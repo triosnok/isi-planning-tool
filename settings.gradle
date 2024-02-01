@@ -1,0 +1,13 @@
+rootProject.name = 'isi-planning-tool'
+
+include ':apps:backend'
+
+dependencyResolutionManagement {
+  repositories {
+    mavenCentral()
+  }
+
+  versionCatalogs {
+
+  }
+}
