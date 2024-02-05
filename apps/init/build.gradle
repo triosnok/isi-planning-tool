@@ -1,0 +1,13 @@
+plugins {
+  id 'java-conventions'
+  alias libs.plugins.spring.boot
+  alias libs.plugins.spring.dependencies
+}
+
+dependencies {
+  implementation 'org.springframework.boot:spring-boot-starter'
+  implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+  implementation 'org.liquibase:liquibase-core'
+  compileOnly 'org.projectlombok:lombok'
+  annotationProcessor 'org.projectlombok:lombok'
+}
