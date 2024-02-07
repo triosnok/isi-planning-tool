@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import solidPlugin from 'vite-plugin-solid';
+import { fileURLToPath, URL } from 'node:url';
 // import devtools from 'solid-devtools/vite';
 
 export default defineConfig({
@@ -16,5 +17,10 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
+  },
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
   },
 });
