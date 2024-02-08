@@ -1,0 +1,20 @@
+package no.isi.insight.planning.repository;
+
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.data.repository.Repository;
+
+import no.isi.insight.planning.model.UserAccount;
+
+public interface UserAccountJpaRepository extends Repository<UserAccount, UUID> {
+
+  Optional<UserAccount> findByEmail(
+      String email
+  );
+
+  UserAccount save(
+      UserAccount userAccount
+  );
+
+}

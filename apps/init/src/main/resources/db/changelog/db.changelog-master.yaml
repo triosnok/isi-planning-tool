@@ -1,4 +1,8 @@
 databaseChangeLog:
   - changeSet:
-      id: 000-initial
-      author: ...
+      id: 000-user-account
+      author: gisle
+      changes:
+        - sqlFile:
+            path: 000-user-account/000-create-user-account-table.sql
+            relativeToChangelogFile: true
