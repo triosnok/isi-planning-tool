@@ -20,7 +20,12 @@
   },
   "dependencies": {
     "@isi-insight/frontend": "workspace:*",
+    "@kobalte/core": "^0.12.1",
     "@solidjs/router": "^0.11.5",
-    "solid-js": "^1.8.11"
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "solid-js": "^1.8.11",
+    "tailwind-merge": "^2.2.1",
+    "tailwindcss-animate": "^1.0.7"
   }
 }

@@ -1,15 +1,8 @@
-import type { Config } from 'tailwindcss';
-
-const config: Config = {
+/** @type {import('tailwindcss').Config} */
+export default {
+  darkMode: ["class"],
   content: [
-    './index.html',
-    './src/**/*.{js,ts,jsx,tsx,css,md,mdx,html,json,scss}',
+	"./src/**/*.{html,js,jsx,md,mdx,ts,tsx}"
   ],
-  darkMode: 'class',
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-};
-
-export default config;
+  presets: [require("./ui.preset.js")]
+}
