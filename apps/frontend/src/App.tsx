@@ -1,9 +1,9 @@
+import { Router } from '@solidjs/router';
 import type { Component } from 'solid-js';
+import { routes } from './router';
 
 const App: Component = () => {
-  return (
-    <p class='py-20 text-center text-4xl text-blue-700'>inSight</p>
-  );
+  return <Router>{routes}</Router>;
 };
 
 export default App;

@@ -20,6 +20,9 @@ importers:
       '@isi-insight/frontend':
         specifier: workspace:*
         version: 'link:'
+      '@solidjs/router':
+        specifier: ^0.11.5
+        version: 0.11.5(solid-js@1.8.12)
       solid-js:
         specifier: ^1.8.11
         version: 1.8.12
@@ -852,6 +855,14 @@ packages:
     dependencies:
       solid-js: 1.8.12
     dev: true
+
+  /@solidjs/router@0.11.5(solid-js@1.8.12):
+    resolution: {integrity: sha512-nclebUUufZT37rB5l0LbJn92vZwJOhYVltfjfLFI3yAcMlwiil5JOy6X2FEgekWsoX29No/GCBTkYfrSZCRfaw==}
+    peerDependencies:
+      solid-js: ^1.8.6
+    dependencies:
+      solid-js: 1.8.12
+    dev: false
 
   /@types/babel__core@7.20.5:
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}

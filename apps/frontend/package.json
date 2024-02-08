@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@isi-insight/frontend": "workspace:*",
+    "@solidjs/router": "^0.11.5",
     "solid-js": "^1.8.11"
   }
 }
