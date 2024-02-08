@@ -1,102 +1,136 @@
-const {fontFamily} = require("tailwindcss/defaultTheme")
+const { fontFamily } = require('tailwindcss/defaultTheme');
 
 /**@type {import("tailwindcss").Config} */
 module.exports = {
-  darkMode: ["class", '[data-kb-theme="dark"]'],
-  content: ["./src/**/*.{js,jsx,md,mdx,ts,tsx}"],
+  darkMode: ['class', '[data-kb-theme="dark"]'],
+  content: ['./src/**/*.{js,jsx,md,mdx,ts,tsx}'],
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: '2rem',
       screens: {
-        "2xl": "1400px"
-      }
+        '2xl': '1400px',
+      },
     },
+    colors: (utils) => ({
+      gray: utils.colors.zinc,
+      success: utils.colors.emerald,
+      warning: utils.colors.yellow,
+      error: utils.colors.red,
+      'brand-blue': {
+        DEFAULT: '#00347D',
+        50: '#B0D1FF',
+        100: '#9CC5FF',
+        200: '#73ADFF',
+        300: '#4A95FF',
+        400: '#217DFF',
+        500: '#0067F7',
+        600: '#0056CF',
+        700: '#0045A6',
+        800: '#00347D',
+        900: '#001D45',
+        950: '#001129',
+      },
+      'brand-red': {
+        DEFAULT: '#AF1429',
+        50: '#FAD2D8',
+        100: '#F8C0C8',
+        200: '#F49BA7',
+        300: '#EF7787',
+        400: '#EB5267',
+        500: '#E72E47',
+        600: '#D41832',
+        700: '#AF1429',
+        800: '#7D0E1D',
+        900: '#4A0811',
+        950: '#31060C',
+      },
+    }),
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))"
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))"
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))"
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
         },
         info: {
-          DEFAULT: "hsl(var(--info))",
-          foreground: "hsl(var(--info-foreground))"
+          DEFAULT: 'hsl(var(--info))',
+          foreground: 'hsl(var(--info-foreground))',
         },
         success: {
-          DEFAULT: "hsl(var(--success))",
-          foreground: "hsl(var(--success-foreground))"
+          DEFAULT: 'hsl(var(--success))',
+          foreground: 'hsl(var(--success-foreground))',
         },
         warning: {
-          DEFAULT: "hsl(var(--warning))",
-          foreground: "hsl(var(--warning-foreground))"
+          DEFAULT: 'hsl(var(--warning))',
+          foreground: 'hsl(var(--warning-foreground))',
         },
         error: {
-          DEFAULT: "hsl(var(--error))",
-          foreground: "hsl(var(--error-foreground))"
+          DEFAULT: 'hsl(var(--error))',
+          foreground: 'hsl(var(--error-foreground))',
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))"
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))"
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))"
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))',
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))"
-        }
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
+        },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)"
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
       },
       fontFamily: {
-        sans: ["Inter", ...fontFamily.sans]
+        sans: ['Inter', ...fontFamily.sans],
       },
       keyframes: {
-        "accordion-down": {
+        'accordion-down': {
           from: { height: 0 },
-          to: { height: "var(--kb-accordion-content-height)" }
+          to: { height: 'var(--kb-accordion-content-height)' },
         },
-        "accordion-up": {
-          from: { height: "var(--kb-accordion-content-height)" },
-          to: { height: 0 }
+        'accordion-up': {
+          from: { height: 'var(--kb-accordion-content-height)' },
+          to: { height: 0 },
         },
-        "content-show": {
-          from: { opacity: 0, transform: "scale(0.96)" },
-          to: { opacity: 1, transform: "scale(1)" }
+        'content-show': {
+          from: { opacity: 0, transform: 'scale(0.96)' },
+          to: { opacity: 1, transform: 'scale(1)' },
         },
-        "content-hide": {
-          from: { opacity: 1, transform: "scale(1)" },
-          to: { opacity: 0, transform: "scale(0.96)" }
-        }
+        'content-hide': {
+          from: { opacity: 1, transform: 'scale(1)' },
+          to: { opacity: 0, transform: 'scale(0.96)' },
+        },
       },
       animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-        "content-show": "content-show 0.2s ease-out",
-        "content-hide": "content-hide 0.2s ease-out"
-      }
-    }
+        'accordion-down': 'accordion-down 0.2s ease-out',
+        'accordion-up': 'accordion-up 0.2s ease-out',
+        'content-show': 'content-show 0.2s ease-out',
+        'content-hide': 'content-hide 0.2s ease-out',
+      },
+    },
   },
-  plugins: [require("tailwindcss-animate")]
-}
+  plugins: [require('tailwindcss-animate')],
+};
