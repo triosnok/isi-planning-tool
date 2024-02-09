@@ -17,4 +17,8 @@ public interface UserAccountJpaRepository extends Repository<UserAccount, UUID> 
       UserAccount userAccount
   );
 
+  void delete(
+      UserAccount userAccount
+  );
+
 }

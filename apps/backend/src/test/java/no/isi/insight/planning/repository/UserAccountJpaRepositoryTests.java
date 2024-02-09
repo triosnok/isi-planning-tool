@@ -3,20 +3,15 @@ package no.isi.insight.planning.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 
 import lombok.RequiredArgsConstructor;
-import no.isi.insight.planning.PlanningApplicationDevelopment;
+import no.isi.insight.planning.annotation.IntegrationTest;
 import no.isi.insight.planning.model.UserAccount;
 import no.isi.insight.planning.model.UserAccountRole;
 
-@DataJpaTest
+@IntegrationTest
 @RequiredArgsConstructor
-@Import(PlanningApplicationDevelopment.class)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class UserAccountJpaRepoistoryTests {
+class UserAccountJpaRepositoryTests {
 
   private final UserAccountJpaRepository userAccountJpaRepository;
 
