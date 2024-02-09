@@ -2,10 +2,11 @@ import Logo from '@/components/logo/Logo';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Component } from 'solid-js';
-import { A } from '@solidjs/router';
+import { A, useNavigate } from '@solidjs/router';
 import { createForm, SubmitHandler, zodForm } from '@modular-forms/solid';
 import { z } from 'zod';
 import { Input } from '@/components/ui/input';
+import { useSignInMutation } from '../api';
 
 const SignInSchema = z.object({
   email: z.string().email(),
@@ -15,12 +16,16 @@ const SignInSchema = z.object({
 type SignInForm = z.infer<typeof SignInSchema>;
 
 const SignIn: Component = () => {
-  const [, { Form, Field }] = createForm({validate:zodForm(SignInSchema)});
-  const handleSubmit: SubmitHandler<SignInForm> = (
-    values,
-    event
-  ) => {
-    
+  const [, { Form, Field }] = createForm({ validate: zodForm(SignInSchema) });
+  const navigate = useNavigate();
+  const { mutateAsync } = useSignInMutation();
+  const handleSubmit: SubmitHandler<SignInForm> = async (values) => {
+    try {
+      await mutateAsync(values);
+      navigate('/');
+    } catch (error) {
+      // ignored
+    }
   };
 
   return (
@@ -49,6 +54,7 @@ const SignIn: Component = () => {
                     type='email'
                     id='email'
                     placeholder='E-mail'
+                    value={field.value}
                   />
                 )}
               </Field>
@@ -63,6 +69,7 @@ const SignIn: Component = () => {
                     type='password'
                     id='password'
                     placeholder='Password'
+                    value={field.value}
                   />
                 )}
               </Field>
