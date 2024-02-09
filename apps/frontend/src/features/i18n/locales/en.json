@@ -1,0 +1,10 @@
+{
+  "AUTHENTICATION": {
+    "SIGN_IN": "Sign in",
+    "SIGN_OUT": "Sign out"
+  },
+
+  "DASHBOARD": {
+    "TITLE": "Dashboard"
+  }
+}

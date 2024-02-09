@@ -1,0 +1,10 @@
+{
+  "AUTHENTICATION": {
+    "SIGN_IN": "Logg inn",
+    "SIGN_OUT": "Logg ut"
+  },
+
+  "DASHBOARD": {
+    "TITLE": "Dashboard norsk"
+  }
+}
