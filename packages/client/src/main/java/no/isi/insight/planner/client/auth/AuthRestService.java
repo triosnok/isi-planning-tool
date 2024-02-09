@@ -20,6 +20,9 @@ public interface AuthRestService {
       @RequestBody SignInRequest request
   );
 
+  @PostExchange("/sign-out")
+  ResponseEntity<Void> signOut();
+
   @GetExchange("/refresh")
   ResponseEntity<SignInResponse> refresh();
 

@@ -93,4 +93,21 @@ public class AuthRestServiceImpl implements AuthRestService {
     }
   }
 
+  @Override
+  public ResponseEntity<Void> signOut() {
+    var request = RequestUtils.getServletRequest();
+    var refreshToken = Optional.ofNullable(WebUtils.getCookie(request, JwtService.REFRESH_COOKIE_NAME));
+
+    if (refreshToken.isEmpty()) {
+      return ResponseEntity.ok().build();
+    }
+
+    var cookie = this.jwtService.createRefreshTokenCookie(refreshToken.get().getValue());
+    cookie.setMaxAge(0);
+
+    var response = RequestUtils.getServletResponse();
+    response.addCookie(cookie);
+
+    return ResponseEntity.ok().build();
+  }
 }
