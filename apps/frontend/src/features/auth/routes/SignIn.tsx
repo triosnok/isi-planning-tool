@@ -29,12 +29,12 @@ const SignIn: Component = () => {
               <Input type='password' id='password' placeholder='Password' />
 
               <div class='flex justify-end'>
-                <A class='text-sm underline' href=''>
+                <A class='text-sm hover:underline' href=''>
                   Forgot password?
                 </A>
               </div>
 
-              <Button color='' class='mt-4'>Sign in</Button>
+              <Button class='mt-4'>Sign in</Button>
             </form>
           </div>
         </div>
