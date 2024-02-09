@@ -1,0 +1,9 @@
+no.isi.insight.planning:
+  auth:
+    token-issuer: isi-insight
+    access-token:
+      expiration-ms: 300000
+      secret: test-access-token-test-access-token
+    refresh-token:
+      expiration-ms: 2592000000
+      secret: test-refresh-token-test-refresh-token
