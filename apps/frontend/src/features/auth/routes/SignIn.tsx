@@ -28,9 +28,11 @@ const SignIn: Component = () => {
               </Label>
               <Input type='password' id='password' placeholder='Password' />
 
-              <A class='flex justify-end text-sm underline' href=''>
-                Forgot password?
-              </A>
+              <div class='flex justify-end'>
+                <A class='text-sm underline' href=''>
+                  Forgot password?
+                </A>
+              </div>
 
               <Button color='' class='mt-4'>Sign in</Button>
             </form>
