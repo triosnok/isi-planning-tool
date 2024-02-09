@@ -26,6 +26,9 @@ importers:
       '@modular-forms/solid':
         specifier: ^0.20.0
         version: 0.20.0(solid-js@1.8.12)
+      '@solid-primitives/i18n':
+        specifier: ^2.0.1
+        version: 2.0.1(solid-js@1.8.12)
       '@solidjs/router':
         specifier: ^0.11.5
         version: 0.11.5(solid-js@1.8.12)
@@ -838,6 +841,14 @@ packages:
     dependencies:
       '@solid-primitives/utils': 6.2.2(solid-js@1.8.12)
       solid-js: 1.8.12
+
+  /@solid-primitives/i18n@2.0.1(solid-js@1.8.12):
+    resolution: {integrity: sha512-oOsZQUqlfPciJLz+iW+L2l0e0pSUZbx2SrFIRIkuhnaXLKfM5q9oXq59ManOYlhFDkQiE0EigWfBHMR4OjkrSQ==}
+    peerDependencies:
+      solid-js: ^1.6.12
+    dependencies:
+      solid-js: 1.8.12
+    dev: false
 
   /@solid-primitives/keyboard@1.2.6(solid-js@1.8.12):
     resolution: {integrity: sha512-ZbXkzAwFs+6hyaZ2hT9uQ38iPZzGTjV6kWvVvJ3BDfKASg0dDDuhEZRKmpkmpLfnqOabV58BUkASJWMAA4dZCg==}

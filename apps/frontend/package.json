@@ -22,6 +22,7 @@
     "@isi-insight/client": "workspace:*",
     "@kobalte/core": "^0.12.1",
     "@modular-forms/solid": "^0.20.0",
+    "@solid-primitives/i18n": "^2.0.1",
     "@solidjs/router": "^0.11.5",
     "@tanstack/solid-query": "^5.18.1",
     "axios": "^1.6.7",
