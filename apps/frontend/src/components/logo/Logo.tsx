@@ -1,6 +1,10 @@
 import { Component } from 'solid-js';
 
-const Logo: Component = () => {
+export interface LogoProps {
+  class?: string;
+}
+
+const Logo: Component<LogoProps> = (props) => {
   return (
     <svg
       width='174'
@@ -8,6 +12,7 @@ const Logo: Component = () => {
       viewBox='0 0 174 130'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
+      class={props.class}
     >
       <g clip-path='url(#clip0_68_1482)'>
         <path
