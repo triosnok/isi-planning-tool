@@ -12,6 +12,7 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-security'
   implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'com.nimbusds:nimbus-jose-jwt:9.37.3'
+  implementation 'no.vegvesen.nvdb:nvdb-read-api-v3-client:1.21.2'
   compileOnly 'org.projectlombok:lombok'
   developmentOnly project(':apps:init')
   developmentOnly 'org.springframework.boot:spring-boot-devtools'
