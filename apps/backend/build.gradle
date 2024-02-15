@@ -27,6 +27,7 @@ dependencies {
   testImplementation 'org.testcontainers:junit-jupiter'
   testImplementation 'org.testcontainers:postgresql'
   testRuntimeOnly project(':apps:init')
+  testCompileOnly 'org.springframework.boot:spring-boot-devtools'
 }
 
 tasks.named('test') {
