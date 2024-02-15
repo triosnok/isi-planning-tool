@@ -7,3 +7,6 @@ no.isi.insight.planning:
     refresh-token:
       expiration-ms: 2592000000
       secret: test-refresh-token-test-refresh-token
+  integration.nvdb:
+    client-name: isi-insight-dev
+    base-url: https://nvdbapiles-v3.atlas.vegvesen.no
