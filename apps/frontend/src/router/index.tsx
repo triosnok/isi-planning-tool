@@ -1,14 +1,25 @@
+import { UserRole } from '@isi-insight/client';
 import type { RouteDefinition as SolidRouteDef } from '@solidjs/router';
 import { JSX } from 'solid-js';
-import { AuthStatus, Role } from '../lib/constants';
+import { AuthStatus } from '../lib/constants';
 import RouteGuard from './RouteGuard';
 
-export interface RouteMeta {
-  authentication?: AuthStatus;
+export interface SignedIn {
+  status: AuthStatus.SIGNED_IN;
   /**
-   * Roles that can access the route
+   * Roles that can access the route.
    */
-  roles?: Role[];
+  roles?: UserRole[];
+}
+
+export interface SignedOut {
+  status: AuthStatus.SIGNED_OUT;
+}
+
+export type RouteAuthentication = SignedIn | SignedOut;
+
+export interface RouteMeta {
+  authentication?: RouteAuthentication;
 }
 
 export interface RouteDefinition extends SolidRouteDef {
@@ -25,30 +36,35 @@ const featureRoutes = import.meta.glob<RouteDefinition[]>(
   }
 );
 
+const mapRoute = (route: RouteDefinition) => {
+  if (route.meta?.authentication === undefined) {
+    return route;
+  }
+
+  const Component = route.component as () => JSX.Element;
+
+  const guardedRoute: RouteDefinition = {
+    ...route,
+    // sorry not sorry for the ternary
+    children: Array.isArray(route.children)
+      ? route.children.map(mapRoute)
+      : route.children === undefined
+        ? undefined
+        : mapRoute(route.children),
+    component: () => (
+      <RouteGuard authentication={route.meta!.authentication!}>
+        <Component />
+      </RouteGuard>
+    ),
+  };
+
+  return guardedRoute;
+};
+
 for (const [_path, importedRoutes] of Object.entries(featureRoutes)) {
   for (const route of importedRoutes) {
-    if (route.meta?.authentication !== AuthStatus.SIGNED_IN) {
-      routes.push(route);
-      continue;
-    }
-
-    const Component = route.component as () => JSX.Element;
-
-    const guardedRoute: RouteDefinition = {
-      ...route,
-      component: () => (
-        <RouteGuard
-          roles={route.meta?.roles ?? []}
-          authStatus={AuthStatus.SIGNED_IN}
-        >
-          <Component />
-        </RouteGuard>
-      ),
-    };
-
-    routes.push(guardedRoute);
+    routes.push(mapRoute(route));
   }
 }
 
 export { routes };
-

@@ -1,5 +1,5 @@
 import { useSignOutMutation } from '@/features/auth/api';
-import { A, useNavigate } from '@solidjs/router';
+import { A } from '@solidjs/router';
 import { Component } from 'solid-js';
 import Logo from '../logo/Logo';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
@@ -13,7 +13,6 @@ import { Input } from '../ui/input';
 
 const Header: Component = () => {
   const signOut = useSignOutMutation();
-  const navigate = useNavigate();
 
   const handleSignOut = async () => {
     try {

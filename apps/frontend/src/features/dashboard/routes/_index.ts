@@ -7,7 +7,9 @@ export const routes: RouteDefinition[] = [
     path: '/',
     component: lazy(() => import('./Dashboard')),
     meta: {
-      authentication: AuthStatus.SIGNED_IN,
-    }
+      authentication: {
+        status: AuthStatus.SIGNED_IN,
+      },
+    },
   },
 ];

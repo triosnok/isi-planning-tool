@@ -7,14 +7,18 @@ export const routes: RouteDefinition[] = [
     path: '/sign-in',
     component: lazy(() => import('./SignIn')),
     meta: {
-      authentication: AuthStatus.SIGNED_OUT,
-    }
+      authentication: {
+        status: AuthStatus.SIGNED_OUT,
+      },
+    },
   },
   {
     path: '/forgot-password',
     component: lazy(() => import('./ForgotPassword')),
     meta: {
-      authentication: AuthStatus.SIGNED_OUT,
-    }
+      authentication: {
+        status: AuthStatus.SIGNED_OUT,
+      },
+    },
   },
 ];

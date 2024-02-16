@@ -3,7 +3,9 @@
     "SIGN_IN": "Sign in",
     "SIGN_OUT": "Sign out"
   },
-
+  "FEEDBACK": {
+    "LOADING": "Loading..."
+  },
   "DASHBOARD": {
     "TITLE": "Dashboard"
   }
