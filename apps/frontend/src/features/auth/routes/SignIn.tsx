@@ -33,7 +33,7 @@ const SignIn: Component = () => {
       <main>
         <div class='flex h-screen items-center justify-center'>
           <div class='flex w-full max-w-md flex-col items-center justify-center rounded-lg border border-gray-100 py-6 shadow-lg'>
-            <Logo />
+            <Logo class='h-28' />
 
             <Form
               id='sign-in-form'
