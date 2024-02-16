@@ -40,6 +40,9 @@ importers:
       clsx:
         specifier: ^2.1.0
         version: 2.1.0
+      leaflet:
+        specifier: ^1.9.4
+        version: 1.9.4
       solid-icons:
         specifier: ^1.1.0
         version: 1.1.0(solid-js@1.8.12)
@@ -1516,6 +1519,10 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
     dev: true
+
+  /leaflet@1.9.4:
+    resolution: {integrity: sha512-nxS1ynzJOmOlHp+iL3FyWqK89GtNL8U8rvlMOsQdTTssxZwCXh8N2NB3GDQOL+YR3XnWyZAxwQixURb+FA74PA==}
+    dev: false
 
   /lilconfig@2.1.0:
     resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}
