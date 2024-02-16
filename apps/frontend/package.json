@@ -9,6 +9,7 @@
     "serve": "vite preview"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.9.8",
     "@types/node": "^20.11.16",
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.33",
@@ -27,7 +28,6 @@
     "@tanstack/query-sync-storage-persister": "^5.20.5",
     "@tanstack/solid-query": "^5.20.5",
     "@tanstack/solid-query-persist-client": "5.20.5",
-    "@types/leaflet": "^1.9.8",
     "axios": "^1.6.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
