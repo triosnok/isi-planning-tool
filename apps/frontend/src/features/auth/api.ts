@@ -1,5 +1,9 @@
 import { ACCESS_TOKEN_LOCALSTORAGE_KEY, CacheKey } from '@/api';
-import type { SignInRequest, SignInResponse } from '@isi-insight/client';
+import type {
+  SignInRequest,
+  SignInResponse,
+  UserProfile,
+} from '@isi-insight/client';
 import {
   createMutation,
   createQuery,
@@ -15,10 +19,7 @@ export const useProfile = () => {
     retry: () => localStorage.getItem(ACCESS_TOKEN_LOCALSTORAGE_KEY) !== null,
     queryKey: [CacheKey.USER_PROFILE],
     queryFn: async () => {
-      const response = await axios.get<string>('api/v1/auth/profile', {
-        transformResponse: (p) => p,
-      });
-
+      const response = await axios.get<UserProfile>('api/v1/auth/profile');
       return response.data;
     },
   }));
