@@ -8,12 +8,13 @@ import org.springframework.web.service.annotation.PostExchange;
 
 import no.isi.insight.planner.client.auth.view.SignInRequest;
 import no.isi.insight.planner.client.auth.view.SignInResponse;
+import no.isi.insight.planner.client.auth.view.UserProfile;
 
 @HttpExchange("/api/v1/auth")
 public interface AuthRestService {
 
   @GetExchange("/profile")
-  ResponseEntity<String> profile();
+  ResponseEntity<UserProfile> profile();
 
   @PostExchange("/sign-in")
   ResponseEntity<SignInResponse> signIn(
