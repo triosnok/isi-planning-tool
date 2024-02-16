@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -28,9 +32,15 @@ importers:
       '@solidjs/router':
         specifier: ^0.11.5
         version: 0.11.5(solid-js@1.8.12)
+      '@tanstack/query-sync-storage-persister':
+        specifier: ^5.20.5
+        version: 5.20.5
       '@tanstack/solid-query':
-        specifier: ^5.18.1
-        version: 5.18.1(solid-js@1.8.12)
+        specifier: ^5.20.5
+        version: 5.20.5(solid-js@1.8.12)
+      '@tanstack/solid-query-persist-client':
+        specifier: 5.20.5
+        version: 5.20.5(@tanstack/solid-query@5.20.5)(solid-js@1.8.12)
       '@types/leaflet':
         specifier: ^1.9.8
         version: 1.9.8
@@ -1004,16 +1014,40 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@tanstack/query-core@5.18.1:
-    resolution: {integrity: sha512-fYhrG7bHgSNbnkIJF2R4VUXb4lF7EBiQjKkDc5wOlB7usdQOIN4LxxHpDxyE3qjqIst1WBGvDtL48T0sHJGKCw==}
+  /@tanstack/query-core@5.20.5:
+    resolution: {integrity: sha512-T1W28gGgWn0A++tH3lxj3ZuUVZZorsiKcv+R50RwmPYz62YoDEkG4/aXHZELGkRp4DfrW07dyq2K5dvJ4Wl1aA==}
     dev: false
 
-  /@tanstack/solid-query@5.18.1(solid-js@1.8.12):
-    resolution: {integrity: sha512-kD1uVar0uTngdTXOk6U7lQ9V44MhNCi2MIVkxEZQD39pEv0ozy36iUe8BPdoLQps53BnrO+I6pZA1t1pjxVnwQ==}
+  /@tanstack/query-persist-client-core@5.20.5:
+    resolution: {integrity: sha512-wR11+nLFFqmP5Em/vgih/89YABWfO6gzuv1h+934LAnsxNew3Ih4y1j/M7WgammWnpkUJrFy50/5BCAk4bQZIg==}
+    dependencies:
+      '@tanstack/query-core': 5.20.5
+    dev: false
+
+  /@tanstack/query-sync-storage-persister@5.20.5:
+    resolution: {integrity: sha512-cvY11l39h+D5oQ2Ejb3VS2VgjxoaTK4RarzU/2csSHTVx7V337SVfXyJMZrLYJWllvm6S+f2pUwctIEhSWL3Mw==}
+    dependencies:
+      '@tanstack/query-core': 5.20.5
+      '@tanstack/query-persist-client-core': 5.20.5
+    dev: false
+
+  /@tanstack/solid-query-persist-client@5.20.5(@tanstack/solid-query@5.20.5)(solid-js@1.8.12):
+    resolution: {integrity: sha512-wgwi3ZxghcEtL5KN+w4GKICjR4eCGTwulmvusqA2b49vqskU21EjdpSnOXN24GijkwweQZ0VrkTIleGTHgtXmg==}
+    peerDependencies:
+      '@tanstack/solid-query': 5.20.5
+      solid-js: ^1.6.0
+    dependencies:
+      '@tanstack/query-persist-client-core': 5.20.5
+      '@tanstack/solid-query': 5.20.5(solid-js@1.8.12)
+      solid-js: 1.8.12
+    dev: false
+
+  /@tanstack/solid-query@5.20.5(solid-js@1.8.12):
+    resolution: {integrity: sha512-d/H544VZb3/MA/K4Lzar9WB1OU43tmHl4pO2/kgbmpvn0f4MqIfTzqcf1MjiV9d9c0jXZ3V6sDglme4Bxk5AWg==}
     peerDependencies:
       solid-js: ^1.6.0
     dependencies:
-      '@tanstack/query-core': 5.18.1
+      '@tanstack/query-core': 5.20.5
       solid-js: 1.8.12
     dev: false
 
@@ -2187,7 +2221,3 @@ packages:
   /zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
