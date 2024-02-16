@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import no.isi.insight.planner.client.auth.AuthRestService;
 import no.isi.insight.planner.client.auth.view.SignInRequest;
 import no.isi.insight.planner.client.auth.view.SignInResponse;
+import no.isi.insight.planner.client.auth.view.UserProfile;
+import no.isi.insight.planner.client.auth.view.UserRole;
 import no.isi.insight.planning.auth.TokenClaim;
 import no.isi.insight.planning.auth.TokenType;
 import no.isi.insight.planning.auth.UserAccountDetailsAdapter;
@@ -33,9 +35,22 @@ public class AuthRestServiceImpl implements AuthRestService {
 
   @Override
   @Authenticated
-  public ResponseEntity<String> profile() {
+  public ResponseEntity<UserProfile> profile() {
     var user = (UserAccountDetailsAdapter) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    return ResponseEntity.ok(user.getUsername());
+    var account = user.getUserAccount();
+    var role = switch (account.getRole()) {
+      case DRIVER -> UserRole.DRIVER;
+      case PLANNER -> UserRole.PLANNER;
+    };
+
+    var profile = UserProfile.builder()
+      .fullName(account.getFullName())
+      .email(account.getEmail())
+      .phoneNumber(account.getPhoneNumber())
+      .role(role)
+      .build();
+
+    return ResponseEntity.ok(profile);
   }
 
   @Override
