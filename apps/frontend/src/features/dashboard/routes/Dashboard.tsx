@@ -9,7 +9,7 @@ const Dashboard: Component = () => {
     <>
       <Header />
       <main>
-        <h1>Dashboard {profile.data}</h1>
+        <h1>Dashboard {profile.data?.fullName}</h1>
       </main>
     </>
   );

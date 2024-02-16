@@ -16,7 +16,7 @@ import axios from 'axios';
  */
 export const useProfile = () => {
   return createQuery(() => ({
-    retry: () => localStorage.getItem(ACCESS_TOKEN_LOCALSTORAGE_KEY) !== null,
+    retry: false,
     queryKey: [CacheKey.USER_PROFILE],
     queryFn: async () => {
       const response = await axios.get<UserProfile>('api/v1/auth/profile');
