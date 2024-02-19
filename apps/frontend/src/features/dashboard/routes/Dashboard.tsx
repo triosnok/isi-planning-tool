@@ -1,15 +1,19 @@
-import { useProfile } from '@/features/auth/api';
-import { Component } from 'solid-js';
 import Header from '@/components/layout/Header';
+import MapRailingLayer from '@/components/map/MapRailingLayer';
+import MapRoot from '@/components/map/MapRoot';
+import { Component } from 'solid-js';
 
 const Dashboard: Component = () => {
-  const profile = useProfile();
-
   return (
     <>
       <Header />
-      <main>
-        <h1>Dashboard {profile.data?.fullName}</h1>
+      <main class='flex justify-center'>
+        <div class=''>
+          <h2>Coverage</h2>
+          <MapRoot class='h-96 w-96'>
+            <MapRailingLayer></MapRailingLayer>
+          </MapRoot>
+        </div>
       </main>
     </>
   );
