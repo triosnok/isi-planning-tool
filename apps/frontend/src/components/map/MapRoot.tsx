@@ -9,6 +9,7 @@ import {
   onMount,
   useContext,
 } from 'solid-js';
+import proj4 from 'proj4leaflet';
 
 export interface MapContextValue {
   map: Leaflet.Map;
@@ -25,13 +26,28 @@ export const MapRoot: Component<{ children?: JSX.Element; class?: string }> = (
 
   onMount(() => {
     if (!container) return;
+
+    // const crs = new Leaflet.Proj.CRS(
+    //   'EPSG:25833',
+    //   '+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs',
+    //   {
+    //     resolutions: [8192, 4096, 2048, 1024, 512, 256, 128],
+    //     origin: [-2500000, 9045984],
+    //   }
+    // );
+
+    // https://epsg.io/25833
+
     const map = Leaflet.map(container, {
-      center: [0, 0],
+      center: [203174.5, 6876298.5],
       zoom: 7,
+      // crs: crs,
     });
+
+    // better way to do this is to change maxZoom to length of resolution list from crs i think
     const layer = new TileLayer(
       'https://services.geodataonline.no/arcgis/rest/services/Trafikkportalen/GeocacheTrafikkJPG/MapServer/tile/{z}/{y}/{x}',
-      {}
+      { maxZoom: 14, minZoom: 0 }
     );
 
     map.addLayer(layer);
