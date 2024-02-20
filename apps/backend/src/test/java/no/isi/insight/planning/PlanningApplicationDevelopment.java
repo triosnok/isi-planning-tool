@@ -6,7 +6,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.utility.DockerImageName;
 
 import no.isi.insight.planning.auth.service.UserAccountService;
 import no.isi.insight.planning.model.UserAccountRole;
@@ -18,7 +17,7 @@ public class PlanningApplicationDevelopment {
   @RestartScope
   @ServiceConnection
   PostgreSQLContainer<?> postgresContainer() {
-    return new PostgreSQLContainer<>(DockerImageName.parse("postgres:latest"));
+    return new PostgreSQLContainer<>(TestcontainersConfiguration.POSTGIS_IMAGE_NAME);
   }
 
   public static void main(
