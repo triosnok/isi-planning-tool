@@ -32,6 +32,9 @@ importers:
       '@solidjs/router':
         specifier: ^0.11.5
         version: 0.11.5(solid-js@1.8.12)
+      '@tabler/icons-solidjs':
+        specifier: ^2.47.0
+        version: 2.47.0(solid-js@1.8.12)
       '@tanstack/query-sync-storage-persister':
         specifier: ^5.20.5
         version: 5.20.5
@@ -1018,6 +1021,19 @@ packages:
     resolution: {integrity: sha512-aYX01Ke9hunpoCexYAgQucEpARGQ5w/cqHFrIR+e9gdKb1QWTsVJuTJ2ozQzIAxLyRQe/m+2RqzkyOOGiMKRQA==}
     dependencies:
       tslib: 2.6.2
+    dev: false
+
+  /@tabler/icons-solidjs@2.47.0(solid-js@1.8.12):
+    resolution: {integrity: sha512-qyQau0ViXrYy0ut8ZkLTTvLlbCZi92P5YIlEV7t6f1a5sAN9CMuTcsjrZM60Vf7+6o7tloUgW+VFgc9kwsIBcg==}
+    peerDependencies:
+      solid-js: ^1.4.7
+    dependencies:
+      '@tabler/icons': 2.47.0
+      solid-js: 1.8.12
+    dev: false
+
+  /@tabler/icons@2.47.0:
+    resolution: {integrity: sha512-4w5evLh+7FUUiA1GucvGj2ReX2TvOjEr4ejXdwL/bsjoSkof6r1gQmzqI+VHrE2CpJpB3al7bCTulOkFa/RcyA==}
     dev: false
 
   /@tanstack/query-core@5.20.5:
