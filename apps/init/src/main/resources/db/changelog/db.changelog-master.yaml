@@ -1,8 +1,22 @@
 databaseChangeLog:
   - changeSet:
-      id: 000-user-account
+      id: 000-preflight
+      author: halvard
+      changes:
+        - sqlFile:
+            path: 000-preflight/000-enable-extensions.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: 001-user-account
       author: gisle
       changes:
         - sqlFile:
-            path: 000-user-account/000-create-user-account-table.sql
+            path: 001-user-account/000-create-user-account-table.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: 001-project
+      author: halvard
+      changes:
+        - sqlFile:
+            path: 001-project/000-create-project-tables.sql
             relativeToChangelogFile: true
