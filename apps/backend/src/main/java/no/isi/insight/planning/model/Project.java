@@ -1,6 +1,6 @@
 package no.isi.insight.planning.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -33,10 +33,10 @@ public class Project {
   private String referenceCode;
 
   @Column(name = "starts_at")
-  private LocalDateTime startsAt;
+  private LocalDate startsAt;
 
   @Column(name = "ends_at")
-  private LocalDateTime endsAt;
+  private LocalDate endsAt;
 
   @Embedded
   private Audit audit;
@@ -44,8 +44,8 @@ public class Project {
   public Project(
       String name,
       String referenceCode,
-      LocalDateTime startsAt,
-      LocalDateTime endsAt
+      LocalDate startsAt,
+      LocalDate endsAt
   ) {
     this.name = name;
     this.referenceCode = referenceCode;

@@ -1,6 +1,6 @@
 package no.isi.insight.planning.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,10 +43,10 @@ public class ProjectPlan {
   private List<String> railingImportUrls;
 
   @Column(name = "starts_at")
-  private LocalDateTime startsAt;
+  private LocalDate startsAt;
 
   @Column(name = "ends_at")
-  private LocalDateTime endsAt;
+  private LocalDate endsAt;
 
   @ManyToMany
   @JoinTable(
@@ -62,8 +62,8 @@ public class ProjectPlan {
   public ProjectPlan(
       Project project,
       List<String> railingImportUrls,
-      LocalDateTime startsAt,
-      LocalDateTime endsAt
+      LocalDate startsAt,
+      LocalDate endsAt
   ) {
     this.project = project;
     this.railingImportUrls = railingImportUrls;
