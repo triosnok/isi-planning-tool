@@ -14,9 +14,9 @@ databaseChangeLog:
             path: 001-user-account/000-create-user-account-table.sql
             relativeToChangelogFile: true
   - changeSet:
-      id: 001-project
+      id: 002-project
       author: halvard
       changes:
         - sqlFile:
-            path: 001-project/000-create-project-tables.sql
+            path: 002-project/000-create-project-tables.sql
             relativeToChangelogFile: true
