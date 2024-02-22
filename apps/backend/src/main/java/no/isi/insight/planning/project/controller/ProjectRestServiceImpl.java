@@ -40,7 +40,9 @@ public class ProjectRestServiceImpl implements ProjectRestService {
       new ProjectDetails(
         savedProject.getId(),
         savedProject.getName(),
-        savedProject.getReferenceCode()
+        savedProject.getReferenceCode(),
+        savedProject.getStartsAt(),
+        savedProject.getEndsAt()
       )
     );
   }
@@ -64,7 +66,9 @@ public class ProjectRestServiceImpl implements ProjectRestService {
       new ProjectDetails(
         project.getId(),
         project.getName(),
-        project.getReferenceCode()
+        project.getReferenceCode(),
+        project.getStartsAt(),
+        project.getEndsAt()
       )
     );
   }
