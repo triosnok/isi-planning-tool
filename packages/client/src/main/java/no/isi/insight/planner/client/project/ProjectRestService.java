@@ -12,7 +12,7 @@ import org.springframework.web.service.annotation.HttpExchange;
 
 import no.isi.insight.planner.client.project.view.RoadRailing;
 
-@HttpExchange("/api/v1/project")
+@HttpExchange("/api/v1/projects")
 public interface ProjectRestService {
 
   /**
