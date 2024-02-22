@@ -54,4 +54,18 @@ public class ProjectRestServiceImpl implements ProjectRestService {
     var railings = this.roadRailingJdbcRepository.getRailings(projectId, planId, tripId);
     return ResponseEntity.ok(railings);
   }
+
+  @Override
+  public ResponseEntity<ProjectDetails> getProject(
+      UUID projectId
+  ) {
+    var project = this.projectJpaRepository.findById(projectId);
+    return ResponseEntity.ok(
+      new ProjectDetails(
+        project.getId(),
+        project.getName(),
+        project.getReferenceCode()
+      )
+    );
+  }
 }

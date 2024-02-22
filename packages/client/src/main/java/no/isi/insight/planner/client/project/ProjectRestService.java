@@ -44,4 +44,14 @@ public interface ProjectRestService {
   ResponseEntity<ProjectDetails> createProject(
       @RequestBody CreateProjectRequest request
   );
+
+  /**
+   * Get a project by its id.
+   * 
+   * @param projectId the id of the project to find
+   */
+  @GetExchange("/{projectId}")
+  ResponseEntity<ProjectDetails> getProject(
+      @PathVariable UUID projectId
+  );
 }
