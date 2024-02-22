@@ -6,10 +6,14 @@ import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
+import org.springframework.web.service.annotation.PostExchange;
 
+import no.isi.insight.planner.client.project.view.CreateProjectRequest;
+import no.isi.insight.planner.client.project.view.ProjectDetails;
 import no.isi.insight.planner.client.project.view.RoadRailing;
 
 @HttpExchange("/api/v1/projects")
@@ -31,4 +35,13 @@ public interface ProjectRestService {
       @RequestParam Optional<UUID> tripId
   );
 
+  /**
+   * Creates a new project with the given details.
+   * 
+   * @param request the details of the project to create
+   */
+  @PostExchange
+  ResponseEntity<ProjectDetails> createProject(
+      @RequestBody CreateProjectRequest request
+  );
 }
