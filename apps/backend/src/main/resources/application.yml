@@ -1,6 +1,8 @@
 spring:
   config:
     import: optional:file:.env[.properties]
+  jpa:
+    database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
 
 no.isi.insight.planning:
   auth:

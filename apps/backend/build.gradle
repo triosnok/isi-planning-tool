@@ -12,6 +12,8 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-security'
   implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'com.nimbusds:nimbus-jose-jwt:9.37.3'
+  implementation 'org.hibernate:hibernate-spatial:6.4.1.Final'
+  implementation 'org.locationtech.jts:jts:1.19.0'
   compileOnly 'org.projectlombok:lombok'
   developmentOnly project(':apps:init')
   developmentOnly 'org.springframework.boot:spring-boot-devtools'
