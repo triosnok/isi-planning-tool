@@ -13,6 +13,7 @@ import no.isi.insight.planner.client.project.view.CreateProjectRequest;
 import no.isi.insight.planner.client.project.view.ProjectDetails;
 import no.isi.insight.planner.client.project.view.RoadRailing;
 import no.isi.insight.planning.model.Project;
+import no.isi.insight.planning.repository.ProjectJdbcRepository;
 import no.isi.insight.planning.repository.ProjectJpaRepository;
 import no.isi.insight.planning.repository.RoadRailingJdbcRepository;
 
@@ -21,6 +22,7 @@ import no.isi.insight.planning.repository.RoadRailingJdbcRepository;
 public class ProjectRestServiceImpl implements ProjectRestService {
   private final RoadRailingJdbcRepository roadRailingJdbcRepository;
   private final ProjectJpaRepository projectJpaRepository;
+  private final ProjectJdbcRepository projectJdbcRepository;
 
   @Override
   public ResponseEntity<ProjectDetails> createProject(
@@ -71,5 +73,11 @@ public class ProjectRestServiceImpl implements ProjectRestService {
         project.getEndsAt()
       )
     );
+  }
+
+  @Override
+  public ResponseEntity<List<ProjectDetails>> getProjects() {
+    var projects = this.projectJdbcRepository.findProjects();
+    return ResponseEntity.ok(projects);
   }
 }
