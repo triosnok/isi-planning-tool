@@ -46,6 +46,12 @@ public interface ProjectRestService {
   );
 
   /**
+   * Get a list of all projects.
+   */
+  @GetExchange
+  ResponseEntity<List<ProjectDetails>> getProjects();
+
+  /**
    * Get a project by its id.
    * 
    * @param projectId the id of the project to find

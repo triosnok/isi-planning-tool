@@ -15,7 +15,4 @@ public interface ProjectJpaRepository extends Repository<Project, UUID> {
   Project findById(
       UUID id
   );
-
-  Project findAll();
-
 }
