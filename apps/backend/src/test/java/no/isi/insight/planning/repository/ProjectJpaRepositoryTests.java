@@ -2,7 +2,7 @@ package no.isi.insight.planning.repository;
 
 import static org.junit.Assert.assertEquals;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
@@ -21,8 +21,8 @@ class ProjectJpaRepositoryTests {
     var newProject = new Project(
       "Project 1",
       "REF523592",
-      LocalDateTime.now(),
-      LocalDateTime.now().plusDays(30)
+      LocalDate.now(),
+      LocalDate.now().plusDays(30)
     );
 
     var savedProject = projectJpaRepository.save(newProject);
