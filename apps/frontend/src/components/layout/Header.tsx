@@ -24,10 +24,37 @@ const Header: Component = () => {
 
   return (
     <header class='bg-brand-blue flex items-center justify-between gap-4 px-4 py-2'>
-      <nav class='flex flex-1 items-center justify-between'>
-        <A href='/'>
-          <Logo variant='white' class='h-8' />
-        </A>
+      <nav class='text-primary-foreground flex flex-1 items-center justify-between'>
+        <div class='flex flex-row items-center gap-4'>
+          <A href='/'>
+            <Logo variant='white' class='h-8' />
+          </A>
+
+          <ul class='flex flex-row gap-4'>
+            <li class='select-none font-bold'>inSight</li>
+            <li class='select-none'>|</li>
+            <li>
+              <A href='/' class='hover:underline'>
+                Home
+              </A>
+            </li>
+            <li>
+              <A href='/projects' class='hover:underline'>
+                Projects
+              </A>
+            </li>
+            <li>
+              <A href='/' class='hover:underline'>
+                Users
+              </A>
+            </li>
+            <li>
+              <A href='/' class='hover:underline'>
+                Vehicles
+              </A>
+            </li>
+          </ul>
+        </div>
       </nav>
 
       <section class='flex flex-1 items-center justify-center'>
