@@ -5,5 +5,14 @@ package no.isi.insight.planning.model;
  */
 public enum RoadSide {
   LEFT,
-  RIGHT
+  RIGHT,
+  LEFT_AND_RIGHT,
+  MIDDLE,
+  CROSSING,
+  MIDDLE_LEFT,
+  MIDDLE_RIGHT,
+  LEFT_ACCESS,
+  RIGHT_ACCESS,
+  ROUNDABOUT_CENTRE,
+  LONGITUDINAL
 }

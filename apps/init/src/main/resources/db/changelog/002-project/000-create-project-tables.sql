@@ -35,7 +35,7 @@ CREATE TABLE project_plan (
 );
 
 CREATE TYPE road_direction AS ENUM ('WITH', 'AGAINST');
-CREATE TYPE road_side AS ENUM ('LEFT', 'RIGHT');
+CREATE TYPE road_side AS ENUM ('LEFT', 'RIGHT', 'LEFT_AND_RIGHT', 'MIDDLE', 'CROSSING', 'MIDDLE_LEFT', 'MIDDLE_RIGHT', 'LEFT_ACCESS', 'RIGHT_ACCESS', 'ROUNDABOUT_CENTRE', 'LONGITUDINAL');
 
 CREATE TABLE road_railing (
   road_railing_id UUID NOT NULL DEFAULT gen_random_uuid(),

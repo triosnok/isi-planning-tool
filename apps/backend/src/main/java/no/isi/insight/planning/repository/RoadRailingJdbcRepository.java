@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import java.sql.Types;
+
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -46,15 +48,15 @@ public class RoadRailingJdbcRepository {
           ON pp.fk_project_id = p.project_id
         WHERE 1=1
           AND (p.project_id = :projectId)
-          AND (:planId IS NULL OR pp.project_plan_id = :planId)
+          AND (:planId IS NULL OR pp.project_plan_id = :planId::uuid)
           -- AND (:tripId IS NULL OR trc.fk_trip_id = :tripId)
       """;
 
     var params = new MapSqlParameterSource();
 
     params.addValue("projectId", projectId);
-    params.addValue("planId", planId.orElse(null));
-    params.addValue("tripId", tripId.orElse(null));
+    params.addValue("planId", planId.orElse(null), Types.VARCHAR);
+    // params.addValue("tripId", tripId.orElse(null));
 
     return this.jdbcTemplate.query(
       sql,

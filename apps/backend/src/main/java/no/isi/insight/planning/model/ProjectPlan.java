@@ -1,6 +1,7 @@
 package no.isi.insight.planning.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,7 +55,7 @@ public class ProjectPlan {
     joinColumns = @JoinColumn(name = "fk_project_plan_id", referencedColumnName = ProjectPlan.PRIMARY_KEY),
     inverseJoinColumns = @JoinColumn(name = "fk_road_railing_id", referencedColumnName = RoadRailing.PRIMARY_KEY)
   )
-  private List<RoadRailing> railings;
+  private List<RoadRailing> railings = new ArrayList<>();
 
   @Embedded
   private Audit audit;
@@ -75,6 +76,18 @@ public class ProjectPlan {
       String url
   ) {
     this.railingImportUrls.add(url);
+  }
+
+  public void addRailing(
+      RoadRailing railing
+  ) {
+    this.railings.add(railing);
+  }
+
+  public void removeRailing(
+      RoadRailing railing
+  ) {
+    this.railings.remove(railing);
   }
 
 }
