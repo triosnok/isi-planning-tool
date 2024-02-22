@@ -9,13 +9,41 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import no.isi.insight.planner.client.project.ProjectRestService;
+import no.isi.insight.planner.client.project.view.CreateProjectRequest;
+import no.isi.insight.planner.client.project.view.ProjectDetails;
 import no.isi.insight.planner.client.project.view.RoadRailing;
+import no.isi.insight.planning.model.Project;
+import no.isi.insight.planning.repository.ProjectJpaRepository;
 import no.isi.insight.planning.repository.RoadRailingJdbcRepository;
 
 @RestController
 @RequiredArgsConstructor
 public class ProjectRestServiceImpl implements ProjectRestService {
   private final RoadRailingJdbcRepository roadRailingJdbcRepository;
+  private final ProjectJpaRepository projectJpaRepository;
+
+  @Override
+  public ResponseEntity<ProjectDetails> createProject(
+      CreateProjectRequest request
+  ) {
+
+    Project project = new Project(
+      request.name(),
+      request.referenceCode(),
+      request.startsAt(),
+      request.endsAt()
+    );
+
+    var savedProject = this.projectJpaRepository.save(project);
+
+    return ResponseEntity.ok(
+      new ProjectDetails(
+        savedProject.getId(),
+        savedProject.getName(),
+        savedProject.getReferenceCode()
+      )
+    );
+  }
 
   @Override
   public ResponseEntity<List<RoadRailing>> getRailings(
@@ -25,5 +53,19 @@ public class ProjectRestServiceImpl implements ProjectRestService {
   ) {
     var railings = this.roadRailingJdbcRepository.getRailings(projectId, planId, tripId);
     return ResponseEntity.ok(railings);
+  }
+
+  @Override
+  public ResponseEntity<ProjectDetails> getProject(
+      UUID projectId
+  ) {
+    var project = this.projectJpaRepository.findById(projectId);
+    return ResponseEntity.ok(
+      new ProjectDetails(
+        project.getId(),
+        project.getName(),
+        project.getReferenceCode()
+      )
+    );
   }
 }

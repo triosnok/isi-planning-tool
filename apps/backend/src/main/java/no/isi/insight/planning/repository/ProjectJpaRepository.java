@@ -8,4 +8,14 @@ import no.isi.insight.planning.model.Project;
 
 public interface ProjectJpaRepository extends Repository<Project, UUID> {
 
+  Project save(
+      Project project
+  );
+
+  Project findById(
+      UUID id
+  );
+
+  Project findAll();
+
 }
