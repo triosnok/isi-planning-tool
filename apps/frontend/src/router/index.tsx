@@ -1,3 +1,4 @@
+import { LayoutProps } from '@/lib/utils';
 import { UserRole } from '@isi-insight/client';
 import type { RouteDefinition as SolidRouteDef } from '@solidjs/router';
 import { JSX } from 'solid-js';
@@ -41,7 +42,7 @@ const mapRoute = (route: RouteDefinition) => {
     return route;
   }
 
-  const Component = route.component as () => JSX.Element;
+  const Component = route.component ?? (() => null);
 
   const guardedRoute: RouteDefinition = {
     ...route,
@@ -51,9 +52,9 @@ const mapRoute = (route: RouteDefinition) => {
       : route.children === undefined
         ? undefined
         : mapRoute(route.children),
-    component: () => (
+    component: (props) => (
       <RouteGuard authentication={route.meta!.authentication!}>
-        <Component />
+        <Component {...props} />
       </RouteGuard>
     ),
   };
