@@ -1,6 +1,3 @@
-import Header from '@/components/layout/Header';
-import MapRailingLayer from '@/components/map/MapRailingLayer';
-import MapRoot from '@/components/map/MapRoot';
 import ProjectCard from '@/components/projects/ProjectCard';
 import {
   Accordion,
@@ -30,7 +27,7 @@ const Projects: Component = (props) => {
       </div>
       <Accordion multiple={true} defaultValue={['ongoing', 'upcoming']}>
         <AccordionItem value='ongoing'>
-          <AccordionTrigger class='bg-gray-100 px-2 py-1 text-xl font-semibold'>
+          <AccordionTrigger>
             Ongoing
           </AccordionTrigger>
           <AccordionContent class='space-y-2 p-2'>
@@ -38,7 +35,7 @@ const Projects: Component = (props) => {
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value='upcoming'>
-          <AccordionTrigger class='bg-gray-100 px-2 py-1 text-xl font-semibold'>
+          <AccordionTrigger>
             Upcoming
           </AccordionTrigger>
           <AccordionContent class='space-y-2 p-2'>
@@ -47,7 +44,7 @@ const Projects: Component = (props) => {
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value='previous'>
-          <AccordionTrigger class='bg-gray-100 px-2 py-1 text-xl font-semibold'>
+          <AccordionTrigger>
             Previous
           </AccordionTrigger>
           <AccordionContent class='space-y-2 p-2'>
