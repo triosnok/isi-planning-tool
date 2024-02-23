@@ -11,9 +11,9 @@ export const routes: RouteDefinition[] = [
       { path: '/new', component: lazy(() => import('./NewProject')) },
     ],
     meta: {
-      authentication: {
-        status: AuthStatus.SIGNED_IN,
-      },
+      // authentication: {
+      //   status: AuthStatus.SIGNED_IN,
+      // },
     },
   },
 ];
