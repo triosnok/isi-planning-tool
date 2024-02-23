@@ -10,61 +10,52 @@ import {
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { A } from '@solidjs/router';
+import { IconPlus } from '@tabler/icons-solidjs';
 import { Component } from 'solid-js';
-import { IconPlus, IconSearch } from '@tabler/icons-solidjs';
 
-const Projects: Component = () => {
+const Projects: Component = (props) => {
   return (
-    <>
-      <Header />
-      <main class='flex h-screen justify-between'>
-        <div class='w-1/4'>
-          <div>
-            <div class='space-y-2 p-2'>
-              <div class='flex items-center justify-between'>
-                <h1 class='text-4xl font-bold'>Projects</h1>
-                <Button>
-                  <IconPlus />
-                </Button>
-              </div>
-              <Input placeholder='Search...' />
-            </div>
-            <Accordion multiple={true} defaultValue={['ongoing', 'upcoming']}>
-              <AccordionItem value='ongoing'>
-                <AccordionTrigger class='bg-gray-100 px-2 py-1 text-xl font-semibold'>
-                  Ongoing
-                </AccordionTrigger>
-                <AccordionContent class='space-y-2 p-2'>
-                  <ProjectCard />
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value='upcoming'>
-                <AccordionTrigger class='bg-gray-100 px-2 py-1 text-xl font-semibold'>
-                  Upcoming
-                </AccordionTrigger>
-                <AccordionContent class='space-y-2 p-2'>
-                  <ProjectCard />
-                  <ProjectCard />
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value='previous'>
-                <AccordionTrigger class='bg-gray-100 px-2 py-1 text-xl font-semibold'>
-                  Previous
-                </AccordionTrigger>
-                <AccordionContent class='space-y-2 p-2'>
-                  <ProjectCard />
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
+    <div>
+      <div class='space-y-2 p-2'>
+        <div class='flex items-center justify-between'>
+          <h1 class='text-4xl font-bold'>Projects</h1>
+          <A href='/projects/new'>
+            <Button>
+              <IconPlus />
+            </Button>
+          </A>
         </div>
-        <div class='w-3/4'>
-          <MapRoot class='h-full w-full'>
-            <MapRailingLayer />
-          </MapRoot>
-        </div>
-      </main>
-    </>
+        <Input placeholder='Search...' />
+      </div>
+      <Accordion multiple={true} defaultValue={['ongoing', 'upcoming']}>
+        <AccordionItem value='ongoing'>
+          <AccordionTrigger class='bg-gray-100 px-2 py-1 text-xl font-semibold'>
+            Ongoing
+          </AccordionTrigger>
+          <AccordionContent class='space-y-2 p-2'>
+            <ProjectCard />
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value='upcoming'>
+          <AccordionTrigger class='bg-gray-100 px-2 py-1 text-xl font-semibold'>
+            Upcoming
+          </AccordionTrigger>
+          <AccordionContent class='space-y-2 p-2'>
+            <ProjectCard />
+            <ProjectCard />
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value='previous'>
+          <AccordionTrigger class='bg-gray-100 px-2 py-1 text-xl font-semibold'>
+            Previous
+          </AccordionTrigger>
+          <AccordionContent class='space-y-2 p-2'>
+            <ProjectCard />
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </div>
   );
 };
 
