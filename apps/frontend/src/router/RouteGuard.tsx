@@ -40,7 +40,7 @@ const RouteGuard: Component<RouteGuardProps> = (props) => {
 
   return (
     <Switch>
-      <Match when={profileQuery.isLoading}>{t('FEEDBACK.LOADING')}</Match>
+      <Match when={profileQuery.isPending}>{t('FEEDBACK.LOADING')}</Match>
 
       <Match
         when={guard.status === AuthStatus.SIGNED_OUT && auth().isAuthenticated}
