@@ -2,6 +2,11 @@
 import './index.css';
 import { render } from 'solid-js/web';
 
+import dayjs from 'dayjs';
+import localeData from 'dayjs/plugin/localeData';
+
+dayjs.extend(localeData);
+
 import App from './App';
 
 const root = document.getElementById('root');
