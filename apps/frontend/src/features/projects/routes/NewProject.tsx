@@ -1,25 +1,26 @@
 import PlanCard from '@/components/plans/PlanCard';
-import ProjectCard from '@/components/projects/ProjectCard';
+import RailingCard from '@/components/railings/RailingCard';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Form, SubmitHandler, createForm, zodForm } from '@modular-forms/solid';
+import { SubmitHandler, createForm, zodForm } from '@modular-forms/solid';
 import { A, useNavigate } from '@solidjs/router';
-import { IconPlus, IconChevronLeft } from '@tabler/icons-solidjs';
+import { IconChevronLeft } from '@tabler/icons-solidjs';
 import { Component } from 'solid-js';
 import { z } from 'zod';
+import { useNewProjectMutation } from '../api';
+import { Button } from '@/components/ui/button';
 
 const NewProjectSchema = z.object({
   name: z.string(),
-  reference: z.string(),
-  from: z.date(),
-  to: z.date(),
+  referenceCode: z.string(),
+  startsAt: z.date(),
+  endsAt: z.date(),
 });
 
 type NewProjectForm = z.infer<typeof NewProjectSchema>;
@@ -29,10 +30,10 @@ const NewProject: Component = () => {
     validate: zodForm(NewProjectSchema),
   });
   const navigate = useNavigate();
-  //const { mutateAsync } = useNewProjectMutation();
+  const { mutateAsync } = useNewProjectMutation();
   const handleSubmit: SubmitHandler<NewProjectForm> = async (values) => {
     try {
-      //await mutateAsync(values);
+      await mutateAsync(values);
       navigate('/projects');
     } catch (error) {
       // ignored
@@ -40,92 +41,109 @@ const NewProject: Component = () => {
   };
 
   return (
-    <div>
-      <div class='p-2'>
-        <div class='flex flex-col'>
-          <div class='flex'>
-            <A
-              href='/projects'
-              class='flex items-center text-sm text-gray-600 hover:underline'
-            >
-              <IconChevronLeft size={16} />
-              <p class='flex-none'>Back</p>
-            </A>
+    <Form
+      class='flex h-full flex-col justify-between'
+      id='new-project-form'
+      onSubmit={handleSubmit}
+    >
+      <div>
+        <div class='p-2'>
+          <div class='flex flex-col'>
+            <div class='flex'>
+              <A
+                href='/projects'
+                class='flex items-center text-sm text-gray-600 hover:underline'
+              >
+                <IconChevronLeft size={16} />
+                <p class='flex-none'>Back</p>
+              </A>
+            </div>
+          </div>
+          <div>
+            <h1 class='text-4xl font-bold'>New project</h1>
+            <Label for='name'>Name</Label>
+            <Field name='name'>
+              {(field, props) => (
+                <Input
+                  {...props}
+                  type='text'
+                  id='name'
+                  placeholder='Name'
+                  value={field.value}
+                />
+              )}
+            </Field>
+            <Label for='referenceCode'>Project reference</Label>
+            <Field name='referenceCode'>
+              {(field, props) => (
+                <Input
+                  {...props}
+                  type='text'
+                  id='referenceCode'
+                  placeholder='Project reference'
+                  value={field.value}
+                />
+              )}
+            </Field>
+            <div class='flex gap-2'>
+              <div class='grow'>
+                <Label for='startsAt'>Start date</Label>
+                <Field name='startsAt' type='Date'>
+                  {(field, props) => (
+                    <Input
+                      {...props}
+                      type='date'
+                      id='startsAt'
+                      placeholder='Start date'
+                    />
+                  )}
+                </Field>
+              </div>
+              <div class='grow'>
+                <Label for='endsAt'>End date</Label>
+                <Field name='endsAt' type='Date'>
+                  {(field, props) => (
+                    <Input
+                      {...props}
+                      type='date'
+                      id='endsAt'
+                      placeholder='End date'
+                    />
+                  )}
+                </Field>
+              </div>
+            </div>
           </div>
         </div>
-        <Form id='new-project-form' onSubmit={handleSubmit}>
-          <h1 class='text-4xl font-bold'>New project</h1>
-          <Label for='name'>Name</Label>
-          <Field name='name'>
-            {(field, props) => (
-              <Input
-                {...props}
-                type='text'
-                id='name'
-                placeholder='Name'
-                value={field.value}
-              />
-            )}
-          </Field>
-          <Label for='reference'>Project reference</Label>
-          <Field name='reference'>
-            {(field, props) => (
-              <Input
-                {...props}
-                type='text'
-                id='reference'
-                placeholder='Project reference'
-                value={field.value}
-              />
-            )}
-          </Field>
-          <div class='flex gap-2'>
-            <div class='grow'>
-              <Label for='from'>Start date</Label>
-              <Field name='from' type='Date'>
-                {(field, props) => (
-                  <Input
-                    {...props}
-                    type='date'
-                    id='from'
-                    placeholder='Start date'
-                    // value={field.value}
-                  />
-                )}
-              </Field>
-            </div>
-            <div class='grow'>
-              <Label for='to'>End date</Label>
-              <Field name='to' type='Date'>
-                {(field, props) => (
-                  <Input
-                    {...props}
-                    type='date'
-                    id='to'
-                    placeholder='End date'
-                    // value={field.value}
-                  />
-                )}
-              </Field>
-            </div>
-          </div>
-        </Form>
+
+        <Accordion multiple={true} defaultValue={['plans', 'railings']}>
+          <AccordionItem value='plans'>
+            <AccordionTrigger>Plans (3)</AccordionTrigger>
+            <AccordionContent class='p-2'>
+              <div class='flex justify-end'>
+                <p class='text-brand-blue hover:cursor-pointer hover:underline'>
+                  + Add plan
+                </p>
+              </div>
+              <PlanCard />
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value='railings'>
+            <AccordionTrigger>Railings (200)</AccordionTrigger>
+            <AccordionContent>
+              <RailingCard />
+              <RailingCard />
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
 
-      <Accordion multiple={true} defaultValue={['plans', 'railings']}>
-        <AccordionItem value='plans'>
-          <AccordionTrigger>Plans (3)</AccordionTrigger>
-          <AccordionContent class='space-y-2 p-2'>
-            <PlanCard />
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value='railings'>
-          <AccordionTrigger>Railings (200)</AccordionTrigger>
-          <AccordionContent class='space-y-2 p-2'></AccordionContent>
-        </AccordionItem>
-      </Accordion>
-    </div>
+      <button class='bg-primary text-primary-foreground hover:bg-primary/90 flex justify-center py-2 hover:cursor-pointer'>
+        Save
+      </button>
+    </Form>
   );
 };
+// todo: replace with actual data, replace generic button with Button component, add radio functionality on plan selection
 
 export default NewProject;
