@@ -1,12 +1,5 @@
 import { Component } from 'solid-js';
-import { Progress } from '../ui/progress';
 import {
-  IconRoute,
-  IconRulerMeasure,
-  IconCalendarClock,
-  IconCircleCheckFilled,
-  IconAlertCircleFilled,
-  IconMessage,
   IconPoint,
   IconCar,
   IconPencil,
