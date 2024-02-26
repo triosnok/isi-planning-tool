@@ -2,24 +2,32 @@ import { IconArrowsUpDown, IconCamera } from '@tabler/icons-solidjs';
 import { Component } from 'solid-js';
 
 export interface RailingCardProps {
-  class?: string;
+  name: string;
+  length: number;
+  cameraSide: string;
+  direction: string;
 }
 
-const RailingCard: Component<RailingCardProps> = (props) => {
+const RailingCard: Component<RailingCardProps> = ({
+  name,
+  length,
+  cameraSide,
+  direction,
+}) => {
   return (
     <div class='flex justify-between border-b p-2 hover:cursor-pointer hover:bg-gray-100'>
       <div>
-        <h3 class='text-lg font-semibold'>EV39..</h3>
+        <h3 class='text-lg font-semibold'>{name}</h3>
         <div class='flex items-center gap-1'>
           <IconCamera size={16} />
-          <p>Right side camera</p>
+          <p>{cameraSide} side camera</p>
         </div>
         <div class='flex items-center gap-1'>
           <IconArrowsUpDown size={16} />
-          <p>With road</p>
+          <p>{direction} road</p>
         </div>
       </div>
-      <p class='text-lg text-gray-600'>300 m</p>
+      <p class='text-lg text-gray-600'>{length} m</p>
     </div>
   );
 };

@@ -131,8 +131,12 @@ const NewProject: Component = () => {
           <AccordionItem value='railings'>
             <AccordionTrigger>Railings (200)</AccordionTrigger>
             <AccordionContent>
-              <RailingCard />
-              <RailingCard />
+              <RailingCard
+                name='EV39..'
+                length={302}
+                cameraSide='Left'
+                direction='With'
+              />
             </AccordionContent>
           </AccordionItem>
         </Accordion>
