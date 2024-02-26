@@ -10,8 +10,12 @@ import { Input } from '@/components/ui/input';
 import { A } from '@solidjs/router';
 import { IconPlus } from '@tabler/icons-solidjs';
 import { Component } from 'solid-js';
+//import { useProjects } from '../api';
 
 const Projects: Component = (props) => {
+  //const projectsQuery = useProjects();
+  //const data = projectsQuery.data;
+
   return (
     <div>
       <div class='space-y-2 p-2'>
@@ -27,29 +31,29 @@ const Projects: Component = (props) => {
       </div>
       <Accordion multiple={true} defaultValue={['ongoing', 'upcoming']}>
         <AccordionItem value='ongoing'>
-          <AccordionTrigger>
-            Ongoing
-          </AccordionTrigger>
+          <AccordionTrigger>Ongoing</AccordionTrigger>
           <AccordionContent class='space-y-2 p-2'>
-            <ProjectCard />
+            <ProjectCard
+              name='Ålesund Project'
+              referenceCode='ABC123'
+              startsAt='31 Jan'
+              endsAt='31 Feb'
+              geoCharacteristics='E39 - E136 - E137'
+              coverage='1 523 / 3 944 m'
+              status='Done'
+              deviationAmount={4}
+              noteAmount={18}
+              progress={30}
+            />
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value='upcoming'>
-          <AccordionTrigger>
-            Upcoming
-          </AccordionTrigger>
-          <AccordionContent class='space-y-2 p-2'>
-            <ProjectCard />
-            <ProjectCard />
-          </AccordionContent>
+          <AccordionTrigger>Upcoming</AccordionTrigger>
+          <AccordionContent class='space-y-2 p-2'></AccordionContent>
         </AccordionItem>
         <AccordionItem value='previous'>
-          <AccordionTrigger>
-            Previous
-          </AccordionTrigger>
-          <AccordionContent class='space-y-2 p-2'>
-            <ProjectCard />
-          </AccordionContent>
+          <AccordionTrigger>Previous</AccordionTrigger>
+          <AccordionContent class='space-y-2 p-2'></AccordionContent>
         </AccordionItem>
       </Accordion>
     </div>
