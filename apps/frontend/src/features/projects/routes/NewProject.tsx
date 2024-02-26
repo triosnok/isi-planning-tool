@@ -125,7 +125,14 @@ const NewProject: Component = () => {
                   + Add plan
                 </p>
               </div>
-              <PlanCard />
+              <PlanCard
+                startsAt='31 Jan'
+                endsAt='24 Feb'
+                railingAmount={231}
+                length={999}
+                car='Corolla (UB 11112)'
+                ongoingTripAmount={2}
+              />
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value='railings'>

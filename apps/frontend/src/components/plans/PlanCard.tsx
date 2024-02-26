@@ -1,34 +1,46 @@
 import { Component } from 'solid-js';
-import {
-  IconPoint,
-  IconCar,
-  IconPencil,
-} from '@tabler/icons-solidjs';
+import { IconPoint, IconCar, IconPencil } from '@tabler/icons-solidjs';
 
 export interface PlanCardProps {
-  class?: string;
+  startsAt: string;
+  endsAt: string;
+  railingAmount: number;
+  length: number;
+  car: string;
+  ongoingTripAmount?: number;
 }
 
-const PlanCard: Component<PlanCardProps> = (props) => {
+const PlanCard: Component<PlanCardProps> = ({
+  startsAt,
+  endsAt,
+  railingAmount,
+  length,
+  car,
+  ongoingTripAmount,
+}) => {
   return (
     <div class='overflow-hidden rounded-lg border hover:cursor-pointer hover:bg-gray-100'>
       <div class='flex justify-between p-2'>
         <div class='flex items-center'>
-          <IconPoint size={20}/>
+          <IconPoint size={20} />
           <div class='flex flex-col'>
-            <p class='text-success-700 text-xs'>1 ongoing trip</p>
-            <h3 class='text-xl font-semibold'>Feb 15 - Feb 26</h3>
+            <p class='text-success-700 text-xs'>
+              {ongoingTripAmount} ongoing trips
+            </p>
+            <h3 class='text-xl font-semibold'>
+              {startsAt} - {endsAt}
+            </h3>
             <div class='flex items-center gap-1'>
-              <IconCar size={20}/>
-              <p>Corolla (UB 38122)</p>
+              <IconCar size={20} />
+              <p>{car}</p>
             </div>
           </div>
         </div>
 
         <div class='flex flex-col items-end'>
-          <IconPencil size={20}/>
-          <p>200 railings</p>
-          <p>1 490 m</p>
+          <IconPencil size={20} />
+          <p>{railingAmount} railings</p>
+          <p>{length} m</p>
         </div>
       </div>
     </div>
