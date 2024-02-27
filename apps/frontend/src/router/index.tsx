@@ -25,6 +25,7 @@ export interface RouteMeta {
 
 export interface RouteDefinition extends SolidRouteDef {
   meta?: RouteMeta;
+  children?: RouteDefinition | RouteDefinition[];
 }
 
 const routes: RouteDefinition[] = [];
