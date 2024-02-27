@@ -51,7 +51,7 @@ const Header: Component = () => {
               </A>
             </li>
             <li>
-              <A href='/' class='hover:underline'>
+              <A href='/vehicles' class='hover:underline'>
                 Vehicles
               </A>
             </li>
