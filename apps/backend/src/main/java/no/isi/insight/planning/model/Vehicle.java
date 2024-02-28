@@ -32,7 +32,7 @@ public class Vehicle {
   private String registrationNumber;
 
   @Column(name = "camera")
-  private boolean camera;
+  private Boolean camera;
 
   @Column(name = "description")
   private String description;
@@ -46,7 +46,7 @@ public class Vehicle {
   public Vehicle(
       String imageUrl,
       String registrationNumber,
-      boolean camera,
+      Boolean camera,
       String description,
       String gnssId
   ) {
