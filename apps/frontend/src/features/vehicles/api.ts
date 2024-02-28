@@ -5,6 +5,7 @@ import {
   useQueryClient,
 } from '@tanstack/solid-query';
 import axios from 'axios';
+import { z } from 'zod';
 
 export const useVehiclesQuery = () => {
   return createQuery(() => ({
@@ -19,6 +20,18 @@ export const useVehicleDetailsQuery = (id: string) => {
     queryFn: async () => axios.get<any>(`/api/v1/vehicles/${id}`),
   }));
 };
+
+export const VehicleSchema = z.object({
+  vehicleId: z.string().optional(),
+  imageUrl: z.string().optional(),
+  registrationNumber: z.string().min(1),
+  camera: z.boolean(),
+  model: z.string(),
+  description: z.string(),
+  gnssId: z.string(),
+});
+
+export type VehicleSchemaValues = z.infer<typeof VehicleSchema>;
 
 export const useVehicleMutation = () => {
   const qc = useQueryClient();

@@ -2,11 +2,17 @@ import Header from '@/components/layout/Header';
 import MapRoot from '@/components/map/MapRoot';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useTranslations } from '@/features/i18n';
 import { LayoutProps } from '@/lib/utils';
+import { useNavigate } from '@solidjs/router';
 import { Component, For } from 'solid-js';
 import VehicleCard from '../components/VehicleCard';
 
 const VehicleOverview: Component<LayoutProps> = (props) => {
+  const navigate = useNavigate();
+  const { t } = useTranslations();
+  const handleAddVehicle = () => navigate('/vehicles/new');
+
   return (
     <div class='flex h-svh w-svw flex-col'>
       <Header />
@@ -17,7 +23,9 @@ const VehicleOverview: Component<LayoutProps> = (props) => {
 
           <section class='flex items-center gap-2'>
             <Input placeholder='Search...' class='w-fit' />
-            <Button class='ml-auto'>Add vehicle</Button>
+            <Button onClick={handleAddVehicle} class='ml-auto'>
+              {t('VEHICLES.ADD_VEHICLE')}
+            </Button>
           </section>
 
           <section class='mt-2 grid grid-cols-6 gap-2'>
