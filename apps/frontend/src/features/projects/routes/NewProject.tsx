@@ -1,5 +1,5 @@
-import PlanCard from '@/components/plans/PlanCard';
-import RailingCard from '@/components/railings/RailingCard';
+import PlanCard from '@/features/projects/components/PlanCard';
+import RailingCard from '@/features/projects/components/RailingCard';
 import {
   Accordion,
   AccordionContent,
@@ -13,7 +13,7 @@ import { A, useNavigate } from '@solidjs/router';
 import { IconChevronLeft } from '@tabler/icons-solidjs';
 import { Component } from 'solid-js';
 import { z } from 'zod';
-import { useNewProjectMutation } from '../api';
+import { useProjectsMutation } from '../api';
 import { Button } from '@/components/ui/button';
 
 const NewProjectSchema = z.object({
@@ -30,10 +30,10 @@ const NewProject: Component = () => {
     validate: zodForm(NewProjectSchema),
   });
   const navigate = useNavigate();
-  const { mutateAsync } = useNewProjectMutation();
+  const { create } = useProjectsMutation();
   const handleSubmit: SubmitHandler<NewProjectForm> = async (values) => {
     try {
-      await mutateAsync(values);
+      await create.mutateAsync(values);
       navigate('/projects');
     } catch (error) {
       // ignored
