@@ -24,6 +24,7 @@ generateTypeScript {
   outputFile = 'src/main/typescript/index.ts'
   noFileComment = true
   nullableAnnotations = []
+  mapDate = 'asString'
   classesWithAnnotations = [
     'no.isi.insight.planner.client.annotation.GenerateTypeScript'
   ]
