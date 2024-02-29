@@ -19,8 +19,8 @@ import { Button } from '@/components/ui/button';
 const NewProjectSchema = z.object({
   name: z.string(),
   referenceCode: z.string(),
-  startsAt: z.date(),
-  endsAt: z.date(),
+  startsAt: z.string().datetime(),
+  endsAt: z.string().datetime(),
 });
 
 type NewProjectForm = z.infer<typeof NewProjectSchema>;
@@ -66,7 +66,7 @@ const NewProject: Component = () => {
               {(field, props) => (
                 <Input
                   {...props}
-                  type='text'
+                  type='string'
                   id='name'
                   placeholder='Name'
                   value={field.value}
@@ -78,7 +78,7 @@ const NewProject: Component = () => {
               {(field, props) => (
                 <Input
                   {...props}
-                  type='text'
+                  type='string'
                   id='referenceCode'
                   placeholder='Project reference'
                   value={field.value}
@@ -88,7 +88,7 @@ const NewProject: Component = () => {
             <div class='flex gap-2'>
               <div class='grow'>
                 <Label for='startsAt'>Start date</Label>
-                <Field name='startsAt' type='Date'>
+                <Field name='startsAt' type='string'>
                   {(field, props) => (
                     <Input
                       {...props}
@@ -101,7 +101,7 @@ const NewProject: Component = () => {
               </div>
               <div class='grow'>
                 <Label for='endsAt'>End date</Label>
-                <Field name='endsAt' type='Date'>
+                <Field name='endsAt' type='string'>
                   {(field, props) => (
                     <Input
                       {...props}
