@@ -1,6 +1,7 @@
 package no.isi.insight.planning.project.controller;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -16,10 +17,12 @@ import no.isi.insight.planning.geometry.GeometryService;
 import no.isi.insight.planning.integration.nvdb.RailingImportService;
 import no.isi.insight.planning.model.ProjectPlan;
 import no.isi.insight.planning.model.RoadRailing;
+import no.isi.insight.planning.model.Vehicle;
 import no.isi.insight.planning.repository.ProjectJpaRepository;
 import no.isi.insight.planning.repository.ProjectPlanJdbcRepository;
 import no.isi.insight.planning.repository.ProjectPlanJpaRepository;
 import no.isi.insight.planning.repository.RoadRailingJpaRepository;
+import no.isi.insight.planning.repository.VehicleJpaRepository;
 
 @Slf4j
 @RestController
@@ -30,6 +33,7 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
   private final ProjectJpaRepository projectJpaRepository;
   private final ProjectPlanJpaRepository projectPlanJpaRepository;
   private final ProjectPlanJdbcRepository projectPlanJdbcRepository;
+  private final VehicleJpaRepository vehicleJpaRepository;
   private final GeometryService geometryService;
 
   @Override
@@ -40,6 +44,12 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
     var project = this.projectJpaRepository.findById(projectId)
       .orElseThrow(() -> new RuntimeException("Project not found"));
     var railings = this.railingImportService.importRailings(request.importUrl());
+    Optional<Vehicle> vehicle = Optional.empty();
+
+    if (request.vehicleId() != null) {
+      vehicle = Optional
+        .of(this.vehicleJpaRepository.findById(request.vehicleId()).orElseThrow(() -> new RuntimeException("")));
+    }
 
     var mappedRailings = new ArrayList<RoadRailing>();
     var importUrls = new ArrayList<String>();
@@ -51,6 +61,8 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
       request.startsAt(),
       request.endsAt()
     );
+
+    vehicle.ifPresent(plan::setVehicle);
 
     for (var railing : railings) {
       try {
@@ -90,6 +102,14 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
       UpdateProjectPlanRequest request
   ) {
     var plan = this.projectPlanJpaRepository.findById(planId).orElseThrow();
+    Optional<Vehicle> vehicle = Optional.empty();
+
+    if (request.vehicleId() != null) {
+      vehicle = Optional
+        .of(this.vehicleJpaRepository.findById(request.vehicleId()).orElseThrow(() -> new RuntimeException("")));
+    }
+
+    vehicle.ifPresent(plan::setVehicle);
 
     plan.setStartsAt(request.startsAt());
     plan.setEndsAt(request.endsAt());

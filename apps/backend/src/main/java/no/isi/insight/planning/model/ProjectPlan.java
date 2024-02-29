@@ -52,6 +52,11 @@ public class ProjectPlan {
   @Column(name = "ends_at")
   private LocalDate endsAt;
 
+  @Setter
+  @ManyToOne
+  @JoinColumn(name = "fk_vehicle_id", referencedColumnName = Vehicle.PRIMARY_KEY)
+  private Vehicle vehicle;
+
   @ManyToMany
   @JoinTable(
     name = "project_plan_road_railing",

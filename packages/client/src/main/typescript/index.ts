@@ -21,6 +21,7 @@ export interface CreateProjectPlanRequest {
     importUrl: string;
     startsAt: DateAsString;
     endsAt: DateAsString;
+    vehicleId?: string | null;
 }
 
 export interface CreateProjectRequest {
@@ -36,6 +37,7 @@ export interface ProjectDetails {
     referenceCode: string;
     startsAt: DateAsString;
     endsAt: DateAsString;
+    status: ProjectStatus;
 }
 
 export interface ProjectPlanDetails {
@@ -55,8 +57,9 @@ export interface RoadRailing {
 }
 
 export interface CreateVehicleRequest {
-    imageUrl: string;
+    imageUrl?: string | null;
     registrationNumber: string;
+    model: string;
     camera: boolean;
     description: string;
     gnssId: string;
@@ -66,6 +69,7 @@ export interface VehicleDetails {
     id: string;
     imageUrl: string;
     registrationNumber: string;
+    model: string;
     camera: boolean;
     description: string;
     gnssId: string;
@@ -74,3 +78,5 @@ export interface VehicleDetails {
 export type DateAsString = string;
 
 export type UserRole = "DRIVER" | "PLANNER";
+
+export type ProjectStatus = "UPCOMING" | "ONGOING" | "PREVIOUS";

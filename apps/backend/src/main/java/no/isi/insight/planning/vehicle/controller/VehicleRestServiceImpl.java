@@ -10,6 +10,7 @@ import no.isi.insight.planner.client.vehicle.VehicleRestService;
 import no.isi.insight.planner.client.vehicle.view.CreateVehicleRequest;
 import no.isi.insight.planner.client.vehicle.view.VehicleDetails;
 import no.isi.insight.planning.model.Vehicle;
+import no.isi.insight.planning.repository.VehicleJdbcRespotiory;
 import no.isi.insight.planning.repository.VehicleJpaRepository;
 
 @RestController
@@ -17,6 +18,7 @@ import no.isi.insight.planning.repository.VehicleJpaRepository;
 public class VehicleRestServiceImpl implements VehicleRestService {
 
   private final VehicleJpaRepository vehicleJpaRepository;
+  private final VehicleJdbcRespotiory vehicleJdbcRespotiory;
 
   @Override
   public ResponseEntity<VehicleDetails> createVehicle(
@@ -78,6 +80,38 @@ public class VehicleRestServiceImpl implements VehicleRestService {
         savedVehicle.getGnssId()
       )
     );
+  }
+
+  @Override
+  public ResponseEntity<VehicleDetails> findVehicle(
+      UUID id
+  ) {
+    var vehicle = this.vehicleJpaRepository.findById(id);
+
+    if (vehicle.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
+
+    var foundVehicle = vehicle.get();
+
+    return ResponseEntity.ok(
+      new VehicleDetails(
+        foundVehicle.getId(),
+        foundVehicle.getImageUrl(),
+        foundVehicle.getRegistrationNumber(),
+        foundVehicle.getModel(),
+        foundVehicle.getCamera(),
+        foundVehicle.getDescription(),
+        foundVehicle.getGnssId()
+      )
+    );
+  }
+
+  @Override
+  public ResponseEntity<VehicleDetails[]> findAllVehicles() {
+    var vehicles = this.vehicleJdbcRespotiory.findVehicles();
+
+    return ResponseEntity.ok(vehicles.toArray(new VehicleDetails[0]));
   }
 
 }
