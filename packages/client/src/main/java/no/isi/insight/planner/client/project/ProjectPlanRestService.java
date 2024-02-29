@@ -7,16 +7,25 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
+import org.springframework.web.service.annotation.PutExchange;
 
 import no.isi.insight.planner.client.project.view.CreateProjectPlanRequest;
+import no.isi.insight.planner.client.project.view.ProjectPlanDetails;
+import no.isi.insight.planner.client.project.view.UpdateProjectPlanRequest;
 
 @HttpExchange("/api/v1/projects/{projectId}/plans")
 public interface ProjectPlanRestService {
 
   @PostExchange
-  ResponseEntity<Object> createPlan(
+  ResponseEntity<ProjectPlanDetails> createPlan(
       @PathVariable UUID projectId,
       @RequestBody CreateProjectPlanRequest request
+  );
+
+  @PutExchange("/{planId}")
+  ResponseEntity<ProjectPlanDetails> updatePlan(
+      @PathVariable UUID planId,
+      @RequestBody UpdateProjectPlanRequest request
   );
 
 }

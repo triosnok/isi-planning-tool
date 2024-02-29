@@ -10,11 +10,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.isi.insight.planner.client.project.ProjectPlanRestService;
 import no.isi.insight.planner.client.project.view.CreateProjectPlanRequest;
+import no.isi.insight.planner.client.project.view.ProjectPlanDetails;
+import no.isi.insight.planner.client.project.view.UpdateProjectPlanRequest;
 import no.isi.insight.planning.geometry.GeometryService;
 import no.isi.insight.planning.integration.nvdb.RailingImportService;
 import no.isi.insight.planning.model.ProjectPlan;
 import no.isi.insight.planning.model.RoadRailing;
 import no.isi.insight.planning.repository.ProjectJpaRepository;
+import no.isi.insight.planning.repository.ProjectPlanJdbcRepository;
 import no.isi.insight.planning.repository.ProjectPlanJpaRepository;
 import no.isi.insight.planning.repository.RoadRailingJpaRepository;
 
@@ -26,10 +29,11 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
   private final RoadRailingJpaRepository railingJpaRepository;
   private final ProjectJpaRepository projectJpaRepository;
   private final ProjectPlanJpaRepository projectPlanJpaRepository;
+  private final ProjectPlanJdbcRepository projectPlanJdbcRepository;
   private final GeometryService geometryService;
 
   @Override
-  public ResponseEntity<Object> createPlan(
+  public ResponseEntity<ProjectPlanDetails> createPlan(
       UUID projectId,
       CreateProjectPlanRequest request
   ) {
@@ -73,10 +77,32 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
 
     var savedRailings = this.railingJpaRepository.saveAll(mappedRailings);
     savedRailings.forEach(plan::addRailing);
-
     var savedPlan = this.projectPlanJpaRepository.save(plan);
+    var planDetails = this.projectPlanJdbcRepository.findPlanDetailsById(savedPlan.getId());
 
-    return ResponseEntity.ok(savedPlan.getId());
+    return ResponseEntity.ok(planDetails.get());
+  }
+
+  @Override
+  public ResponseEntity<ProjectPlanDetails> updatePlan(
+      UUID planId,
+      UpdateProjectPlanRequest request
+  ) {
+    var plan = this.projectPlanJpaRepository.findById(planId).orElseThrow();
+
+    plan.setStartsAt(request.startsAt());
+    plan.setEndsAt(request.endsAt());
+
+    if (request.importUrl() != null) {
+      log.info("Re-importing railings for plan with id: {}", planId);
+      plan.addRailingImportUrl(request.importUrl());
+      // TODO: re-import railings
+    }
+
+    this.projectPlanJpaRepository.save(plan);
+    var details = this.projectPlanJdbcRepository.findPlanDetailsById(planId);
+
+    return ResponseEntity.ok(details.get());
   }
 
 }
