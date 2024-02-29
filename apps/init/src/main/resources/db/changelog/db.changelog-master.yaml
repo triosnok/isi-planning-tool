@@ -20,3 +20,13 @@ databaseChangeLog:
         - sqlFile:
             path: 002-project/000-create-project-tables.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: 003-vehicle
+      author: gisle, halvard
+      changes:
+        - sqlFile:
+            path: 003-vehicle/000-create-vehicle-tables.sql
+            relativeToChangelogFile: true
+        - sqlFile:
+            path: 003-vehicle/001-add-project-plan-vehicle-assignment.sql
+            relativeToChangelogFile: true

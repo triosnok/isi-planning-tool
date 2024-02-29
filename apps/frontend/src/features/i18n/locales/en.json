@@ -8,5 +8,23 @@
   },
   "DASHBOARD": {
     "TITLE": "Dashboard"
+  },
+  "NAVIGATION": {
+    "BACK": "Back"
+  },
+  "ERROR": {
+    "PAGE_NOT_FOUND": "We could not find the page you were looking for.",
+    "FORBIDDEN": "You are not allowed to access this page."
+  },
+  "VEHICLES": {
+    "ADD_VEHICLE": "Add vehicle",
+    "FORM": {
+      "REGISTRATION_NUMBER": "Registration number",
+      "MODEL": "Model",
+      "GNSS_ID": "GNSS ID",
+      "DESCRIPTION": "Description",
+      "UPDATE_VEHICLE": "Update vehicle",
+      "CREATE_VEHICLE": "Create vehicle"
+    }
   }
 }

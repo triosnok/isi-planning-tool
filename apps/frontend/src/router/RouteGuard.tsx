@@ -2,14 +2,7 @@ import { useProfile } from '@/features/auth/api';
 import { useTranslations } from '@/features/i18n';
 import { AuthStatus } from '@/lib/constants';
 import { Navigate } from '@solidjs/router';
-import {
-  Component,
-  JSX,
-  Match,
-  Switch,
-  createEffect,
-  createMemo,
-} from 'solid-js';
+import { Component, JSX, Match, Switch, createMemo } from 'solid-js';
 import { RouteAuthentication } from '.';
 
 interface RouteGuardProps {

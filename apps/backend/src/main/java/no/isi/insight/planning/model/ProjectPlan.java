@@ -21,6 +21,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Entity
@@ -43,9 +44,11 @@ public class ProjectPlan {
   @Column(name = "railing_import_urls")
   private List<String> railingImportUrls;
 
+  @Setter
   @Column(name = "starts_at")
   private LocalDate startsAt;
 
+  @Setter
   @Column(name = "ends_at")
   private LocalDate endsAt;
 

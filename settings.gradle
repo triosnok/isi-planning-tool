@@ -8,7 +8,7 @@ include ':packages:client'
 dependencyResolutionManagement {
   versionCatalogs {
     libs {
-      plugin('spring-boot', 'org.springframework.boot').version('3.2.2')
+      plugin('spring-boot', 'org.springframework.boot').version('3.2.3')
       plugin('spring-dependencies', 'io.spring.dependency-management').version('1.1.4')
     }
   }
