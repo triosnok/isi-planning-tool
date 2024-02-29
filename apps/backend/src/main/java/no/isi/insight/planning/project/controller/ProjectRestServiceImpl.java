@@ -63,7 +63,8 @@ public class ProjectRestServiceImpl implements ProjectRestService {
   public ResponseEntity<ProjectDetails> getProject(
       UUID projectId
   ) {
-    var project = this.projectJpaRepository.findById(projectId);
+    var project = this.projectJpaRepository.findById(projectId)
+      .orElseThrow(() -> new RuntimeException("Project not found"));
     return ResponseEntity.ok(
       new ProjectDetails(
         project.getId(),

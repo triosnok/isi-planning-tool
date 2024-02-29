@@ -1,5 +1,6 @@
 package no.isi.insight.planning.repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.repository.Repository;
@@ -12,7 +13,7 @@ public interface VehicleJpaRepository extends Repository<Vehicle, UUID> {
       Vehicle vehicle
   );
 
-  Vehicle findById(
+  Optional<Vehicle> findById(
       UUID id
   );
 
