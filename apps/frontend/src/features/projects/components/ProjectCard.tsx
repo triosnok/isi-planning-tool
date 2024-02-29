@@ -1,5 +1,5 @@
 import { Component } from 'solid-js';
-import { Progress } from '../ui/progress';
+import { Progress } from '../../../components/ui/progress';
 import {
   IconRoute,
   IconRulerMeasure,
@@ -11,16 +11,16 @@ import {
 
 export interface ProjectCardProps {
   id?: string;
-  name: string;
+  name?: string;
   referenceCode?: string;
-  startsAt: string;
+  startsAt?: string;
   endsAt?: string;
-  geoCharacteristics: string;
-  coverage: string;
-  status: string;
+  geoCharacteristics?: string;
+  coverage?: string;
+  status?: string;
   deviationAmount?: number;
   noteAmount?: number;
-  progress: number;
+  progress?: number;
 }
 
 const ProjectCard: Component<ProjectCardProps> = ({
