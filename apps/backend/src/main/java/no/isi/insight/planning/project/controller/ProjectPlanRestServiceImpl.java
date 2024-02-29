@@ -37,7 +37,8 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
       UUID projectId,
       CreateProjectPlanRequest request
   ) {
-    var project = this.projectJpaRepository.findById(projectId);
+    var project = this.projectJpaRepository.findById(projectId)
+      .orElseThrow(() -> new RuntimeException("Project not found"));
     var railings = this.railingImportService.importRailings(request.importUrl());
 
     var mappedRailings = new ArrayList<RoadRailing>();

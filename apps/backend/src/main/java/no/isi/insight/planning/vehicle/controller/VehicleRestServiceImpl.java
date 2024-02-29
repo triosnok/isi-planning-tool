@@ -1,5 +1,7 @@
 package no.isi.insight.planning.vehicle.controller;
 
+import java.util.UUID;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,11 +18,6 @@ public class VehicleRestServiceImpl implements VehicleRestService {
 
   private final VehicleJpaRepository vehicleJpaRepository;
 
-  /**
-   * Creates a new vehicle.
-   * 
-   * @return
-   */
   @Override
   public ResponseEntity<VehicleDetails> createVehicle(
       CreateVehicleRequest request
@@ -46,4 +43,7 @@ public class VehicleRestServiceImpl implements VehicleRestService {
       )
     );
   }
+
+
+  
 }

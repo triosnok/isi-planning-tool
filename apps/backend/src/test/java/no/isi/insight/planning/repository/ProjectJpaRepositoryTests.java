@@ -31,7 +31,8 @@ class ProjectJpaRepositoryTests {
     assertEquals(newProject.getId(), savedProject.getId());
     assertEquals(newProject.getName(), savedProject.getName());
 
-    var foundProject = projectJpaRepository.findById(savedProject.getId());
+    var foundProject = projectJpaRepository.findById(savedProject.getId())
+      .orElseThrow(() -> new RuntimeException("Project not found"));
 
     assertEquals(savedProject.getId(), foundProject.getId());
     assertEquals(savedProject.getName(), foundProject.getName());
