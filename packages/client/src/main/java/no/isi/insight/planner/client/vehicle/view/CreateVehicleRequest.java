@@ -9,6 +9,7 @@ import no.isi.insight.planner.client.annotation.GenerateTypeScript;
 public record CreateVehicleRequest(
   @URL String imageUrl,
   @NotBlank String registrationNumber,
+  @NotBlank String model,
   Boolean camera,
   String description,
   String gnssId

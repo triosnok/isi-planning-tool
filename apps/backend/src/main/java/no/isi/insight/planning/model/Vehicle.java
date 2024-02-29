@@ -11,8 +11,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @Table(name = "vehicle")
@@ -31,6 +33,9 @@ public class Vehicle {
   @Column(name = "registration_number")
   private String registrationNumber;
 
+  @Column(name = "model")
+  private String model;
+
   @Column(name = "camera")
   private Boolean camera;
 
@@ -46,12 +51,14 @@ public class Vehicle {
   public Vehicle(
       String imageUrl,
       String registrationNumber,
+      String model,
       Boolean camera,
       String description,
       String gnssId
   ) {
     this.imageUrl = imageUrl;
     this.registrationNumber = registrationNumber;
+    this.model = model;
     this.camera = camera;
     this.description = description;
     this.gnssId = gnssId;

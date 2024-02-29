@@ -11,6 +11,7 @@ public record VehicleDetails(
   UUID id,
   String imageUrl,
   String registrationNumber,
+  String model,
   Boolean camera,
   String description,
   String gnssId

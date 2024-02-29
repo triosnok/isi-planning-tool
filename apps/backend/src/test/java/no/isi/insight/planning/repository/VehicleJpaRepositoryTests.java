@@ -19,6 +19,7 @@ class VehicleJpaRepositoryTests {
     var newVehicle = new Vehicle(
       "https://picsum.photos/300/200",
       "REF2349239",
+      "Model 1",
       true,
       "Vehicle 1",
       "9345-534959-3495"
