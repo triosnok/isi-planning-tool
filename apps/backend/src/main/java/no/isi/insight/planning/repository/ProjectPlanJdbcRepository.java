@@ -18,6 +18,7 @@ import no.isi.insight.planner.client.project.view.ProjectPlanDetails;
 public class ProjectPlanJdbcRepository {
   private final NamedParameterJdbcTemplate jdbcTemplate;
 
+  // language=sql
   private static final String PLAN_DETAILS_QUERY = """
       WITH railing_aggregate AS (
         SELECT
