@@ -6,9 +6,11 @@ import { useTranslations } from '@/features/i18n';
 import { LayoutProps } from '@/lib/utils';
 import { useNavigate } from '@solidjs/router';
 import { Component, For } from 'solid-js';
+import { useVehiclesQuery } from '../api';
 import VehicleCard from '../components/VehicleCard';
 
 const VehicleOverview: Component<LayoutProps> = (props) => {
+  const vehicles = useVehiclesQuery();
   const navigate = useNavigate();
   const { t } = useTranslations();
   const handleAddVehicle = () => navigate('/vehicles/new');
@@ -29,14 +31,15 @@ const VehicleOverview: Component<LayoutProps> = (props) => {
           </section>
 
           <section class='mt-2 grid grid-cols-6 gap-2'>
-            <For each={Array(10)}>
-              {(_i) => (
+            <For each={vehicles.data}>
+              {(vehicle) => (
                 <VehicleCard
-                  imageUrl='https://picsum.photos/300/200'
-                  name='Toyota Corolla'
-                  registrationNumber='UN 373281'
-                  camera
-                  gnssId='123456'
+                  imageUrl={vehicle.imageUrl}
+                  name={vehicle.model}
+                  registrationNumber={vehicle.registrationNumber}
+                  camera={vehicle.camera}
+                  gnssId={vehicle.gnssId}
+                  onDetailsClick={() => navigate(`/vehicles/${vehicle.id}`)}
                 />
               )}
             </For>
