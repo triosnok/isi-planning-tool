@@ -22,15 +22,11 @@ databaseChangeLog:
             relativeToChangelogFile: true
   - changeSet:
       id: 003-vehicle
-      author: gisle
+      author: gisle, halvard
       changes:
         - sqlFile:
             path: 003-vehicle/000-create-vehicle-tables.sql
             relativeToChangelogFile: true
-  - changeSet:
-      id: 003-vehicle-audit
-      author: gisle
-      changes:
         - sqlFile:
-            path: 003-vehicle/001-add-audit-columns.sql
+            path: 003-vehicle/001-add-project-plan-vehicle-assignment.sql
             relativeToChangelogFile: true
