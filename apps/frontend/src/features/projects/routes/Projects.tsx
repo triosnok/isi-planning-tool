@@ -11,10 +11,12 @@ import { A } from '@solidjs/router';
 import { IconPlus } from '@tabler/icons-solidjs';
 import { Component, For } from 'solid-js';
 import { useProjectsQuery } from '../api';
-import dayjs, { type Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 
 const Projects: Component = () => {
-  const projects = useProjectsQuery();
+  const ongoingProjects = useProjectsQuery('ongoing');
+  const upcomingProjects = useProjectsQuery('upcoming');
+  const previousProjects = useProjectsQuery('previous');
 
   return (
     <div>
@@ -32,8 +34,8 @@ const Projects: Component = () => {
       <Accordion multiple={true} defaultValue={['ongoing', 'upcoming']}>
         <AccordionItem value='ongoing'>
           <AccordionTrigger>Ongoing</AccordionTrigger>
-          <AccordionContent class='space-y-2 p-2'>
-            <For each={projects.data}>
+          <AccordionContent class='flex flex-col space-y-2 p-2'>
+            <For each={ongoingProjects.data}>
               {(project) => (
                 <A href={`/projects/${project.id}`}>
                   <ProjectCard
@@ -41,6 +43,7 @@ const Projects: Component = () => {
                     referenceCode={project.referenceCode}
                     startsAt={dayjs(project.startsAt).format('DD MMM')}
                     endsAt={dayjs(project.endsAt).format('DD MMM')}
+                    status={project.status}
                   />
                 </A>
               )}
@@ -49,11 +52,39 @@ const Projects: Component = () => {
         </AccordionItem>
         <AccordionItem value='upcoming'>
           <AccordionTrigger>Upcoming</AccordionTrigger>
-          <AccordionContent class='space-y-2 p-2'></AccordionContent>
+          <AccordionContent class='flex flex-col space-y-2 p-2'>
+            <For each={upcomingProjects.data}>
+              {(project) => (
+                <A href={`/projects/${project.id}`}>
+                  <ProjectCard
+                    name={project.name}
+                    referenceCode={project.referenceCode}
+                    startsAt={dayjs(project.startsAt).format('DD MMM')}
+                    endsAt={dayjs(project.endsAt).format('DD MMM')}
+                    status={project.status}
+                  />
+                </A>
+              )}
+            </For>
+          </AccordionContent>
         </AccordionItem>
         <AccordionItem value='previous'>
           <AccordionTrigger>Previous</AccordionTrigger>
-          <AccordionContent class='space-y-2 p-2'></AccordionContent>
+          <AccordionContent class='flex flex-col space-y-2 p-2'>
+            <For each={previousProjects.data}>
+              {(project) => (
+                <A href={`/projects/${project.id}`}>
+                  <ProjectCard
+                    name={project.name}
+                    referenceCode={project.referenceCode}
+                    startsAt={dayjs(project.startsAt).format('DD MMM')}
+                    endsAt={dayjs(project.endsAt).format('DD MMM')}
+                    status={project.status}
+                  />
+                </A>
+              )}
+            </For>
+          </AccordionContent>
         </AccordionItem>
       </Accordion>
     </div>

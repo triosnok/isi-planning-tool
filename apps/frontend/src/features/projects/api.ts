@@ -11,11 +11,13 @@ import {
 } from '@tanstack/solid-query';
 import axios from 'axios';
 
-export const useProjectsQuery = () => {
+export const useProjectsQuery = (status: string) => {
   return createQuery(() => ({
     queryKey: [CacheKey.PROJECT_LIST],
     queryFn: async () => {
-      const response = await axios.get<ProjectDetails[]>('/api/v1/projects');
+      const response = await axios.get<ProjectDetails[]>(
+        `/api/v1/projects/${status}`
+      );
 
       return response.data;
     },

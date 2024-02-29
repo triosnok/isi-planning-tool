@@ -31,6 +31,10 @@ export interface CreateProjectRequest {
     endsAt: DateAsString;
 }
 
+export interface CreateProjectResponse {
+    projectId: string;
+}
+
 export interface ProjectDetails {
     id: string;
     name: string;
