@@ -25,6 +25,7 @@ public class VehicleRestServiceImpl implements VehicleRestService {
     Vehicle vehicle = new Vehicle(
       request.imageUrl(),
       request.registrationNumber(),
+      request.model(),
       request.camera(),
       request.description(),
       request.gnssId()
@@ -37,6 +38,7 @@ public class VehicleRestServiceImpl implements VehicleRestService {
         savedVehicle.getId(),
         savedVehicle.getImageUrl(),
         savedVehicle.getRegistrationNumber(),
+        savedVehicle.getModel(),
         savedVehicle.getCamera(),
         savedVehicle.getDescription(),
         savedVehicle.getGnssId()
@@ -44,6 +46,38 @@ public class VehicleRestServiceImpl implements VehicleRestService {
     );
   }
 
+  @Override
+  public ResponseEntity<VehicleDetails> updateVehicle(
+      UUID id,
+      CreateVehicleRequest request
+  ) {
+    var vehicle = this.vehicleJpaRepository.findById(id);
 
-  
+    if (vehicle.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
+
+    var updatedVehicle = vehicle.get();
+    updatedVehicle.setImageUrl(request.imageUrl());
+    updatedVehicle.setRegistrationNumber(request.registrationNumber());
+    updatedVehicle.setCamera(request.camera());
+    updatedVehicle.setModel(request.model());
+    updatedVehicle.setDescription(request.description());
+    updatedVehicle.setGnssId(request.gnssId());
+
+    var savedVehicle = this.vehicleJpaRepository.save(updatedVehicle);
+
+    return ResponseEntity.ok(
+      new VehicleDetails(
+        savedVehicle.getId(),
+        savedVehicle.getImageUrl(),
+        savedVehicle.getRegistrationNumber(),
+        savedVehicle.getModel(),
+        savedVehicle.getCamera(),
+        savedVehicle.getDescription(),
+        savedVehicle.getGnssId()
+      )
+    );
+  }
+
 }
