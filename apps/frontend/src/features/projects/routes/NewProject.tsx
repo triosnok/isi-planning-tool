@@ -66,7 +66,7 @@ const NewProject: Component = () => {
               {(field, props) => (
                 <Input
                   {...props}
-                  type='string'
+                  type='text'
                   id='name'
                   placeholder='Name'
                   value={field.value}
@@ -78,7 +78,7 @@ const NewProject: Component = () => {
               {(field, props) => (
                 <Input
                   {...props}
-                  type='string'
+                  type='text'
                   id='referenceCode'
                   placeholder='Project reference'
                   value={field.value}
