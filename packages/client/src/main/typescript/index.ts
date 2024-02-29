@@ -21,7 +21,7 @@ export interface CreateProjectPlanRequest {
     importUrl: string;
     startsAt: DateAsString;
     endsAt: DateAsString;
-    vehicleId: string | null;
+    vehicleId?: string | null;
 }
 
 export interface CreateProjectRequest {
@@ -57,7 +57,7 @@ export interface RoadRailing {
 }
 
 export interface CreateVehicleRequest {
-    imageUrl: string | null;
+    imageUrl?: string | null;
     registrationNumber: string;
     model: string;
     camera: boolean;

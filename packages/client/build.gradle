@@ -25,6 +25,7 @@ generateTypeScript {
   noFileComment = true
   nullableAnnotations = []
   mapDate = 'asString'
+  nullabilityDefinition = 'nullAndUndefinedInlineUnion'
   nullableAnnotations = [
     'no.isi.insight.planner.client.annotation.Optional'
   ]
