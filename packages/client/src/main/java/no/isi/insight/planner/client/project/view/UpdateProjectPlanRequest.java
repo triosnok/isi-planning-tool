@@ -2,7 +2,6 @@ package no.isi.insight.planner.client.project.view;
 
 import java.time.LocalDate;
 import java.util.UUID;
-import java.util.Optional;
 
 import org.hibernate.validator.constraints.URL;
 
@@ -12,5 +11,5 @@ public record UpdateProjectPlanRequest(
   @URL String importUrl,
   @NotNull LocalDate startsAt,
   @NotNull LocalDate endsAt,
-  Optional<UUID> vehicleId
+  UUID vehicleId
 ) {}

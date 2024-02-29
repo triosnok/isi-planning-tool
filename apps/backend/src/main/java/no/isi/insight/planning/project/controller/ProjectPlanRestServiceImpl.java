@@ -46,9 +46,9 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
     var railings = this.railingImportService.importRailings(request.importUrl());
     Optional<Vehicle> vehicle = Optional.empty();
 
-    if (request.vehicleId().isEmpty()) {
-      var vehicleId = request.vehicleId().get();
-      vehicle = Optional.of(this.vehicleJpaRepository.findById(vehicleId).orElseThrow(() -> new RuntimeException("")));
+    if (request.vehicleId() != null) {
+      vehicle = Optional
+        .of(this.vehicleJpaRepository.findById(request.vehicleId()).orElseThrow(() -> new RuntimeException("")));
     }
 
     var mappedRailings = new ArrayList<RoadRailing>();
@@ -104,9 +104,9 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
     var plan = this.projectPlanJpaRepository.findById(planId).orElseThrow();
     Optional<Vehicle> vehicle = Optional.empty();
 
-    if (request.vehicleId().isEmpty()) {
-      var vehicleId = request.vehicleId().get();
-      vehicle = Optional.of(this.vehicleJpaRepository.findById(vehicleId).orElseThrow(() -> new RuntimeException("")));
+    if (request.vehicleId() != null) {
+      vehicle = Optional
+        .of(this.vehicleJpaRepository.findById(request.vehicleId()).orElseThrow(() -> new RuntimeException("")));
     }
 
     vehicle.ifPresent(plan::setVehicle);
