@@ -1,22 +1,54 @@
+import { CacheKey } from '@/api';
 import type {
   CreateProjectRequest,
   CreateProjectResponse,
+  ProjectDetails,
 } from '@isi-insight/client';
-import { createMutation } from '@tanstack/solid-query';
+import {
+  createMutation,
+  createQuery,
+  useQueryClient,
+} from '@tanstack/solid-query';
 import axios from 'axios';
 
-export const useNewProjectMutation = () => {
-  return createMutation(() => ({
-    mutationFn: async (data: CreateProjectRequest) => {
+export const useProjectsQuery = () => {
+  return createQuery(() => ({
+    queryKey: [CacheKey.PROJECT_LIST],
+    queryFn: async () => {
+      const response = await axios.get<ProjectDetails[]>('/api/v1/projects');
+
+      return response.data;
+    },
+  }));
+};
+
+export const useProjectDetailsQuery = (id: string) => {
+  return createQuery(() => ({
+    queryKey: [CacheKey.PROJECT_DETAILS, id],
+    queryFn: async () => axios.get<ProjectDetails>(`/api/v1/projects/${id}`),
+  }));
+};
+
+export const useProjectsMutation = () => {
+  const qc = useQueryClient();
+
+  const create = createMutation(() => ({
+    mutationFn: async (project: CreateProjectRequest) => {
       const response = await axios.post<CreateProjectResponse>(
         '/api/v1/projects',
-        data
+        project
       );
 
       return response.data;
     },
+
     onSuccess: (response) => {
-      // todo: navigate to project
+      qc.invalidateQueries({ queryKey: [CacheKey.PROJECT_LIST] });
+      qc.invalidateQueries({
+        queryKey: [CacheKey.PROJECT_DETAILS, response.projectId],
+      });
     },
   }));
+
+  return { create };
 };

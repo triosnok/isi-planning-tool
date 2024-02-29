@@ -2,6 +2,8 @@ import axios from 'axios';
 
 export enum CacheKey {
   USER_PROFILE = 'USER_PROFILE',
+  PROJECT_LIST = 'PROJECT_LIST',
+  PROJECT_DETAILS = 'PROJECT',
 }
 
 export const ACCESS_TOKEN_LOCALSTORAGE_KEY = 'accessToken';
