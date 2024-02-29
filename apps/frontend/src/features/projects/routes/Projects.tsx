@@ -35,12 +35,14 @@ const Projects: Component = () => {
           <AccordionContent class='space-y-2 p-2'>
             <For each={projects.data}>
               {(project) => (
-                <ProjectCard
-                  name={project.name}
-                  referenceCode={project.referenceCode}
-                  startsAt={dayjs(project.startsAt).format('DD MMM')}
-                  endsAt={dayjs(project.endsAt).format('DD MMM')}
-                />
+                <A href={`/projects/${project.id}`}>
+                  <ProjectCard
+                    name={project.name}
+                    referenceCode={project.referenceCode}
+                    startsAt={dayjs(project.startsAt).format('DD MMM')}
+                    endsAt={dayjs(project.endsAt).format('DD MMM')}
+                  />
+                </A>
               )}
             </For>
           </AccordionContent>
