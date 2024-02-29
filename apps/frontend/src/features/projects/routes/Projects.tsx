@@ -11,6 +11,7 @@ import { A } from '@solidjs/router';
 import { IconPlus } from '@tabler/icons-solidjs';
 import { Component, For } from 'solid-js';
 import { useProjectsQuery } from '../api';
+import dayjs, { type Dayjs } from 'dayjs';
 
 const Projects: Component = () => {
   const projects = useProjectsQuery();
@@ -37,6 +38,8 @@ const Projects: Component = () => {
                 <ProjectCard
                   name={project.name}
                   referenceCode={project.referenceCode}
+                  startsAt={dayjs(project.startsAt).format('DD MMM')}
+                  endsAt={dayjs(project.endsAt).format('DD MMM')}
                 />
               )}
             </For>
