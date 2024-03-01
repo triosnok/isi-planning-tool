@@ -3,6 +3,7 @@ import type {
   CreateProjectRequest,
   CreateProjectResponse,
   ProjectDetails,
+  ProjectStatus,
 } from '@isi-insight/client';
 import {
   createMutation,
@@ -11,12 +12,17 @@ import {
 } from '@tanstack/solid-query';
 import axios from 'axios';
 
-export const useProjectsQuery = (status?: string) => {
+export const useProjectsQuery = (status?: ProjectStatus) => {
+  const params = new URLSearchParams();
+  if (status !== undefined) {
+    params.set('status', status);
+  }
+
   return createQuery(() => ({
-    queryKey: [CacheKey.PROJECT_LIST],
+    queryKey: [CacheKey.PROJECT_LIST, status],
     queryFn: async () => {
       const response = await axios.get<ProjectDetails[]>(
-        `/api/v1/projects/${status}`
+        `/api/v1/projects?${params.toString()}`
       );
 
       return response.data;

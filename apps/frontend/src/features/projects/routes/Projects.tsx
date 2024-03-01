@@ -14,9 +14,9 @@ import { useProjectsQuery } from '../api';
 import dayjs from 'dayjs';
 
 const Projects: Component = () => {
-  const ongoingProjects = useProjectsQuery('ongoing');
-  const upcomingProjects = useProjectsQuery('upcoming');
-  const previousProjects = useProjectsQuery('previous');
+  const ongoingProjects = useProjectsQuery('ONGOING');
+  const upcomingProjects = useProjectsQuery('UPCOMING');
+  const previousProjects = useProjectsQuery('PREVIOUS');
 
   return (
     <div>
