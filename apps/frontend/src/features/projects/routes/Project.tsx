@@ -7,7 +7,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { SubmitHandler, createForm, zodForm } from '@modular-forms/solid';
-import { A, useNavigate } from '@solidjs/router';
+import { A, useNavigate, useParams } from '@solidjs/router';
 import {
   IconChevronLeft,
   IconCircleCheckFilled,
@@ -15,10 +15,12 @@ import {
 } from '@tabler/icons-solidjs';
 import { Component } from 'solid-js';
 import { z } from 'zod';
-//import { useProjectPlansMutation } from '../api';
+import { useProjectPlansMutation, useProjectDetailsQuery } from '../api';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import VehicleSelect from '@/features/vehicles/components/VehicleSelect';
+import { useVehiclesQuery } from '@/features/vehicles/api';
+import dayjs from 'dayjs';
 
 const ProjectPlanSchema = z.object({
   importUrl: z.string(),
@@ -30,14 +32,18 @@ const ProjectPlanSchema = z.object({
 type ProjectPlanForm = z.infer<typeof ProjectPlanSchema>;
 
 const Project: Component = () => {
+  const params = useParams();
+  const project = useProjectDetailsQuery(params.id);
+  const { create } = useProjectPlansMutation(params.id);
+
   const [, { Form, Field }] = createForm({
     validate: zodForm(ProjectPlanSchema),
   });
   const navigate = useNavigate();
-  //const { create } = useProjectPlansMutation();
+  const vehicles = useVehiclesQuery();
   const handleSubmit: SubmitHandler<ProjectPlanForm> = async (values) => {
     try {
-      //await create.mutateAsync(values);
+      await create.mutateAsync(values);
       navigate('/projects');
     } catch (error) {
       // ignored
@@ -66,14 +72,17 @@ const Project: Component = () => {
           <div class='space-y-2'>
             <div class='flex justify-between'>
               <div>
-                <h1 class='text-4xl font-bold'>Project</h1>
-                <h2>12 Jan - 23 Jan</h2>
+                <h1 class='text-4xl font-bold'>{project.data?.name}</h1>
+                <h2>
+                  {dayjs(project.data?.startsAt).format('DD MMM')} -{' '}
+                  {dayjs(project.data?.endsAt).format('DD MMM')}
+                </h2>
                 <div class='text-success-500 flex items-center gap-1'>
                   <IconCircleCheckFilled size={16} />
                   <p class='text-sm'>Done</p>
                 </div>
               </div>
-              <A href='/projects/new'>
+              <A href=''>
                 <Button>
                   <IconEdit />
                 </Button>
@@ -119,6 +128,20 @@ const Project: Component = () => {
                 </div>
               </div>
               <Label for='vehicle'>Vehicle</Label>
+              <VehicleSelect vehicles={vehicles.data ?? []} />
+              <Label for='importUrl'>Import railings</Label>
+              <Field name='importUrl'>
+                {(field, props) => (
+                  <Input
+                    {...props}
+                    type='url'
+                    id='importUrl'
+                    placeholder='URL'
+                    value={field.value}
+                  />
+                )}
+              </Field>
+              <Button class='grow'>Import and save</Button>
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value='railings'>
