@@ -1,6 +1,7 @@
 package no.isi.insight.planning.project.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,6 +36,24 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
   private final ProjectPlanJdbcRepository projectPlanJdbcRepository;
   private final VehicleJpaRepository vehicleJpaRepository;
   private final GeometryService geometryService;
+
+  @Override
+  public ResponseEntity<List<ProjectPlanDetails>> getPlans(
+      UUID projectId
+  ) {
+    return ResponseEntity.ok(this.projectPlanJdbcRepository.findPlanDetailsByProjectId(projectId));
+  }
+
+  @Override
+  public ResponseEntity<ProjectPlanDetails> getPlan(
+      UUID projectId,
+      UUID planId
+  ) {
+    var plan = this.projectPlanJdbcRepository.findPlanByIds(planId, projectId)
+      .orElseThrow(() -> new RuntimeException(""));
+
+    return ResponseEntity.ok(plan);
+  }
 
   @Override
   public ResponseEntity<ProjectPlanDetails> createPlan(
