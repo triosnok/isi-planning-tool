@@ -11,20 +11,17 @@ import {
   IconCamera,
   IconCircleCheckFilled,
 } from '@tabler/icons-solidjs';
-import { Component, Show, createEffect, createSignal } from 'solid-js';
+import { Component, Show, createSignal } from 'solid-js';
 
 export interface VehicleSelectProps {
+  value?: VehicleDetails;
   vehicles: VehicleDetails[];
   emptyText?: string;
-  onChange: (vehicle: VehicleDetails) => void;
+  onChange?: (vehicle: VehicleDetails) => void;
 }
 
 const VehicleSelect: Component<VehicleSelectProps> = (props) => {
-  const [value, setValue] = createSignal<VehicleDetails>();
-
-  createEffect(() => {
-    console.log(value());
-  });
+  const [value, setValue] = createSignal(props.value);
 
   return (
     <Select<VehicleDetails>
@@ -44,7 +41,7 @@ const VehicleSelect: Component<VehicleSelectProps> = (props) => {
           fallback={<NoVehiclesSelected emptyText={props.emptyText} />}
         >
           {(selectedVehicle) => (
-            <SelectValue class='flex-1 h-fit'>
+            <SelectValue class='h-fit flex-1'>
               <VehicleSelectItem selected {...selectedVehicle()} />
             </SelectValue>
           )}
