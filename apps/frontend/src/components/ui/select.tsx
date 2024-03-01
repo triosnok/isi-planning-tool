@@ -54,7 +54,7 @@ const SelectItem: Component<SelectPrimitive.SelectItemProps> = (props) => {
   return (
     <SelectPrimitive.Item
       class={cn(
-        'focus:bg-accent focus:text-accent-foreground relative mt-0 flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+        'focus:bg-gray-200 relative mt-0 flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
         props.class
       )}
       {...rest}
@@ -64,7 +64,7 @@ const SelectItem: Component<SelectPrimitive.SelectItemProps> = (props) => {
           <TbCheck class='size-4' />
         </SelectPrimitive.ItemIndicator>
       </span>
-      <SelectPrimitive.ItemLabel>{props.children}</SelectPrimitive.ItemLabel>
+      <SelectPrimitive.ItemLabel class='flex-1'>{props.children}</SelectPrimitive.ItemLabel>
     </SelectPrimitive.Item>
   );
 };
