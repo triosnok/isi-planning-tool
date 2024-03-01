@@ -1,8 +1,10 @@
 <p align="center">
-  <img align="center" src="docs/assets/banner.png">
+  <img align="center" alt="isi logo" src="docs/assets/logo.png">
 </p>
 
-<p align="center">A bachelor project at NTNU in collaboration with iSi</p>
+<h3 align="center">inSight planning tool</h3>
+
+<p align="center">A bachelor project at NTNU in collaboration with iSi.</p>
 
 <div align="center">
   <a href="#project-structure">Project structure</a> •
