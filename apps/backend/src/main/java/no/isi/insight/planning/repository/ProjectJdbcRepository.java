@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
 import no.isi.insight.planner.client.project.view.ProjectDetails;
+import no.isi.insight.planner.client.project.view.ProjectStatus;
 import no.isi.insight.planning.utility.JdbcUtils;
 
 @Repository
@@ -61,7 +62,13 @@ public class ProjectJdbcRepository {
       FROM project p
       LEFT JOIN plan_aggregate pa
         ON p.project_id = pa.fk_project_id
-      WHERE (:projectId IS NULL OR p.project_id = :projectId::uuid)
+      WHERE 1=1
+        AND (:projectId IS NULL OR p.project_id = :projectId::uuid)
+        AND (:projectStatus IS NULL OR CASE
+            WHEN :projectStatus = 'ONGOING' THEN NOW() BETWEEN p.starts_at AND p.ends_at
+            WHEN :projectStatus = 'UPCOMING' THEN NOW() < p.starts_at
+            WHEN :projectStatus = 'PREVIOUS' THEN NOW() > p.ends_at
+          END)
     """;
 
   private static final RowMapper<ProjectDetails> PROJECT_DETAILS_ROW_MAPPER = (rs, i) -> {
@@ -84,10 +91,13 @@ public class ProjectJdbcRepository {
     );
   };
 
-  public List<ProjectDetails> findProjects() {
+  public List<ProjectDetails> findProjects(
+      Optional<ProjectStatus> status
+  ) {
     var params = new MapSqlParameterSource();
 
     params.addValue("projectId", null, Types.VARCHAR);
+    params.addValue("projectStatus", status.map(ProjectStatus::name).orElse(null), Types.VARCHAR);
 
     return this.jdbcTemplate.query(PROJECT_DETAILS_QUERY, params, PROJECT_DETAILS_ROW_MAPPER);
   }
@@ -98,6 +108,7 @@ public class ProjectJdbcRepository {
     var params = new MapSqlParameterSource();
 
     params.addValue("projectId", projectId, Types.VARCHAR);
+    params.addValue("projectStatus", null, Types.VARCHAR);
 
     return Optional
       .ofNullable(this.jdbcTemplate.queryForObject(PROJECT_DETAILS_QUERY, params, PROJECT_DETAILS_ROW_MAPPER));
