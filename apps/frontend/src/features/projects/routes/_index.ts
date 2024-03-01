@@ -9,6 +9,7 @@ export const routes: RouteDefinition[] = [
     children: [
       { path: '/', component: lazy(() => import('./Projects')) },
       { path: '/new', component: lazy(() => import('./NewProject')) },
+      { path: '/:id', component: lazy(() => import('./Project')) },
     ],
     meta: {
       // authentication: {
@@ -17,3 +18,5 @@ export const routes: RouteDefinition[] = [
     },
   },
 ];
+
+//todo: fix auth here
