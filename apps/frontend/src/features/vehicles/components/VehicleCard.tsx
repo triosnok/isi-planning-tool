@@ -14,6 +14,7 @@ export interface VehicleCardProps {
   registrationNumber: string;
   camera: boolean;
   gnssId: string;
+  onDetailsClick?: () => void;
 }
 
 const VehicleCard: Component<VehicleCardProps> = (props) => {
@@ -21,7 +22,7 @@ const VehicleCard: Component<VehicleCardProps> = (props) => {
     <div class='overflow-hidden rounded-md border'>
       <img class='h-24 w-full' src={props.imageUrl} />
 
-      <div class='flex flex-col p-2 py-2'>
+      <div class='relative flex flex-col p-2 py-2'>
         <h2 class='self-center text-xl font-semibold'>{props.name}</h2>
         <VehicleStatus />
 
@@ -32,7 +33,13 @@ const VehicleCard: Component<VehicleCardProps> = (props) => {
         <VehicleDetail icon={IconGps} text={props.gnssId} />
       </div>
 
-      <Button class='h-fit w-full rounded-none py-1'>View car details</Button>
+      <Button
+        type='button'
+        onClick={props.onDetailsClick}
+        class='h-fit w-full rounded-none py-1'
+      >
+        View details
+      </Button>
     </div>
   );
 };
@@ -55,7 +62,7 @@ const VehicleDetail: Component<VehicleDetailProps> = (props) => {
   return (
     <p class='flex items-center gap-1 text-sm text-gray-800'>
       <props.icon class='h-5 w-5 text-gray-500' />
-      <span>{props.text}</span>
+      <span class='truncate'>{props.text}</span>
     </p>
   );
 };

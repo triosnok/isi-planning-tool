@@ -38,15 +38,9 @@ public class ProjectRestServiceImpl implements ProjectRestService {
 
     var savedProject = this.projectJpaRepository.save(project);
 
-    return ResponseEntity.ok(
-      new ProjectDetails(
-        savedProject.getId(),
-        savedProject.getName(),
-        savedProject.getReferenceCode(),
-        savedProject.getStartsAt(),
-        savedProject.getEndsAt()
-      )
-    );
+    var details = this.projectJdbcRepository.findById(savedProject.getId());
+
+    return ResponseEntity.ok(details.get());
   }
 
   @Override
@@ -63,17 +57,9 @@ public class ProjectRestServiceImpl implements ProjectRestService {
   public ResponseEntity<ProjectDetails> getProject(
       UUID projectId
   ) {
-    var project = this.projectJpaRepository.findById(projectId)
+    var project = this.projectJdbcRepository.findById(projectId)
       .orElseThrow(() -> new RuntimeException("Project not found"));
-    return ResponseEntity.ok(
-      new ProjectDetails(
-        project.getId(),
-        project.getName(),
-        project.getReferenceCode(),
-        project.getStartsAt(),
-        project.getEndsAt()
-      )
-    );
+    return ResponseEntity.ok(project);
   }
 
   @Override

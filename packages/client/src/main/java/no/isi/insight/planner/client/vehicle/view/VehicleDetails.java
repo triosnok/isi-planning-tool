@@ -1,5 +1,6 @@
 package no.isi.insight.planner.client.vehicle.view;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import lombok.Builder;
@@ -14,5 +15,11 @@ public record VehicleDetails(
   String model,
   Boolean camera,
   String description,
-  String gnssId
-) {}
+  String gnssId,
+  LocalDate inactiveFrom
+) {
+
+  public boolean isActive() {
+    return this.inactiveFrom == null || LocalDate.now().isBefore(this.inactiveFrom);
+  }
+}

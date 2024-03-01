@@ -1,5 +1,6 @@
 package no.isi.insight.planning.model;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -45,6 +46,9 @@ public class Vehicle {
   @Column(name = "gnss_id")
   private String gnssId;
 
+  @Column(name = "inactive_from")
+  private LocalDate inactiveFrom;
+
   @Embedded
   private Audit audit;
 
@@ -62,6 +66,10 @@ public class Vehicle {
     this.camera = camera;
     this.description = description;
     this.gnssId = gnssId;
+  }
+
+  public boolean isActive() {
+    return this.inactiveFrom == null || LocalDate.now().isBefore(this.inactiveFrom);
   }
 
 }

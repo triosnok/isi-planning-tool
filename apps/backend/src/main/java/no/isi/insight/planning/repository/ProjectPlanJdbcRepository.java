@@ -18,6 +18,7 @@ import no.isi.insight.planner.client.project.view.ProjectPlanDetails;
 public class ProjectPlanJdbcRepository {
   private final NamedParameterJdbcTemplate jdbcTemplate;
 
+  // language=sql
   private static final String PLAN_DETAILS_QUERY = """
       WITH railing_aggregate AS (
         SELECT
@@ -67,15 +68,22 @@ public class ProjectPlanJdbcRepository {
       .build();
   };
 
-  public Optional<ProjectPlanDetails> findPlanDetailsById(
-      UUID id
+  public Optional<ProjectPlanDetails> findPlanByIds(
+      UUID id,
+      UUID projectId
   ) {
     var params = new MapSqlParameterSource();
 
     params.addValue("id", id, Types.VARCHAR);
-    params.addValue("projectId", null, Types.VARCHAR);
+    params.addValue("projectId", projectId, Types.VARCHAR);
 
     return Optional.ofNullable(this.jdbcTemplate.queryForObject(PLAN_DETAILS_QUERY, params, PLAN_DETAILS_MAPPER));
+  }
+
+  public Optional<ProjectPlanDetails> findPlanDetailsById(
+      UUID id
+  ) {
+    return this.findPlanByIds(id, null);
   }
 
   public List<ProjectPlanDetails> findPlanDetailsByProjectId(

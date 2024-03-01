@@ -8,7 +8,17 @@ import no.isi.insight.planner.client.annotation.GenerateTypeScript;
 
 @Builder
 @GenerateTypeScript
-public record ProjectDetails(UUID id, String name, String referenceCode, LocalDate startsAt, LocalDate endsAt) {
+public record ProjectDetails(
+  UUID id,
+  String name,
+  String referenceCode,
+  LocalDate startsAt,
+  LocalDate endsAt,
+  double capturedLength,
+  double totalLength,
+  int deviations,
+  int notes
+) {
 
   public ProjectStatus getStatus() {
     return ProjectStatus.fromDates(startsAt, endsAt);

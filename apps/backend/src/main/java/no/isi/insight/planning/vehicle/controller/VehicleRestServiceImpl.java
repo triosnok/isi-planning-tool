@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import no.isi.insight.planner.client.vehicle.VehicleRestService;
 import no.isi.insight.planner.client.vehicle.view.CreateVehicleRequest;
+import no.isi.insight.planner.client.vehicle.view.UpdateVehicleRequest;
 import no.isi.insight.planner.client.vehicle.view.VehicleDetails;
 import no.isi.insight.planning.model.Vehicle;
 import no.isi.insight.planning.repository.VehicleJdbcRespotiory;
@@ -43,7 +44,8 @@ public class VehicleRestServiceImpl implements VehicleRestService {
         savedVehicle.getModel(),
         savedVehicle.getCamera(),
         savedVehicle.getDescription(),
-        savedVehicle.getGnssId()
+        savedVehicle.getGnssId(),
+        savedVehicle.getInactiveFrom()
       )
     );
   }
@@ -51,7 +53,7 @@ public class VehicleRestServiceImpl implements VehicleRestService {
   @Override
   public ResponseEntity<VehicleDetails> updateVehicle(
       UUID id,
-      CreateVehicleRequest request
+      UpdateVehicleRequest request
   ) {
     var vehicle = this.vehicleJpaRepository.findById(id);
 
@@ -66,6 +68,7 @@ public class VehicleRestServiceImpl implements VehicleRestService {
     updatedVehicle.setModel(request.model());
     updatedVehicle.setDescription(request.description());
     updatedVehicle.setGnssId(request.gnssId());
+    updatedVehicle.setInactiveFrom(request.inactiveFrom());
 
     var savedVehicle = this.vehicleJpaRepository.save(updatedVehicle);
 
@@ -77,7 +80,8 @@ public class VehicleRestServiceImpl implements VehicleRestService {
         savedVehicle.getModel(),
         savedVehicle.getCamera(),
         savedVehicle.getDescription(),
-        savedVehicle.getGnssId()
+        savedVehicle.getGnssId(),
+        savedVehicle.getInactiveFrom()
       )
     );
   }
@@ -102,7 +106,8 @@ public class VehicleRestServiceImpl implements VehicleRestService {
         foundVehicle.getModel(),
         foundVehicle.getCamera(),
         foundVehicle.getDescription(),
-        foundVehicle.getGnssId()
+        foundVehicle.getGnssId(),
+        foundVehicle.getInactiveFrom()
       )
     );
   }

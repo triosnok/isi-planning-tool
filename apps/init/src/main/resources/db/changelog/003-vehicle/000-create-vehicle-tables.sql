@@ -10,6 +10,7 @@ CREATE TABLE vehicle (
   fk_created_by_user_id UUID,
   updated_at TIMESTAMP,
   fk_updated_by_user_id UUID,
+  inactive_from TIMESTAMP,
   
   PRIMARY KEY (vehicle_id)
 );

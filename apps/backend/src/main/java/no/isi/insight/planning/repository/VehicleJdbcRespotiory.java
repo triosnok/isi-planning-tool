@@ -1,6 +1,8 @@
 package no.isi.insight.planning.repository;
 
+import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -24,21 +26,25 @@ public class VehicleJdbcRespotiory {
         v.camera,
         v.description,
         v.gnss_id as gnssId,
-        v.model
+        v.model,
+        v.inactive_from as inactiveFrom
       FROM vehicle v
       """;
 
-    return this.jdbcTemplate.query(
-      sql,
-      (rs, rowNum) -> new VehicleDetails(
+    return this.jdbcTemplate.query(sql, (rs, rowNum) -> {
+
+      var inactiveFrom = Optional.ofNullable(rs.getDate("inactiveFrom")).map(Date::toLocalDate).orElse(null);
+
+      return new VehicleDetails(
         UUID.fromString(rs.getString("id")),
         rs.getString("imageUrl"),
         rs.getString("registrationNumber"),
         rs.getString("model"),
         rs.getBoolean("camera"),
         rs.getString("description"),
-        rs.getString("gnssId")
-      )
-    );
+        rs.getString("gnssId"),
+        inactiveFrom
+      );
+    });
   }
 }

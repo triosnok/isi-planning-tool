@@ -13,18 +13,20 @@ export interface VehicleFormProps {
   registrationNumber?: string;
   camera?: boolean;
   description?: string;
+  model?: string;
   gnssId?: string;
   onSubmit: (values: VehicleSchemaValues) => void;
 }
 
 const VehicleForm: Component<VehicleFormProps> = (props) => {
   const { t } = useTranslations();
-  const [, { Form, Field }] = createForm({
+  const [_form, { Form, Field }] = createForm({
     validate: zodForm(VehicleSchema),
     initialValues: {
       vehicleId: props.vehicleId,
       registrationNumber: props.registrationNumber,
-      camera: props.camera,
+      model: props.model,
+      camera: props.camera ?? true,
       description: props.description,
       gnssId: props.gnssId,
     },
@@ -35,42 +37,56 @@ const VehicleForm: Component<VehicleFormProps> = (props) => {
       class={cn('flex flex-col gap-1', props.class)}
       onSubmit={props.onSubmit}
     >
-      <Label for='registrationNumber'>
-        {t('VEHICLES.FORM.REGISTRATION_NUMBER')}
-      </Label>
-
       <Field name='registrationNumber'>
         {(field, props) => (
-          <Input {...props} type='text' placeholder='' value={field.value} />
+          <>
+            <Label for={field.name}>
+              {t('VEHICLES.FORM.REGISTRATION_NUMBER')}
+            </Label>
+
+            <Input {...props} id={field.name} type='text' value={field.value} />
+          </>
         )}
       </Field>
-
-      <Label for='model' class='mt-2'>
-        {t('VEHICLES.FORM.MODEL')}
-      </Label>
 
       <Field name='model'>
         {(field, props) => (
-          <Input {...props} type='text' placeholder='' value={field.value} />
+          <>
+            <Label for={field.name} class='mt-2'>
+              {t('VEHICLES.FORM.MODEL')}
+            </Label>
+
+            <Input {...props} type='text' value={field.value} />
+          </>
         )}
       </Field>
 
-      <Label for='gnssId' class='mt-2'>
-        {t('VEHICLES.FORM.GNSS_ID')}
-      </Label>
+      <Field name='camera' type='boolean' keepState>
+        {() => null}
+      </Field>
 
       <Field name='gnssId'>
         {(field, props) => (
-          <Input {...props} type='text' placeholder='' value={field.value} />
+          <>
+            <Label for={field.name} class='mt-2'>
+              {t('VEHICLES.FORM.GNSS_ID')}
+            </Label>
+
+            <Input {...props} type='text' value={field.value} />
+          </>
         )}
       </Field>
 
-      <Label for='description' class='mt-2'>
-        {t('VEHICLES.FORM.DESCRIPTION')}
-      </Label>
-
       <Field name='description'>
-        {(field, props) => <Input {...props} type='text' value={field.value} />}
+        {(field, props) => (
+          <>
+            <Label for={field.name} class='mt-2'>
+              {t('VEHICLES.FORM.DESCRIPTION')}
+            </Label>
+
+            <Input {...props} type='text' value={field.value} />
+          </>
+        )}
       </Field>
 
       <Button type='submit' class='mt-auto'>
