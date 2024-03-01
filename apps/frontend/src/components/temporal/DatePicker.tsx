@@ -60,6 +60,7 @@ const DatePicker: Component<DatePickerProps> = (props) => {
 
           <input
             type='text'
+            readOnly
             value={selectedDate()?.format('YYYY-MM-DD') ?? ''}
             placeholder='YYYY-MM-DD'
             class='h-fit w-32 cursor-pointer bg-transparent text-sm'
