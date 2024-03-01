@@ -17,6 +17,7 @@ module.exports = {
       success: utils.colors.emerald,
       warning: utils.colors.yellow,
       error: utils.colors.red,
+      transparent: utils.colors.transparent,
       'brand-blue': {
         DEFAULT: '#00347D',
         50: '#B0D1FF',
