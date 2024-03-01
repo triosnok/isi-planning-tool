@@ -37,10 +37,14 @@ export const parse = (wkt: string) => {
     .replace('LINESTRING Z(', '')
     .replace(')', '');
 
-  const rawCoords = stripped.split(', ');
+  const rawCoords = stripped.split(',');
 
   return rawCoords.map((pair) => {
-    const [x, y] = pair.split(' ').map((n) => parseFloat(n));
+    const [x, y] = pair
+      .trim()
+      .split(' ')
+      .map((n) => parseFloat(n));
+
     return CRS_PROJECTION.unproject(new Leaflet.Point(x, y));
   });
 };
