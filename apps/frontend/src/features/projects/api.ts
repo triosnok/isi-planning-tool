@@ -11,7 +11,7 @@ import {
 } from '@tanstack/solid-query';
 import axios from 'axios';
 
-export const useProjectsQuery = (status: string) => {
+export const useProjectsQuery = (status?: string) => {
   return createQuery(() => ({
     queryKey: [CacheKey.PROJECT_LIST],
     queryFn: async () => {
