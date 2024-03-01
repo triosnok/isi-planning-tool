@@ -16,22 +16,22 @@ import { z } from 'zod';
 import { useProjectsMutation } from '../api';
 import { Button } from '@/components/ui/button';
 
-const NewProjectSchema = z.object({
+const ProjectSchema = z.object({
   name: z.string(),
   referenceCode: z.string(),
   startsAt: z.string().datetime(),
   endsAt: z.string().datetime(),
 });
 
-type NewProjectForm = z.infer<typeof NewProjectSchema>;
+type ProjectForm = z.infer<typeof ProjectSchema>;
 
 const NewProject: Component = () => {
   const [, { Form, Field }] = createForm({
-    validate: zodForm(NewProjectSchema),
+    validate: zodForm(ProjectSchema),
   });
   const navigate = useNavigate();
   const { create } = useProjectsMutation();
-  const handleSubmit: SubmitHandler<NewProjectForm> = async (values) => {
+  const handleSubmit: SubmitHandler<ProjectForm> = async (values) => {
     try {
       await create.mutateAsync(values);
       navigate('/projects');
