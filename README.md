@@ -91,6 +91,9 @@ With the above installed, you can start developing by:
 4. Install PNPM dependencies (`pnpm install`)
 5. Start the frontend (`pnpm dev`)
 
+We use Prettier to format TypeScript code, and the provided `eclipse-formatter.xml` file to format Java code.
+Make sure to configure your IDE to use these prior to contributing.
+
 ### Deployment
 
 tbd.
