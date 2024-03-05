@@ -9,6 +9,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 import no.isi.insight.planning.auth.service.UserAccountService;
 import no.isi.insight.planning.model.UserAccountRole;
+import no.isi.insight.planning.repository.UserAccountJpaRepository;
 
 @TestConfiguration(proxyBeanMethods = false)
 public class PlanningApplicationDevelopment {
@@ -28,9 +29,13 @@ public class PlanningApplicationDevelopment {
 
   @Bean
   boolean init(
-      UserAccountService userService
+      UserAccountService userService,
+      UserAccountJpaRepository userRepository
   ) {
-    userService.createAccount("Developer", "dev@email.invalid", null, "dev", UserAccountRole.PLANNER);
+    if (userRepository.findByEmail("dev@email.invalid").isEmpty()) {
+      userService.createAccount("Developer", "dev@email.invalid", null, "dev", UserAccountRole.PLANNER);
+    }
+
     return true;
   }
 
