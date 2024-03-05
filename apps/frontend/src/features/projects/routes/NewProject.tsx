@@ -1,32 +1,39 @@
-import PlanCard from '@/features/projects/components/PlanCard';
-import RailingCard from '@/features/projects/components/RailingCard';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { SubmitHandler, createForm, zodForm } from '@modular-forms/solid';
+import PlanCard from '@/features/projects/components/PlanCard';
+import RailingCard from '@/features/projects/components/RailingCard';
+import {
+  SubmitHandler,
+  createForm,
+  setValue,
+  zodForm,
+} from '@modular-forms/solid';
 import { A, useNavigate } from '@solidjs/router';
 import { IconChevronLeft } from '@tabler/icons-solidjs';
 import { Component } from 'solid-js';
 import { z } from 'zod';
 import { useProjectsMutation } from '../api';
-import { Button } from '@/components/ui/button';
+import DatePicker from '@/components/temporal/DatePicker';
+import dayjs from 'dayjs';
 
 const ProjectSchema = z.object({
   name: z.string(),
   referenceCode: z.string(),
-  startsAt: z.string().datetime(),
-  endsAt: z.string().datetime(),
+  startsAt: z.string(),
+  endsAt: z.string().datetime().optional(),
 });
 
 type ProjectForm = z.infer<typeof ProjectSchema>;
 
 const NewProject: Component = () => {
-  const [, { Form, Field }] = createForm({
+  const [form, { Form, Field }] = createForm({
     validate: zodForm(ProjectSchema),
   });
   const navigate = useNavigate();
@@ -89,25 +96,30 @@ const NewProject: Component = () => {
               <div class='grow'>
                 <Label for='startsAt'>Start date</Label>
                 <Field name='startsAt' type='string'>
-                  {(field, props) => (
-                    <Input
-                      {...props}
-                      type='date'
-                      id='startsAt'
-                      placeholder='Start date'
+                  {(field) => (
+                    <DatePicker
+                      value={dayjs(field.value).toDate()}
+                      onChange={(v) =>
+                        setValue(
+                          form,
+                          'startsAt',
+                          v!.toISOString() ?? undefined
+                        )
+                      }
                     />
                   )}
                 </Field>
               </div>
               <div class='grow'>
                 <Label for='endsAt'>End date</Label>
-                <Field name='endsAt' type='string'>
-                  {(field, props) => (
-                    <Input
-                      {...props}
-                      type='date'
-                      id='endsAt'
-                      placeholder='End date'
+                <Field name='endsAt'>
+                  {(field) => (
+                    <DatePicker
+                      value={dayjs(field.value).toDate()}
+                      onChange={(v) =>
+                        setValue(form, 'endsAt', v?.toISOString() ?? undefined)
+                      }
+                      clearable
                     />
                   )}
                 </Field>
@@ -149,9 +161,9 @@ const NewProject: Component = () => {
         </Accordion>
       </div>
 
-      <button class='bg-primary text-primary-foreground hover:bg-primary/90 flex justify-center py-2 hover:cursor-pointer'>
+      <Button type='submit' class='rounded-none'>
         Save
-      </button>
+      </Button>
     </Form>
   );
 };

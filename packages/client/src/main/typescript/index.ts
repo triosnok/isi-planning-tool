@@ -32,7 +32,7 @@ export interface CreateProjectRequest {
     name: string;
     referenceCode: string;
     startsAt: DateAsString;
-    endsAt: DateAsString;
+    endsAt?: DateAsString | null;
 }
 
 export interface CreateProjectResponse {

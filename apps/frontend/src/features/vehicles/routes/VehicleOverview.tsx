@@ -8,6 +8,8 @@ import { useNavigate } from '@solidjs/router';
 import { Component, For } from 'solid-js';
 import { useVehiclesQuery } from '../api';
 import VehicleCard from '../components/VehicleCard';
+import VehicleSelect from '../components/VehicleSelect';
+import DatePicker from '@/components/temporal/DatePicker';
 
 const VehicleOverview: Component<LayoutProps> = (props) => {
   const vehicles = useVehiclesQuery();
@@ -44,6 +46,15 @@ const VehicleOverview: Component<LayoutProps> = (props) => {
               )}
             </For>
           </section>
+
+          <VehicleSelect
+            vehicles={vehicles.data ?? []}
+            onChange={() => 0}
+            emptyText='No vehicle assigned'
+          />
+
+          <DatePicker />
+          <DatePicker clearable class='w-full' />
         </main>
 
         <aside class='w-1/3'>
