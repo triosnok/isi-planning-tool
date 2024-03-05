@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import no.isi.insight.planner.client.project.ProjectRestService;
 import no.isi.insight.planner.client.project.view.CreateProjectRequest;
 import no.isi.insight.planner.client.project.view.ProjectDetails;
+import no.isi.insight.planner.client.project.view.ProjectStatus;
 import no.isi.insight.planner.client.project.view.RoadRailing;
 import no.isi.insight.planning.model.Project;
 import no.isi.insight.planning.repository.ProjectJdbcRepository;
@@ -63,8 +64,10 @@ public class ProjectRestServiceImpl implements ProjectRestService {
   }
 
   @Override
-  public ResponseEntity<List<ProjectDetails>> getProjects() {
-    var projects = this.projectJdbcRepository.findProjects();
+  public ResponseEntity<List<ProjectDetails>> getProjects(
+      Optional<ProjectStatus> status
+  ) {
+    var projects = this.projectJdbcRepository.findProjects(status);
     return ResponseEntity.ok(projects);
   }
 }

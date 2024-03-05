@@ -14,6 +14,7 @@ import org.springframework.web.service.annotation.PostExchange;
 
 import no.isi.insight.planner.client.project.view.CreateProjectRequest;
 import no.isi.insight.planner.client.project.view.ProjectDetails;
+import no.isi.insight.planner.client.project.view.ProjectStatus;
 import no.isi.insight.planner.client.project.view.RoadRailing;
 
 @HttpExchange("/api/v1/projects")
@@ -49,7 +50,9 @@ public interface ProjectRestService {
    * Get a list of all projects.
    */
   @GetExchange
-  ResponseEntity<List<ProjectDetails>> getProjects();
+  ResponseEntity<List<ProjectDetails>> getProjects(
+      @RequestParam Optional<ProjectStatus> status
+  );
 
   /**
    * Get a project by its id.

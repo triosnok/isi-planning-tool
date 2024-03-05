@@ -24,11 +24,19 @@ export interface CreateProjectPlanRequest {
     vehicleId?: string | null;
 }
 
+export interface CreateProjectPlanResponse {
+    projectPlanId: string;
+}
+
 export interface CreateProjectRequest {
     name: string;
     referenceCode: string;
     startsAt: DateAsString;
     endsAt: DateAsString;
+}
+
+export interface CreateProjectResponse {
+    projectId: string;
 }
 
 export interface ProjectDetails {
@@ -37,6 +45,10 @@ export interface ProjectDetails {
     referenceCode: string;
     startsAt: DateAsString;
     endsAt: DateAsString;
+    capturedLength: number;
+    totalLength: number;
+    deviations: number;
+    notes: number;
     status: ProjectStatus;
 }
 
@@ -65,6 +77,16 @@ export interface CreateVehicleRequest {
     gnssId: string;
 }
 
+export interface UpdateVehicleRequest {
+    imageUrl: string;
+    registrationNumber: string;
+    model: string;
+    camera: boolean;
+    description: string;
+    gnssId: string;
+    inactiveFrom: DateAsString;
+}
+
 export interface VehicleDetails {
     id: string;
     imageUrl: string;
@@ -73,6 +95,8 @@ export interface VehicleDetails {
     camera: boolean;
     description: string;
     gnssId: string;
+    inactiveFrom: DateAsString;
+    active: boolean;
 }
 
 export type DateAsString = string;

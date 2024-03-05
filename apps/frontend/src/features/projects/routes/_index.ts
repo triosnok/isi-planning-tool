@@ -9,11 +9,14 @@ export const routes: RouteDefinition[] = [
     children: [
       { path: '/', component: lazy(() => import('./Projects')) },
       { path: '/new', component: lazy(() => import('./NewProject')) },
+      { path: '/:id', component: lazy(() => import('./Project')) },
     ],
     meta: {
-      authentication: {
-        status: AuthStatus.SIGNED_IN,
-      },
+      // authentication: {
+      //   status: AuthStatus.SIGNED_IN,
+      // },
     },
   },
 ];
+
+//todo: fix auth here

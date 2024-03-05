@@ -1,7 +1,4 @@
-import Header from '@/components/layout/Header';
-import MapRailingLayer from '@/components/map/MapRailingLayer';
-import MapRoot from '@/components/map/MapRoot';
-import ProjectCard from '@/components/projects/ProjectCard';
+import ProjectCard from '@/features/projects/components/ProjectCard';
 import {
   Accordion,
   AccordionContent,
@@ -12,9 +9,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { A } from '@solidjs/router';
 import { IconPlus } from '@tabler/icons-solidjs';
-import { Component } from 'solid-js';
+import { Component, For } from 'solid-js';
+import { useProjectsQuery } from '../api';
+import dayjs from 'dayjs';
 
-const Projects: Component = (props) => {
+const Projects: Component = () => {
+  const ongoingProjects = useProjectsQuery('ONGOING');
+  const upcomingProjects = useProjectsQuery('UPCOMING');
+  const previousProjects = useProjectsQuery('PREVIOUS');
+
   return (
     <div>
       <div class='space-y-2 p-2'>
@@ -30,28 +33,57 @@ const Projects: Component = (props) => {
       </div>
       <Accordion multiple={true} defaultValue={['ongoing', 'upcoming']}>
         <AccordionItem value='ongoing'>
-          <AccordionTrigger class='bg-gray-100 px-2 py-1 text-xl font-semibold'>
-            Ongoing
-          </AccordionTrigger>
-          <AccordionContent class='space-y-2 p-2'>
-            <ProjectCard />
+          <AccordionTrigger>Ongoing</AccordionTrigger>
+          <AccordionContent class='flex flex-col space-y-2 p-2'>
+            <For each={ongoingProjects.data}>
+              {(project) => (
+                <A href={`/projects/${project.id}`}>
+                  <ProjectCard
+                    name={project.name}
+                    referenceCode={project.referenceCode}
+                    startsAt={dayjs(project.startsAt).format('DD MMM')}
+                    endsAt={dayjs(project.endsAt).format('DD MMM')}
+                    status={project.status}
+                  />
+                </A>
+              )}
+            </For>
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value='upcoming'>
-          <AccordionTrigger class='bg-gray-100 px-2 py-1 text-xl font-semibold'>
-            Upcoming
-          </AccordionTrigger>
-          <AccordionContent class='space-y-2 p-2'>
-            <ProjectCard />
-            <ProjectCard />
+          <AccordionTrigger>Upcoming</AccordionTrigger>
+          <AccordionContent class='flex flex-col space-y-2 p-2'>
+            <For each={upcomingProjects.data}>
+              {(project) => (
+                <A href={`/projects/${project.id}`}>
+                  <ProjectCard
+                    name={project.name}
+                    referenceCode={project.referenceCode}
+                    startsAt={dayjs(project.startsAt).format('DD MMM')}
+                    endsAt={dayjs(project.endsAt).format('DD MMM')}
+                    status={project.status}
+                  />
+                </A>
+              )}
+            </For>
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value='previous'>
-          <AccordionTrigger class='bg-gray-100 px-2 py-1 text-xl font-semibold'>
-            Previous
-          </AccordionTrigger>
-          <AccordionContent class='space-y-2 p-2'>
-            <ProjectCard />
+          <AccordionTrigger>Previous</AccordionTrigger>
+          <AccordionContent class='flex flex-col space-y-2 p-2'>
+            <For each={previousProjects.data}>
+              {(project) => (
+                <A href={`/projects/${project.id}`}>
+                  <ProjectCard
+                    name={project.name}
+                    referenceCode={project.referenceCode}
+                    startsAt={dayjs(project.startsAt).format('DD MMM')}
+                    endsAt={dayjs(project.endsAt).format('DD MMM')}
+                    status={project.status}
+                  />
+                </A>
+              )}
+            </For>
           </AccordionContent>
         </AccordionItem>
       </Accordion>
