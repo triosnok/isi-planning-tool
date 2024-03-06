@@ -1,8 +1,12 @@
 spring:
   config:
     import: optional:file:.env[.properties]
-  jpa:
-    database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
 
 no.isi.insight.planning:
   auth:
