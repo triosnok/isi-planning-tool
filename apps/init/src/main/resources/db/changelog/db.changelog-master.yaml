@@ -37,3 +37,10 @@ databaseChangeLog:
         - sqlFile:
             path: 004-trip/000-create-trip-tables.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: 005-capture
+      author: halvard
+      changes:
+        - sqlFile:
+            path: 005-capture/000-create-capture-table.sql
+            relativeToChangelogFile: true
