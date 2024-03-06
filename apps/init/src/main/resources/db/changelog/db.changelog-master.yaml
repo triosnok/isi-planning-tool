@@ -30,3 +30,10 @@ databaseChangeLog:
         - sqlFile:
             path: 003-vehicle/001-add-project-plan-vehicle-assignment.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: 004-trip
+      author: gisle
+      changes:
+        - sqlFile:
+            path: 004-trip/000-create-trip-tables.sql
+            relativeToChangelogFile: true
