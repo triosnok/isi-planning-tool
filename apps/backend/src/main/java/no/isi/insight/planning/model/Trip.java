@@ -61,4 +61,22 @@ public class Trip {
 
   @Embedded
   private Audit audit;
+
+  public Trip(
+      Vehicle vehicle,
+      UserAccount driverUser,
+      ProjectPlan projectPlan,
+      LocalDate startedAt,
+      LocalDate endedAt,
+      String gnssLog,
+      Map<String, RoadSide> cameraLogs
+  ) {
+    this.vehicle = vehicle;
+    this.driverUser = driverUser;
+    this.projectPlan = projectPlan;
+    this.startedAt = startedAt;
+    this.endedAt = endedAt;
+    this.gnssLog = gnssLog;
+    this.cameraLogs = cameraLogs;
+  }
 }
