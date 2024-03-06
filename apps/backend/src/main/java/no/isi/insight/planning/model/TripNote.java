@@ -2,7 +2,7 @@ package no.isi.insight.planning.model;
 
 import java.util.UUID;
 
-import org.springframework.data.geo.Point;
+import org.locationtech.jts.geom.Point;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
