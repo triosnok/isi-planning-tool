@@ -13,5 +13,5 @@ import org.springframework.security.access.prepost.PreAuthorize;
     ElementType.METHOD, ElementType.TYPE
 })
 @Retention(RetentionPolicy.RUNTIME)
-@PreAuthorize("hasRole('PLANNER')")
+@PreAuthorize("hasAuthority('PLANNER')")
 public @interface PlannerAuthorization {}
