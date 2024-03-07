@@ -6,7 +6,12 @@ import {
 } from '@/components/ui/accordion';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { SubmitHandler, createForm, zodForm } from '@modular-forms/solid';
+import {
+  SubmitHandler,
+  createForm,
+  setValue,
+  zodForm,
+} from '@modular-forms/solid';
 import { A, useNavigate, useParams } from '@solidjs/router';
 import {
   IconChevronLeft,
@@ -21,6 +26,7 @@ import { Progress } from '@/components/ui/progress';
 import VehicleSelect from '@/features/vehicles/components/VehicleSelect';
 import { useVehiclesQuery } from '@/features/vehicles/api';
 import dayjs from 'dayjs';
+import DatePicker from '@/components/temporal/DatePicker';
 
 const ProjectPlanSchema = z.object({
   importUrl: z.string(),
@@ -36,7 +42,7 @@ const Project: Component = () => {
   const project = useProjectDetailsQuery(params.id);
   const { create } = useProjectPlansMutation(params.id);
 
-  const [, { Form, Field }] = createForm({
+  const [form, { Form, Field }] = createForm({
     validate: zodForm(ProjectPlanSchema),
   });
   const navigate = useNavigate();
@@ -89,39 +95,47 @@ const Project: Component = () => {
               </A>
             </div>
             <div class='text-center'>
-              <Progress class='rounded-lg' value={20} />
-              <p>200/1000 m</p>
+              <Progress class='rounded-lg' value={0} />
+              <p>{'0/0 m'}</p>
             </div>
           </div>
         </div>
 
-        <Accordion multiple={true} defaultValue={['plans', 'railings']}>
+        <Accordion multiple={true} defaultValue={['plans']}>
           <AccordionItem value='plans'>
             <AccordionTrigger>Plans</AccordionTrigger>
             <AccordionContent class='flex flex-col space-y-2 p-2'>
-              <div class='flex gap-2'>
-                <div class='grow'>
+              <div class='flex justify-between gap-2'>
+                <div>
                   <Label for='startsAt'>Start date</Label>
                   <Field name='startsAt' type='string'>
-                    {(field, props) => (
-                      <Input
-                        {...props}
-                        type='date'
-                        id='startsAt'
-                        placeholder='Start date'
+                    {(field) => (
+                      <DatePicker
+                        value={dayjs(field.value).toDate()}
+                        onChange={(v) =>
+                          setValue(
+                            form,
+                            'startsAt',
+                            v!.toISOString() ?? undefined
+                          )
+                        }
                       />
                     )}
                   </Field>
                 </div>
-                <div class='grow'>
+                <div>
                   <Label for='endsAt'>End date</Label>
                   <Field name='endsAt' type='string'>
-                    {(field, props) => (
-                      <Input
-                        {...props}
-                        type='date'
-                        id='endsAt'
-                        placeholder='End date'
+                    {(field) => (
+                      <DatePicker
+                        value={dayjs(field.value).toDate()}
+                        onChange={(v) =>
+                          setValue(
+                            form,
+                            'endsAt',
+                            v!.toISOString() ?? undefined
+                          )
+                        }
                       />
                     )}
                   </Field>
@@ -144,8 +158,16 @@ const Project: Component = () => {
               <Button class='grow'>Import and save</Button>
             </AccordionContent>
           </AccordionItem>
+          <AccordionItem value='trips'>
+            <AccordionTrigger>Trips</AccordionTrigger>
+            <AccordionContent class='flex flex-col space-y-2 p-2'></AccordionContent>
+          </AccordionItem>
           <AccordionItem value='railings'>
             <AccordionTrigger>Railings</AccordionTrigger>
+            <AccordionContent class='flex flex-col space-y-2 p-2'></AccordionContent>
+          </AccordionItem>
+          <AccordionItem value='deviations'>
+            <AccordionTrigger>Deviations</AccordionTrigger>
             <AccordionContent class='flex flex-col space-y-2 p-2'></AccordionContent>
           </AccordionItem>
         </Accordion>
