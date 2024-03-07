@@ -32,7 +32,7 @@ const ProjectPlanSchema = z.object({
   importUrl: z.string(),
   startsAt: z.string().datetime(),
   endsAt: z.string().datetime(),
-  vehicleId: z.string().nullable(),
+  vehicleId: z.string().optional(),
 });
 
 type ProjectPlanForm = z.infer<typeof ProjectPlanSchema>;
@@ -85,7 +85,7 @@ const Project: Component = () => {
                 </h2>
                 <div class='text-success-500 flex items-center gap-1'>
                   <IconCircleCheckFilled size={16} />
-                  <p class='text-sm'>Done</p>
+                  <p class='text-sm'>{project.data?.status}</p>
                 </div>
               </div>
               <A href=''>
@@ -95,8 +95,8 @@ const Project: Component = () => {
               </A>
             </div>
             <div class='text-center'>
-              <Progress class='rounded-lg' value={0} />
-              <p>{'0/0 m'}</p>
+              <Progress class='rounded-lg' value={20} />
+              <p>{'2 000 / 10 000 m'}</p>
             </div>
           </div>
         </div>
@@ -155,7 +155,9 @@ const Project: Component = () => {
                   />
                 )}
               </Field>
-              <Button class='grow'>Import and save</Button>
+              <Button class='grow' type='submit'>
+                Import and save
+              </Button>
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value='trips'>
