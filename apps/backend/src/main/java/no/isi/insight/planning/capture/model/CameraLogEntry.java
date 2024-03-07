@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import no.isi.insight.planner.client.trip.view.CameraPosition;
 
 @Getter
 @NoArgsConstructor
