@@ -18,7 +18,7 @@ import dayjs from 'dayjs';
 const ProjectSchema = z.object({
   name: z.string(),
   referenceCode: z.string(),
-  startsAt: z.string(),
+  startsAt: z.string().datetime(),
   endsAt: z.string().datetime().optional(),
 });
 
