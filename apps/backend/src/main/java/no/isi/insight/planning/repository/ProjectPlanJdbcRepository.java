@@ -94,7 +94,7 @@ public class ProjectPlanJdbcRepository {
     params.addValue("id", null, Types.VARCHAR);
     params.addValue("projectId", projectId, Types.VARCHAR);
 
-    return this.jdbcTemplate.query(PLAN_DETAILS_QUERY, PLAN_DETAILS_MAPPER);
+    return this.jdbcTemplate.query(PLAN_DETAILS_QUERY, params, PLAN_DETAILS_MAPPER);
   }
 
 }
