@@ -14,6 +14,7 @@ dependencies {
   implementation 'com.nimbusds:nimbus-jose-jwt:9.37.3'
   implementation 'org.hibernate:hibernate-spatial:6.4.1.Final'
   implementation 'org.locationtech.jts:jts:1.19.0'
+  implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv'
   compileOnly 'org.projectlombok:lombok'
   developmentOnly project(':apps:init')
   developmentOnly 'org.springframework.boot:spring-boot-devtools'
