@@ -1,6 +1,7 @@
 package no.isi.insight.planning.trip.controller;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +19,8 @@ public class TripRestServiceImpl implements TripRestService {
 
   @Override
   public ResponseEntity<TripDetails> createTrip(
-
+      UUID projectId,
+      UUID planId
   ) {
 
     Trip trip = new Trip();
