@@ -15,6 +15,7 @@ import {
   useQueryClient,
 } from '@tanstack/solid-query';
 import axios from 'axios';
+import { Accessor } from 'solid-js';
 
 export const useProjectsQuery = (status?: ProjectStatus) => {
   const params = new URLSearchParams();
@@ -108,10 +109,12 @@ export const useProjectPlansQuery = (projectId: string) => {
   }));
 };
 
-export const useProjectRailings = (projectId?: string) => {
+export const useProjectRailings = (projectId: Accessor<string | undefined>) => {
   return createQuery(() => ({
-    queryKey: [projectId],
-    queryFn: async () => {
+    queryKey: [projectId()] as const,
+    queryFn: async ({ queryKey }) => {
+      const [projectId] = queryKey;
+
       if (projectId === undefined) return [];
 
       const response = await axios.get<RoadRailing[]>(

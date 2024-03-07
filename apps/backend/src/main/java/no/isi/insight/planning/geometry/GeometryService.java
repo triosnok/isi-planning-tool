@@ -2,8 +2,10 @@ package no.isi.insight.planning.geometry;
 
 import java.util.Optional;
 
+import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.locationtech.jts.io.WKTReader;
 import org.springframework.stereotype.Service;
@@ -15,12 +17,14 @@ import lombok.extern.slf4j.Slf4j;
 public class GeometryService {
   private final GeometryFactory geometryFactory;
   private final WKTReader wktReader;
+  private final PrecisionModel precisionModel;
 
   public GeometryService(
       GeometryProperties properties
   ) {
+    this.precisionModel = new PrecisionModel();
     this.geometryFactory = new GeometryFactory(
-      new PrecisionModel(),
+      this.precisionModel,
       properties.getSRID()
     );
 
@@ -48,6 +52,26 @@ public class GeometryService {
       log.debug("Failed to parse wkt: {}", e.getMessage(), e);
       return Optional.empty();
     }
+  }
+
+  /**
+   * Creates a Point from the given coordinates.
+   * 
+   * @param lon the longitude
+   * @param lat the latitude
+   * 
+   * @return the created Point
+   */
+  public Point createPoint(
+      Double lon,
+      Double lat
+  ) {
+    return this.geometryFactory.createPoint(
+      new Coordinate(
+        lon,
+        lat
+      )
+    );
   }
 
 }
