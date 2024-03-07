@@ -41,11 +41,11 @@ const NewProject: Component = () => {
 
   return (
     <Form
-      class='flex h-full flex-col justify-between'
+      class='flex h-full flex-col justify-between p-2'
       id='new-project-form'
       onSubmit={handleSubmit}
     >
-      <div class='p-2'>
+      <div>
         <div class='flex flex-col'>
           <div class='flex'>
             <A
@@ -115,9 +115,7 @@ const NewProject: Component = () => {
         </div>
       </div>
 
-      <Button type='submit' class='rounded-none'>
-        Save
-      </Button>
+      <Button type='submit'>Save</Button>
     </Form>
   );
 };
