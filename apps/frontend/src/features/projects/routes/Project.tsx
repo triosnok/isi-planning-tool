@@ -142,7 +142,7 @@ const Project: Component = () => {
                 </div>
               </div>
               <Label for='vehicle'>Vehicle</Label>
-              <VehicleSelect vehicles={vehicles.data ?? []} />
+              <VehicleSelect vehicles={vehicles.data ?? []} emptyText='No vehicle selected.' />
               <Label for='importUrl'>Import railings</Label>
               <Field name='importUrl'>
                 {(field, props) => (
