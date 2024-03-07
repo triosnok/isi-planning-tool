@@ -17,16 +17,21 @@ export interface VehicleSelectProps {
   value?: VehicleDetails;
   vehicles: VehicleDetails[];
   emptyText?: string;
-  onChange?: (vehicle: VehicleDetails) => void;
+  onChange?: (vehicle?: VehicleDetails) => void;
 }
 
 const VehicleSelect: Component<VehicleSelectProps> = (props) => {
   const [value, setValue] = createSignal(props.value);
 
+  const handleChange = (value?: VehicleDetails) => {
+    setValue(value);
+    props.onChange?.(value);
+  };
+
   return (
     <Select<VehicleDetails>
       value={value()}
-      onChange={setValue}
+      onChange={handleChange}
       options={props.vehicles}
       optionValue='id'
       itemComponent={(props) => (

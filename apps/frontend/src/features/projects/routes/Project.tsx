@@ -142,7 +142,13 @@ const Project: Component = () => {
                 </div>
               </div>
               <Label for='vehicle'>Vehicle</Label>
-              <VehicleSelect vehicles={vehicles.data ?? []} emptyText='No vehicle selected.' />
+
+              <VehicleSelect
+                vehicles={vehicles.data ?? []}
+                onChange={(v) => setValue(form, 'vehicleId', v?.id)}
+                emptyText='No vehicle selected.'
+              />
+
               <Label for='importUrl'>Import railings</Label>
               <Field name='importUrl'>
                 {(field, props) => (
