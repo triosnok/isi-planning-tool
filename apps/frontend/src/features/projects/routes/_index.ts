@@ -12,11 +12,9 @@ export const routes: RouteDefinition[] = [
       { path: '/:id', component: lazy(() => import('./Project')) },
     ],
     meta: {
-      // authentication: {
-      //   status: AuthStatus.SIGNED_IN,
-      // },
+      authentication: {
+        status: AuthStatus.SIGNED_IN,
+      },
     },
   },
 ];
-
-//todo: fix auth here
