@@ -100,7 +100,7 @@ export const useProjectPlansQuery = (projectId: string) => {
   return createQuery(() => ({
     queryKey: [CacheKey.PROJECT_PLAN_LIST, projectId],
     queryFn: async () => {
-      const response = await axios.get<ProjectPlanDetails>(
+      const response = await axios.get<ProjectPlanDetails[]>(
         `/api/v1/projects/${projectId}/plans`
       );
 

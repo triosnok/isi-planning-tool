@@ -4,100 +4,73 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  SubmitHandler,
-  createForm,
-  setValue,
-  zodForm,
-} from '@modular-forms/solid';
-import { A, useNavigate, useParams } from '@solidjs/router';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { A, useParams } from '@solidjs/router';
 import {
   IconChevronLeft,
   IconCircleCheckFilled,
   IconEdit,
+  IconPlus,
 } from '@tabler/icons-solidjs';
-import { Component } from 'solid-js';
-import { z } from 'zod';
-import { useProjectPlansMutation, useProjectDetailsQuery } from '../api';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import VehicleSelect from '@/features/vehicles/components/VehicleSelect';
-import { useVehiclesQuery } from '@/features/vehicles/api';
 import dayjs from 'dayjs';
-import DatePicker from '@/components/temporal/DatePicker';
+import { Component, For, Show, createSignal } from 'solid-js';
+import { useProjectDetailsQuery, useProjectPlansQuery } from '../api';
+import PlanCard from '../components/PlanCard';
+import { LayoutProps } from '@/lib/utils';
 
-const ProjectPlanSchema = z.object({
-  importUrl: z.string(),
-  startsAt: z.string().datetime(),
-  endsAt: z.string().datetime(),
-  vehicleId: z.string().optional(),
-});
-
-type ProjectPlanForm = z.infer<typeof ProjectPlanSchema>;
-
-const Project: Component = () => {
+const Project: Component<LayoutProps> = (props) => {
   const params = useParams();
   const project = useProjectDetailsQuery(params.id);
-  const { create } = useProjectPlansMutation(params.id);
+  const plans = useProjectPlansQuery(params.id);
+  const [selectedPlans, setSelectedPlans] = createSignal<string[]>([]);
 
-  const [form, { Form, Field }] = createForm({
-    validate: zodForm(ProjectPlanSchema),
-  });
-  const navigate = useNavigate();
-  const vehicles = useVehiclesQuery();
-  const handleSubmit: SubmitHandler<ProjectPlanForm> = async (values) => {
-    try {
-      await create.mutateAsync(values);
-      navigate('/projects');
-    } catch (error) {
-      // ignored
+  const handlePlanToggled = (planId: string) => {
+    const plans = selectedPlans();
+
+    if (plans.includes(planId)) {
+      setSelectedPlans((p) => p.filter((id) => id !== planId));
+    } else {
+      setSelectedPlans([...plans, planId]);
     }
   };
 
   return (
-    <Form
-      class='flex h-full flex-col justify-between'
-      id='new-project-plan-form'
-      onSubmit={handleSubmit}
-    >
-      <div>
-        <div class='p-2'>
-          <div class='flex flex-col'>
-            <div class='flex'>
-              <A
-                href='/projects'
-                class='flex items-center text-sm text-gray-600 hover:underline'
-              >
-                <IconChevronLeft size={16} />
-                <p class='flex-none'>Back</p>
-              </A>
-            </div>
+    <>
+      <div class='p-2'>
+        <div class='flex flex-col'>
+          <div class='flex'>
+            <A
+              href='/projects'
+              class='flex items-center text-sm text-gray-600 hover:underline'
+            >
+              <IconChevronLeft size={16} />
+              <p class='flex-none'>Back</p>
+            </A>
           </div>
-          <div class='space-y-2'>
-            <div class='flex justify-between'>
-              <div>
-                <h1 class='text-4xl font-bold'>{project.data?.name}</h1>
-                <h2>
-                  {dayjs(project.data?.startsAt).format('DD MMM')} -{' '}
-                  {dayjs(project.data?.endsAt).format('DD MMM')}
-                </h2>
-                <div class='text-success-500 flex items-center gap-1'>
-                  <IconCircleCheckFilled size={16} />
-                  <p class='text-sm'>{project.data?.status}</p>
-                </div>
+        </div>
+        <div class='space-y-2'>
+          <div class='flex justify-between'>
+            <div>
+              <h1 class='text-4xl font-bold'>{project.data?.name}</h1>
+              <h2>
+                {dayjs(project.data?.startsAt).format('MMM D')} -{' '}
+                {dayjs(project.data?.endsAt).format('MMM D')}
+              </h2>
+              <div class='text-success-500 flex items-center gap-1'>
+                <IconCircleCheckFilled size={16} />
+                <p class='text-sm'>{project.data?.status}</p>
               </div>
-              <A href=''>
-                <Button>
-                  <IconEdit />
-                </Button>
-              </A>
             </div>
-            <div class='text-center'>
-              <Progress class='rounded-lg' value={20} />
-              <p>{'2 000 / 10 000 m'}</p>
-            </div>
+            <A href=''>
+              <Button>
+                <IconEdit />
+              </Button>
+            </A>
+          </div>
+          <div class='text-center'>
+            <Progress class='rounded-lg' value={20} />
+            <p>{'2 000 / 10 000 m'}</p>
           </div>
         </div>
 
@@ -105,65 +78,33 @@ const Project: Component = () => {
           <AccordionItem value='plans'>
             <AccordionTrigger>Plans</AccordionTrigger>
             <AccordionContent class='flex flex-col space-y-2 p-2'>
-              <div class='flex justify-between gap-2'>
-                <div>
-                  <Label for='startsAt'>Start date</Label>
-                  <Field name='startsAt' type='string'>
-                    {(field) => (
-                      <DatePicker
-                        value={dayjs(field.value).toDate()}
-                        onChange={(v) =>
-                          setValue(
-                            form,
-                            'startsAt',
-                            v!.toISOString() ?? undefined
-                          )
-                        }
-                      />
-                    )}
-                  </Field>
-                </div>
-                <div>
-                  <Label for='endsAt'>End date</Label>
-                  <Field name='endsAt' type='string'>
-                    {(field) => (
-                      <DatePicker
-                        value={dayjs(field.value).toDate()}
-                        onChange={(v) =>
-                          setValue(
-                            form,
-                            'endsAt',
-                            v!.toISOString() ?? undefined
-                          )
-                        }
-                      />
-                    )}
-                  </Field>
-                </div>
-              </div>
-              <Label for='vehicle'>Vehicle</Label>
+              <Show
+                when={plans.data !== undefined && plans.data.length > 0}
+                fallback={<p>hihi</p>}
+              >
+                <A
+                  href={`/projects/${params.id}/plans/new`}
+                  class='text-brand-blue flex w-full items-center justify-end'
+                >
+                  <IconPlus class='h-4 w-4' />
+                  <span>Add plan</span>
+                </A>
 
-              <VehicleSelect
-                vehicles={vehicles.data ?? []}
-                onChange={(v) => setValue(form, 'vehicleId', v?.id)}
-                emptyText='No vehicle selected.'
-              />
-
-              <Label for='importUrl'>Import railings</Label>
-              <Field name='importUrl'>
-                {(field, props) => (
-                  <Input
-                    {...props}
-                    type='url'
-                    id='importUrl'
-                    placeholder='URL'
-                    value={field.value}
-                  />
-                )}
-              </Field>
-              <Button class='grow' type='submit'>
-                Import and save
-              </Button>
+                <For each={plans.data}>
+                  {(plan) => (
+                    <PlanCard
+                      car={plan.vehicleModel}
+                      startsAt={dayjs(plan.startsAt).format('MMM D')}
+                      endsAt={dayjs(plan.endsAt).format('MMM D')}
+                      length={Number(plan.meters.toFixed(0))}
+                      ongoingTripAmount={0}
+                      railingAmount={plan.railings}
+                      onToggle={() => handlePlanToggled(plan.id)}
+                      selected={selectedPlans().includes(plan.id)}
+                    />
+                  )}
+                </For>
+              </Show>
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value='trips'>
@@ -180,7 +121,9 @@ const Project: Component = () => {
           </AccordionItem>
         </Accordion>
       </div>
-    </Form>
+
+      {props.children}
+    </>
   );
 };
 

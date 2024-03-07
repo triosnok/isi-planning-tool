@@ -9,7 +9,23 @@ export const routes: RouteDefinition[] = [
     children: [
       { path: '/', component: lazy(() => import('./Projects')) },
       { path: '/new', component: lazy(() => import('./NewProject')) },
-      { path: '/:id', component: lazy(() => import('./Project')) },
+      {
+        path: '/:id',
+        component: lazy(() => import('./Project')),
+        children: [
+          {
+            path: '/',
+          },
+          {
+            path: '/plans/new',
+            component: lazy(() => import('./NewProjectPlan')),
+          },
+          {
+            path: '/plans/:planId',
+            component: lazy(() => import('./EditProjectPlan')),
+          },
+        ],
+      },
     ],
     meta: {
       authentication: {
