@@ -3,7 +3,7 @@ CREATE TABLE trip_railing_capture (
   fk_trip_id UUID NOT NULL,
   fk_road_railing_id UUID NOT NULL,
   captured_at TIMESTAMP DEFAULT NOW(),
-  position POINT,
+  position GEOMETRY(POINT),
   image_urls JSON,
 
   PRIMARY KEY (trip_railing_capture_id),
