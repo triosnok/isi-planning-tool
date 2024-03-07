@@ -46,15 +46,6 @@ const VehicleOverview: Component<LayoutProps> = (props) => {
               )}
             </For>
           </section>
-
-          <VehicleSelect
-            vehicles={vehicles.data ?? []}
-            onChange={() => 0}
-            emptyText='No vehicle assigned'
-          />
-
-          <DatePicker />
-          <DatePicker clearable class='w-full' />
         </main>
 
         <aside class='w-1/3'>
