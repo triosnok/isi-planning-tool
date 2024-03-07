@@ -1,5 +1,6 @@
 import { useSignOutMutation } from '@/features/auth/api';
 import { A } from '@solidjs/router';
+import { IconSearch } from '@tabler/icons-solidjs';
 import { Component } from 'solid-js';
 import Logo from '../logo/Logo';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
@@ -9,7 +10,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import { Input } from '../ui/input';
 
 const Header: Component = () => {
   const signOut = useSignOutMutation();
@@ -59,9 +59,14 @@ const Header: Component = () => {
         </div>
       </nav>
 
-      <section class='flex flex-1 items-center justify-center'>
-        <Input class='h-8 max-w-screen-sm' />
-      </section>
+      <label class='flex flex-1 items-center justify-center rounded-md border border-gray-300 bg-gray-50 pl-2 ring-gray-300 focus-within:ring-2'>
+        <IconSearch class='h-5 w-5 text-gray-400' />
+
+        <input
+          class='h-8 flex-1 bg-transparent px-2 focus:outline-none'
+          placeholder='Search...'
+        />
+      </label>
 
       <section class='flex flex-1 flex-row-reverse'>
         <DropdownMenu>
