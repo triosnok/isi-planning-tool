@@ -3,7 +3,7 @@ CREATE TABLE trip (
   fk_project_plan_id UUID,
   fk_driver_user_id UUID,
   fk_vehicle_id UUID,
-  started_at TIMESTAMP,
+  started_at TIMESTAMP DEFAULT NOW(),
   ended_at TIMESTAMP,
   gnss_log TEXT,
   camera_logs JSON,

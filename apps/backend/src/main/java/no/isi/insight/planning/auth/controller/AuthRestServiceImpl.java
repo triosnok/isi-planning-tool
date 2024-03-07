@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.WebUtils;
 
@@ -36,8 +35,7 @@ public class AuthRestServiceImpl implements AuthRestService {
   @Override
   @Authenticated
   public ResponseEntity<UserProfile> profile() {
-    var user = (UserAccountDetailsAdapter) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    var account = user.getUserAccount();
+    var account = RequestUtils.getRequestingUserAccount().orElseThrow(() -> new IllegalStateException("Cannot happen"));
     var role = switch (account.getRole()) {
       case DRIVER -> UserRole.DRIVER;
       case PLANNER -> UserRole.PLANNER;
