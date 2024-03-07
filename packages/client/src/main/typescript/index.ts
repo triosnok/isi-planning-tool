@@ -17,6 +17,11 @@ export interface UserProfile {
     role: UserRole;
 }
 
+export interface Geometry {
+    wkt: string;
+    srid: number;
+}
+
 export interface CreateProjectPlanRequest {
     importUrl: string;
     startsAt: DateAsString;
@@ -68,6 +73,28 @@ export interface RoadRailing {
     srid: number;
 }
 
+export interface CreateTripNoteRequest {
+    note: string;
+}
+
+export interface CreateTripRequest {
+    vehicleId: string;
+}
+
+export interface TripDetails {
+    id: string;
+    startedAt: DateAsString;
+    endedAt: DateAsString;
+    gnssLog: string;
+    cameraLogs: string;
+}
+
+export interface TripNoteDetails {
+    id: string;
+    note: string;
+    geometry: Geometry;
+}
+
 export interface CreateVehicleRequest {
     imageUrl?: string | null;
     registrationNumber: string;
@@ -104,3 +131,5 @@ export type DateAsString = string;
 export type UserRole = "DRIVER" | "PLANNER";
 
 export type ProjectStatus = "UPCOMING" | "ONGOING" | "PREVIOUS";
+
+export type CameraPosition = "LEFT" | "RIGHT" | "TOP";
