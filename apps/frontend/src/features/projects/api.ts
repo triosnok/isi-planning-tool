@@ -8,6 +8,7 @@ import {
   type ProjectDetails,
   type ProjectPlanDetails,
   type ProjectStatus,
+  CreateTripNoteRequest,
 } from '@isi-insight/client';
 import {
   createMutation,
@@ -72,13 +73,13 @@ export const useProjectsMutation = () => {
   return { create };
 };
 
-export const useProjectPlansMutation = (id: string) => {
+export const useProjectPlansMutation = (projectId: string) => {
   const qc = useQueryClient();
 
   const create = createMutation(() => ({
     mutationFn: async (plan: CreateProjectPlanRequest) => {
       const response = await axios.post<CreateProjectPlanResponse>(
-        `/api/v1/projects/${id}/plans`,
+        `/api/v1/projects/${projectId}/plans`,
         plan
       );
 
@@ -124,4 +125,16 @@ export const useProjectRailings = (projectId: Accessor<string | undefined>) => {
       return response.data;
     },
   }));
+};
+
+export const useTripNoteMutation = (tripId: string) => {
+  const create = createMutation(() => ({
+    mutationFn: async (note: CreateTripNoteRequest) => {
+      const response = await axios.post(`/api/v1/trips/${tripId}/notes`, note);
+
+      return response.data;
+    },
+  }));
+
+  return { create };
 };
