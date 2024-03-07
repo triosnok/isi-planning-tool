@@ -1,5 +1,7 @@
 package no.isi.insight.planning.trip.controller;
 
+import java.time.LocalDateTime;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,16 +17,19 @@ public class TripRestServiceImpl implements TripRestService {
   private final TripJpaRepository tripJpaRepository;
 
   @Override
-  public ResponseEntity<TripDetails> createTrip() {
+  public ResponseEntity<TripDetails> createTrip(
+
+  ) {
 
     Trip trip = new Trip();
+    trip.setStartedAt(LocalDateTime.now());
 
     Trip savedTrip = tripJpaRepository.save(trip);
 
     return ResponseEntity.ok(
       new TripDetails(
         savedTrip.getId(),
-        null,
+        savedTrip.getStartedAt(),
         null,
         null,
         null

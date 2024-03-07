@@ -1,6 +1,6 @@
 package no.isi.insight.planning.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
@@ -47,10 +47,10 @@ public class Trip {
   private ProjectPlan projectPlan;
 
   @Column(name = "started_at")
-  private LocalDate startedAt;
+  private LocalDateTime startedAt;
 
   @Column(name = "ended_at")
-  private LocalDate endedAt;
+  private LocalDateTime endedAt;
 
   @Column(name = "gnss_log")
   private String gnssLog;
@@ -66,8 +66,8 @@ public class Trip {
       Vehicle vehicle,
       UserAccount driverUser,
       ProjectPlan projectPlan,
-      LocalDate startedAt,
-      LocalDate endedAt,
+      LocalDateTime startedAt,
+      LocalDateTime endedAt,
       String gnssLog,
       Map<String, RoadSide> cameraLogs
   ) {
