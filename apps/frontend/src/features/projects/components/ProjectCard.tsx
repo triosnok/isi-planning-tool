@@ -43,13 +43,14 @@ const ProjectCard: Component<ProjectCardProps> = ({
             <h3 class='text-base font-semibold'>
               {name} - {referenceCode}
             </h3>
-            <div class='flex items-center gap-1'>
+            {/* <div class='flex items-center gap-1'>
               <IconRoute size={20} />
               <p>{geoCharacteristics}</p>
-            </div>
+            </div> */}
             <div class='flex items-center gap-1'>
               <IconRulerMeasure size={20} />
-              <p>{coverage}</p>
+              <p>{'2 000 / 10 000 m'}</p>
+              {/* <p>{coverage}</p> */}
             </div>
             <div class='flex items-center gap-1'>
               <IconCalendarClock size={20} />
@@ -64,11 +65,11 @@ const ProjectCard: Component<ProjectCardProps> = ({
               <IconCircleCheckFilled size={20} />
             </div>
             <div class='text-warning-500 flex flex-row-reverse items-center gap-1'>
-              <p>{deviationAmount} deviations</p>
+              <p>{deviationAmount} 3 deviations</p>
               <IconAlertCircleFilled size={20} />
             </div>
             <div class='flex flex-row-reverse items-center gap-1'>
-              <p>{noteAmount} notes</p>
+              <p>{noteAmount} 5 notes</p>
               <IconMessage size={20} />
             </div>
           </div>
