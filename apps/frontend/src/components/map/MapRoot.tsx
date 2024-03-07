@@ -51,9 +51,11 @@ export const parse = (wkt: string) => {
 
 const MapContext = createContext<MapContextValue>();
 
-export const MapRoot: Component<{ children?: JSX.Element; class?: string }> = (
-  props
-) => {
+export const MapRoot: Component<{
+  children?: JSX.Element;
+  class?: string;
+  customZoom?: boolean;
+}> = (props) => {
   const [map, setMap] = createSignal<Leaflet.Map>();
 
   let container: HTMLDivElement | undefined;
@@ -65,6 +67,7 @@ export const MapRoot: Component<{ children?: JSX.Element; class?: string }> = (
       center: [62.46, 6.4],
       zoom: 9,
       crs: CRS_PROJECTION,
+      zoomControl: !props.customZoom,
     });
 
     // better way to do this is to change maxZoom to length of resolution list from crs i think
