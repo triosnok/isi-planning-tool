@@ -8,15 +8,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import no.isi.insight.planner.client.trip.TripRestService;
+import no.isi.insight.planner.client.trip.view.CreateTripNoteRequest;
 import no.isi.insight.planner.client.trip.view.CreateTripRequest;
 import no.isi.insight.planner.client.trip.view.TripDetails;
+import no.isi.insight.planner.client.trip.view.TripNoteDetails;
 import no.isi.insight.planning.auth.annotation.DriverAuthorization;
 import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.model.ProjectPlan;
 import no.isi.insight.planning.model.Trip;
+import no.isi.insight.planning.model.TripNote;
 import no.isi.insight.planning.model.Vehicle;
 import no.isi.insight.planning.repository.ProjectPlanJpaRepository;
 import no.isi.insight.planning.repository.TripJpaRepository;
+import no.isi.insight.planning.repository.TripNoteJpaRepository;
 import no.isi.insight.planning.repository.VehicleJpaRepository;
 import no.isi.insight.planning.utility.RequestUtils;
 
@@ -26,6 +30,7 @@ public class TripRestServiceImpl implements TripRestService {
   private final TripJpaRepository tripJpaRepository;
   private final ProjectPlanJpaRepository planJpaRepository;
   private final VehicleJpaRepository vehicleJpaRepository;
+  private final TripNoteJpaRepository tripNoteJpaRepository;
 
   @Override
   @DriverAuthorization
@@ -57,6 +62,32 @@ public class TripRestServiceImpl implements TripRestService {
         savedTrip.getStartedAt(),
         null,
         null,
+        null
+      )
+    );
+  }
+
+  @Override
+  @DriverAuthorization
+  public ResponseEntity<TripNoteDetails> addNote(
+      UUID tripId,
+      CreateTripNoteRequest request
+  ) {
+
+    Trip trip = tripJpaRepository.findById(tripId).orElseThrow(() -> new NotFoundException("Trip not found"));
+
+    TripNote tripNote = new TripNote(
+      trip,
+      request.note(),
+      null
+    );
+
+    TripNote savedTripNote = tripNoteJpaRepository.save(tripNote);
+
+    return ResponseEntity.ok(
+      new TripNoteDetails(
+        savedTripNote.getId(),
+        savedTripNote.getNote(),
         null
       )
     );
