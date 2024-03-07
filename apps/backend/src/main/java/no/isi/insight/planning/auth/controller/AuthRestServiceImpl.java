@@ -16,7 +16,6 @@ import no.isi.insight.planner.client.auth.view.SignInRequest;
 import no.isi.insight.planner.client.auth.view.SignInResponse;
 import no.isi.insight.planner.client.auth.view.UserProfile;
 import no.isi.insight.planner.client.auth.view.UserRole;
-import no.isi.insight.planning.auth.SecurityUtils;
 import no.isi.insight.planning.auth.TokenClaim;
 import no.isi.insight.planning.auth.TokenType;
 import no.isi.insight.planning.auth.UserAccountDetailsAdapter;
