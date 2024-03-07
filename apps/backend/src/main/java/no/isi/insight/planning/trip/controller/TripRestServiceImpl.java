@@ -1,6 +1,8 @@
 package no.isi.insight.planning.trip.controller;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -91,5 +93,33 @@ public class TripRestServiceImpl implements TripRestService {
         null
       )
     );
+  }
+
+  @Override
+  public ResponseEntity<TripDetails> getTrip(
+      UUID tripId
+  ) {
+
+    Trip trip = tripJpaRepository.findById(tripId).orElseThrow(() -> new NotFoundException("Trip not found"));
+
+    return ResponseEntity.ok(
+      new TripDetails(
+        trip.getId(),
+        trip.getStartedAt(),
+        null,
+        null,
+        null
+      )
+    );
+  }
+
+  @Override
+  public ResponseEntity<List<TripDetails>> getTrips(
+      UUID projectId,
+      Optional<List<UUID>> planId
+  ) {
+    var trips = tripJpaRepository.findAllByProjectId(projectId, planId.orElse(null));
+
+    return ResponseEntity.ok(trips);
   }
 }
