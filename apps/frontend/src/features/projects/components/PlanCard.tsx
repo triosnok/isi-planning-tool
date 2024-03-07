@@ -1,5 +1,6 @@
+import { cn } from '@/lib/utils';
+import { IconCar, IconPencil, IconPoint } from '@tabler/icons-solidjs';
 import { Component } from 'solid-js';
-import { IconPoint, IconCar, IconPencil } from '@tabler/icons-solidjs';
 
 export interface PlanCardProps {
   startsAt: string;
@@ -7,40 +8,56 @@ export interface PlanCardProps {
   railingAmount: number;
   length: number;
   car: string;
-  ongoingTripAmount?: number;
+  ongoingTripAmount: number;
+  selected?: boolean;
+  onToggle?: () => void;
+  onEdit?: () => void;
 }
 
-const PlanCard: Component<PlanCardProps> = ({
-  startsAt,
-  endsAt,
-  railingAmount,
-  length,
-  car,
-  ongoingTripAmount,
-}) => {
+const PlanCard: Component<PlanCardProps> = (props) => {
   return (
-    <div class='overflow-hidden rounded-lg border hover:cursor-pointer hover:bg-gray-100'>
+    <div
+      onClick={props.onToggle}
+      class={cn(
+        'select-none overflow-hidden rounded-lg border transition-colors hover:cursor-pointer hover:bg-gray-100',
+        props.selected &&
+          'border-brand-blue-500 bg-brand-blue-50/40 hover:bg-brand-blue-50/80'
+      )}
+    >
       <div class='flex justify-between p-2'>
         <div class='flex items-center'>
-          <IconPoint size={20} />
+          <div
+            role='figure'
+            class={cn(
+              'mr-2 h-2 w-2 rounded-full border-2 border-gray-400',
+              props.selected && 'bg-brand-blue border-brand-blue'
+            )}
+          />
+
           <div class='flex flex-col'>
-            <p class='text-success-700 text-xs'>
-              {ongoingTripAmount} ongoing trips
+            <p
+              class={cn(
+                props.ongoingTripAmount === 0 && 'hidden',
+                'text-success-700 text-xs'
+              )}
+            >
+              {props.ongoingTripAmount} ongoing trips
             </p>
             <h3 class='text-xl font-semibold'>
-              {startsAt} - {endsAt}
+              {props.startsAt} - {props.endsAt}
             </h3>
-            <div class='flex items-center gap-1'>
-              <IconCar size={20} />
-              <p>{car}</p>
+            <div class='flex items-center gap-1 text-gray-800'>
+              <IconCar class='h-5 w-5' />
+              <p>{props.car}</p>
             </div>
           </div>
         </div>
 
         <div class='flex flex-col items-end'>
-          <IconPencil size={20} />
-          <p>{railingAmount} railings</p>
-          <p>{length} m</p>
+          <IconPencil class='h-5 w-5' />
+
+          <p>{props.railingAmount} railings</p>
+          <p>{props.length} m</p>
         </div>
       </div>
     </div>
