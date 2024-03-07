@@ -19,6 +19,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import no.isi.insight.planner.client.trip.view.CameraPosition;
 
 @Getter
 @Setter
@@ -57,7 +58,7 @@ public class Trip {
 
   @JdbcTypeCode(SqlTypes.JSON)
   @Column(name = "camera_logs")
-  private Map<String, RoadSide> cameraLogs;
+  private Map<CameraPosition, String> cameraLogs;
 
   @Embedded
   private Audit audit;
@@ -69,7 +70,7 @@ public class Trip {
       LocalDateTime startedAt,
       LocalDateTime endedAt,
       String gnssLog,
-      Map<String, RoadSide> cameraLogs
+      Map<CameraPosition, String> cameraLogs
   ) {
     this.vehicle = vehicle;
     this.driverUser = driverUser;
