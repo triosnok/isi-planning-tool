@@ -62,8 +62,8 @@ export const MapRoot: Component<{ children?: JSX.Element; class?: string }> = (
     if (!container) return;
 
     const map = Leaflet.map(container, {
-      center: [203174.5, 6876298.5],
-      zoom: 7,
+      center: [62.46, 6.4],
+      zoom: 9,
       crs: CRS_PROJECTION,
     });
 
