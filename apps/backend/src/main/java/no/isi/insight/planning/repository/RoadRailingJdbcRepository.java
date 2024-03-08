@@ -30,7 +30,8 @@ public class RoadRailingJdbcRepository {
   public List<RoadRailing> getRailings(
       UUID projectId,
       Optional<UUID> planId,
-      Optional<UUID> tripId
+      Optional<UUID> tripId,
+      boolean hideCompleted
   ) {
     // language=sql
     var sql = """
@@ -59,6 +60,7 @@ public class RoadRailingJdbcRepository {
           AND (p.project_id = :projectId)
           AND (:planId IS NULL OR pp.project_plan_id = :planId::uuid)
           AND (:tripId IS NULL OR trc.fk_trip_id = :tripId::uuid)
+          AND (:hideCompleted = FALSE OR trc.captured_length < CEIL(rr.length))
       """;
 
     var params = new MapSqlParameterSource();
@@ -66,6 +68,7 @@ public class RoadRailingJdbcRepository {
     params.addValue("projectId", projectId);
     params.addValue("planId", planId.orElse(null), Types.VARCHAR);
     params.addValue("tripId", tripId.orElse(null), Types.VARCHAR);
+    params.addValue("hideCompleted", hideCompleted, Types.BOOLEAN);
 
     return this.jdbcTemplate.query(
       sql,

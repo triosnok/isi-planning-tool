@@ -33,7 +33,8 @@ public interface ProjectRestService {
   ResponseEntity<List<RoadRailing>> getRailings(
       @PathVariable UUID projectId,
       @RequestParam Optional<UUID> planId,
-      @RequestParam Optional<UUID> tripId
+      @RequestParam Optional<UUID> tripId,
+      @RequestParam Optional<Boolean> hideCompleted
   );
 
   /**

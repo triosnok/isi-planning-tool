@@ -48,9 +48,10 @@ public class ProjectRestServiceImpl implements ProjectRestService {
   public ResponseEntity<List<RoadRailing>> getRailings(
       UUID projectId,
       Optional<UUID> planId,
-      Optional<UUID> tripId
+      Optional<UUID> tripId,
+      Optional<Boolean> hideCompleted
   ) {
-    var railings = this.roadRailingJdbcRepository.getRailings(projectId, planId, tripId);
+    var railings = this.roadRailingJdbcRepository.getRailings(projectId, planId, tripId, hideCompleted.orElse(false));
     return ResponseEntity.ok(railings);
   }
 
