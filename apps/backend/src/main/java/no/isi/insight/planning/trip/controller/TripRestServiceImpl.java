@@ -97,6 +97,28 @@ public class TripRestServiceImpl implements TripRestService {
   }
 
   @Override
+  public ResponseEntity<TripNoteDetails> updateNote(
+      UUID noteId,
+      CreateTripNoteRequest request
+  ) {
+
+    TripNote tripNote = tripNoteJpaRepository.findById(noteId)
+      .orElseThrow(() -> new NotFoundException("Note not found"));
+
+    tripNote.setNote(request.note());
+
+    TripNote savedTripNote = tripNoteJpaRepository.save(tripNote);
+
+    return ResponseEntity.ok(
+      new TripNoteDetails(
+        savedTripNote.getId(),
+        savedTripNote.getNote(),
+        GeometryUtils.toClientGeometry(savedTripNote.getPosition())
+      )
+    );
+  }
+
+  @Override
   public ResponseEntity<TripDetails> getTrip(
       UUID tripId
   ) {

@@ -50,4 +50,10 @@ public interface TripRestService {
       @RequestBody UpdateTripRequest request
   );
 
+  @PutExchange("/{tripId}/notes")
+  ResponseEntity<TripNoteDetails> updateNote(
+      @RequestParam UUID noteId,
+      @RequestBody CreateTripNoteRequest request
+  );
+
 }
