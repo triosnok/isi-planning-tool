@@ -5,8 +5,9 @@ import {
   IconCamera,
   IconCircleCheckFilled,
   IconGps,
+  IconPhotoX,
 } from '@tabler/icons-solidjs';
-import { Component } from 'solid-js';
+import { Component, Show } from 'solid-js';
 
 export interface VehicleCardProps {
   imageUrl: string;
@@ -20,7 +21,17 @@ export interface VehicleCardProps {
 const VehicleCard: Component<VehicleCardProps> = (props) => {
   return (
     <div class='overflow-hidden rounded-md border'>
-      <img class='h-24 w-full' src={props.imageUrl} />
+      <Show
+        when={props.imageUrl}
+        fallback={
+          <div class='flex h-24 flex-col items-center justify-center bg-gray-200 text-gray-500'>
+            <IconPhotoX class='h-7 w-7' />
+            <span class='uppercase text-xs'>No image</span>
+          </div>
+        }
+      >
+        {(url) => <img class='h-24 w-full' src={url()} />}
+      </Show>
 
       <div class='relative flex flex-col p-2 py-2'>
         <h2 class='self-center text-xl font-semibold'>{props.name}</h2>
