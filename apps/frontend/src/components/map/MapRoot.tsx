@@ -73,7 +73,7 @@ export const MapRoot: Component<{
     // better way to do this is to change maxZoom to length of resolution list from crs i think
     const layer = new Leaflet.TileLayer(
       'https://services.geodataonline.no/arcgis/rest/services/Trafikkportalen/GeocacheTrafikkJPG/MapServer/tile/{z}/{y}/{x}',
-      { maxZoom: 14, minZoom: 0 }
+      { maxZoom: 16, minZoom: 3 }
     );
 
     map.addLayer(layer);
