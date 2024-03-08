@@ -19,13 +19,11 @@ import no.isi.insight.planner.client.trip.view.TripDetails;
 import no.isi.insight.planner.client.trip.view.TripNoteDetails;
 import no.isi.insight.planner.client.trip.view.UpdateTripRequest;
 
-@HttpExchange("/api/v1/projects/{projectId}/plans/{planId}/trips")
+@HttpExchange("/api/v1/trips")
 public interface TripRestService {
 
   @PostExchange
   ResponseEntity<TripDetails> createTrip(
-      @PathVariable UUID projectId,
-      @PathVariable UUID planId,
       @RequestBody CreateTripRequest request
   );
 
@@ -42,7 +40,7 @@ public interface TripRestService {
 
   @GetExchange
   ResponseEntity<List<TripDetails>> getTrips(
-      @PathVariable UUID projectId,
+      @RequestParam UUID projectId,
       @RequestParam Optional<List<UUID>> planId
   );
 

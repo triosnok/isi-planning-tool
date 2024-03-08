@@ -79,8 +79,11 @@ export const useProjectPlansMutation = (projectId: string) => {
   const create = createMutation(() => ({
     mutationFn: async (plan: CreateProjectPlanRequest) => {
       const response = await axios.post<CreateProjectPlanResponse>(
-        `/api/v1/projects/${projectId}/plans`,
-        plan
+        `/api/v1/project-plans`,
+        {
+          ...plan,
+          projectId,
+        }
       );
 
       return response.data;
@@ -102,7 +105,7 @@ export const useProjectPlansQuery = (projectId: string) => {
     queryKey: [CacheKey.PROJECT_PLAN_LIST, projectId],
     queryFn: async () => {
       const response = await axios.get<ProjectPlanDetails[]>(
-        `/api/v1/projects/${projectId}/plans`
+        `/api/v1/project-plans?projectId=${projectId}`
       );
 
       return response.data;
