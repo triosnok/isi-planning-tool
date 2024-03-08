@@ -14,6 +14,7 @@ import no.isi.insight.planner.client.project.ProjectPlanRestService;
 import no.isi.insight.planner.client.project.view.CreateProjectPlanRequest;
 import no.isi.insight.planner.client.project.view.ProjectPlanDetails;
 import no.isi.insight.planner.client.project.view.UpdateProjectPlanRequest;
+import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.geometry.GeometryService;
 import no.isi.insight.planning.integration.nvdb.RailingImportService;
 import no.isi.insight.planning.model.ProjectPlan;
@@ -41,33 +42,33 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
   public ResponseEntity<List<ProjectPlanDetails>> getPlans(
       UUID projectId
   ) {
-    return ResponseEntity.ok(this.projectPlanJdbcRepository.findPlanDetailsByProjectId(projectId));
+    return ResponseEntity.ok(this.projectPlanJdbcRepository.findByProjectId(projectId));
   }
 
   @Override
   public ResponseEntity<ProjectPlanDetails> getPlan(
-      UUID projectId,
       UUID planId
   ) {
-    var plan = this.projectPlanJdbcRepository.findPlanByIds(planId, projectId)
-      .orElseThrow(() -> new RuntimeException(""));
+    var plan = this.projectPlanJdbcRepository.findById(planId)
+      .orElseThrow(() -> new NotFoundException("Could not find a plan with id: " + planId));
 
     return ResponseEntity.ok(plan);
   }
 
   @Override
   public ResponseEntity<ProjectPlanDetails> createPlan(
-      UUID projectId,
       CreateProjectPlanRequest request
   ) {
-    var project = this.projectJpaRepository.findById(projectId)
+    var project = this.projectJpaRepository.findById(request.projectId())
       .orElseThrow(() -> new RuntimeException("Project not found"));
     var railings = this.railingImportService.importRailings(request.importUrl());
     Optional<Vehicle> vehicle = Optional.empty();
 
     if (request.vehicleId() != null) {
-      vehicle = Optional
-        .of(this.vehicleJpaRepository.findById(request.vehicleId()).orElseThrow(() -> new RuntimeException("")));
+      vehicle = Optional.of(
+        this.vehicleJpaRepository.findById(request.vehicleId())
+          .orElseThrow(() -> new NotFoundException("Could not find vehicle with id: " + request.vehicleId()))
+      );
     }
 
     var mappedRailings = new ArrayList<RoadRailing>();
@@ -110,7 +111,7 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
     var savedRailings = this.railingJpaRepository.saveAll(mappedRailings);
     savedRailings.forEach(plan::addRailing);
     var savedPlan = this.projectPlanJpaRepository.save(plan);
-    var planDetails = this.projectPlanJdbcRepository.findPlanDetailsById(savedPlan.getId());
+    var planDetails = this.projectPlanJdbcRepository.findById(savedPlan.getId());
 
     return ResponseEntity.ok(planDetails.get());
   }
@@ -140,7 +141,7 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
     }
 
     this.projectPlanJpaRepository.save(plan);
-    var details = this.projectPlanJdbcRepository.findPlanDetailsById(planId);
+    var details = this.projectPlanJdbcRepository.findById(planId);
 
     return ResponseEntity.ok(details.get());
   }

@@ -68,25 +68,17 @@ public class ProjectPlanJdbcRepository {
       .build();
   };
 
-  public Optional<ProjectPlanDetails> findPlanByIds(
-      UUID id,
-      UUID projectId
+  public Optional<ProjectPlanDetails> findById(
+      UUID id
   ) {
     var params = new MapSqlParameterSource();
 
     params.addValue("id", id, Types.VARCHAR);
-    params.addValue("projectId", projectId, Types.VARCHAR);
 
     return Optional.ofNullable(this.jdbcTemplate.queryForObject(PLAN_DETAILS_QUERY, params, PLAN_DETAILS_MAPPER));
   }
 
-  public Optional<ProjectPlanDetails> findPlanDetailsById(
-      UUID id
-  ) {
-    return this.findPlanByIds(id, null);
-  }
-
-  public List<ProjectPlanDetails> findPlanDetailsByProjectId(
+  public List<ProjectPlanDetails> findByProjectId(
       UUID projectId
   ) {
     var params = new MapSqlParameterSource();

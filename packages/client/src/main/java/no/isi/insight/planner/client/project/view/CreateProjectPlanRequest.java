@@ -12,6 +12,7 @@ import no.isi.insight.planner.client.annotation.Optional;
 
 @GenerateTypeScript
 public record CreateProjectPlanRequest(
+  @NotNull UUID projectId,
   @URL @NotBlank String importUrl,
   @NotNull LocalDate startsAt,
   @NotNull LocalDate endsAt,
