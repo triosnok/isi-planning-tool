@@ -38,12 +38,11 @@ public class TripRestServiceImpl implements TripRestService {
   @Override
   @DriverAuthorization
   public ResponseEntity<TripDetails> createTrip(
-      UUID projectId,
-      UUID planId,
       CreateTripRequest request
   ) {
 
-    ProjectPlan plan = planJpaRepository.findById(planId).orElseThrow(() -> new NotFoundException("Plan not found"));
+    ProjectPlan plan = planJpaRepository.findById(request.planId())
+      .orElseThrow(() -> new NotFoundException("Plan not found"));
 
     Vehicle vehicle = vehicleJpaRepository.findById(request.vehicleId())
       .orElseThrow(() -> new NotFoundException("Vehicle not found"));
