@@ -25,6 +25,7 @@ import no.isi.insight.planning.repository.ProjectPlanJpaRepository;
 import no.isi.insight.planning.repository.TripJpaRepository;
 import no.isi.insight.planning.repository.TripNoteJpaRepository;
 import no.isi.insight.planning.repository.VehicleJpaRepository;
+import no.isi.insight.planning.utility.GeometryUtils;
 import no.isi.insight.planning.utility.RequestUtils;
 
 @RestController
@@ -90,7 +91,7 @@ public class TripRestServiceImpl implements TripRestService {
       new TripNoteDetails(
         savedTripNote.getId(),
         savedTripNote.getNote(),
-        null
+        GeometryUtils.toClientGeometry(savedTripNote.getPosition())
       )
     );
   }
