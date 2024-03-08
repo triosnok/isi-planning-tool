@@ -6,10 +6,13 @@ import {
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { LayoutProps } from '@/lib/utils';
 import { A, useParams } from '@solidjs/router';
 import {
+  IconCalendarSad,
   IconChevronLeft,
   IconCircleCheckFilled,
+  IconCirclePlus,
   IconEdit,
   IconPlus,
 } from '@tabler/icons-solidjs';
@@ -17,7 +20,6 @@ import dayjs from 'dayjs';
 import { Component, For, Show, createSignal } from 'solid-js';
 import { useProjectDetailsQuery, useProjectPlansQuery } from '../api';
 import PlanCard from '../components/PlanCard';
-import { LayoutProps } from '@/lib/utils';
 
 const Project: Component<LayoutProps> = (props) => {
   const params = useParams();
@@ -80,7 +82,17 @@ const Project: Component<LayoutProps> = (props) => {
           <AccordionContent class='flex flex-col space-y-2 p-2'>
             <Show
               when={plans.data !== undefined && plans.data.length > 0}
-              fallback={<p>hihi</p>}
+              fallback={
+                <A
+                  href={`/projects/${params.id}/plans/new`}
+                  class='group flex flex-col items-center rounded-md border-2 border-dashed p-2 font-medium hover:bg-gray-100'
+                >
+                  <IconPlus class='group-hover:text-brand-blue group-hover:bg-brand-blue-50/40 mb-1 h-16 w-16 rounded-full bg-gray-200 text-gray-400 transition-colors' />
+                  <span class='group-hover:text-brand-blue text-gray-600 transition-colors'>
+                    Add plan
+                  </span>
+                </A>
+              }
             >
               <A
                 href={`/projects/${params.id}/plans/new`}
