@@ -10,17 +10,20 @@ import {
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import {
-  Field,
-  Form,
   SubmitHandler,
   createForm,
-  zodForm,
+  zodForm
 } from '@modular-forms/solid';
-import { A, useParams } from '@solidjs/router';
+import { A, useNavigate, useParams } from '@solidjs/router';
 import { IconChevronLeft, IconMessage } from '@tabler/icons-solidjs';
+import dayjs from 'dayjs';
 import { Component } from 'solid-js';
-import { useTripNoteMutation } from '../api';
 import { z } from 'zod';
+import {
+  useTripDetailsQuery,
+  useTripMutation,
+  useTripNoteMutation
+} from '../api';
 
 const TripNoteSchema = z.object({
   note: z.string(),
@@ -30,14 +33,30 @@ type TripNoteForm = z.infer<typeof TripNoteSchema>;
 
 const Trip: Component = () => {
   const params = useParams();
-  const { create } = useTripNoteMutation(params.id);
+  const { create } = useTripNoteMutation(params.tripId);
+  const { update } = useTripMutation();
+  const navigate = useNavigate();
   const [form, { Form, Field }] = createForm({
     validate: zodForm(TripNoteSchema),
   });
+  const tripDetails = useTripDetailsQuery(params.tripId);
 
   const handleSubmit: SubmitHandler<TripNoteForm> = async (values) => {
     try {
       await create.mutateAsync(values);
+    } catch (error) {
+      // ignored
+    }
+  };
+
+  const handleEndTrip = async () => {
+    try {
+      await update.mutateAsync({
+        tripId: params.tripId,
+        endedAt: dayjs().toDate(),
+      });
+
+      navigate('/projects');
     } catch (error) {
       // ignored
     }
@@ -96,11 +115,13 @@ const Trip: Component = () => {
         </div>
       </div>
       <div class='bg-background absolute bottom-4 left-4 w-96 rounded-md p-2'>
-        <A href='/projects'>
-          <Button variant='destructive' class='flex w-full'>
-            End trip
-          </Button>
-        </A>
+        <Button
+          onClick={handleEndTrip}
+          variant='destructive'
+          class='flex w-full'
+        >
+          End trip {tripDetails.data?.endedAt ? ' (ended)' : ''}
+        </Button>
       </div>
     </>
   );

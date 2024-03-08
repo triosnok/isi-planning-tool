@@ -6,19 +6,19 @@ import {
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { useProfile } from '@/features/auth/api';
 import { LayoutProps } from '@/lib/utils';
 import { A, useParams } from '@solidjs/router';
 import {
-  IconCalendarSad,
   IconChevronLeft,
   IconCircleCheckFilled,
-  IconCirclePlus,
   IconEdit,
   IconPlus,
 } from '@tabler/icons-solidjs';
 import dayjs from 'dayjs';
-import { Component, For, Show, createSignal } from 'solid-js';
+import { Component, For, Show, createMemo, createSignal } from 'solid-js';
 import { useProjectDetailsQuery, useProjectPlansQuery } from '../api';
+import NewTripDialog from '../components/NewTripDialog';
 import PlanCard from '../components/PlanCard';
 
 const Project: Component<LayoutProps> = (props) => {
@@ -26,6 +26,12 @@ const Project: Component<LayoutProps> = (props) => {
   const project = useProjectDetailsQuery(params.id);
   const plans = useProjectPlansQuery(params.id);
   const [selectedPlans, setSelectedPlans] = createSignal<string[]>([]);
+  const [showNewTripDialog, setShowNewTripDialog] = createSignal(false);
+  const profile = useProfile();
+
+  const planId = createMemo(() => {
+    return selectedPlans().length === 1 ? selectedPlans()[0] : undefined;
+  });
 
   const handlePlanToggled = (planId: string) => {
     const plans = selectedPlans();
@@ -39,7 +45,7 @@ const Project: Component<LayoutProps> = (props) => {
 
   return (
     <>
-      <div class='flex flex-col p-2'>
+      <div class='flex flex-col justify-between p-2'>
         <div class='flex'>
           <A
             href='/projects'
@@ -132,6 +138,22 @@ const Project: Component<LayoutProps> = (props) => {
           <AccordionContent class='flex flex-col space-y-2 p-2'></AccordionContent>
         </AccordionItem>
       </Accordion>
+
+      {/* {profile.data?.role === 'DRIVER' && ( */}
+      <Button
+        class='w-full'
+        disabled={planId() === undefined}
+        onClick={() => setShowNewTripDialog(true)}
+      >
+        New trip
+      </Button>
+      {/* )} */}
+
+      <NewTripDialog
+        open={showNewTripDialog()}
+        onOpenChange={setShowNewTripDialog}
+        planId={planId()}
+      />
 
       {props.children}
     </>

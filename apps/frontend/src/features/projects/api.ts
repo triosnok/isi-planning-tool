@@ -1,6 +1,9 @@
 import { CacheKey } from '@/api';
 import {
+  CreateTripNoteRequest,
+  CreateTripRequest,
   RoadRailing,
+  TripDetails,
   type CreateProjectPlanRequest,
   type CreateProjectPlanResponse,
   type CreateProjectRequest,
@@ -8,7 +11,6 @@ import {
   type ProjectDetails,
   type ProjectPlanDetails,
   type ProjectStatus,
-  CreateTripNoteRequest,
 } from '@isi-insight/client';
 import {
   createMutation,
@@ -17,6 +19,7 @@ import {
 } from '@tanstack/solid-query';
 import axios from 'axios';
 import { Accessor } from 'solid-js';
+import { z } from 'zod';
 
 export const useProjectsQuery = (status?: ProjectStatus) => {
   const params = new URLSearchParams();
@@ -124,6 +127,58 @@ export const useProjectRailings = (projectId: Accessor<string | undefined>) => {
       const response = await axios.get<RoadRailing[]>(
         `/api/v1/projects/${projectId}/railings`
       );
+
+      return response.data;
+    },
+  }));
+};
+
+export const TripSchema = z.object({
+  tripId: z.string().optional(),
+  planId: z.string().optional(),
+  startedAt: z.date().optional(),
+  endedAt: z.date().optional(),
+  gnssLog: z.string().optional(),
+  cameraLogs: z.record(z.string()).optional(),
+});
+
+export type TripSchemaValues = z.infer<typeof TripSchema>;
+
+export const useTripMutation = () => {
+  const qc = useQueryClient();
+
+  const create = createMutation(() => ({
+    mutationFn: async (trip: CreateTripRequest) => {
+      const response = await axios.post<TripDetails>('/api/v1/trips', trip);
+
+      return response.data;
+    },
+  }));
+
+  const update = createMutation(() => ({
+    mutationFn: async (trip: TripSchemaValues) => {
+      const response = await axios.put<TripDetails>(
+        `/api/v1/trips/${trip.tripId}`,
+        trip
+      );
+
+      return response.data;
+    },
+    onSuccess: (_data, _variables, _context) => {
+      qc.invalidateQueries({
+        queryKey: [CacheKey.TRIP_LIST, CacheKey.TRIP_DETAILS],
+      });
+    },
+  }));
+
+  return { create, update };
+};
+
+export const useTripDetailsQuery = (id: string) => {
+  return createQuery(() => ({
+    queryKey: [CacheKey.TRIP_DETAILS, id],
+    queryFn: async () => {
+      const response = await axios.get<TripDetails>(`/api/v1/trips/${id}`);
 
       return response.data;
     },

@@ -23,6 +23,7 @@ export interface Geometry {
 }
 
 export interface CreateProjectPlanRequest {
+    projectId: string;
     importUrl: string;
     startsAt: DateAsString;
     endsAt: DateAsString;
@@ -78,6 +79,7 @@ export interface CreateTripNoteRequest {
 }
 
 export interface CreateTripRequest {
+    planId: string;
     vehicleId: string;
 }
 
@@ -86,13 +88,19 @@ export interface TripDetails {
     startedAt: DateAsString;
     endedAt: DateAsString;
     gnssLog: string;
-    cameraLogs: string;
+    cameraLogs: { [P in CameraPosition]?: string };
 }
 
 export interface TripNoteDetails {
     id: string;
     note: string;
     geometry: Geometry;
+}
+
+export interface UpdateTripRequest {
+    endedAt: DateAsString;
+    gnssLog: string;
+    cameraLogs: { [P in CameraPosition]?: string };
 }
 
 export interface CreateVehicleRequest {

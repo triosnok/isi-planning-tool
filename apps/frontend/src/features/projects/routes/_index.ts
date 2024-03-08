@@ -34,7 +34,7 @@ export const routes: RouteDefinition[] = [
     },
   },
   {
-    path: '/projects/trip',
+    path: '/projects/trip/:tripId',
     component: lazy(() => import('./TripLayout')),
     children: [{ path: '/', component: lazy(() => import('./Trip')) }],
     meta: {
