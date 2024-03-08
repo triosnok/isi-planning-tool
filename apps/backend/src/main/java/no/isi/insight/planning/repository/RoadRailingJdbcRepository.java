@@ -32,13 +32,20 @@ public class RoadRailingJdbcRepository {
       Optional<UUID> planId,
       Optional<UUID> tripId
   ) {
-    // TODO: Handle tripId parameter when the trips table is present
-
     // language=sql
     var sql = """
+        WITH trip_railings AS (
+          SELECT 
+            trc.fk_trip_id,
+            trc.fk_road_railing_id,
+            COUNT(*) AS captured_length
+          FROM trip_railing_capture trc
+          GROUP BY trc.fk_road_railing_id, trc.fk_trip_id
+        )
         SELECT
           ST_AsText(ST_Force2D(rr.geometry)) AS wkt,
-          ST_SRID(rr.geometry) AS srid
+          ST_SRID(rr.geometry) AS srid,
+          trc.captured_length / CEIL(rr.length) AS capture_grade
         FROM road_railing rr
         LEFT JOIN project_plan_road_railing pprr
           ON rr.road_railing_id = pprr.fk_road_railing_id
@@ -46,17 +53,19 @@ public class RoadRailingJdbcRepository {
           ON pprr.fk_project_plan_id = pp.project_plan_id
         LEFT JOIN project p
           ON pp.fk_project_id = p.project_id
+        LEFT JOIN trip_railings trc
+          ON rr.road_railing_id = trc.fk_road_railing_id
         WHERE 1=1
           AND (p.project_id = :projectId)
           AND (:planId IS NULL OR pp.project_plan_id = :planId::uuid)
-          -- AND (:tripId IS NULL OR trc.fk_trip_id = :tripId)
+          AND (:tripId IS NULL OR trc.fk_trip_id = :tripId::uuid)
       """;
 
     var params = new MapSqlParameterSource();
 
     params.addValue("projectId", projectId);
     params.addValue("planId", planId.orElse(null), Types.VARCHAR);
-    // params.addValue("tripId", tripId.orElse(null));
+    params.addValue("tripId", tripId.orElse(null), Types.VARCHAR);
 
     return this.jdbcTemplate.query(
       sql,
