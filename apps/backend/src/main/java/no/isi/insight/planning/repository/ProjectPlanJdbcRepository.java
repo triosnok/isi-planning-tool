@@ -74,6 +74,7 @@ public class ProjectPlanJdbcRepository {
     var params = new MapSqlParameterSource();
 
     params.addValue("id", id, Types.VARCHAR);
+    params.addValue("projectId", null, Types.VARCHAR);
 
     return Optional.ofNullable(this.jdbcTemplate.queryForObject(PLAN_DETAILS_QUERY, params, PLAN_DETAILS_MAPPER));
   }
