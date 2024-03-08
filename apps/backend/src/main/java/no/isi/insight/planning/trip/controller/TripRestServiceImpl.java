@@ -14,6 +14,7 @@ import no.isi.insight.planner.client.trip.view.CreateTripNoteRequest;
 import no.isi.insight.planner.client.trip.view.CreateTripRequest;
 import no.isi.insight.planner.client.trip.view.TripDetails;
 import no.isi.insight.planner.client.trip.view.TripNoteDetails;
+import no.isi.insight.planner.client.trip.view.UpdateTripRequest;
 import no.isi.insight.planning.auth.annotation.DriverAuthorization;
 import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.model.ProjectPlan;
@@ -62,9 +63,9 @@ public class TripRestServiceImpl implements TripRestService {
       new TripDetails(
         savedTrip.getId(),
         savedTrip.getStartedAt(),
-        null,
-        null,
-        null
+        savedTrip.getEndedAt(),
+        savedTrip.getGnssLog(),
+        savedTrip.getCameraLogs()
       )
     );
   }
@@ -106,9 +107,9 @@ public class TripRestServiceImpl implements TripRestService {
       new TripDetails(
         trip.getId(),
         trip.getStartedAt(),
-        null,
-        null,
-        null
+        trip.getEndedAt(),
+        trip.getGnssLog(),
+        trip.getCameraLogs()
       )
     );
   }
@@ -121,5 +122,29 @@ public class TripRestServiceImpl implements TripRestService {
     var trips = tripJpaRepository.findAllByProjectId(projectId, planId.orElse(null));
 
     return ResponseEntity.ok(trips);
+  }
+
+  @Override
+  public ResponseEntity<TripDetails> updateTrip(
+      UUID tripId,
+      UpdateTripRequest request
+  ) {
+    Trip trip = tripJpaRepository.findById(tripId).orElseThrow(() -> new NotFoundException("Trip not found"));
+
+    trip.setEndedAt(request.endedAt());
+    trip.setGnssLog(request.gnssLog());
+    trip.setCameraLogs(request.cameraLogs());
+
+    Trip savedTrip = tripJpaRepository.save(trip);
+
+    return ResponseEntity.ok(
+      new TripDetails(
+        savedTrip.getId(),
+        savedTrip.getStartedAt(),
+        savedTrip.getEndedAt(),
+        savedTrip.getGnssLog(),
+        savedTrip.getCameraLogs()
+      )
+    );
   }
 }
