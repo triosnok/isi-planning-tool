@@ -7,6 +7,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useProfile } from '@/features/auth/api';
+import TripCard from '@/features/trip/components/TripCard';
 import { LayoutProps } from '@/lib/utils';
 import { A, useParams } from '@solidjs/router';
 import {
@@ -17,7 +18,11 @@ import {
 } from '@tabler/icons-solidjs';
 import dayjs from 'dayjs';
 import { Component, For, Show, createMemo, createSignal } from 'solid-js';
-import { useProjectDetailsQuery, useProjectPlansQuery } from '../api';
+import {
+  useProjectDetailsQuery,
+  useProjectPlansQuery,
+  useTripsQuery,
+} from '../api';
 import NewTripDialog from '../components/NewTripDialog';
 import PlanCard from '../components/PlanCard';
 
@@ -25,8 +30,10 @@ const Project: Component<LayoutProps> = (props) => {
   const params = useParams();
   const project = useProjectDetailsQuery(params.id);
   const plans = useProjectPlansQuery(params.id);
+
   const [selectedPlans, setSelectedPlans] = createSignal<string[]>([]);
   const [showNewTripDialog, setShowNewTripDialog] = createSignal(false);
+  const trips = useTripsQuery(params.id, selectedPlans);
   const profile = useProfile();
 
   const planId = createMemo(() => {
@@ -127,7 +134,21 @@ const Project: Component<LayoutProps> = (props) => {
         </AccordionItem>
         <AccordionItem value='trips'>
           <AccordionTrigger>Trips</AccordionTrigger>
-          <AccordionContent class='flex flex-col space-y-2 p-2'></AccordionContent>
+          <AccordionContent class='flex flex-col space-y-2 p-2'>
+            <For each={trips.data}>
+              {(trip) => (
+                <A href={`/projects/trip/${trip.id}`}>
+                  <TripCard
+                    date={dayjs(trip.startedAt).format('MMM D')}
+                    deviations={5}
+                    notes={4}
+                    length={320}
+                    car={'car'}
+                  />
+                </A>
+              )}
+            </For>
+          </AccordionContent>
         </AccordionItem>
         <AccordionItem value='railings'>
           <AccordionTrigger>Railings</AccordionTrigger>

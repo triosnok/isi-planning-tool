@@ -9,7 +9,7 @@ export enum CacheKey {
   VEHICLE_LIST = 'VEHICLE_LIST',
   VEHICLE_DETAILS = 'VEHICLE',
   TRIP_LIST = 'TRIP_LIST',
-  TRIP_DETAILS = 'TRIP_DETAILS',
+  TRIP_DETAILS = 'TRIP',
 }
 
 export const ACCESS_TOKEN_LOCALSTORAGE_KEY = 'accessToken';

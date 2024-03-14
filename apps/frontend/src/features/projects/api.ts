@@ -185,6 +185,24 @@ export const useTripDetailsQuery = (id: string) => {
   }));
 };
 
+export const useTripsQuery = (
+  projectId: string,
+  selectedPlans: Accessor<string[]>
+) => {
+  return createQuery(() => ({
+    queryKey: [CacheKey.TRIP_DETAILS, CacheKey.TRIP_LIST, selectedPlans()],
+    queryFn: async () => {
+      const planIds = selectedPlans();
+      const response = await axios.get<TripDetails[]>(
+        `/api/v1/trips?projectId=${projectId}&planId=${planIds.join('&planId=')}`
+      );
+
+      console.log(response.request.responseURL);
+      return response.data;
+    },
+  }));
+};
+
 export const useTripNoteMutation = (tripId: string) => {
   const create = createMutation(() => ({
     mutationFn: async (note: CreateTripNoteRequest) => {
