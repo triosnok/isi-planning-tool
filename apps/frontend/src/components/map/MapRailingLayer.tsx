@@ -13,7 +13,7 @@ const MapRailingLayer: Component<MapRailingLayerProps> = (props) => {
 
   createEffect(() => {
     const polylines = props.railings?.map((railing) => {
-      const ls = parse(railing.wkt);
+      const ls = parse(railing.geometry.wkt);
       return Leaflet.polyline(ls, {
         color: 'blue',
         weight: 4,

@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
+import no.isi.insight.planner.client.geometry.Geometry;
 import no.isi.insight.planner.client.project.view.RoadRailing;
 
 @Repository
@@ -36,7 +37,7 @@ public class RoadRailingJdbcRepository {
     // language=sql
     var sql = """
         WITH trip_railings AS (
-          SELECT 
+          SELECT
             trc.fk_trip_id,
             trc.fk_road_railing_id,
             COUNT(*) AS captured_length
@@ -74,8 +75,11 @@ public class RoadRailingJdbcRepository {
       sql,
       params,
       (rs, i) -> new RoadRailing(
-        rs.getString("wkt"),
-        rs.getInt("srid")
+        new Geometry(
+          rs.getString("wkt"),
+          rs.getInt("srid")
+        ),
+        rs.getDouble("capture_grade")
       )
     );
   }

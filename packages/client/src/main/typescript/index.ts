@@ -70,11 +70,12 @@ export interface ProjectPlanDetails {
 }
 
 export interface RoadRailing {
-    wkt: string;
-    srid: number;
+    geometry: Geometry;
+    captureGrade: number;
 }
 
 export interface CreateTripNoteRequest {
+    tripId: string;
     note: string;
 }
 
