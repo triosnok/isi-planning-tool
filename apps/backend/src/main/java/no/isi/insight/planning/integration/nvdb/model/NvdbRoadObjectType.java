@@ -1,13 +1,18 @@
 package no.isi.insight.planning.integration.nvdb.model;
 
 public enum NvdbRoadObjectType {
-  RAILING(5);
+  RAILING(5),
+  ROAD_NET(915);
 
-  public final int ID;
+  private final int id;
 
   private NvdbRoadObjectType(
       int id
   ) {
-    ID = id;
+    this.id = id;
+  }
+
+  public int getId() {
+    return id;
   }
 }

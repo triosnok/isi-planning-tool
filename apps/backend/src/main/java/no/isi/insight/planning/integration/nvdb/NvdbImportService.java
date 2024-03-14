@@ -12,17 +12,17 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObjectType;
 import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObject;
+import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObjectType;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RailingImportService {
+public class NvdbImportService {
   private final NvdbClient nvdb;
 
   /**
-   * Imports a list of railings from NVDB API URL.
+   * Imports a list of railings from NVDBs API using a reference URL.
    * 
    * @param url a reference URL to copy parameters from
    * 
@@ -30,6 +30,21 @@ public class RailingImportService {
    */
   public List<NvdbRoadObject> importRailings(
       String url
+  ) {
+    return this.importRoadObjects(url, NvdbRoadObjectType.RAILING);
+  }
+
+  /**
+   * Imports a list of railings from NVDB API URL.
+   * 
+   * @param url  a reference URL to copy parameters from
+   * @param type the type of road objects to import, will override the type in the provided URL
+   * 
+   * @return a list of railings, imported from NVDB
+   */
+  public List<NvdbRoadObject> importRoadObjects(
+      String url,
+      NvdbRoadObjectType type
   ) {
     log.info("Beginning import of railings from NVDB, using url: {}", url);
     var start = System.currentTimeMillis();
@@ -59,7 +74,7 @@ public class RailingImportService {
     int pageSize = 0;
 
     do {
-      var response = this.nvdb.getRoadObjects(NvdbRoadObjectType.RAILING.ID, params, sessionId);
+      var response = this.nvdb.getRoadObjects(type.getId(), params, sessionId);
       var body = response.getBody();
       var meta = body.metadata();
 
@@ -80,7 +95,7 @@ public class RailingImportService {
       pageSize = meta.pageSize();
 
       count += returned;
-      log.info("Processed {} out of {} railings", count, meta.total());
+      log.info("Fetched {} out of {} railings", count, meta.total());
     } while (returned == pageSize);
 
     log.info("Imported {} railings in {} ms", importedObjects.size(), System.currentTimeMillis() - start);

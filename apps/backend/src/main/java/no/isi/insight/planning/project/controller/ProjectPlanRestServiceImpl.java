@@ -16,7 +16,7 @@ import no.isi.insight.planner.client.project.view.ProjectPlanDetails;
 import no.isi.insight.planner.client.project.view.UpdateProjectPlanRequest;
 import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.geometry.GeometryService;
-import no.isi.insight.planning.integration.nvdb.RailingImportService;
+import no.isi.insight.planning.integration.nvdb.NvdbImportService;
 import no.isi.insight.planning.model.ProjectPlan;
 import no.isi.insight.planning.model.RoadRailing;
 import no.isi.insight.planning.model.Vehicle;
@@ -30,7 +30,7 @@ import no.isi.insight.planning.repository.VehicleJpaRepository;
 @RestController
 @RequiredArgsConstructor
 public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
-  private final RailingImportService railingImportService;
+  private final NvdbImportService railingImportService;
   private final RoadRailingJpaRepository railingJpaRepository;
   private final ProjectJpaRepository projectJpaRepository;
   private final ProjectPlanJpaRepository projectPlanJpaRepository;
