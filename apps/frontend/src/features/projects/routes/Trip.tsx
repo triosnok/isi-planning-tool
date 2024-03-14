@@ -9,11 +9,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
-import {
-  SubmitHandler,
-  createForm,
-  zodForm
-} from '@modular-forms/solid';
+import { SubmitHandler, createForm, zodForm } from '@modular-forms/solid';
 import { A, useNavigate, useParams } from '@solidjs/router';
 import { IconChevronLeft, IconMessage } from '@tabler/icons-solidjs';
 import dayjs from 'dayjs';
@@ -22,7 +18,7 @@ import { z } from 'zod';
 import {
   useTripDetailsQuery,
   useTripMutation,
-  useTripNoteMutation
+  useTripNoteMutation,
 } from '../api';
 
 const TripNoteSchema = z.object({
@@ -91,7 +87,11 @@ const Trip: Component = () => {
                   <DialogTitle>Add note</DialogTitle>
                   <DialogDescription>Add a note to this trip</DialogDescription>
                 </DialogHeader>
-                <Form id='add-trip-note' onSubmit={handleSubmit}>
+                <Form
+                  id='add-trip-note'
+                  onSubmit={handleSubmit}
+                  class='flex flex-col gap-4'
+                >
                   <Field name='note'>
                     {(field, props) => (
                       <Input
@@ -103,8 +103,8 @@ const Trip: Component = () => {
                       />
                     )}
                   </Field>
+                  <Button type='submit'>Save</Button>
                 </Form>
-                <Button type='submit'>Save</Button>
               </DialogContent>
             </Dialog>
           </div>
