@@ -1,4 +1,4 @@
-package no.isi.insight.planning.controller;
+package no.isi.insight.planning.vehicle;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
