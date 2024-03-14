@@ -185,7 +185,7 @@ export const useTripDetailsQuery = (id: string) => {
   }));
 };
 
-export const useTripsQuery = (
+export const useTripsDetailsQuery = (
   projectId: string,
   selectedPlans: Accessor<string[]>
 ) => {
@@ -197,7 +197,6 @@ export const useTripsQuery = (
         `/api/v1/trips?projectId=${projectId}&planId=${planIds.join('&planId=')}`
       );
 
-      console.log(response.request.responseURL);
       return response.data;
     },
   }));

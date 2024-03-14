@@ -21,7 +21,7 @@ import { Component, For, Show, createMemo, createSignal } from 'solid-js';
 import {
   useProjectDetailsQuery,
   useProjectPlansQuery,
-  useTripsQuery,
+  useTripsDetailsQuery,
 } from '../api';
 import NewTripDialog from '../components/NewTripDialog';
 import PlanCard from '../components/PlanCard';
@@ -33,7 +33,7 @@ const Project: Component<LayoutProps> = (props) => {
 
   const [selectedPlans, setSelectedPlans] = createSignal<string[]>([]);
   const [showNewTripDialog, setShowNewTripDialog] = createSignal(false);
-  const trips = useTripsQuery(params.id, selectedPlans);
+  const trips = useTripsDetailsQuery(params.id, selectedPlans);
   const profile = useProfile();
 
   const planId = createMemo(() => {
