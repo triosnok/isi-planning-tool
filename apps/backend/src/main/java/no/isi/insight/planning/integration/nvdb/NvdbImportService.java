@@ -46,7 +46,7 @@ public class NvdbImportService {
       String url,
       NvdbRoadObjectType type
   ) {
-    log.info("Beginning import of road objects from NVDB, using url: {}", url);
+    log.info("Beginning import of {} road objects from NVDB, using url: {}", type.name(), url);
     var start = System.currentTimeMillis();
     var uriComponents = UriComponentsBuilder.fromHttpUrl(url).build();
     var host = uriComponents.getHost();
@@ -98,7 +98,7 @@ public class NvdbImportService {
       log.info("Fetched {} out of {} road objects", count, meta.total());
     } while (returned == pageSize);
 
-    log.info("Imported {} road objects in {} ms", importedObjects.size(), System.currentTimeMillis() - start);
+    log.info("Imported {} {} road objects in {} ms", importedObjects.size(), type.name(), System.currentTimeMillis() - start);
     return importedObjects;
   }
 
