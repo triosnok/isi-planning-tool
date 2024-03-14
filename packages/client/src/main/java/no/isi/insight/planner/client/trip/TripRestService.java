@@ -13,10 +13,8 @@ import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 import org.springframework.web.service.annotation.PutExchange;
 
-import no.isi.insight.planner.client.trip.view.CreateTripNoteRequest;
 import no.isi.insight.planner.client.trip.view.CreateTripRequest;
 import no.isi.insight.planner.client.trip.view.TripDetails;
-import no.isi.insight.planner.client.trip.view.TripNoteDetails;
 import no.isi.insight.planner.client.trip.view.UpdateTripRequest;
 
 @HttpExchange("/api/v1/trips")
@@ -25,12 +23,6 @@ public interface TripRestService {
   @PostExchange
   ResponseEntity<TripDetails> createTrip(
       @RequestBody CreateTripRequest request
-  );
-
-  @PostExchange("/{tripId}/notes")
-  ResponseEntity<TripNoteDetails> addNote(
-      @PathVariable UUID tripId,
-      @RequestBody CreateTripNoteRequest request
   );
 
   @GetExchange("/{tripId}")
@@ -48,12 +40,6 @@ public interface TripRestService {
   ResponseEntity<TripDetails> updateTrip(
       @PathVariable UUID tripId,
       @RequestBody UpdateTripRequest request
-  );
-
-  @PutExchange("/{tripId}/notes")
-  ResponseEntity<TripNoteDetails> updateNote(
-      @RequestParam UUID noteId,
-      @RequestBody CreateTripNoteRequest request
   );
 
 }

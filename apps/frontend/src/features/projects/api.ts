@@ -188,7 +188,10 @@ export const useTripDetailsQuery = (id: string) => {
 export const useTripNoteMutation = (tripId: string) => {
   const create = createMutation(() => ({
     mutationFn: async (note: CreateTripNoteRequest) => {
-      const response = await axios.post(`/api/v1/trips/${tripId}/notes`, note);
+      const response = await axios.post(
+        `/api/v1/trip-notes?tripId=${tripId}`,
+        note
+      );
 
       return response.data;
     },
