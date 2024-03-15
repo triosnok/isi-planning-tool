@@ -17,7 +17,14 @@ import {
   IconPlus,
 } from '@tabler/icons-solidjs';
 import dayjs from 'dayjs';
-import { Component, For, Show, createMemo, createSignal } from 'solid-js';
+import {
+  Component,
+  For,
+  Show,
+  Suspense,
+  createMemo,
+  createSignal,
+} from 'solid-js';
 import {
   useProjectDetailsQuery,
   useProjectPlansQuery,
@@ -135,19 +142,22 @@ const Project: Component<LayoutProps> = (props) => {
         <AccordionItem value='trips'>
           <AccordionTrigger>Trips</AccordionTrigger>
           <AccordionContent class='flex flex-col space-y-2 p-2'>
-            <For each={trips.data}>
-              {(trip) => (
-                <A href={`/projects/trip/${trip.id}`}>
-                  <TripCard
-                    date={dayjs(trip.startedAt).format('MMM D')}
-                    deviations={5}
-                    notes={4}
-                    length={320}
-                    car={'car'}
-                  />
-                </A>
-              )}
-            </For>
+            <Suspense fallback={<div class=''>Loading...</div>}>
+              <For each={trips.data}>
+                {(trip) => (
+                  <A href={`/projects/trip/${trip.id}`}>
+                    <TripCard
+                      sequenceNumber={trip.sequenceNumber}
+                      date={dayjs(trip.startedAt).format('MMM D')}
+                      deviations={5}
+                      notes={4}
+                      length={320}
+                      car={'car'}
+                    />
+                  </A>
+                )}
+              </For>
+            </Suspense>
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value='railings'>

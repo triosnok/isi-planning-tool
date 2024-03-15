@@ -7,6 +7,7 @@ CREATE TABLE trip (
   ended_at TIMESTAMP,
   gnss_log TEXT,
   camera_logs JSON,
+  sequence_number INT,
   created_at TIMESTAMP DEFAULT NOW(),
   fk_created_by_user_id UUID,
   updated_at TIMESTAMP,

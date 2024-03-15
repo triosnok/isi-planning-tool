@@ -45,11 +45,15 @@ public class TripRestServiceImpl implements TripRestService {
     var userAccount = RequestUtils.getRequestingUserAccount()
       .orElseThrow(() -> new NotFoundException("User not found"));
 
-    Trip trip = new Trip();
-    trip.setDriverUser(userAccount);
-    trip.setProjectPlan(plan);
-    trip.setVehicle(vehicle);
-    trip.setStartedAt(LocalDateTime.now());
+    var sequenceNumber = tripJpaRepository.findNextSequenceNumber(plan.getId());
+
+    Trip trip = new Trip(
+      vehicle,
+      userAccount,
+      plan,
+      LocalDateTime.now(),
+      sequenceNumber
+    );
 
     Trip savedTrip = tripJpaRepository.save(trip);
 
@@ -59,7 +63,8 @@ public class TripRestServiceImpl implements TripRestService {
         savedTrip.getStartedAt(),
         savedTrip.getEndedAt(),
         savedTrip.getGnssLog(),
-        savedTrip.getCameraLogs()
+        savedTrip.getCameraLogs(),
+        savedTrip.getSequenceNumber()
       )
     );
   }
@@ -77,7 +82,8 @@ public class TripRestServiceImpl implements TripRestService {
         trip.getStartedAt(),
         trip.getEndedAt(),
         trip.getGnssLog(),
-        trip.getCameraLogs()
+        trip.getCameraLogs(),
+        trip.getSequenceNumber()
       )
     );
   }
@@ -111,7 +117,8 @@ public class TripRestServiceImpl implements TripRestService {
         savedTrip.getStartedAt(),
         savedTrip.getEndedAt(),
         savedTrip.getGnssLog(),
-        savedTrip.getCameraLogs()
+        savedTrip.getCameraLogs(),
+        savedTrip.getSequenceNumber()
       )
     );
   }

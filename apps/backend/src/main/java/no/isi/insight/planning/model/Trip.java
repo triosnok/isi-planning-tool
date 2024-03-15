@@ -56,6 +56,9 @@ public class Trip {
   @Column(name = "gnss_log")
   private String gnssLog;
 
+  @Column(name = "sequence_number")
+  private Integer sequenceNumber;
+
   @JdbcTypeCode(SqlTypes.JSON)
   @Column(name = "camera_logs")
   private Map<CameraPosition, String> cameraLogs;
@@ -68,16 +71,12 @@ public class Trip {
       UserAccount driverUser,
       ProjectPlan projectPlan,
       LocalDateTime startedAt,
-      LocalDateTime endedAt,
-      String gnssLog,
-      Map<CameraPosition, String> cameraLogs
+      Integer sequenceNumber
   ) {
     this.vehicle = vehicle;
     this.driverUser = driverUser;
     this.projectPlan = projectPlan;
     this.startedAt = startedAt;
-    this.endedAt = endedAt;
-    this.gnssLog = gnssLog;
-    this.cameraLogs = cameraLogs;
+    this.sequenceNumber = sequenceNumber;
   }
 }

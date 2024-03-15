@@ -5,13 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import lombok.RequiredArgsConstructor;
-import no.isi.insight.planner.client.trip.view.CameraPosition;
 import no.isi.insight.planning.annotation.IntegrationTest;
 import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.model.Project;
@@ -83,10 +81,7 @@ class TripJpaRepositoryTests {
       this.userAccount,
       this.projectPlan,
       LocalDateTime.of(2023, 1, 1, 9, 0),
-      LocalDateTime.of(2023, 1, 1, 17, 0),
-      "GNSS_DATA",
-      Map.of(CameraPosition.TOP, "Top camera log")
-
+      1
     );
 
     var savedTrip = tripJpaRepository.save(newTrip);

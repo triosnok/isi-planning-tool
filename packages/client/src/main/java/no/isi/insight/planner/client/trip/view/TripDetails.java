@@ -14,7 +14,8 @@ public record TripDetails(
   LocalDateTime startedAt,
   LocalDateTime endedAt,
   String gnssLog,
-  Map<CameraPosition, String> cameraLogs
+  Map<CameraPosition, String> cameraLogs,
+  Integer sequenceNumber
 ) {
 
 }

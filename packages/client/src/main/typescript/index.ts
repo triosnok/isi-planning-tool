@@ -90,6 +90,7 @@ export interface TripDetails {
     endedAt: DateAsString;
     gnssLog: string;
     cameraLogs: { [P in CameraPosition]?: string };
+    sequenceNumber: number;
 }
 
 export interface TripNoteDetails {

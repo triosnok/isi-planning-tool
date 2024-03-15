@@ -28,7 +28,8 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
       t.startedAt,
       t.endedAt,
       t.gnssLog,
-      t.cameraLogs
+      t.cameraLogs,
+      t.sequenceNumber
     )  FROM Trip t
     INNER JOIN t.projectPlan pp
     INNER JOIN pp.project p
@@ -39,6 +40,18 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
   List<TripDetails> findAllByProjectId(
       @Param("projectId") UUID projectId,
       @Param("planIds") List<UUID> planIds
+  );
+
+  // language=sql
+  @Query("""
+      SELECT
+        COALESCE(MAX(t.sequenceNumber) + 1, 1)
+      FROM Trip t
+      INNER JOIN t.projectPlan
+      WHERE t.projectPlan.id = :planId
+    """)
+  int findNextSequenceNumber(
+      @Param("planId") UUID planId
   );
 
 }

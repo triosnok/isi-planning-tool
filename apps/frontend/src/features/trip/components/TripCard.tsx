@@ -6,6 +6,7 @@ import {
 } from '@tabler/icons-solidjs';
 import { Component } from 'solid-js';
 export interface TripCardProps {
+  sequenceNumber: number;
   date: string;
   deviations?: number;
   notes?: number;
@@ -17,7 +18,7 @@ const TripCard: Component<TripCardProps> = (props) => {
   return (
     <div class='relative overflow-hidden rounded-lg border p-2 hover:cursor-pointer hover:bg-gray-100'>
       <div class='flex flex-row items-center gap-2'>
-        <p class='text-base font-semibold'>Trip 1</p>
+        <p class='text-base font-semibold'>Trip {props.sequenceNumber}</p>
         <p class='text-sm font-semibold text-gray-400'>{props.date}</p>
       </div>
 
