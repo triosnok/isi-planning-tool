@@ -1,0 +1,27 @@
+<svg host="65bd71144e" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="284px" height="57px" viewBox="-0.5 -0.5 284 57" content="&lt;mxfile&gt;&lt;diagram id=&quot;2KJTCcaCCpXZJGCrjDAV&quot; name=&quot;Page-1&quot;&gt;5VpLj9owEP413P3I81joZnupVGkPPVuJIVEDRo559dfX2TgknkCW0sWIwgHhyXgy+fzNeDxhQmfL/atk6/y7yHg5ISjbT+jXCSFBjPR3LTg0AhKFjWAhi6wR4U7wVvzmRmjmLTZFxitLUQlRqmJtC1OxWvFUWTImpdjZanNR2nddswUfCN5SVg6lP4tM5Y008lEn/8aLRd7eGSNzZclaZSOocpaJXU9EXyZ0JoVQza/lfsbLGrsWl2Zecubq0THJV+qSCaSZsGXlxjyb8Usd2odNN3LLa3U8oVO+yr7UAOrhSqy0xjRXy7K7mBRlPUJ6VCkpfh3x0U82HTpn/OWZhbdx9ZWLJVfyoBV2HcotyHkP4FYmeclUsbVXiZnFXhzNHe/wQxTaE4IML0m7TIaWXoRsE5XYyJSbWX1UgSEvAIZCYEgxueBqYEhDyw49tXWtUI04HNn38REa9YuGwC/f0tc/Gg/aUW8NOtE7g06zKfiYTXqCjtKaOLu8UPxtzdL6yk7nCZtMrFo3oTsv9jX9DJ9mohTy3RRFKNGfk0ybaxqe0jzLwC2Xiu9HOdhiHkeAJLQZ9zjqDSnqnSdjD/5RdMMnQJdSgG4QOEI3egZ0Q4CuHztCN34CdD0MuYsdodvWRaPwdjt3WrKqKlIb1QGIQZAkOvoeciMPCMjR8XUbOYlDYCi4aCO/Yu/E+II1fPQQITBEnG2e2P8Y3s+rdE8EUx1OjxA6oAb28bU1sA9qzfg2NTCGNW3kjYc0rJnxuP6gZg7G9Y/Pedqff66xsesiG6E4vixPGM3PyBPnWHj7POG6DrwHvDgC21rsKg2TSyqVR4dX5yQAr6tDDKFPAC/1YHfF1SmmtfF/wwsPiaGr3EsuqNEeHt7BKTF0dUp03p67C7ymPOvKL+IK3meoHDwvAPBGjuClt+hxJEkNzmP2OEAfuu39/32PI6DAkG8b+rweh+v8fpcWhw9bHKGrBOS6g3SX2tqHtHd2dCHPAC98uxXfKL/rYfeWu0kl3V8F6Msf&lt;/diagram&gt;&lt;/mxfile&gt;">
+    <defs/>
+    <g>
+        <path d="M 14 22 Q 94 42 139 17 Q 184 -8 274 12" fill="none" stroke="rgb(0, 0, 0)" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke"/>
+        <ellipse cx="114" cy="27" rx="2" ry="2" fill="#00ffff" stroke="#00ffff" stroke-width="2" pointer-events="all"/>
+        <ellipse cx="154" cy="10" rx="2" ry="2" fill="#00ffff" stroke="#00ffff" stroke-width="2" pointer-events="all"/>
+        <ellipse cx="194" cy="3" rx="2" ry="2" fill="#00ffff" stroke="#00ffff" stroke-width="2" pointer-events="all"/>
+        <ellipse cx="234" cy="5" rx="2" ry="2" fill="#00ffff" stroke="#00ffff" stroke-width="2" pointer-events="all"/>
+        <path d="M 76 31 L 102.79 28.7" fill="none" stroke="#66ff66" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 108.77 28.19 L 101.14 32.86 L 102.79 28.7 L 100.46 24.89 Z" fill="#66ff66" stroke="#66ff66" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
+        <ellipse cx="34" cy="27" rx="2" ry="2" fill="#00ffff" stroke="#00ffff" stroke-width="2" pointer-events="all"/>
+        <path d="M 14 52 Q -16 26 39 41 Q 94 56 139 31 Q 184 6 244 16 Q 304 26 264 32" fill="none" stroke="#6666ff" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke"/>
+        <ellipse cx="16" cy="54" rx="2" ry="2" fill="#000099" stroke="#000099" stroke-width="2" pointer-events="all"/>
+        <ellipse cx="3" cy="37" rx="2" ry="2" fill="#000099" stroke="#000099" stroke-width="2" pointer-events="all"/>
+        <ellipse cx="33" cy="40" rx="2" ry="2" fill="#000099" stroke="#000099" stroke-width="2" pointer-events="all"/>
+        <ellipse cx="156" cy="23" rx="2" ry="2" fill="#000099" stroke="#000099" stroke-width="2" pointer-events="all"/>
+        <ellipse cx="194" cy="14" rx="2" ry="2" fill="#000099" stroke="#000099" stroke-width="2" pointer-events="all"/>
+        <ellipse cx="234" cy="15" rx="2" ry="2" fill="#000099" stroke="#000099" stroke-width="2" pointer-events="all"/>
+        <ellipse cx="280" cy="26" rx="2" ry="2" fill="#000099" stroke="#000099" stroke-width="2" pointer-events="all"/>
+        <ellipse cx="262" cy="32" rx="2" ry="2" fill="#000099" stroke="#000099" stroke-width="2" pointer-events="all"/>
+        <path d="M 112 42 L 85.15 45.84" fill="none" stroke="#ff0000" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 79.21 46.68 L 86.57 41.59 L 85.15 45.84 L 87.7 49.51 Z" fill="#ff0000" stroke="#ff0000" stroke-width="2" stroke-miterlimit="10" pointer-events="all"/>
+        <ellipse cx="74" cy="31" rx="2" ry="2" fill="#00ffff" stroke="#00ffff" stroke-width="2" pointer-events="all"/>
+        <ellipse cx="74" cy="47" rx="2" ry="2" fill="#000099" stroke="#000099" stroke-width="2" pointer-events="all"/>
+        <ellipse cx="114" cy="42" rx="2" ry="2" fill="#000099" stroke="#000099" stroke-width="2" pointer-events="all"/>
+    </g>
+</svg>
