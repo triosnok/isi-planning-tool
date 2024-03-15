@@ -86,11 +86,13 @@ export interface CreateTripRequest {
 
 export interface TripDetails {
     id: string;
+    driver: string;
     startedAt: DateAsString;
     endedAt: DateAsString;
     gnssLog: string;
     cameraLogs: { [P in CameraPosition]?: string };
     sequenceNumber: number;
+    deviations: number;
 }
 
 export interface TripNoteDetails {

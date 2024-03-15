@@ -25,14 +25,17 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
   @Query("""
     SELECT new no.isi.insight.planner.client.trip.view.TripDetails(
       t.id,
+      d.fullName,
       t.startedAt,
       t.endedAt,
       t.gnssLog,
       t.cameraLogs,
-      t.sequenceNumber
+      t.sequenceNumber,
+      0
     )  FROM Trip t
     INNER JOIN t.projectPlan pp
     INNER JOIN pp.project p
+    INNER JOIN t.driver d
     WHERE 1=1
       AND p.id = :projectId
       AND COALESCE(:planIds, NULL) IS NULL OR pp.id IN (:planIds)

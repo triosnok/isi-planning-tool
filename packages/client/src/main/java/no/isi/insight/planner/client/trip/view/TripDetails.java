@@ -11,11 +11,13 @@ import no.isi.insight.planner.client.annotation.GenerateTypeScript;
 @GenerateTypeScript
 public record TripDetails(
   UUID id,
+  String driver,
   LocalDateTime startedAt,
   LocalDateTime endedAt,
   String gnssLog,
   Map<CameraPosition, String> cameraLogs,
-  Integer sequenceNumber
+  int sequenceNumber,
+  int deviations
 ) {
 
 }

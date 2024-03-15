@@ -60,11 +60,13 @@ public class TripRestServiceImpl implements TripRestService {
     return ResponseEntity.ok(
       new TripDetails(
         savedTrip.getId(),
+        savedTrip.getDriver().getFullName(),
         savedTrip.getStartedAt(),
         savedTrip.getEndedAt(),
         savedTrip.getGnssLog(),
         savedTrip.getCameraLogs(),
-        savedTrip.getSequenceNumber()
+        savedTrip.getSequenceNumber(),
+        0
       )
     );
   }
@@ -79,11 +81,13 @@ public class TripRestServiceImpl implements TripRestService {
     return ResponseEntity.ok(
       new TripDetails(
         trip.getId(),
+        trip.getDriver().getFullName(),
         trip.getStartedAt(),
         trip.getEndedAt(),
         trip.getGnssLog(),
         trip.getCameraLogs(),
-        trip.getSequenceNumber()
+        trip.getSequenceNumber(),
+        0
       )
     );
   }
@@ -114,11 +118,13 @@ public class TripRestServiceImpl implements TripRestService {
     return ResponseEntity.ok(
       new TripDetails(
         savedTrip.getId(),
+        savedTrip.getDriver().getFullName(),
         savedTrip.getStartedAt(),
         savedTrip.getEndedAt(),
         savedTrip.getGnssLog(),
         savedTrip.getCameraLogs(),
-        savedTrip.getSequenceNumber()
+        savedTrip.getSequenceNumber(),
+        0
       )
     );
   }
