@@ -13,13 +13,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import no.isi.insight.planning.capture.config.CaptureProcessingConfig;
 import no.isi.insight.planning.capture.model.ProcessedLogEntry;
+import no.isi.insight.planning.geometry.GeometryProperties;
 
 @Slf4j
 @Repository
 @RequiredArgsConstructor
 public class TripRailingCaptureJdbcRepository {
   private final NamedParameterJdbcTemplate jdbcTemplate;
+  private final CaptureProcessingConfig captureConfig;
+  private final GeometryProperties geometryProperties;
   private final ObjectMapper objectMapper;
 
   /**
@@ -37,18 +41,18 @@ public class TripRailingCaptureJdbcRepository {
     // language=sql
     final var createTempTableQuery = """
         CREATE TEMPORARY TABLE temp_trip_railing_capture_log (
-          position GEOMETRY(POINT, 5973),
+          position GEOMETRY(POINT, :targetSrid),
           timestamp TIMESTAMP,
           images JSON
         );
       """;
 
-    this.jdbcTemplate.update(createTempTableQuery, Map.of());
+    this.jdbcTemplate.update(createTempTableQuery, Map.of("targetSrid", this.geometryProperties.getSRID()));
 
     // language=sql
     final var insertTempTableQuery = """
         INSERT INTO temp_trip_railing_capture_log (position, timestamp, images)
-        VALUES (ST_Transform(ST_PointFromText(:position, 4326), 5973), :timestamp, :images::json)
+        VALUES (ST_Transform(ST_PointFromText(:position, :referenceSrid), :targetSrid), :timestamp, :images::json)
       """;
 
     var tempInsertionParams = entries.stream().map(entry -> {
@@ -65,6 +69,8 @@ public class TripRailingCaptureJdbcRepository {
       params.addValue("position", entry.point().toText());
       params.addValue("timestamp", entry.timestamp());
       params.addValue("images", imagesJson);
+      params.addValue("referenceSrid", this.captureConfig.getSRID());
+      params.addValue("targetSrid", this.geometryProperties.getSRID());
 
       return params;
     }).toArray(MapSqlParameterSource[]::new);
@@ -88,11 +94,23 @@ public class TripRailingCaptureJdbcRepository {
       INNER JOIN road_railing rr
         ON pprr.fk_road_railing_id = rr.road_railing_id
       INNER JOIN temp_trip_railing_capture_log ttrl
-        ON ST_DWithin(ttrl.position, rr.geometry, 10)
+        ON ST_DWithin(ttrl.position, rr.geometry, 0.5)
       WHERE t.trip_id = :tripId
       """;
 
     this.jdbcTemplate.update(insertRailingsQuery, Map.of("tripId", tripId));
+  }
+
+  @Transactional(readOnly = false)
+  int deleteByTripId(
+      UUID tripId
+  ) {
+    // language=sql
+    final var deleteQuery = """
+        DELETE FROM trip_railing_capture WHERE fk_trip_id = :tripId
+      """;
+
+    return this.jdbcTemplate.update(deleteQuery, Map.of("tripId", tripId));
   }
 
 }
