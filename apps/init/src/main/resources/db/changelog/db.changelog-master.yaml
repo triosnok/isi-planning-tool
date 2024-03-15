@@ -49,7 +49,7 @@ databaseChangeLog:
       author: halvard
       changes:
         - sqlFile:
-            path: 006-road-system/000-road-net-table.sql
+            path: 006-road-system/000-road-system-table.sql
             relativeToChangelogFile: true
         - sqlFile:
             path: 006-road-system/001-road-railing-unique-external-id.sql
