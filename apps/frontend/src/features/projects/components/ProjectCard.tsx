@@ -36,7 +36,7 @@ const ProjectCard: Component<ProjectCardProps> = ({
   progress,
 }) => {
   return (
-    <div class='overflow-hidden rounded-lg border hover:cursor-pointer hover:bg-gray-100'>
+    <div class='overflow-hidden truncate rounded-lg border hover:cursor-pointer hover:bg-gray-100'>
       <div class='p-2'>
         <div class='flex justify-between'>
           <div>

@@ -48,7 +48,7 @@ const VehicleOverview: Component<LayoutProps> = (props) => {
           </section>
         </main>
 
-        <aside class='w-1/3'>
+        <aside class='w-0 md:w-1/3'>
           <MapRoot class='h-full w-full' />
         </aside>
 

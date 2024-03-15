@@ -19,7 +19,7 @@ const ProjectsLayout: Component<LayoutProps> = (props) => {
       <Header />
 
       <main class='flex flex-1'>
-        <aside class='w-96 flex-shrink-0'>{props.children}</aside>
+        <aside class='w-full md:w-96 flex-shrink-0'>{props.children}</aside>
 
         <div class='flex-1'>
           <MapRoot class='h-full w-full'>
