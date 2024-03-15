@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -17,7 +16,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.http.HttpHeaders;
 
 import lombok.RequiredArgsConstructor;
-import no.isi.insight.planner.client.auth.view.SignInRequest;
 import no.isi.insight.planner.client.trip.view.CreateTripRequest;
 import no.isi.insight.planning.annotation.IntegrationTest;
 import no.isi.insight.planning.auth.service.UserAccountService;
@@ -29,8 +27,8 @@ import no.isi.insight.planning.model.UserAccountRole;
 import no.isi.insight.planning.model.Vehicle;
 import no.isi.insight.planning.repository.ProjectJpaRepository;
 import no.isi.insight.planning.repository.ProjectPlanJpaRepository;
-import no.isi.insight.planning.repository.UserAccountJpaRepository;
 import no.isi.insight.planning.repository.VehicleJpaRepository;
+import no.isi.insight.planning.utility.AuthTestUtils;
 
 @IntegrationTest
 @RequiredArgsConstructor
@@ -39,17 +37,15 @@ class TripRestServiceIntegrationTests {
   private final MockMvc mockMvc;
   private final ObjectMapper objectMapper;
   private final UserAccountService userService;
-
-  private CreateTripRequest trip;
-
-  private ProjectPlan projectPlan;
-  private Vehicle vehicle;
-  private UserAccount userAccount;
-
+  private final AuthTestUtils authTestUtils;
   private final ProjectJpaRepository projectJpaRepository;
   private final ProjectPlanJpaRepository projectPlanJpaRepository;
   private final VehicleJpaRepository vehicleJpaRepository;
-  private final UserAccountJpaRepository userAccountJpaRepository;
+
+  private CreateTripRequest trip;
+  private ProjectPlan projectPlan;
+  private Vehicle vehicle;
+  private UserAccount userAccount;
 
   @BeforeEach
   void setUp() throws JsonProcessingException, Exception {
@@ -87,22 +83,20 @@ class TripRestServiceIntegrationTests {
       vehicle.getId()
     );
 
-    String uniqueEmail = "driverUserTrip+" + UUID.randomUUID().toString() + "@email.invalid";
+    String uniqueEmail = UUID.randomUUID().toString() + "@email.invalid";
 
-    this.userAccount = this.userAccountJpaRepository.save(
-      this.userAccount = this.userService.createAccount("Driver", uniqueEmail, "", "pass", UserAccountRole.DRIVER)
-    );
+    this.userAccount = this.userService.createAccount("Driver", uniqueEmail, "", "pass", UserAccountRole.DRIVER);
   }
 
   @Test
   void canCreateTrip() throws Exception {
-    var accessToken = obtainAccessToken(userAccount.getEmail(), "pass");
+    var authorization = this.authTestUtils.generateAuthorizationHeader(this.userAccount);
 
     this.mockMvc
       .perform(
         MockMvcRequestBuilders.post("/api/v1/trips")
           .contentType(MediaType.APPLICATION_JSON)
-          .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+          .header(HttpHeaders.AUTHORIZATION, authorization)
           .content(this.objectMapper.writeValueAsString(this.trip))
       )
       .andExpect(MockMvcResultMatchers.status().isOk())
@@ -112,13 +106,13 @@ class TripRestServiceIntegrationTests {
 
   @Test
   void canSaveAndFindTripById() throws Exception {
-    var accessToken = obtainAccessToken(userAccount.getEmail(), "pass");
+    var authorization = this.authTestUtils.generateAuthorizationHeader(this.userAccount);
 
     var savedTrip = this.mockMvc
       .perform(
         MockMvcRequestBuilders.post("/api/v1/trips")
           .contentType(MediaType.APPLICATION_JSON)
-          .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+          .header(HttpHeaders.AUTHORIZATION, authorization)
           .content(this.objectMapper.writeValueAsString(this.trip))
       )
       .andExpect(MockMvcResultMatchers.status().isOk())
@@ -139,13 +133,13 @@ class TripRestServiceIntegrationTests {
 
   @Test
   void canSaveAndFindTripByProjectId() throws Exception {
-    var accessToken = obtainAccessToken(userAccount.getEmail(), "pass");
+    var authorization = this.authTestUtils.generateAuthorizationHeader(this.userAccount);
 
     var savedTrip = this.mockMvc
       .perform(
         MockMvcRequestBuilders.post("/api/v1/trips")
           .contentType(MediaType.APPLICATION_JSON)
-          .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+          .header(HttpHeaders.AUTHORIZATION, authorization)
           .content(this.objectMapper.writeValueAsString(this.trip))
       )
       .andExpect(MockMvcResultMatchers.status().isOk())
@@ -166,13 +160,13 @@ class TripRestServiceIntegrationTests {
 
   @Test
   void canSaveAndFindTripByProjectIdAndPlanId() throws Exception {
-    var accessToken = obtainAccessToken(userAccount.getEmail(), "pass");
+    var authorization = this.authTestUtils.generateAuthorizationHeader(this.userAccount);
 
     var savedTrip = this.mockMvc
       .perform(
         MockMvcRequestBuilders.post("/api/v1/trips")
           .contentType(MediaType.APPLICATION_JSON)
-          .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+          .header(HttpHeaders.AUTHORIZATION, authorization)
           .content(this.objectMapper.writeValueAsString(this.trip))
       )
       .andExpect(MockMvcResultMatchers.status().isOk())
@@ -192,28 +186,4 @@ class TripRestServiceIntegrationTests {
       .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(tripDetails.getId().toString()));
   }
 
-  private String obtainAccessToken(
-      String username,
-      String password
-  ) throws Exception {
-    var signInRequest = new SignInRequest(
-      username,
-      password
-    );
-
-    var result = this.mockMvc
-      .perform(
-        MockMvcRequestBuilders.post("/api/v1/auth/sign-in")
-          .contentType(MediaType.APPLICATION_JSON)
-          .content(this.objectMapper.writeValueAsString(signInRequest))
-      )
-      .andReturn()
-      .getResponse();
-
-    var content = result.getContentAsString();
-    var parser = new JacksonJsonParser();
-    var token = parser.parseMap(content).get("accessToken").toString();
-
-    return token;
-  }
 }
