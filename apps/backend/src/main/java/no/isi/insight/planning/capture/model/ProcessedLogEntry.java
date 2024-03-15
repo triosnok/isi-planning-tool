@@ -7,4 +7,9 @@ import org.locationtech.jts.geom.Point;
 
 import no.isi.insight.planner.client.trip.view.CameraPosition;
 
-public record ProcessedLogEntry(Point point, LocalDateTime timestamp, Map<CameraPosition, String> images) {}
+public record ProcessedLogEntry(
+  Point point,
+  Double heading,
+  LocalDateTime timestamp,
+  Map<CameraPosition, String> images
+) {}
