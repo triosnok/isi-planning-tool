@@ -97,7 +97,6 @@ class TripJpaRepositoryTests {
     assertEquals(savedTrip.getEndedAt(), foundTrip.getEndedAt());
     assertEquals(savedTrip.getGnssLog(), foundTrip.getGnssLog());
     assertEquals(savedTrip.getCameraLogs(), foundTrip.getCameraLogs());
-
   }
 
 }

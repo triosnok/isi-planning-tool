@@ -41,7 +41,7 @@ public class Trip {
 
   @ManyToOne
   @JoinColumn(name = "fk_driver_user_id", referencedColumnName = UserAccount.PRIMARY_KEY)
-  private UserAccount driverUser;
+  private UserAccount driver;
 
   @ManyToOne
   @JoinColumn(name = "fk_project_plan_id", referencedColumnName = ProjectPlan.PRIMARY_KEY)
@@ -57,7 +57,7 @@ public class Trip {
   private String gnssLog;
 
   @Column(name = "sequence_number")
-  private Integer sequenceNumber;
+  private int sequenceNumber;
 
   @JdbcTypeCode(SqlTypes.JSON)
   @Column(name = "camera_logs")
@@ -68,13 +68,13 @@ public class Trip {
 
   public Trip(
       Vehicle vehicle,
-      UserAccount driverUser,
+      UserAccount driver,
       ProjectPlan projectPlan,
       LocalDateTime startedAt,
       Integer sequenceNumber
   ) {
     this.vehicle = vehicle;
-    this.driverUser = driverUser;
+    this.driver = driver;
     this.projectPlan = projectPlan;
     this.startedAt = startedAt;
     this.sequenceNumber = sequenceNumber;

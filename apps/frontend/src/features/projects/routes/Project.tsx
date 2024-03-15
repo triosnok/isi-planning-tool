@@ -149,10 +149,10 @@ const Project: Component<LayoutProps> = (props) => {
                     <TripCard
                       sequenceNumber={trip.sequenceNumber}
                       date={dayjs(trip.startedAt).format('MMM D')}
-                      deviations={5}
+                      deviations={trip.deviations}
                       notes={4}
                       length={320}
-                      car={'car'}
+                      car={trip.driver}
                     />
                   </A>
                 )}
