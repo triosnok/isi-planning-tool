@@ -42,6 +42,7 @@ public class TripRailingCaptureJdbcRepository {
     final var createTempTableQuery = """
         CREATE TEMPORARY TABLE temp_trip_railing_capture_log (
           position GEOMETRY(POINT, :targetSrid),
+          heading NUMERIC,
           timestamp TIMESTAMP,
           images JSON
         );
@@ -51,8 +52,8 @@ public class TripRailingCaptureJdbcRepository {
 
     // language=sql
     final var insertTempTableQuery = """
-        INSERT INTO temp_trip_railing_capture_log (position, timestamp, images)
-        VALUES (ST_Transform(ST_PointFromText(:position, :referenceSrid), :targetSrid), :timestamp, :images::json)
+        INSERT INTO temp_trip_railing_capture_log (position, heading, timestamp, images)
+        VALUES (ST_Transform(ST_PointFromText(:position, :referenceSrid), :heading, :targetSrid), :timestamp, :images::json)
       """;
 
     var tempInsertionParams = entries.stream().map(entry -> {
@@ -68,6 +69,7 @@ public class TripRailingCaptureJdbcRepository {
 
       params.addValue("position", entry.point().toText());
       params.addValue("timestamp", entry.timestamp());
+      params.addValue("heading", entry.heading());
       params.addValue("images", imagesJson);
       params.addValue("referenceSrid", this.captureConfig.getSRID());
       params.addValue("targetSrid", this.geometryProperties.getSRID());
@@ -79,23 +81,64 @@ public class TripRailingCaptureJdbcRepository {
 
     // language=sql
     final var insertRailingsQuery = """
+      WITH base_candidate AS (
+        SELECT
+          t.trip_id,
+          rr.road_railing_id,
+          ttrl.timestamp,
+          ttrl.position,
+          ttrl.images,
+          rr.road_system_reference_id
+        FROM trip t
+        INNER JOIN project_plan pp
+          ON t.fk_project_plan_id = pp.project_plan_id
+        INNER JOIN project_plan_road_railing pprr
+          ON pp.project_plan_id = pprr.fk_project_plan_id
+        INNER JOIN road_railing rr
+          ON pprr.fk_road_railing_id = rr.road_railing_id
+        INNER JOIN temp_trip_railing_capture_log ttrl
+          ON ST_DWithin(ttrl.position, rr.geometry, 0.5)
+      ),
+      road_points AS (
+        SELECT
+          rs.external_id,
+          (ST_DumpPoints(ST_Force2D(rs.geometry))).geom AS points
+        FROM road_system rs
+      ),
+      road_point_pairs AS (
+        SELECT
+          rp.external_id,
+          rp.points AS point_a, 
+          LEAD(rp.points) OVER (ORDER BY rp.points) AS point_b
+        FROM road_points rp
+      ),
+      candidate AS (
+        SELECT
+          *
+        FROM base_candidate bc
+        INNER JOIN road_point_pairs rpp
+          ON ST_DWithin(bc.position, rpp.point_a, 0.5)
+          AND bc.road_system_reference_id = rpp.external_id
+      )
       INSERT INTO trip_railing_capture (fk_trip_id, fk_road_railing_id, captured_at, position, image_urls)
-      SELECT
-        t.trip_id,
-        rr.road_railing_id,
-        ttrl.timestamp,
-        ttrl.position,
-        ttrl.images
-      FROM trip t
-      INNER JOIN project_plan pp
-        ON t.fk_project_plan_id = pp.project_plan_id
-      INNER JOIN project_plan_road_railing pprr
-        ON pp.project_plan_id = pprr.fk_project_plan_id
-      INNER JOIN road_railing rr
-        ON pprr.fk_road_railing_id = rr.road_railing_id
-      INNER JOIN temp_trip_railing_capture_log ttrl
-        ON ST_DWithin(ttrl.position, rr.geometry, 0.5)
-      WHERE t.trip_id = :tripId
+      SELECT 
+        c.trip_id,
+        c.road_railing_id,
+        c.timestamp,
+        c.position,
+        c.images
+      FROM candidate c
+      WHERE 1=1
+        AND (c.trip_id = :tripId)
+        AND (CASE
+          WHEN c.side_of_road = 'LEFT' THEN ttrl.images->>'LEFT' IS NOT NULL
+          WHEN c.side_of_road = 'RIGHT' THEN ttrl.images->>'RIGHT' IS NOT NULL
+          ELSE FALSE
+        END)
+        AND (CASE
+          WHEN rr.direction_of_road = 'WITH' THEN c.inferred_driving_direction IS NOT NULL
+          ELSE FALSE          
+        END)
       """;
 
     this.jdbcTemplate.update(insertRailingsQuery, Map.of("tripId", tripId));

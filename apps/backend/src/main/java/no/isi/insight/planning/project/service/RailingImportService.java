@@ -1,6 +1,8 @@
 package no.isi.insight.planning.project.service;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -13,7 +15,9 @@ import no.isi.insight.planning.integration.nvdb.NvdbImportService;
 import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObject;
 import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObjectType;
 import no.isi.insight.planning.model.RoadDirection;
+import no.isi.insight.planning.model.RoadRailing;
 import no.isi.insight.planning.model.RoadSide;
+import no.isi.insight.planning.repository.RoadRailingJpaRepository;
 
 @Slf4j
 @Service
@@ -21,6 +25,7 @@ import no.isi.insight.planning.model.RoadSide;
 public class RailingImportService {
   private final NvdbImportService importService;
   private final NamedParameterJdbcTemplate jdbcTemplate;
+  private final RoadRailingJpaRepository railingJpaRepository;
 
   // language=sql
   private static final String UPSERT_ROAD_RAILING_QUERY = """
@@ -38,7 +43,7 @@ public class RailingImportService {
 
   // language=sql
   private static final String UPSERT_ROAD_NET_QUERY = """
-      INSERT INTO road_net (external_id, geometry)
+      INSERT INTO road_system (external_id, geometry)
       VALUES (:externalId, ST_GeomFromText(:geometry))
       ON CONFLICT (external_id) DO UPDATE SET
         geometry = EXCLUDED.geometry,
@@ -46,30 +51,34 @@ public class RailingImportService {
     """;
 
   @Transactional(readOnly = false)
-  public void importRailings(
-      String planId,
+  public List<RoadRailing> importRailings(
+      UUID planId,
       String url
   ) {
     log.info("Importing railings & road nets from NVDB...");
     var railings = this.importService.importRoadObjects(url, NvdbRoadObjectType.RAILING);
-    var roadNets = this.importService.importRoadObjects(url, NvdbRoadObjectType.ROAD_NET);
+    var roadNets = this.importService.importRoadObjects(url, NvdbRoadObjectType.ROAD_SYSTEM);
 
     var railingParams = new ArrayList<MapSqlParameterSource>(railings.size());
     var roadNetParams = new ArrayList<MapSqlParameterSource>(roadNets.size());
+    var railingIds = new ArrayList<Long>();
 
     for (var railing : railings) {
-      railingParams.add(this.mapRailing(railing));
+      railingParams.add(this.mapRailingParams(railing));
+      railingIds.add(railing.id());
     }
 
     for (var roadNet : roadNets) {
-      roadNetParams.add(this.mapRoadNet(roadNet));
+      roadNetParams.add(this.mapRoadNetParams(roadNet));
     }
 
     this.jdbcTemplate.batchUpdate(UPSERT_ROAD_RAILING_QUERY, railingParams.toArray(MapSqlParameterSource[]::new));
     this.jdbcTemplate.batchUpdate(UPSERT_ROAD_NET_QUERY, roadNetParams.toArray(MapSqlParameterSource[]::new));
+
+    return this.railingJpaRepository.findAllByExternalIds(railingIds);
   }
 
-  private MapSqlParameterSource mapRailing(
+  private MapSqlParameterSource mapRailingParams(
       NvdbRoadObject roadObject
   ) {
     var roadSystemReference = roadObject.location().roadSystemReferences().get(0);
@@ -87,7 +96,7 @@ public class RailingImportService {
     return params;
   }
 
-  private MapSqlParameterSource mapRoadNet(
+  private MapSqlParameterSource mapRoadNetParams(
       NvdbRoadObject roadObject
   ) {
     var params = new MapSqlParameterSource();

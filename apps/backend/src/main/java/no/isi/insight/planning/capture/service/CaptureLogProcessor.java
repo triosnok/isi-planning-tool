@@ -138,6 +138,7 @@ public class CaptureLogProcessor {
 
       var processed = new ProcessedLogEntry(
         point,
+        gnss.getHeading(),
         timestamp,
         images
       );

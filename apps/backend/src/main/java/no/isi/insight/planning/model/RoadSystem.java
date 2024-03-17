@@ -16,10 +16,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor
-@Table(name = "road_net")
-public class RoadNet {
+@Table(name = "road_system")
+public class RoadSystem {
 
-  public static final String PRIMARY_KEY = "road_net_id";
+  public static final String PRIMARY_KEY = "road_system_id";
 
   @Id
   @Column(name = PRIMARY_KEY)
@@ -35,7 +35,7 @@ public class RoadNet {
   @Column(name = "last_imported_at")
   private LocalDateTime lastImportedAt;
 
-  public RoadNet(
+  public RoadSystem(
       Long externalId,
       LineString lineString
   ) {

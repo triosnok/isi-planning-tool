@@ -45,12 +45,12 @@ databaseChangeLog:
             path: 005-capture/000-create-capture-table.sql
             relativeToChangelogFile: true
   - changeSet:
-      id: 006-road-nets
+      id: 006-road-system
       author: halvard
       changes:
         - sqlFile:
-            path: 006-road-nets/000-road-net-table.sql
+            path: 006-road-system/000-road-system-table.sql
             relativeToChangelogFile: true
         - sqlFile:
-            path: 006-road-nets/001-road-railing-unique-external-id.sql
+            path: 006-road-system/001-road-railing-unique-external-id.sql
             relativeToChangelogFile: true
