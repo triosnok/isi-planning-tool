@@ -1,6 +1,7 @@
 package no.isi.insight.planning.trip;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,23 +17,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.http.HttpHeaders;
 
 import lombok.RequiredArgsConstructor;
-import no.isi.insight.planner.client.trip.view.CreateTripRequest;
-import no.isi.insight.planner.client.trip.view.TripDetails;
+import no.isi.insight.planner.client.trip.view.CreateTripNoteRequest;
+import no.isi.insight.planner.client.trip.view.UpdateTripNoteRequest;
 import no.isi.insight.planning.annotation.IntegrationTest;
 import no.isi.insight.planning.auth.service.UserAccountService;
 import no.isi.insight.planning.model.Project;
 import no.isi.insight.planning.model.ProjectPlan;
+import no.isi.insight.planning.model.Trip;
 import no.isi.insight.planning.model.UserAccount;
 import no.isi.insight.planning.model.UserAccountRole;
 import no.isi.insight.planning.model.Vehicle;
 import no.isi.insight.planning.repository.ProjectJpaRepository;
 import no.isi.insight.planning.repository.ProjectPlanJpaRepository;
+import no.isi.insight.planning.repository.TripJpaRepository;
 import no.isi.insight.planning.repository.VehicleJpaRepository;
 import no.isi.insight.planning.utility.AuthTestUtils;
 
 @IntegrationTest
 @RequiredArgsConstructor
-class TripRestServiceIntegrationTests {
+class TripNoteRestServiceIntegrationTests {
 
   private final MockMvc mockMvc;
   private final ObjectMapper objectMapper;
@@ -41,8 +44,10 @@ class TripRestServiceIntegrationTests {
   private final ProjectJpaRepository projectJpaRepository;
   private final ProjectPlanJpaRepository projectPlanJpaRepository;
   private final VehicleJpaRepository vehicleJpaRepository;
+  private final TripJpaRepository tripJpaRepository;
 
-  private CreateTripRequest trip;
+  private CreateTripNoteRequest tripNote;
+  private Trip trip;
   private ProjectPlan projectPlan;
   private Vehicle vehicle;
   private UserAccount userAccount;
@@ -78,110 +83,69 @@ class TripRestServiceIntegrationTests {
     projectPlanJpaRepository.save(projectPlan);
     vehicleJpaRepository.save(vehicle);
 
-    this.trip = new CreateTripRequest(
-      projectPlan.getId(),
-      vehicle.getId()
+    String uniqueEmail = UUID.randomUUID().toString() + "@email.invalid";
+    this.userAccount = this.userService.createAccount("Driver", uniqueEmail, "", "pass", UserAccountRole.DRIVER);
+
+    trip = new Trip(
+      vehicle,
+      userAccount,
+      projectPlan,
+      LocalDateTime.now(),
+      0
     );
 
-    String uniqueEmail = UUID.randomUUID().toString() + "@email.invalid";
+    this.trip = this.tripJpaRepository.save(trip);
 
-    this.userAccount = this.userService.createAccount("Driver", uniqueEmail, "", "pass", UserAccountRole.DRIVER);
+    this.tripNote = new CreateTripNoteRequest(
+      trip.getId(),
+      "Note"
+    );
   }
 
   @Test
-  void canCreateTrip() throws Exception {
+  void createTripNote() throws Exception {
     var authorization = this.authTestUtils.generateAuthorizationHeader(this.userAccount);
 
     this.mockMvc
       .perform(
-        MockMvcRequestBuilders.post("/api/v1/trips")
-          .contentType(MediaType.APPLICATION_JSON)
+        MockMvcRequestBuilders.post("/api/v1/trip-notes")
           .header(HttpHeaders.AUTHORIZATION, authorization)
-          .content(this.objectMapper.writeValueAsString(this.trip))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(this.objectMapper.writeValueAsString(this.tripNote))
       )
       .andExpect(MockMvcResultMatchers.status().isOk())
       .andExpect(MockMvcResultMatchers.jsonPath("$.id").isString())
-      .andExpect(MockMvcResultMatchers.jsonPath("$.startedAt").isString());
+      .andExpect(MockMvcResultMatchers.jsonPath("$.note").isString());
   }
 
   @Test
-  void canSaveAndFindTripById() throws Exception {
+  void updateTripNote() throws Exception {
     var authorization = this.authTestUtils.generateAuthorizationHeader(this.userAccount);
 
-    var savedTrip = this.mockMvc
+    var response = this.mockMvc
       .perform(
-        MockMvcRequestBuilders.post("/api/v1/trips")
-          .contentType(MediaType.APPLICATION_JSON)
+        MockMvcRequestBuilders.post("/api/v1/trip-notes")
           .header(HttpHeaders.AUTHORIZATION, authorization)
-          .content(this.objectMapper.writeValueAsString(this.trip))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(this.objectMapper.writeValueAsString(this.tripNote))
       )
       .andExpect(MockMvcResultMatchers.status().isOk())
-      .andReturn()
-      .getResponse()
-      .getContentAsString();
+      .andReturn();
 
-    var tripDetails = this.objectMapper.readValue(savedTrip, TripDetails.class);
+    var noteId = this.objectMapper.readTree(response.getResponse().getContentAsString()).get("id").asText();
+
+    var updateTripNote = new UpdateTripNoteRequest("Updated note");
 
     this.mockMvc
-      .perform(MockMvcRequestBuilders.get("/api/v1/trips/" + tripDetails.id()).contentType(MediaType.APPLICATION_JSON))
+      .perform(
+        MockMvcRequestBuilders.put("/api/v1/trip-notes/" + noteId)
+          .header(HttpHeaders.AUTHORIZATION, authorization)
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(this.objectMapper.writeValueAsString(updateTripNote))
+      )
       .andExpect(MockMvcResultMatchers.status().isOk())
       .andExpect(MockMvcResultMatchers.jsonPath("$.id").isString())
-      .andExpect(MockMvcResultMatchers.jsonPath("$.startedAt").isString());
-  }
-
-  @Test
-  void canSaveAndFindTripByProjectId() throws Exception {
-    var authorization = this.authTestUtils.generateAuthorizationHeader(this.userAccount);
-
-    var savedTrip = this.mockMvc
-      .perform(
-        MockMvcRequestBuilders.post("/api/v1/trips")
-          .contentType(MediaType.APPLICATION_JSON)
-          .header(HttpHeaders.AUTHORIZATION, authorization)
-          .content(this.objectMapper.writeValueAsString(this.trip))
-      )
-      .andExpect(MockMvcResultMatchers.status().isOk())
-      .andReturn()
-      .getResponse()
-      .getContentAsString();
-
-    var tripDetails = this.objectMapper.readValue(savedTrip, TripDetails.class);
-
-    this.mockMvc
-      .perform(
-        MockMvcRequestBuilders.get("/api/v1/trips?projectId=" + projectPlan.getProject().getId())
-          .contentType(MediaType.APPLICATION_JSON)
-      )
-      .andExpect(MockMvcResultMatchers.status().isOk())
-      .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(tripDetails.id().toString()));
-  }
-
-  @Test
-  void canSaveAndFindTripByProjectIdAndPlanId() throws Exception {
-    var authorization = this.authTestUtils.generateAuthorizationHeader(this.userAccount);
-
-    var savedTrip = this.mockMvc
-      .perform(
-        MockMvcRequestBuilders.post("/api/v1/trips")
-          .contentType(MediaType.APPLICATION_JSON)
-          .header(HttpHeaders.AUTHORIZATION, authorization)
-          .content(this.objectMapper.writeValueAsString(this.trip))
-      )
-      .andExpect(MockMvcResultMatchers.status().isOk())
-      .andReturn()
-      .getResponse()
-      .getContentAsString();
-
-    var tripDetails = this.objectMapper.readValue(savedTrip, TripDetails.class);
-
-    this.mockMvc
-      .perform(
-        MockMvcRequestBuilders
-          .get("/api/v1/trips?projectId=" + projectPlan.getProject().getId() + "&planId=" + projectPlan.getId())
-          .contentType(MediaType.APPLICATION_JSON)
-      )
-      .andExpect(MockMvcResultMatchers.status().isOk())
-      .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(tripDetails.id().toString()));
+      .andExpect(MockMvcResultMatchers.jsonPath("$.note").value("Updated note"));
   }
 
 }
