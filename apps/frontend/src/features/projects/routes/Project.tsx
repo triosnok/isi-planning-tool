@@ -7,7 +7,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useProfile } from '@/features/auth/api';
-import TripCard from '@/features/trip/components/TripCard';
+import TripCard from '@/features/trips/components/TripCard';
 import { LayoutProps } from '@/lib/utils';
 import { A, useParams } from '@solidjs/router';
 import {
