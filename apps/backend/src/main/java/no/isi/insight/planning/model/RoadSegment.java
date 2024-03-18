@@ -1,7 +1,6 @@
 package no.isi.insight.planning.model;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import org.hibernate.annotations.UpdateTimestamp;
 import org.locationtech.jts.geom.LineString;
@@ -16,17 +15,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor
-@Table(name = "road_system")
-public class RoadSystem {
+@Table(name = "road_segment")
+public class RoadSegment {
 
-  public static final String PRIMARY_KEY = "road_system_id";
+  public static final String PRIMARY_KEY = "road_segment_id";
 
   @Id
   @Column(name = PRIMARY_KEY)
-  private UUID id;
-
-  @Column(name = "external_id")
-  private Long externalId;
+  private String id;
 
   @Column(name = "geometry")
   private LineString geometry;
@@ -35,11 +31,11 @@ public class RoadSystem {
   @Column(name = "last_imported_at")
   private LocalDateTime lastImportedAt;
 
-  public RoadSystem(
-      Long externalId,
+  public RoadSegment(
+      String id,
       LineString lineString
   ) {
-    this.externalId = externalId;
+    this.id = id;
     this.geometry = lineString;
   }
 

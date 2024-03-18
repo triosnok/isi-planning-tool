@@ -9,9 +9,7 @@ import org.junit.jupiter.api.Test;
 import lombok.RequiredArgsConstructor;
 import no.isi.insight.planning.annotation.IntegrationTest;
 import no.isi.insight.planning.geometry.GeometryService;
-import no.isi.insight.planning.model.RoadDirection;
 import no.isi.insight.planning.model.RoadRailing;
-import no.isi.insight.planning.model.RoadSide;
 
 @IntegrationTest
 @RequiredArgsConstructor
@@ -28,11 +26,7 @@ class RoadRailingJpaRepositoryTests {
     var railing = new RoadRailing(
       1L,
       ls,
-      1L,
-      "EV39",
-      1.1,
-      RoadDirection.WITH,
-      RoadSide.RIGHT
+      1.1
     );
 
     var saved = this.repository.save(railing);

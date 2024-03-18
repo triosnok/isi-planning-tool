@@ -2,7 +2,8 @@ package no.isi.insight.planning.project.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -13,8 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.isi.insight.planning.integration.nvdb.NvdbImportService;
 import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObject;
+import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObject.Side;
 import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObjectType;
-import no.isi.insight.planning.model.RoadDirection;
 import no.isi.insight.planning.model.RoadRailing;
 import no.isi.insight.planning.model.RoadSide;
 import no.isi.insight.planning.repository.RoadRailingJpaRepository;
@@ -29,81 +30,94 @@ public class RailingImportService {
 
   // language=sql
   private static final String UPSERT_ROAD_RAILING_QUERY = """
-      INSERT INTO road_railing (external_id, geometry, road_system_reference_id, road_system_reference, length, direction_of_road, side_of_road)
-      VALUES (:externalId, ST_GeomFromText(:geometry), :roadSystemReferenceId, :roadSystemReference, :length, :direction::road_direction, :side::road_side)
-      ON CONFLICT (external_id) DO UPDATE SET
+      INSERT INTO road_railing (road_railing_id, geometry, length)
+      VALUES (:externalId, ST_GeomFromText(:geometry, 5973), :length)
+      ON CONFLICT (road_railing_id) DO UPDATE SET
         geometry = EXCLUDED.geometry,
-        road_system_reference_id = EXCLUDED.road_system_reference_id,
-        road_system_reference = EXCLUDED.road_system_reference,
         length = EXCLUDED.length,
-        direction_of_road = EXCLUDED.direction_of_road,
-        side_of_road = EXCLUDED.side_of_road,
         last_imported_at = NOW()
     """;
 
   // language=sql
-  private static final String UPSERT_ROAD_NET_QUERY = """
-      INSERT INTO road_system (external_id, geometry)
-      VALUES (:externalId, ST_GeomFromText(:geometry))
-      ON CONFLICT (external_id) DO UPDATE SET
+  private static final String UPSERT_ROAD_SEGMENT_QUERY = """
+      INSERT INTO road_segment (road_segment_id, geometry)
+      VALUES (:externalId, ST_GeomFromText(:geometry, 5973))
+      ON CONFLICT (road_segment_id) DO UPDATE SET
         geometry = EXCLUDED.geometry,
         last_imported_at = NOW()
     """;
 
+  // language=sql
+  private static final String UPSERT_JOIN_TABLE_QUERY = """
+      INSERT INTO road_railing_road_segment (fk_road_railing_id, fk_road_segment_id, side_of_road, direction_of_road)
+      VALUES (:railingId, :roadSegmentId, :side::road_side, :direction::road_direction)
+    """;
+
   @Transactional(readOnly = false)
   public List<RoadRailing> importRailings(
-      UUID planId,
       String url
   ) {
-    log.info("Importing railings & road nets from NVDB...");
-    var railings = this.importService.importRoadObjects(url, NvdbRoadObjectType.RAILING);
-    var roadNets = this.importService.importRoadObjects(url, NvdbRoadObjectType.ROAD_SYSTEM);
+    log.info("Importing railings from NVDB...");
+    var railings = this.importService.importRoadObjects(url, NvdbRoadObjectType.RAILING, Map.of("inkluder", "alle"));
 
     var railingParams = new ArrayList<MapSqlParameterSource>(railings.size());
-    var roadNetParams = new ArrayList<MapSqlParameterSource>(roadNets.size());
+    var roadSegmentsParams = new ArrayList<MapSqlParameterSource>();
+    var joinTableParams = new ArrayList<MapSqlParameterSource>();
     var railingIds = new ArrayList<Long>();
 
     for (var railing : railings) {
-      railingParams.add(this.mapRailingParams(railing));
       railingIds.add(railing.id());
-    }
-
-    for (var roadNet : roadNets) {
-      roadNetParams.add(this.mapRoadNetParams(roadNet));
+      railingParams.add(this.mapRailingParams(railing));
+      roadSegmentsParams.addAll(this.mapRoadSegmentParams(railing));
+      joinTableParams.addAll(this.mapPlacementParams(railing));
     }
 
     this.jdbcTemplate.batchUpdate(UPSERT_ROAD_RAILING_QUERY, railingParams.toArray(MapSqlParameterSource[]::new));
-    this.jdbcTemplate.batchUpdate(UPSERT_ROAD_NET_QUERY, roadNetParams.toArray(MapSqlParameterSource[]::new));
+    this.jdbcTemplate.batchUpdate(UPSERT_ROAD_SEGMENT_QUERY, roadSegmentsParams.toArray(MapSqlParameterSource[]::new));
+    this.jdbcTemplate.batchUpdate(UPSERT_JOIN_TABLE_QUERY, joinTableParams.toArray(MapSqlParameterSource[]::new));
 
-    return this.railingJpaRepository.findAllByExternalIds(railingIds);
+    return this.railingJpaRepository.findAllByIds(railingIds);
   }
 
   private MapSqlParameterSource mapRailingParams(
       NvdbRoadObject roadObject
   ) {
-    var roadSystemReference = roadObject.location().roadSystemReferences().get(0);
-    var placement = roadObject.location().placements().stream().findFirst();
-
     var params = new MapSqlParameterSource();
     params.addValue("externalId", roadObject.id());
     params.addValue("geometry", roadObject.geometry().wkt());
-    params.addValue("roadSystemReferenceId", roadSystemReference.system().id());
-    params.addValue("roadSystemReference", roadSystemReference.shortform());
     params.addValue("length", roadObject.location().length());
-    params.addValue("direction", placement.map(p -> p.getDirection()).map(RoadDirection::name).orElse(null));
-    params.addValue("side", placement.map(p -> p.getSide()).map(RoadSide::name).orElse(null));
 
     return params;
   }
 
-  private MapSqlParameterSource mapRoadNetParams(
+  private List<MapSqlParameterSource> mapRoadSegmentParams(
       NvdbRoadObject roadObject
   ) {
-    var params = new MapSqlParameterSource();
-    params.addValue("externalId", roadObject.id());
-    params.addValue("geometry", roadObject.geometry().wkt());
+    return roadObject.roadSegments().stream().map(segment -> {
+      var params = new MapSqlParameterSource();
+      params.addValue("externalId", segment.getShortform());
+      params.addValue("geometry", segment.geometry().wkt());
+      return params;
+    }).toList();
+  }
 
-    return params;
+  private List<MapSqlParameterSource> mapPlacementParams(
+      NvdbRoadObject roadObject
+  ) {
+    return roadObject.roadSegments().stream().map(segment -> {
+      var placement = roadObject.location().placements().stream().filter(p -> segment.isWithin(p)).findFirst();
+
+      if (placement.isEmpty()) {
+        return null;
+      }
+
+      var params = new MapSqlParameterSource();
+      params.addValue("railingId", roadObject.id());
+      params.addValue("roadSegmentId", segment.getShortform());
+      params.addValue("direction", segment.roadSystemReference().stretch().direction().toRoadDirection().name());
+      params.addValue("side", placement.map(p -> p.side()).map(Side::toRoadSide).map(RoadSide::name).orElse(null));
+      return params;
+    }).filter(Objects::nonNull).toList();
   }
 
 }

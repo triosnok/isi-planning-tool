@@ -41,19 +41,19 @@ public class TripRailingCaptureJdbcRepository {
     // language=sql
     final var createTempTableQuery = """
         CREATE TEMPORARY TABLE temp_trip_railing_capture_log (
-          position GEOMETRY(POINT, :targetSrid),
+          position GEOMETRY(POINT, $targetSrid),
           heading NUMERIC,
           timestamp TIMESTAMP,
           images JSON
         );
-      """;
+      """.replace("$targetSrid", this.geometryProperties.getSRID().toString());
 
-    this.jdbcTemplate.update(createTempTableQuery, Map.of("targetSrid", this.geometryProperties.getSRID()));
+    this.jdbcTemplate.update(createTempTableQuery, Map.of());
 
     // language=sql
     final var insertTempTableQuery = """
         INSERT INTO temp_trip_railing_capture_log (position, heading, timestamp, images)
-        VALUES (ST_Transform(ST_PointFromText(:position, :referenceSrid), :heading, :targetSrid), :timestamp, :images::json)
+        VALUES (ST_Transform(ST_PointFromText(:position, :referenceSrid), :targetSrid), :heading, :timestamp, :images::json)
       """;
 
     var tempInsertionParams = entries.stream().map(entry -> {
@@ -82,62 +82,76 @@ public class TripRailingCaptureJdbcRepository {
     // language=sql
     final var insertRailingsQuery = """
       WITH base_candidate AS (
-        SELECT
-          t.trip_id,
+	      SELECT
           rr.road_railing_id,
+          rs.road_segment_id,
+          rrrs.direction_of_road,
+          rrrs.side_of_road,
+          ST_ClosestPoint(ttrl.position, rs.geometry) AS road_closest,
+          ST_Force2D(rs.geometry) AS road_geometry,
           ttrl.timestamp,
           ttrl.position,
           ttrl.images,
-          rr.road_system_reference_id
-        FROM trip t
-        INNER JOIN project_plan pp
-          ON t.fk_project_plan_id = pp.project_plan_id
-        INNER JOIN project_plan_road_railing pprr
-          ON pp.project_plan_id = pprr.fk_project_plan_id
+          ttrl.heading,
+          ROW_NUMBER() OVER(PARTITION BY ttrl.timestamp ORDER BY ttrl.POSITION <-> rs.geometry) AS distance_rank
+        FROM temp_trip_railing_capture_log ttrl
         INNER JOIN road_railing rr
-          ON pprr.fk_road_railing_id = rr.road_railing_id
-        INNER JOIN temp_trip_railing_capture_log ttrl
-          ON ST_DWithin(ttrl.position, rr.geometry, 0.5)
+          ON ST_DWithin(ttrl.POSITION, rr.geometry, 3)
+        INNER JOIN road_railing_road_segment rrrs
+          ON rr.road_railing_id = rrrs.fk_road_railing_id
+        INNER JOIN road_segment rs
+          ON rrrs.fk_road_segment_id = rs.road_segment_id
       ),
-      road_points AS (
-        SELECT
-          rs.external_id,
-          (ST_DumpPoints(ST_Force2D(rs.geometry))).geom AS points
-        FROM road_system rs
-      ),
-      road_point_pairs AS (
-        SELECT
-          rp.external_id,
-          rp.points AS point_a, 
-          LEAD(rp.points) OVER (ORDER BY rp.points) AS point_b
-        FROM road_points rp
+      projected_candidate AS (
+        SELECT 
+          bc.road_railing_id,
+          bc.road_segment_id,
+          bc.direction_of_road,
+          bc.side_of_road,
+          bc.timestamp,
+          bc.position,
+          bc.images,
+          DEGREES(ST_Angle(
+            ST_MakeLine(bc.position, ST_Project(bc.position, 1, RADIANS(bc.heading))),
+            ST_MakeLine(
+              ST_LineInterpolatePoint(bc.road_geometry, GREATEST(0, ST_LineLocatePoint(bc.road_geometry, bc.road_closest) - 0.01)),
+              ST_LineInterpolatePoint(bc.road_geometry, LEAST(1, ST_LineLocatePoint(bc.road_geometry, bc.road_closest) + 0.01))
+            )
+          )) AS angle
+        FROM base_candidate bc
+        WHERE bc.distance_rank = 1
       ),
       candidate AS (
-        SELECT
-          *
-        FROM base_candidate bc
-        INNER JOIN road_point_pairs rpp
-          ON ST_DWithin(bc.position, rpp.point_a, 0.5)
-          AND bc.road_system_reference_id = rpp.external_id
+        SELECT 
+          *,
+          (CASE 
+            WHEN pc.angle BETWEEN 90 AND 270 THEN 'WITH'
+            ELSE 'AGAINST'
+          END)::road_direction AS inferred_driving_direction
+        FROM projected_candidate pc
       )
       INSERT INTO trip_railing_capture (fk_trip_id, fk_road_railing_id, captured_at, position, image_urls)
-      SELECT 
-        c.trip_id,
+      SELECT
+        t.trip_id,
         c.road_railing_id,
         c.timestamp,
         c.position,
         c.images
-      FROM candidate c
+      FROM trip t
+      INNER JOIN project_plan pp
+        ON t.fk_project_plan_id = pp.project_plan_id
+      INNER JOIN project_plan_road_railing pprr
+        ON pp.project_plan_id = pprr.fk_project_plan_id
+      INNER JOIN candidate c
+        ON pprr.fk_road_railing_id = c.road_railing_id
       WHERE 1=1
-        AND (c.trip_id = :tripId)
+        AND (t.trip_id = :tripId)
+        AND (c.direction_of_road = c.inferred_driving_direction)
         AND (CASE
-          WHEN c.side_of_road = 'LEFT' THEN ttrl.images->>'LEFT' IS NOT NULL
-          WHEN c.side_of_road = 'RIGHT' THEN ttrl.images->>'RIGHT' IS NOT NULL
+          WHEN c.side_of_road = 'LEFT' THEN c.images->>'LEFT' IS NOT NULL
+          WHEN c.side_of_road = 'RIGHT' THEN c.images->>'RIGHT' IS NOT NULL
+          WHEN c.side_of_road = 'LEFT_AND_RIGHT' THEN c.images->>'LEFT' IS NOT NULL OR c.images->>'RIGHT' IS NOT NULL
           ELSE FALSE
-        END)
-        AND (CASE
-          WHEN rr.direction_of_road = 'WITH' THEN c.inferred_driving_direction IS NOT NULL
-          ELSE FALSE          
         END)
       """;
 

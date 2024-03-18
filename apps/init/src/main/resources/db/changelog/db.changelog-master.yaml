@@ -45,12 +45,15 @@ databaseChangeLog:
             path: 005-capture/000-create-capture-table.sql
             relativeToChangelogFile: true
   - changeSet:
-      id: 006-road-system
+      id: 006-road-segment
       author: halvard
       changes:
         - sqlFile:
-            path: 006-road-system/000-road-system-table.sql
+            path: 006-road-segment/000-road-segment-table.sql
             relativeToChangelogFile: true
         - sqlFile:
-            path: 006-road-system/001-road-railing-unique-external-id.sql
+            path: 006-road-segment/001-railing-segment-join-table.sql
+            relativeToChangelogFile: true
+        - sqlFile:
+            path: 006-road-segment/002-spatial-indexes.sql
             relativeToChangelogFile: true
