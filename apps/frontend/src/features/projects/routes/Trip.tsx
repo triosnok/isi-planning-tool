@@ -18,7 +18,7 @@ import {
   IconDatabase,
   IconMessage,
   IconPhoto,
-  IconVideo
+  IconVideo,
 } from '@tabler/icons-solidjs';
 import dayjs from 'dayjs';
 import { Component, createSignal } from 'solid-js';
@@ -91,10 +91,7 @@ const Trip: Component = () => {
               </h1>
               <h2 class='text-sm'>21 Jan - 31 Mar</h2>
             </div>
-            <Dialog
-              open={isDialogOpen()}
-              onOpenChange={() => setIsDialogOpen(true)}
-            >
+            <Dialog open={isDialogOpen()} onOpenChange={setIsDialogOpen}>
               <DialogTrigger as={Button}>
                 <IconMessage />
               </DialogTrigger>
