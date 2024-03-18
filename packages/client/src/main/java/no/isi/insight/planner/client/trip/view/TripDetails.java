@@ -17,6 +17,7 @@ public record TripDetails(
   String gnssLog,
   Map<CameraPosition, String> cameraLogs,
   int sequenceNumber,
+  Long noteCount,
   int deviations
 ) {
 

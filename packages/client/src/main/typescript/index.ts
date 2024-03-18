@@ -92,6 +92,7 @@ export interface TripDetails {
     gnssLog: string;
     cameraLogs: { [P in CameraPosition]?: string };
     sequenceNumber: number;
+    noteCount: number;
     deviations: number;
 }
 

@@ -31,6 +31,10 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
       t.gnssLog,
       t.cameraLogs,
       t.sequenceNumber,
+      COALESCE(
+        (SELECT COUNT(tn) FROM TripNote tn WHERE tn.trip.id = t.id),
+        0
+      ),
       0
     )  FROM Trip t
     INNER JOIN t.projectPlan pp
@@ -55,6 +59,16 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
     """)
   int findNextSequenceNumber(
       @Param("planId") UUID planId
+  );
+
+  // language=sql
+  @Query("""
+    SELECT COUNT(tn)
+    FROM TripNote tn
+    WHERE tn.trip.id = :tripId
+    """)
+  Long countTripNotesByTripId(
+      @Param("tripId") UUID tripId
   );
 
 }

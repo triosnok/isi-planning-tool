@@ -150,7 +150,7 @@ const Project: Component<LayoutProps> = (props) => {
                       sequenceNumber={trip.sequenceNumber}
                       date={dayjs(trip.startedAt).format('MMM D')}
                       deviations={trip.deviations}
-                      notes={4}
+                      notes={trip.noteCount}
                       length={320}
                       car={trip.driver}
                     />
