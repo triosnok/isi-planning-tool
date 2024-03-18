@@ -1,13 +1,15 @@
 import { useSignOutMutation } from '@/features/auth/api';
 import { A } from '@solidjs/router';
 import { IconMenu2, IconSearch } from '@tabler/icons-solidjs';
-import { Component } from 'solid-js';
+import { Component, Show, createSignal, onCleanup } from 'solid-js';
 import Logo from '../logo/Logo';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 
@@ -68,31 +70,38 @@ const Header: Component = () => {
         />
       </label>
 
-      <section class='hidden flex-1 flex-row-reverse md:flex'>
+      <section class='flex flex-1 flex-row-reverse'>
         <DropdownMenu>
           <DropdownMenuTrigger as={Avatar} class='h-8 w-8'>
-            <AvatarImage src='https://avatars.githubusercontent.com/u/47036430' />
+            <IconMenu2 class='h-8 w-8 text-gray-50 md:hidden' />
+            <AvatarImage
+              class='hidden md:block'
+              src='https://avatars.githubusercontent.com/u/47036430'
+            />
             <AvatarFallback>thedatasnok</AvatarFallback>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem onClick={handleSignOut}>
-              Sign out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </section>
-
-      <section class='flex flex-1 flex-row-reverse md:hidden'>
-        <DropdownMenu>
-          <DropdownMenuTrigger class='h-8 w-8'>
-            <IconMenu2 class='text-gray-50' />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem onClick={handleSignOut}>
-              Sign out
-            </DropdownMenuItem>
+            <DropdownMenuGroup class='md:hidden'>
+              <DropdownMenuItem>
+                <A href='/'>Home</A>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <A href='/projects'>Projects</A>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <A href='/'>Users</A>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <A href='/vehicles'>Vehicles</A>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </DropdownMenuGroup>
+            <DropdownMenuGroup>
+              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleSignOut}>
+                Sign out
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
       </section>
