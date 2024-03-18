@@ -15,6 +15,7 @@ const MapRailingLayer: Component<MapRailingLayerProps> = (props) => {
     if (completionGrade === 0) return 'blue';
     else if (completionGrade > 0 && completionGrade < 95) return 'red';
     else if (completionGrade >= 95 && completionGrade <= 100) return 'green';
+    else return 'gray';
   };
 
   createEffect(() => {
