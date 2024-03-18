@@ -11,7 +11,15 @@ import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { SubmitHandler, createForm, zodForm } from '@modular-forms/solid';
 import { A, useNavigate, useParams } from '@solidjs/router';
-import { IconChevronLeft, IconMessage } from '@tabler/icons-solidjs';
+import {
+  IconChevronLeft,
+  IconCurrentLocation,
+  IconDatabase,
+  IconGps,
+  IconMessage,
+  IconPhoto,
+  IconVideo,
+} from '@tabler/icons-solidjs';
 import dayjs from 'dayjs';
 import { Component } from 'solid-js';
 import { z } from 'zod';
@@ -20,6 +28,7 @@ import {
   useTripMutation,
   useTripNoteMutation,
 } from '../api';
+import { Indicator } from '@/components/ui/indicator';
 
 const TripNoteSchema = z.object({
   note: z.string(),
@@ -39,7 +48,7 @@ const Trip: Component = () => {
 
   const handleSubmit: SubmitHandler<TripNoteForm> = async (values) => {
     try {
-      await create.mutateAsync(values);
+      //await create.mutateAsync(values);
     } catch (error) {
       // ignored
     }
@@ -60,7 +69,7 @@ const Trip: Component = () => {
 
   return (
     <>
-      <div class='bg-background absolute left-4 top-4 w-96 rounded-md p-2'>
+      <div class='bg-background absolute left-4 top-4 w-1/3 rounded-md p-2'>
         <div class='flex flex-col'>
           <div class='flex'>
             <A
@@ -113,8 +122,34 @@ const Trip: Component = () => {
             <p>{'2 000 / 10 000 m'}</p>
           </div>
         </div>
+        <div class='mt-2 grid grid-cols-4 gap-2 text-sm'>
+          <Indicator
+            variant={'warning'}
+            icon={<IconDatabase />}
+            indicates='Storage left'
+            status='20%'
+          />
+          <Indicator
+            variant={'success'}
+            icon={<IconCurrentLocation />}
+            indicates='GPS'
+            status='100%'
+          />
+          <Indicator
+            variant={'undetermined'}
+            icon={<IconVideo />}
+            indicates='Capture'
+            status='Inactive'
+          />
+          <Indicator
+            variant={'error'}
+            icon={<IconPhoto />}
+            indicates='Capture rate'
+            status='55%'
+          />
+        </div>
       </div>
-      <div class='bg-background absolute bottom-4 left-4 w-96 rounded-md p-2'>
+      <div class='bg-background absolute bottom-4 left-4 w-1/3 rounded-md p-2'>
         <Button
           onClick={handleEndTrip}
           variant='destructive'
