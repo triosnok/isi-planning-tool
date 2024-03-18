@@ -15,6 +15,7 @@ import { useTripMutation } from '../api';
 
 export interface NewTripDialogProps {
   open: boolean;
+  projectId: string;
   planId?: string;
   onOpenChange: (open: boolean) => void;
 }
@@ -40,7 +41,7 @@ const NewTripDialog: Component<NewTripDialogProps> = (props) => {
       console.log(tripId);
 
       props.onOpenChange(false);
-      navigate(`/projects/trip/${tripId}`);
+      navigate(`/projects/${props.projectId}/trip/${tripId}`);
     } catch (error) {
       console.error('Failed to start trip');
     }

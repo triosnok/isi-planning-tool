@@ -205,10 +205,10 @@ export const useTripsDetailsQuery = (
 export const useTripNoteMutation = (tripId: string) => {
   const create = createMutation(() => ({
     mutationFn: async (note: CreateTripNoteRequest) => {
-      const response = await axios.post(
-        `/api/v1/trip-notes?tripId=${tripId}`,
-        note
-      );
+      const response = await axios.post(`/api/v1/trip-notes`, {
+        ...note,
+        tripId,
+      });
 
       return response.data;
     },

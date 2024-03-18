@@ -7,6 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Indicator } from '@/components/ui/indicator';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { SubmitHandler, createForm, zodForm } from '@modular-forms/solid';
@@ -15,20 +16,18 @@ import {
   IconChevronLeft,
   IconCurrentLocation,
   IconDatabase,
-  IconGps,
   IconMessage,
   IconPhoto,
-  IconVideo,
+  IconVideo
 } from '@tabler/icons-solidjs';
 import dayjs from 'dayjs';
-import { Component } from 'solid-js';
+import { Component, createSignal } from 'solid-js';
 import { z } from 'zod';
 import {
   useTripDetailsQuery,
   useTripMutation,
   useTripNoteMutation,
 } from '../api';
-import { Indicator } from '@/components/ui/indicator';
 
 const TripNoteSchema = z.object({
   note: z.string(),
@@ -46,9 +45,12 @@ const Trip: Component = () => {
   });
   const tripDetails = useTripDetailsQuery(params.tripId);
 
+  const [isDialogOpen, setIsDialogOpen] = createSignal(false);
+
   const handleSubmit: SubmitHandler<TripNoteForm> = async (values) => {
     try {
-      //await create.mutateAsync(values);
+      await create.mutateAsync({ ...values, tripId: params.tripId });
+      setIsDialogOpen(false);
     } catch (error) {
       // ignored
     }
@@ -73,7 +75,7 @@ const Trip: Component = () => {
         <div class='flex flex-col'>
           <div class='flex'>
             <A
-              href='/projects'
+              href={`/projects/${params.projectId}`}
               class='flex items-center text-sm text-gray-600 hover:underline'
             >
               <IconChevronLeft size={16} />
@@ -84,10 +86,15 @@ const Trip: Component = () => {
         <div class='space-y-2'>
           <div class='flex justify-between'>
             <div>
-              <h1 class='text-3xl font-bold'>Project 1 - Trip 3</h1>
+              <h1 class='text-3xl font-bold'>
+                Project 1 - Trip {tripDetails.data?.sequenceNumber}
+              </h1>
               <h2 class='text-sm'>21 Jan - 31 Mar</h2>
             </div>
-            <Dialog>
+            <Dialog
+              open={isDialogOpen()}
+              onOpenChange={() => setIsDialogOpen(true)}
+            >
               <DialogTrigger as={Button}>
                 <IconMessage />
               </DialogTrigger>
