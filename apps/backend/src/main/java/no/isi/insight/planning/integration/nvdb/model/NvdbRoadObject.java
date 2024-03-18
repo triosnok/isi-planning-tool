@@ -10,10 +10,32 @@ import no.isi.insight.planning.model.RoadSide;
 public record NvdbRoadObject(
   long id,
   @JsonAlias("geometri") Geometry geometry,
+  @JsonAlias("vegsegmenter") List<RoadSegment> roadSegments,
   @JsonAlias("lokasjon") Location location
 ) {
 
   public static record Geometry(String wkt, int srid, @JsonAlias("egengeometri") boolean isOwnGeomtry) {}
+
+  public static record RoadSegment(
+    @JsonAlias("veglenkesekvensid") Long sequenceId,
+    @JsonAlias("startposisjon") Double startPosition,
+    @JsonAlias("sluttposisjon") Double endPosition,
+    @JsonAlias("geometri") Geometry geometry,
+    @JsonAlias("vegsystemreferanse") RoadSystemReference roadSystemReference
+  ) {
+
+    public String getShortform() {
+      return "%.8f-%.8f@%s".formatted(this.startPosition, this.endPosition, this.sequenceId);
+    }
+
+    public boolean isWithin(
+        Placement placement
+    ) {
+      return this.sequenceId.equals(placement.sequenceId()) && this.startPosition >= placement.startPosition()
+          && this.endPosition <= placement.endPosition();
+    }
+
+  }
 
   public static record Location(
     @JsonAlias("geometri") Geometry geometry,
@@ -27,7 +49,14 @@ public record NvdbRoadObject(
     @JsonAlias("kortform") String shortform
   ) {}
 
-  public static record Placement(@JsonAlias("retning") Direction direction, @JsonAlias("sideposisjon") Side side) {
+  public static record Placement(
+    @JsonAlias("veglenkesekvensid") Long sequenceId,
+    @JsonAlias("startposisjon") Double startPosition,
+    @JsonAlias("sluttposisjon") Double endPosition,
+    @JsonAlias("retning") Direction direction,
+    @JsonAlias("sideposisjon") Side side,
+    @JsonAlias("kortform") String shortform
+  ) {
 
     public RoadDirection getDirection() {
       if (this.direction == null) {
@@ -46,8 +75,8 @@ public record NvdbRoadObject(
       }
 
       return switch (this.side) {
-        case H -> RoadSide.LEFT;
-        case V -> RoadSide.RIGHT;
+        case H -> RoadSide.RIGHT;
+        case V -> RoadSide.LEFT;
         case HV -> RoadSide.LEFT_AND_RIGHT;
         case M -> RoadSide.MIDDLE;
         case K -> RoadSide.CROSSING;
