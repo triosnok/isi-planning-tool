@@ -66,6 +66,7 @@ public class TripRestServiceImpl implements TripRestService {
         savedTrip.getGnssLog(),
         savedTrip.getCameraLogs(),
         savedTrip.getSequenceNumber(),
+        Long.valueOf(0),
         0
       )
     );
@@ -78,6 +79,8 @@ public class TripRestServiceImpl implements TripRestService {
 
     Trip trip = tripJpaRepository.findById(tripId).orElseThrow(() -> new NotFoundException("Trip not found"));
 
+    var noteCount = tripJpaRepository.countTripNotesByTripId(trip.getId());
+
     return ResponseEntity.ok(
       new TripDetails(
         trip.getId(),
@@ -87,6 +90,7 @@ public class TripRestServiceImpl implements TripRestService {
         trip.getGnssLog(),
         trip.getCameraLogs(),
         trip.getSequenceNumber(),
+        noteCount,
         0
       )
     );
@@ -115,6 +119,8 @@ public class TripRestServiceImpl implements TripRestService {
 
     Trip savedTrip = tripJpaRepository.save(trip);
 
+    var noteCount = tripJpaRepository.countTripNotesByTripId(trip.getId());
+
     return ResponseEntity.ok(
       new TripDetails(
         savedTrip.getId(),
@@ -124,6 +130,7 @@ public class TripRestServiceImpl implements TripRestService {
         savedTrip.getGnssLog(),
         savedTrip.getCameraLogs(),
         savedTrip.getSequenceNumber(),
+        noteCount,
         0
       )
     );
