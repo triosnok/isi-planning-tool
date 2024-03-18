@@ -145,7 +145,7 @@ const Project: Component<LayoutProps> = (props) => {
             <Suspense fallback={<div class=''>Loading...</div>}>
               <For each={trips.data}>
                 {(trip) => (
-                  <A href={`/projects/trip/${trip.id}`}>
+                  <A href={`/projects/${params.id}/trip/${trip.id}`}>
                     <TripCard
                       sequenceNumber={trip.sequenceNumber}
                       date={dayjs(trip.startedAt).format('MMM D')}
@@ -183,6 +183,7 @@ const Project: Component<LayoutProps> = (props) => {
       <NewTripDialog
         open={showNewTripDialog()}
         onOpenChange={setShowNewTripDialog}
+        projectId={params.id}
         planId={planId()}
       />
 
