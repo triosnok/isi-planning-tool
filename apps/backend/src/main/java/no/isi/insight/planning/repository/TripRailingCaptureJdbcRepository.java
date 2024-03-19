@@ -84,59 +84,46 @@ public class TripRailingCaptureJdbcRepository {
       WITH base_candidate AS (
 	      SELECT
           rr.road_railing_id,
-          rs.road_segment_id,
-          rrrs.direction_of_road,
-          rrrs.side_of_road,
-          ST_ClosestPoint(ttrl.position, rs.geometry) AS road_closest,
-          ST_Force2D(rs.geometry) AS road_geometry,
+          ST_ClosestPoint(rr.geometry, ttrl.position) AS rail_closest,
           ttrl.timestamp,
           ttrl.position,
           ttrl.images,
-          ttrl.heading,
-          ROW_NUMBER() OVER(PARTITION BY ttrl.timestamp ORDER BY ttrl.POSITION <-> rs.geometry) AS distance_rank
+          ttrl.heading
         FROM temp_trip_railing_capture_log ttrl
         INNER JOIN road_railing rr
-          ON ST_DWithin(ttrl.POSITION, rr.geometry, 3)
-        INNER JOIN road_railing_road_segment rrrs
-          ON rr.road_railing_id = rrrs.fk_road_railing_id
-        INNER JOIN road_segment rs
-          ON rrrs.fk_road_segment_id = rs.road_segment_id
+          ON ST_DWithin(ttrl.POSITION, rr.geometry, 4)
       ),
       projected_candidate AS (
         SELECT 
           bc.road_railing_id,
-          bc.road_segment_id,
-          bc.direction_of_road,
-          bc.side_of_road,
           bc.timestamp,
           bc.position,
+          bc.heading,
           bc.images,
-          DEGREES(ST_Angle(
-            ST_MakeLine(bc.position, ST_Project(bc.position, 1, RADIANS(bc.heading))),
-            ST_MakeLine(
-              ST_LineInterpolatePoint(bc.road_geometry, GREATEST(0, ST_LineLocatePoint(bc.road_geometry, bc.road_closest) - 0.01)),
-              ST_LineInterpolatePoint(bc.road_geometry, LEAST(1, ST_LineLocatePoint(bc.road_geometry, bc.road_closest) + 0.01))
+          DEGREES(
+            ST_Angle(
+              ST_MakeLine(bc.POSITION, ST_Project(bc.POSITION, 1, RADIANS(bc.heading))),
+              ST_MakeLine(bc.position, bc.rail_closest)
             )
-          )) AS angle
+          ) AS angle
         FROM base_candidate bc
-        WHERE bc.distance_rank = 1
       ),
       candidate AS (
         SELECT 
           *,
           (CASE 
-            WHEN pc.angle BETWEEN 90 AND 270 THEN 'WITH'
-            ELSE 'AGAINST'
-          END)::road_direction AS inferred_driving_direction
+            WHEN pc.angle BETWEEN 0 AND 179 THEN 'RIGHT'
+			      WHEN pc.angle BETWEEN 180 AND 360 THEN 'LEFT'
+          END) AS railing_side
         FROM projected_candidate pc
       )
       INSERT INTO trip_railing_capture (fk_trip_id, fk_road_railing_id, captured_at, position, image_urls)
       SELECT
         t.trip_id,
         c.road_railing_id,
-        c.timestamp,
-        c.position,
-        c.images
+      	c.timestamp,
+      	c.position,
+      	c.images
       FROM trip t
       INNER JOIN project_plan pp
         ON t.fk_project_plan_id = pp.project_plan_id
@@ -146,13 +133,11 @@ public class TripRailingCaptureJdbcRepository {
         ON pprr.fk_road_railing_id = c.road_railing_id
       WHERE 1=1
         AND (t.trip_id = :tripId)
-        AND (c.direction_of_road = c.inferred_driving_direction)
-        AND (CASE
-          WHEN c.side_of_road = 'LEFT' THEN c.images->>'LEFT' IS NOT NULL
-          WHEN c.side_of_road = 'RIGHT' THEN c.images->>'RIGHT' IS NOT NULL
-          WHEN c.side_of_road = 'LEFT_AND_RIGHT' THEN c.images->>'LEFT' IS NOT NULL OR c.images->>'RIGHT' IS NOT NULL
-          ELSE FALSE
-        END)
+      	AND (CASE 
+      	  WHEN c.railing_side = 'LEFT' THEN c.images->>'LEFT' IS NOT NULL
+      	  WHEN c.railing_side = 'RIGHT' THEN c.images->>'RIGHT' IS NOT NULL
+      	  ELSE FALSE
+      	END)
       """;
 
     this.jdbcTemplate.update(insertRailingsQuery, Map.of("tripId", tripId));

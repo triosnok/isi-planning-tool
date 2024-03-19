@@ -20,6 +20,8 @@ public record NvdbRoadObject(
     @JsonAlias("veglenkesekvensid") Long sequenceId,
     @JsonAlias("startposisjon") Double startPosition,
     @JsonAlias("sluttposisjon") Double endPosition,
+    @JsonAlias("lengde") Double length,
+    @JsonAlias("retning") Direction direction,
     @JsonAlias("geometri") Geometry geometry,
     @JsonAlias("vegsystemreferanse") RoadSystemReference roadSystemReference
   ) {

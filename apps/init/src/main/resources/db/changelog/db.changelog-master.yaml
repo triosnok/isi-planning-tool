@@ -52,8 +52,5 @@ databaseChangeLog:
             path: 006-road-segment/000-road-segment-table.sql
             relativeToChangelogFile: true
         - sqlFile:
-            path: 006-road-segment/001-railing-segment-join-table.sql
-            relativeToChangelogFile: true
-        - sqlFile:
-            path: 006-road-segment/002-spatial-indexes.sql
+            path: 006-road-segment/001-spatial-indexes.sql
             relativeToChangelogFile: true

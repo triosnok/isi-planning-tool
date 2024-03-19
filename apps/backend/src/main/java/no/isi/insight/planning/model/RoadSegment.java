@@ -7,7 +7,11 @@ import org.locationtech.jts.geom.LineString;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,14 +22,25 @@ import lombok.NoArgsConstructor;
 @Table(name = "road_segment")
 public class RoadSegment {
 
-  public static final String PRIMARY_KEY = "road_segment_id";
+  @Id
+  @Column(name = "road_segment_id")
+  private String id;
 
   @Id
-  @Column(name = PRIMARY_KEY)
-  private String id;
+  @ManyToOne
+  @JoinColumn(name = "fk_road_railing_id", referencedColumnName = RoadRailing.PRIMARY_KEY)
+  private RoadRailing railing;
 
   @Column(name = "geometry")
   private LineString geometry;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "direction")
+  private RoadDirection direction;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "side")
+  private RoadSide side;
 
   @UpdateTimestamp
   @Column(name = "last_imported_at")
@@ -33,10 +48,16 @@ public class RoadSegment {
 
   public RoadSegment(
       String id,
-      LineString lineString
+      RoadRailing railing,
+      LineString lineString,
+      RoadDirection direction,
+      RoadSide side
   ) {
     this.id = id;
+    this.railing = railing;
     this.geometry = lineString;
+    this.direction = direction;
+    this.side = side;
   }
 
 }
