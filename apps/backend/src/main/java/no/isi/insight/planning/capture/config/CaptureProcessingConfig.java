@@ -9,4 +9,8 @@ public record CaptureProcessingConfig(Long maxDeltaMs, Integer gnssSrid) {
     return this.maxDeltaMs != null ? this.maxDeltaMs : 10L;
   }
 
+  public Integer getSRID() {
+    return this.gnssSrid != null ? this.gnssSrid : 4326;
+  }
+
 }

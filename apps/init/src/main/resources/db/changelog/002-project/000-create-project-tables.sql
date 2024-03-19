@@ -38,14 +38,9 @@ CREATE TYPE road_direction AS ENUM ('WITH', 'AGAINST');
 CREATE TYPE road_side AS ENUM ('LEFT', 'RIGHT', 'LEFT_AND_RIGHT', 'MIDDLE', 'CROSSING', 'MIDDLE_LEFT', 'MIDDLE_RIGHT', 'LEFT_ACCESS', 'RIGHT_ACCESS', 'ROUNDABOUT_CENTRE', 'LONGITUDINAL');
 
 CREATE TABLE road_railing (
-  road_railing_id UUID NOT NULL DEFAULT gen_random_uuid(),
-  external_id BIGINT NOT NULL,
+  road_railing_id BIGINT NOT NULL,
   geometry GEOMETRY NOT NULL,
-  road_system_reference_id BIGINT,
-  road_system_reference TEXT,
   length NUMERIC,
-  direction_of_road road_direction,
-  side_of_road road_side,
   last_imported_at TIMESTAMP DEFAULT NOW(),
   last_imported_by_user_id UUID,
 
@@ -54,7 +49,7 @@ CREATE TABLE road_railing (
 
 CREATE TABLE project_plan_road_railing (
   fk_project_plan_id UUID NOT NULL,
-  fk_road_railing_id UUID NOT NULL,
+  fk_road_railing_id BIGINT NOT NULL,
   created_at TIMESTAMP DEFAULT NOW(),
   fk_created_by_user_id UUID,
 

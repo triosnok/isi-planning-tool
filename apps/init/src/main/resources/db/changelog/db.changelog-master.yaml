@@ -44,3 +44,13 @@ databaseChangeLog:
         - sqlFile:
             path: 005-capture/000-create-capture-table.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: 006-road-segment
+      author: halvard
+      changes:
+        - sqlFile:
+            path: 006-road-segment/000-road-segment-table.sql
+            relativeToChangelogFile: true
+        - sqlFile:
+            path: 006-road-segment/001-spatial-indexes.sql
+            relativeToChangelogFile: true

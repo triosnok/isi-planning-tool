@@ -138,6 +138,7 @@ public class CaptureLogProcessor {
 
       var processed = new ProcessedLogEntry(
         point,
+        gnss.getHeading(),
         timestamp,
         images
       );
@@ -186,7 +187,6 @@ public class CaptureLogProcessor {
       } else if (deltaMs > this.maxDeltaMs) {
         return CameraLogMatchResult.skip(Optional.of(nextEntry));
       } else {
-        log.info("iterating to next delta {}", deltaMs);
         nextEntry = iterator.hasNext() ? iterator.next() : null;
       }
     }

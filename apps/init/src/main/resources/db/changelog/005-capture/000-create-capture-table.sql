@@ -1,7 +1,7 @@
 CREATE TABLE trip_railing_capture (
   trip_railing_capture_id UUID NOT NULL DEFAULT gen_random_uuid(),
   fk_trip_id UUID NOT NULL,
-  fk_road_railing_id UUID NOT NULL,
+  fk_road_railing_id BIGINT NOT NULL,
   captured_at TIMESTAMP DEFAULT NOW(),
   position GEOMETRY(POINT),
   image_urls JSON,

@@ -20,4 +20,7 @@ public class PositionLogEntry extends LogEntry {
   @JsonProperty("Lon")
   private Double longitude;
 
+  @JsonProperty("Heading")
+  private Double heading;
+
 }

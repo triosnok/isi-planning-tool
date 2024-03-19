@@ -8,6 +8,11 @@ spring:
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
 
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
 no.isi.insight.planning:
   auth:
     token-issuer: ${AUTH_TOKEN_ISSUER:isi-insight}

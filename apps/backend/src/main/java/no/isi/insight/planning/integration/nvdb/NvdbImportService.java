@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -31,22 +32,25 @@ public class NvdbImportService {
   public List<NvdbRoadObject> importRailings(
       String url
   ) {
-    return this.importRoadObjects(url, NvdbRoadObjectType.RAILING);
+    return this.importRoadObjects(url, NvdbRoadObjectType.RAILING, Map.of());
   }
 
   /**
    * Imports a list of railings from NVDB API URL.
    * 
-   * @param url  a reference URL to copy parameters from
-   * @param type the type of road objects to import, will override the type in the provided URL
+   * @param url                a reference URL to copy parameters from
+   * @param type               the type of road objects to import, will override the type in the
+   *                           provided URL
+   * @param parameterOverrides a map of parameters to override in the provided URL
    * 
    * @return a list of railings, imported from NVDB
    */
   public List<NvdbRoadObject> importRoadObjects(
       String url,
-      NvdbRoadObjectType type
+      NvdbRoadObjectType type,
+      Map<String, String> parameterOverrides
   ) {
-    log.info("Beginning import of road objects from NVDB, using url: {}", url);
+    log.info("Beginning import of {} road objects from NVDB, using url: {}", type.name(), url);
     var start = System.currentTimeMillis();
     var uriComponents = UriComponentsBuilder.fromHttpUrl(url).build();
     var host = uriComponents.getHost();
@@ -64,6 +68,14 @@ public class NvdbImportService {
       values.forEach(value -> {
         params.add(key, URLDecoder.decode(value, StandardCharsets.UTF_8));
       });
+    });
+
+    parameterOverrides.forEach((key, value) -> {
+      if (params.containsKey(key)) {
+        params.replace(key, List.of(value));
+      } else {
+        params.add(key, value);
+      }
     });
 
     ArrayList<NvdbRoadObject> importedObjects = null;
@@ -98,7 +110,12 @@ public class NvdbImportService {
       log.info("Fetched {} out of {} road objects", count, meta.total());
     } while (returned == pageSize);
 
-    log.info("Imported {} road objects in {} ms", importedObjects.size(), System.currentTimeMillis() - start);
+    log.info(
+      "Imported {} {} road objects in {} ms",
+      importedObjects.size(),
+      type.name(),
+      System.currentTimeMillis() - start
+    );
     return importedObjects;
   }
 
