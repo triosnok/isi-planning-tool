@@ -4,7 +4,7 @@ import MapRoot from '@/components/map/MapRoot';
 import { LayoutProps } from '@/lib/utils';
 import { Component } from 'solid-js';
 import { useParams } from '@solidjs/router';
-import { useProjectRailings } from '../api';
+import { useProjectRailings } from '../../projects/api';
 
 const TripLayout: Component<LayoutProps> = (props) => {
   const params = useParams();

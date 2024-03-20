@@ -25,12 +25,9 @@ import {
   createMemo,
   createSignal,
 } from 'solid-js';
-import {
-  useProjectDetailsQuery,
-  useProjectPlansQuery,
-  useTripsDetailsQuery,
-} from '../api';
-import NewTripDialog from '../components/NewTripDialog';
+import { useTripsDetailsQuery } from '../../trips/api';
+import NewTripDialog from '../../trips/components/NewTripDialog';
+import { useProjectDetailsQuery, useProjectPlansQuery } from '../api';
 import PlanCard from '../components/PlanCard';
 
 const Project: Component<LayoutProps> = (props) => {
