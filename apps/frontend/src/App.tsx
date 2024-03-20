@@ -9,6 +9,7 @@ import type { Component } from 'solid-js';
 import { CacheKey } from './api';
 import { I18nProvider } from './features/i18n';
 import { routes } from './router';
+import { ThemeProvider } from './features/theme';
 
 const queryClient = new QueryClient();
 const PERSIST_OPTIONS: Omit<PersistQueryClientOptions, 'queryClient'> = {
@@ -30,14 +31,16 @@ const PERSIST_OPTIONS: Omit<PersistQueryClientOptions, 'queryClient'> = {
 const App: Component = () => {
   return (
     <I18nProvider>
-      <QueryClientProvider client={queryClient}>
-        <PersistQueryClientProvider
-          client={queryClient}
-          persistOptions={PERSIST_OPTIONS}
-        >
-          <Router>{routes}</Router>
-        </PersistQueryClientProvider>
-      </QueryClientProvider>
+      <ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <PersistQueryClientProvider
+            client={queryClient}
+            persistOptions={PERSIST_OPTIONS}
+          >
+            <Router>{routes}</Router>
+          </PersistQueryClientProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
     </I18nProvider>
   );
 };

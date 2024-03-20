@@ -1,6 +1,12 @@
 import { useSignOutMutation } from '@/features/auth/api';
 import { A } from '@solidjs/router';
-import { IconMenu2, IconSearch } from '@tabler/icons-solidjs';
+import {
+  IconLogout,
+  IconMenu2,
+  IconMoon,
+  IconSearch,
+  IconSettings,
+} from '@tabler/icons-solidjs';
 import { Component, Show, createSignal, onCleanup } from 'solid-js';
 import Logo from '../logo/Logo';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
@@ -12,8 +18,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
+import { Switch } from '../ui/switch';
+import { Theme, useTheme } from '@/features/theme';
 
 const Header: Component = () => {
+  const theme = useTheme();
   const signOut = useSignOutMutation();
 
   const handleSignOut = async () => {
@@ -97,9 +106,26 @@ const Header: Component = () => {
               <DropdownMenuSeparator />
             </DropdownMenuGroup>
             <DropdownMenuGroup>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem onClick={handleSignOut}>
-                Sign out
+              <DropdownMenuItem class='flex items-center gap-1'>
+                <IconSettings class='h-5 w-5' />
+                <span>Settings</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={() => theme.toggleTheme()}
+                closeOnSelect={false}
+                class='flex items-center gap-1'
+              >
+                <IconMoon class='h-5 w-5' />
+                <span>Dark theme</span>
+                <Switch checked={theme.theme() === Theme.DARK} class='ml-1' />
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={handleSignOut}
+                class='flex items-center gap-1'
+              >
+                <IconLogout class='h-5 w-5' />
+                <span>Sign out</span>
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
