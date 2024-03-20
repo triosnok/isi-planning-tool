@@ -146,7 +146,8 @@ const Project: Component<LayoutProps> = (props) => {
                     <A href={`/projects/${params.id}/trip/${trip.id}`}>
                       <TripCard
                         sequenceNumber={trip.sequenceNumber}
-                        date={dayjs(trip.startedAt).format('MMM D')}
+                        startedAt={dayjs(trip.startedAt).format('DD/MM/YYYY')}
+                        endedAt={dayjs(trip.endedAt).format('DD MMM')}
                         deviations={trip.deviations}
                         notes={trip.noteCount}
                         length={320}
