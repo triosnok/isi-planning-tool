@@ -89,7 +89,7 @@ const NewProject: Component = () => {
               <Field name='startsAt' type='string'>
                 {(field) => (
                   <DatePicker
-                    value={dayjs(field.value).toDate()}
+                    value={field.value ?? new Date()}
                     onChange={(v) =>
                       setValue(form, 'startsAt', v!.toISOString() ?? undefined)
                     }
@@ -102,7 +102,7 @@ const NewProject: Component = () => {
               <Field name='endsAt'>
                 {(field) => (
                   <DatePicker
-                    value={dayjs(field.value).toDate()}
+                    value={field.value}
                     onChange={(v) =>
                       setValue(form, 'endsAt', v?.toISOString() ?? undefined)
                     }

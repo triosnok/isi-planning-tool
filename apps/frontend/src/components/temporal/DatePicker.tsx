@@ -6,12 +6,12 @@ import {
   IconX,
 } from '@tabler/icons-solidjs';
 import dayjs, { type Dayjs } from 'dayjs';
-import { Component, For, JSX, Show, createSignal } from 'solid-js';
+import { Component, For, JSX, Show, createSignal, onMount } from 'solid-js';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { useCalendar } from './hooks';
 
 export interface DatePickerProps {
-  value?: Date;
+  value?: Date | string;
   onChange?: (date?: Date) => void;
   clearable?: boolean;
   class?: string;
@@ -20,7 +20,7 @@ export interface DatePickerProps {
 const DatePicker: Component<DatePickerProps> = (props) => {
   const { weeks, next, previous, reference, setReference } = useCalendar();
   const [selectedDate, setSelectedDate] = createSignal(
-    props.clearable ? undefined : dayjs(props.value)
+    props.value !== undefined ? dayjs(props.value) : undefined
   );
 
   const weekdays = dayjs.weekdaysShort();
@@ -48,6 +48,10 @@ const DatePicker: Component<DatePickerProps> = (props) => {
     setSelectedDate(undefined);
     props.onChange?.(undefined);
   };
+
+  onMount(() => {
+    if (props.value) props.onChange?.(selectedDate()?.toDate());
+  });
 
   return (
     <Popover onOpenChange={handleOpenChange}>
