@@ -26,6 +26,7 @@
     "@kobalte/core": "^0.12.1",
     "@modular-forms/solid": "^0.20.0",
     "@solid-primitives/i18n": "^2.0.1",
+    "@solid-primitives/media": "^2.2.8",
     "@solidjs/router": "^0.11.5",
     "@tabler/icons-solidjs": "^2.47.0",
     "@tanstack/query-sync-storage-persister": "^5.25.0",
