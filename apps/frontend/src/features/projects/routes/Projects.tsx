@@ -33,7 +33,9 @@ const Projects: Component = () => {
       </div>
       <Accordion multiple={true} defaultValue={['ongoing', 'upcoming']}>
         <AccordionItem value='ongoing'>
-          <AccordionTrigger>Ongoing</AccordionTrigger>
+          <AccordionTrigger>
+            Ongoing ({ongoingProjects.data?.length})
+          </AccordionTrigger>
           <AccordionContent class='flex flex-col space-y-2 p-2'>
             <For each={ongoingProjects.data}>
               {(project) => (
@@ -51,7 +53,9 @@ const Projects: Component = () => {
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value='upcoming'>
-          <AccordionTrigger>Upcoming</AccordionTrigger>
+          <AccordionTrigger>
+            Upcoming ({upcomingProjects.data?.length})
+          </AccordionTrigger>
           <AccordionContent class='flex flex-col space-y-2 p-2'>
             <For each={upcomingProjects.data}>
               {(project) => (
@@ -69,7 +73,9 @@ const Projects: Component = () => {
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value='previous'>
-          <AccordionTrigger>Previous</AccordionTrigger>
+          <AccordionTrigger>
+            Previous ({previousProjects.data?.length})
+          </AccordionTrigger>
           <AccordionContent class='flex flex-col space-y-2 p-2'>
             <For each={previousProjects.data}>
               {(project) => (

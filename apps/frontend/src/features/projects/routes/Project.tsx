@@ -96,7 +96,7 @@ const Project: Component<LayoutProps> = (props) => {
 
         <Accordion multiple={true} defaultValue={['plans']}>
           <AccordionItem value='plans'>
-            <AccordionTrigger>Plans</AccordionTrigger>
+            <AccordionTrigger>Plans ({plans.data?.length})</AccordionTrigger>
             <AccordionContent class='flex flex-col space-y-2 p-2'>
               <Show
                 when={plans.data !== undefined && plans.data.length > 0}
@@ -138,7 +138,7 @@ const Project: Component<LayoutProps> = (props) => {
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value='trips'>
-            <AccordionTrigger>Trips</AccordionTrigger>
+            <AccordionTrigger>Trips ({trips.data?.length})</AccordionTrigger>
             <AccordionContent class='flex flex-col space-y-2 p-2'>
               <Suspense fallback={<div class=''>Loading...</div>}>
                 <For each={trips.data}>
