@@ -47,7 +47,7 @@ public class RoadRailingJdbcRepository {
         SELECT
           ST_AsText(ST_Force2D(rr.geometry)) AS wkt,
           ST_SRID(rr.geometry) AS srid,
-          trc.captured_length / CEIL(rr.length) AS capture_grade
+          (trc.captured_length / CEIL(rr.length)) * 100 AS capture_grade
         FROM road_railing rr
         LEFT JOIN project_plan_road_railing pprr
           ON rr.road_railing_id = pprr.fk_road_railing_id
