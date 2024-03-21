@@ -7,19 +7,19 @@ import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'ring-offset-background focus-visible:ring-ring inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'ring-offset-gray-50 focus-visible:ring-gray-900 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        default: 'bg-brand-blue-800 text-gray-50 hover:bg-brand-blue-800/90',
         destructive:
-          'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+          'bg-error-800 text-gray-50 hover:bg-error-800/90',
         outline:
-          'border-input hover:bg-accent hover:text-accent-foreground border',
+          'border-gray-200 hover:bg-brand-red-700 hover:text-gray-50 border',
         secondary:
-          'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-        ghost: 'hover:bg-accent hover:text-accent-foreground',
-        link: 'text-primary underline-offset-4 hover:underline',
+          'bg-brand-blue-700 text-gray-50 hover:bg-brand-blue-700/80',
+        ghost: 'hover:bg-brand-red-700 hover:text-gray-50',
+        link: 'text-brand-blue-800 underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-10 px-4 py-2',

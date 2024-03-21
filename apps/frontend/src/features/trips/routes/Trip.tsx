@@ -71,7 +71,7 @@ const Trip: Component = () => {
 
   return (
     <>
-      <div class='bg-background absolute left-4 top-4 w-1/3 rounded-md p-2'>
+      <div class='bg-gray-50 absolute left-4 top-4 w-1/3 rounded-md p-2'>
         <div class='flex flex-col'>
           <div class='flex'>
             <A
@@ -153,7 +153,7 @@ const Trip: Component = () => {
           />
         </div>
       </div>
-      <div class='bg-background absolute bottom-4 left-4 w-1/3 rounded-md p-2'>
+      <div class='bg-gray-50 absolute bottom-4 left-4 w-1/3 rounded-md p-2'>
         <Button
           onClick={handleEndTrip}
           variant='destructive'

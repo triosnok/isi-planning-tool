@@ -35,7 +35,7 @@ const Header: Component = () => {
 
   return (
     <header class='bg-brand-blue flex items-center justify-between gap-4 px-4 py-2'>
-      <nav class='text-primary-foreground flex flex-1 items-center justify-between'>
+      <nav class='text-gray-50 flex flex-1 items-center justify-between'>
         <div class='flex flex-row items-center gap-4'>
           <A href='/' class='flex items-center gap-4 focus:outline-none'>
             <Logo variant='white' class='h-8' />
