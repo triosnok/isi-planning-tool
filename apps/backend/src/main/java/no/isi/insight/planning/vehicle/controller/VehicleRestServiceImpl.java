@@ -1,6 +1,10 @@
 package no.isi.insight.planning.vehicle.controller;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +17,8 @@ import no.isi.insight.planner.client.vehicle.view.VehicleDetails;
 import no.isi.insight.planning.model.Vehicle;
 import no.isi.insight.planning.repository.VehicleJdbcRespotiory;
 import no.isi.insight.planning.repository.VehicleJpaRepository;
+import no.isi.insight.planning.error.model.NotFoundException;
+import no.isi.insight.planning.error.model.BadRequestException;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,6 +51,7 @@ public class VehicleRestServiceImpl implements VehicleRestService {
         savedVehicle.getCamera(),
         savedVehicle.getDescription(),
         savedVehicle.getGnssId(),
+        true,
         savedVehicle.getInactiveFrom()
       )
     );
@@ -55,68 +62,46 @@ public class VehicleRestServiceImpl implements VehicleRestService {
       UUID id,
       UpdateVehicleRequest request
   ) {
-    var vehicle = this.vehicleJpaRepository.findById(id);
+    var vehicle = this.vehicleJpaRepository.findById(id)
+      .orElseThrow(() -> new NotFoundException("Vehicle with id '%s' not found".formatted(id)));
 
-    if (vehicle.isEmpty()) {
-      return ResponseEntity.notFound().build();
-    }
+    vehicle.setImageUrl(request.imageUrl());
+    vehicle.setRegistrationNumber(request.registrationNumber());
+    vehicle.setCamera(request.camera());
+    vehicle.setModel(request.model());
+    vehicle.setDescription(request.description());
+    vehicle.setGnssId(request.gnssId());
+    vehicle.setInactiveFrom(request.inactiveFrom());
 
-    var updatedVehicle = vehicle.get();
-    updatedVehicle.setImageUrl(request.imageUrl());
-    updatedVehicle.setRegistrationNumber(request.registrationNumber());
-    updatedVehicle.setCamera(request.camera());
-    updatedVehicle.setModel(request.model());
-    updatedVehicle.setDescription(request.description());
-    updatedVehicle.setGnssId(request.gnssId());
-    updatedVehicle.setInactiveFrom(request.inactiveFrom());
+    this.vehicleJpaRepository.save(vehicle);
+    var updatedVehicle = this.vehicleJdbcRespotiory.findById(id).get();
 
-    var savedVehicle = this.vehicleJpaRepository.save(updatedVehicle);
-
-    return ResponseEntity.ok(
-      new VehicleDetails(
-        savedVehicle.getId(),
-        savedVehicle.getImageUrl(),
-        savedVehicle.getRegistrationNumber(),
-        savedVehicle.getModel(),
-        savedVehicle.getCamera(),
-        savedVehicle.getDescription(),
-        savedVehicle.getGnssId(),
-        savedVehicle.getInactiveFrom()
-      )
-    );
+    return ResponseEntity.ok(updatedVehicle);
   }
 
   @Override
   public ResponseEntity<VehicleDetails> findVehicle(
       UUID id
   ) {
-    var vehicle = this.vehicleJpaRepository.findById(id);
+    var vehicle = this.vehicleJdbcRespotiory.findById(id)
+      .orElseThrow(() -> new NotFoundException("Vehicle with id '%s' not found".formatted(id)));
 
-    if (vehicle.isEmpty()) {
-      return ResponseEntity.notFound().build();
-    }
-
-    var foundVehicle = vehicle.get();
-
-    return ResponseEntity.ok(
-      new VehicleDetails(
-        foundVehicle.getId(),
-        foundVehicle.getImageUrl(),
-        foundVehicle.getRegistrationNumber(),
-        foundVehicle.getModel(),
-        foundVehicle.getCamera(),
-        foundVehicle.getDescription(),
-        foundVehicle.getGnssId(),
-        foundVehicle.getInactiveFrom()
-      )
-    );
+    return ResponseEntity.ok(vehicle);
   }
 
   @Override
-  public ResponseEntity<VehicleDetails[]> findAllVehicles() {
-    var vehicles = this.vehicleJdbcRespotiory.findVehicles();
+  public ResponseEntity<List<VehicleDetails>> findAllVehicles(
+      Optional<LocalDate> availableFrom,
+      Optional<LocalDate> availableTo
+  ) {
+    var presentDateFilters = Stream.of(availableFrom, availableTo).filter(Optional::isPresent).count();
 
-    return ResponseEntity.ok(vehicles.toArray(new VehicleDetails[0]));
+    if (presentDateFilters == 1 && availableFrom.isEmpty()) {
+      throw new BadRequestException("Request parameter 'availableFrom' is required when using 'availableTo'");
+    }
+
+    var vehicles = this.vehicleJdbcRespotiory.findVehicles(availableFrom, availableTo);
+    return ResponseEntity.ok(vehicles);
   }
 
 }

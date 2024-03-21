@@ -16,6 +16,7 @@ public record VehicleDetails(
   Boolean camera,
   String description,
   String gnssId,
+  Boolean available,
   LocalDate inactiveFrom
 ) {
 
