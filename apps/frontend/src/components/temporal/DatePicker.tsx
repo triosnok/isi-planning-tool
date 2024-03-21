@@ -19,9 +19,12 @@ export interface DatePickerProps {
 
 const DatePicker: Component<DatePickerProps> = (props) => {
   const { weeks, next, previous, reference, setReference } = useCalendar();
+  const [isOpen, setIsOpen] = createSignal(false);
   const [selectedDate, setSelectedDate] = createSignal(
     props.value !== undefined ? dayjs(props.value) : undefined
   );
+
+  let triggerRef!: HTMLButtonElement;
 
   const weekdays = dayjs.weekdaysShort();
   weekdays.push(weekdays.shift()!); // move sunday to the end
@@ -36,6 +39,7 @@ const DatePicker: Component<DatePickerProps> = (props) => {
 
   const handleOpenChange = (open: boolean) => {
     const date = selectedDate();
+    setIsOpen(open);
     if (open && date !== undefined && !reference().isSame(date, 'month')) {
       setReference(date);
     }
@@ -49,16 +53,25 @@ const DatePicker: Component<DatePickerProps> = (props) => {
     props.onChange?.(undefined);
   };
 
+  const handleFocus = () => {
+    setIsOpen(true);
+  };
+
   onMount(() => {
     if (props.value) props.onChange?.(selectedDate()?.toDate());
   });
 
   return (
-    <Popover onOpenChange={handleOpenChange}>
+    <Popover open={isOpen()} onOpenChange={handleOpenChange}>
       <div class={cn('relative w-fit', props.class)}>
         <PopoverTrigger
           as='div'
-          class='flex items-center gap-1 rounded-md border p-2 text-gray-700 focus:outline-none'
+          ref={triggerRef}
+          class={cn(
+            'flex items-center gap-1 rounded-md border p-2 text-gray-700 focus:outline-none dark:border-gray-400 dark:text-gray-200',
+            isOpen() && 'ring-2 ring-gray-300 dark:ring-gray-400'
+          )}
+          onFocus={handleFocus}
         >
           <IconCalendarMonth class='h-4 w-4' />
 
@@ -67,8 +80,9 @@ const DatePicker: Component<DatePickerProps> = (props) => {
             readOnly
             value={selectedDate()?.format('YYYY-MM-DD') ?? ''}
             placeholder='YYYY-MM-DD'
-            class='h-fit w-32 cursor-pointer bg-transparent text-sm'
+            class='h-fit w-32 cursor-pointer select-none bg-transparent text-sm focus:outline-none'
             onClick={(e) => e.preventDefault()}
+            tabIndex={-1}
           />
         </PopoverTrigger>
 
@@ -77,7 +91,7 @@ const DatePicker: Component<DatePickerProps> = (props) => {
             type='button'
             onClick={handleClear}
             class={cn(
-              'absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-0.5 hover:bg-gray-200',
+              'absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-0.5 hover:bg-gray-200 dark:hover:bg-gray-700',
               selectedDate() === undefined && 'invisible'
             )}
           >
@@ -87,7 +101,7 @@ const DatePicker: Component<DatePickerProps> = (props) => {
         </Show>
       </div>
 
-      <PopoverContent onOpenAutoFocus={(e) => e.preventDefault()}>
+      <PopoverContent>
         <table>
           <thead>
             <tr>
@@ -95,7 +109,7 @@ const DatePicker: Component<DatePickerProps> = (props) => {
                 <div class='flex items-center justify-between'>
                   <button
                     onClick={previous}
-                    class='rounded-md p-1 focus:bg-gray-200 focus:outline-none'
+                    class='rounded-md p-1 focus:bg-gray-200 focus:outline-none dark:focus:bg-gray-800'
                   >
                     <IconChevronLeft />
                   </button>
@@ -104,7 +118,7 @@ const DatePicker: Component<DatePickerProps> = (props) => {
 
                   <button
                     onClick={next}
-                    class='rounded-md p-1 focus:bg-gray-200 focus:outline-none'
+                    class='rounded-md p-1 focus:bg-gray-200 focus:outline-none dark:focus:bg-gray-800'
                   >
                     <IconChevronRight />
                   </button>
@@ -129,12 +143,14 @@ const DatePicker: Component<DatePickerProps> = (props) => {
                         <button
                           onClick={() => handleChange(day)}
                           class={cn(
-                            'flex aspect-square w-8 items-center justify-center rounded-md hover:bg-gray-200 focus:bg-gray-300 focus:outline-none',
+                            'ring-brand-blue m-0.5 flex aspect-square w-8 items-center justify-center rounded-md ring-offset-2 focus:outline-none focus:ring-2',
+                            'ring-offset-gray-50 hover:bg-gray-200',
+                            'dark:focus dark:ring-offset-gray-900 dark:hover:bg-gray-800',
                             day.isSame(reference(), 'month')
-                              ? 'text-black'
+                              ? ''
                               : 'text-gray-400',
                             selectedDate()?.isSame(day, 'day') &&
-                              'bg-brand-blue focus:bg-brand-blue hover:bg-brand-blue text-gray-50'
+                              'bg-brand-blue focus:bg-brand-blue hover:bg-brand-blue dark:hover:bg-brand-blue text-gray-50'
                           )}
                         >
                           <span>{day.format('D')}</span>
