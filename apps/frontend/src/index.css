@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.leaflet-pane, .leaflet-top, .leaflet-bottom {
+.leaflet-pane, .leaflet-top, .leaflet-bottom, .leaflet-control {
   z-index: auto !important;
 }
 
