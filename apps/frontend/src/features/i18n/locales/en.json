@@ -3,20 +3,75 @@
     "SIGN_IN": "Sign in",
     "SIGN_OUT": "Sign out"
   },
-  "FEEDBACK": {
-    "LOADING": "Loading..."
-  },
   "DASHBOARD": {
     "TITLE": "Dashboard"
   },
-  "NAVIGATION": {
-    "BACK": "Back"
+  "DEVIATIONS": {
+    "TITLE": "Deviations",
+    "DEVIATION": "Deviation"
   },
   "ERROR": {
     "PAGE_NOT_FOUND": "We could not find the page you were looking for.",
     "FORBIDDEN": "You are not allowed to access this page."
   },
+  "FEEDBACK": {
+    "LOADING": "Loading..."
+  },
+  "GENERAL": {
+    "SAVE": "Save",
+    "START_DATE": "Start date",
+    "END_DATE": "End date",
+    "STATUSES": {
+      "ONGOING": "Ongoing",
+      "UPCOMING": "Upcoming",
+      "PREVIOUS": "Previous"
+    }
+  },
+  "NAVIGATION": {
+    "BACK": "Back",
+    "SEARCH": "Search..."
+  },
+  "PLANS": {
+    "TITLE": "Plans",
+    "PLAN": "Plan",
+    "ADD_PLAN": "Add plan",
+    "FORM": {
+      "IMPORT_RAILINGS": "Import railings"
+    }
+  },
+  "PROJECTS": {
+    "TITLE": "Projects",
+    "PROJECT": "Project",
+    "NEW_PROJECT": "New project",
+    "FORM": {
+      "PROJECT_NAME": "Project name",
+      "PROJECT_REFERENCE": "Project reference"
+    }
+  },
+  "RAILINGS": {
+    "TITLE": "Railings",
+    "RAILING": "Railing"
+  },
+  "TRIPS": {
+    "TITLE": "Trips",
+    "TRIP": "Trip",
+    "NEW_TRIP": "New trip",
+    "START_TRIP": "Start trip",
+    "END_TRIP": "End trip",
+    "TRIP_INDICATORS": {
+      "STORAGE_LEFT": "Storage left",
+      "GPS": "GPS",
+      "CAPTURE_STATUS": "Capture",
+      "CAPTURE_RATE": "Capture rate"
+    }
+  },
+  "USERS": {
+    "TITLE": "Users",
+    "USER": "User"
+  },
   "VEHICLES": {
+    "TITLE": "Vehicles",
+    "VEHICLE": "Vehicle",
     "ADD_VEHICLE": "Add vehicle",
     "FORM": {
       "REGISTRATION_NUMBER": "Registration number",
