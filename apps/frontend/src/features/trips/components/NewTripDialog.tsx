@@ -57,6 +57,7 @@ const NewTripDialog: Component<NewTripDialogProps> = (props) => {
         <VehicleSelect
           vehicles={vehicles.data ?? []}
           onChange={setSelectedVehicle}
+          emptyText='No vehicle selected.'
         />
 
         <Button
