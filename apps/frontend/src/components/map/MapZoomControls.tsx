@@ -34,10 +34,19 @@ const MapZoomControls: Component<MapZoomControlsProps> = (props) => {
   });
 
   return (
-    <div class={cn('flex flex-col divide-y rounded-md shadow', props.class)}>
+    <div
+      class={cn(
+        'flex flex-col divide-y rounded-md shadow dark:divide-gray-700',
+        props.class
+      )}
+    >
       <button
         disabled={!canZoomIn()}
-        class='rounded-t-md border border-gray-300 bg-gray-50 p-1 transition-colors hover:bg-gray-200 focus:bg-gray-200 disabled:text-gray-400'
+        class={cn(
+          'rounded-t-md border p-1 transition-colors',
+          'border-gray-300 bg-gray-50 hover:bg-gray-200 focus:bg-gray-200 disabled:text-gray-400',
+          'dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100 dark:hover:bg-gray-800 dark:focus:bg-gray-800 dark:disabled:text-gray-500'
+        )}
         onClick={zoomIn}
       >
         <IconPlus class='h-6 w-6' />
@@ -46,7 +55,11 @@ const MapZoomControls: Component<MapZoomControlsProps> = (props) => {
 
       <button
         disabled={!canZoomOut()}
-        class='-mt-px rounded-b-md border border-gray-300 bg-gray-50 p-1 transition-colors hover:bg-gray-200 focus:bg-gray-200 disabled:text-gray-400'
+        class={cn(
+          '-mt-px rounded-b-md border p-1 transition-colors',
+          'border-gray-300 bg-gray-50 hover:bg-gray-200 focus:bg-gray-200 disabled:text-gray-400',
+          'dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100 dark:hover:bg-gray-800 dark:focus:bg-gray-800 dark:disabled:text-gray-500'
+        )}
         onClick={zoomOut}
       >
         <IconMinus class='h-6 w-6' />
