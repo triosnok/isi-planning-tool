@@ -5,6 +5,7 @@ import { LayoutProps } from '@/lib/utils';
 import { useParams } from '@solidjs/router';
 import { Component, createMemo } from 'solid-js';
 import { useProjectRailings } from '../api';
+import MapZoomControls from '@/components/map/MapZoomControls';
 
 const ProjectsLayout: Component<LayoutProps> = (props) => {
   const params = useParams();
@@ -22,7 +23,8 @@ const ProjectsLayout: Component<LayoutProps> = (props) => {
         <aside class='w-full md:w-96 flex-shrink-0'>{props.children}</aside>
 
         <div class='flex-1'>
-          <MapRoot class='h-full w-full'>
+          <MapRoot class='relative h-full w-full' customZoom>
+            <MapZoomControls class='absolute right-2 top-2' />
             <MapRailingLayer railings={railings.data} />
           </MapRoot>
         </div>

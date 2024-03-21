@@ -23,7 +23,9 @@ const AccordionTrigger: Component<AccordionPrimitive.AccordionTriggerProps> = (
     <AccordionPrimitive.Header class='flex'>
       <AccordionPrimitive.Trigger
         class={cn(
-          '-mb-px flex flex-1 items-center justify-between border-y bg-gray-100 px-2 py-1 text-xl font-semibold transition-all hover:underline [&[data-expanded]>svg]:rotate-180',
+          '-mb-px flex flex-1 items-center justify-between border-y px-2 py-1 text-xl font-semibold transition-all [&[data-expanded]>svg]:rotate-180',
+          'border-gray-300 bg-gray-100 hover:bg-gray-200 focus:bg-gray-200',
+          'dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 dark:focus:bg-gray-800',
           props.class
         )}
         {...rest}
