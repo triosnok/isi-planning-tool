@@ -1,9 +1,9 @@
 package no.isi.insight.planning.repository;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.Optional;
 import java.sql.Types;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -110,7 +110,6 @@ public class ProjectJdbcRepository {
     params.addValue("projectId", projectId, Types.VARCHAR);
     params.addValue("projectStatus", null, Types.VARCHAR);
 
-    return Optional
-      .ofNullable(this.jdbcTemplate.queryForObject(PROJECT_DETAILS_QUERY, params, PROJECT_DETAILS_ROW_MAPPER));
+    return this.jdbcTemplate.query(PROJECT_DETAILS_QUERY, params, PROJECT_DETAILS_ROW_MAPPER).stream().findFirst();
   }
 }

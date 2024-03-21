@@ -14,6 +14,7 @@ import no.isi.insight.planner.client.project.view.ProjectDetails;
 import no.isi.insight.planner.client.project.view.ProjectStatus;
 import no.isi.insight.planner.client.project.view.RoadRailing;
 import no.isi.insight.planning.model.Project;
+import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.repository.ProjectJdbcRepository;
 import no.isi.insight.planning.repository.ProjectJpaRepository;
 import no.isi.insight.planning.repository.RoadRailingJdbcRepository;
@@ -60,7 +61,7 @@ public class ProjectRestServiceImpl implements ProjectRestService {
       UUID projectId
   ) {
     var project = this.projectJdbcRepository.findById(projectId)
-      .orElseThrow(() -> new RuntimeException("Project not found"));
+      .orElseThrow(() -> new NotFoundException("Project not found"));
     return ResponseEntity.ok(project);
   }
 
