@@ -1,5 +1,6 @@
-import Leaflet, { TileLayer } from 'leaflet';
+import Leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import 'proj4leaflet';
 import {
   Component,
   JSX,
@@ -9,7 +10,6 @@ import {
   onMount,
   useContext,
 } from 'solid-js';
-import 'proj4leaflet';
 
 export interface MapContextValue {
   map: Leaflet.Map;
@@ -70,10 +70,13 @@ export const MapRoot: Component<{
       zoomControl: !props.customZoom,
     });
 
-    // better way to do this is to change maxZoom to length of resolution list from crs i think
     const layer = new Leaflet.TileLayer(
       'https://services.geodataonline.no/arcgis/rest/services/Trafikkportalen/GeocacheTrafikkJPG/MapServer/tile/{z}/{y}/{x}',
-      { maxZoom: 16, minZoom: 3 }
+      {
+        maxZoom: 16,
+        minZoom: 3,
+        className: 'insight-map-tile-layer',
+      }
     );
 
     map.addLayer(layer);

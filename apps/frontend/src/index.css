@@ -2,7 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-.leaflet-pane, .leaflet-top, .leaflet-bottom {
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom {
   z-index: auto !important;
 }
 
@@ -11,7 +13,7 @@
     --radius: 0.5rem;
   }
 
-  [data-kb-theme="dark"] {
+  [data-kb-theme='dark'] {
     --radius: 0.5rem;
   }
 }
@@ -20,11 +22,17 @@
   * {
     @apply border-gray-200;
   }
+
   body {
-    @apply bg-gray-50 text-gray-950;
+    @apply bg-gray-50 text-gray-950 dark:bg-gray-950 dark:text-gray-50;
+
     font-feature-settings:
-      "rlig" 1,
-      "calt" 1;
+      'rlig' 1,
+      'calt' 1;
+  }
+
+  .insight-map-tile-layer {
+    @apply dark:brightness-95 dark:contrast-75 dark:hue-rotate-180 dark:invert;
   }
 }
 
