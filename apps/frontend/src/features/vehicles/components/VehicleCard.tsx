@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { IconType } from '@/lib/utils';
+import { IconType, cn } from '@/lib/utils';
 import {
   Icon123,
   IconCamera,
@@ -16,11 +16,12 @@ export interface VehicleCardProps {
   camera: boolean;
   gnssId: string;
   onDetailsClick?: () => void;
+  class?: string; 
 }
 
 const VehicleCard: Component<VehicleCardProps> = (props) => {
   return (
-    <div class='overflow-hidden rounded-md border'>
+    <div class={cn('overflow-hidden rounded-md border', props.class)}>
       <Show
         when={props.imageUrl}
         fallback={
@@ -33,8 +34,8 @@ const VehicleCard: Component<VehicleCardProps> = (props) => {
         {(url) => <img class='h-24 w-full' src={url()} />}
       </Show>
 
-      <div class='relative flex flex-col p-2 py-2'>
-        <h2 class='self-center text-xl font-semibold'>{props.name}</h2>
+      <div class='flex flex-col m-2'>
+        <h2 class='self-center text-xl font-semibold truncate max-w-full'>{props.name}</h2>
         <VehicleStatus />
 
         <hr class='my-1 h-px w-full border-0 bg-gray-300' />

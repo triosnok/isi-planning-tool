@@ -25,14 +25,14 @@ const VehicleOverview: Component<LayoutProps> = (props) => {
         <main class='flex-1 px-6 py-4'>
           <h1 class='text-4xl font-bold'>Vehicles</h1>
 
-          <section class='flex items-center gap-2'>
+          <section class='flex justify-between gap-2 flex-col sm:flex-row'>
             <Input placeholder='Search...' class='w-fit' />
-            <Button onClick={handleAddVehicle} class='ml-auto'>
+            <Button onClick={handleAddVehicle} class='ml-auto w-full sm:w-auto'>
               {t('VEHICLES.ADD_VEHICLE')}
             </Button>
           </section>
 
-          <section class='mt-2 grid grid-cols-6 gap-2'>
+          <section class='mt-2 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2'>
             <For each={vehicles.data}>
               {(vehicle) => (
                 <VehicleCard
@@ -42,6 +42,7 @@ const VehicleOverview: Component<LayoutProps> = (props) => {
                   camera={vehicle.camera}
                   gnssId={vehicle.gnssId}
                   onDetailsClick={() => navigate(`/vehicles/${vehicle.id}`)}
+                  class='min-w-48'
                 />
               )}
             </For>
