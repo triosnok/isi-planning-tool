@@ -1,4 +1,6 @@
 import { useSignOutMutation } from '@/features/auth/api';
+import { Theme, useTheme } from '@/features/theme';
+import { cn } from '@/lib/utils';
 import { A } from '@solidjs/router';
 import {
   IconLogout,
@@ -7,7 +9,7 @@ import {
   IconSearch,
   IconSettings,
 } from '@tabler/icons-solidjs';
-import { Component, Show, createSignal, onCleanup } from 'solid-js';
+import { Component } from 'solid-js';
 import Logo from '../logo/Logo';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import {
@@ -19,7 +21,6 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { Switch } from '../ui/switch';
-import { Theme, useTheme } from '@/features/theme';
 
 const Header: Component = () => {
   const theme = useTheme();
@@ -70,8 +71,14 @@ const Header: Component = () => {
         </div>
       </nav>
 
-      <label class='hidden flex-1 items-center justify-center rounded-md border border-gray-300 bg-gray-50 pl-2 ring-gray-300 focus-within:ring-2 md:flex'>
-        <IconSearch class='h-5 w-5 text-gray-400' />
+      <label
+        class={cn(
+          'hidden flex-1 items-center justify-center rounded-md border pl-2 focus-within:ring-2 md:flex',
+          'border-gray-300 bg-gray-50 ring-gray-300',
+          'dark:border-gray-800 dark:bg-gray-900 dark:ring-gray-400'
+        )}
+      >
+        <IconSearch class='h-5 w-5 text-gray-400 dark:text-gray-500' />
 
         <input
           class='h-8 flex-1 bg-transparent px-2 focus:outline-none'
