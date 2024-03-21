@@ -17,7 +17,7 @@ const Progress: Component<ProgressPrimitive.ProgressRootProps> = (props) => {
           props.class
         )}
       >
-        <ProgressPrimitive.Fill class='bg-primary h-full w-[var(--kb-progress-fill-width)] flex-1 transition-all' />
+        <ProgressPrimitive.Fill class='bg-brand-blue-800 h-full w-[var(--kb-progress-fill-width)] flex-1 transition-all' />
       </ProgressPrimitive.Track>
     </ProgressPrimitive.Root>
   );
