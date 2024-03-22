@@ -8,11 +8,24 @@ import {
 import axios from 'axios';
 import { z } from 'zod';
 
-export const useVehiclesQuery = () => {
+export const useVehiclesQuery = (
+  availableFrom?: string,
+  availableTo?: string
+) => {
   return createQuery(() => ({
-    queryKey: [CacheKey.VEHICLE_LIST],
-    queryFn: async () => {
-      const response = await axios.get<VehicleDetails[]>('/api/v1/vehicles');
+    queryKey: [CacheKey.VEHICLE_LIST, availableFrom, availableTo],
+    queryFn: async ({ queryKey }) => {
+      const [availableFrom, availableTo] = queryKey;
+
+      const params = new URLSearchParams();
+
+      if (availableFrom !== undefined)
+        params.set('availableFrom', availableFrom);
+      if (availableTo !== undefined) params.set('availableTo', availableTo);
+
+      const response = await axios.get<VehicleDetails[]>(
+        `/api/v1/vehicles?${params.toString()}`
+      );
 
       return response.data;
     },

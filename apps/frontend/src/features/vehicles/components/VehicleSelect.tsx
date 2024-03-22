@@ -12,6 +12,7 @@ import {
   IconCircleCheckFilled,
 } from '@tabler/icons-solidjs';
 import { Component, Show, createSignal } from 'solid-js';
+import VehicleStatus from './VehicleStatus';
 
 export interface VehicleSelectProps {
   value?: VehicleDetails;
@@ -77,10 +78,7 @@ const VehicleSelectItem: Component<VehicleSelectItemProps> = (props) => {
         <span>{props.camera ? 'Yes' : 'No'}</span>
       </p>
 
-      <p class='text-success-500 absolute right-2 top-2 flex items-center gap-0.5 text-sm'>
-        <IconCircleCheckFilled class='h-4 w-4' />
-        <span>Available</span>
-      </p>
+      <VehicleStatus vehicle={props} />
     </div>
   );
 };

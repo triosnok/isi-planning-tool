@@ -135,6 +135,7 @@ export interface VehicleDetails {
     camera: boolean;
     description: string;
     gnssId: string;
+    available: boolean;
     inactiveFrom: DateAsString;
     active: boolean;
 }
