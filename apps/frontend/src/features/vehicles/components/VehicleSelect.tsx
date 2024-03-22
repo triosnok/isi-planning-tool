@@ -34,32 +34,32 @@ const VehicleSelect: Component<VehicleSelectProps> = (props) => {
 
   return (
     <Show when={hasVehicles()} fallback={<EmptyState />}>
-    <Select<VehicleDetails>
-      value={value()}
-      onChange={handleChange}
-      options={props.vehicles}
-      optionValue='id'
-      itemComponent={(props) => (
-        <SelectItem class='w-full' item={props.item}>
-          <VehicleSelectItem {...props.item.rawValue} />
-        </SelectItem>
-      )}
-    >
-      <SelectTrigger class='h-20'>
-        <Show
-          when={value()}
-          fallback={<NoVehiclesSelected emptyText={props.emptyText} />}
-        >
-          {(selectedVehicle) => (
-            <SelectValue class='h-fit flex-1'>
-              <VehicleSelectItem selected {...selectedVehicle()} />
-            </SelectValue>
-          )}
-        </Show>
-      </SelectTrigger>
+      <Select<VehicleDetails>
+        value={value()}
+        onChange={handleChange}
+        options={props.vehicles}
+        optionValue='id'
+        itemComponent={(props) => (
+          <SelectItem class='w-full' item={props.item}>
+            <VehicleSelectItem {...props.item.rawValue} />
+          </SelectItem>
+        )}
+      >
+        <SelectTrigger class='h-20'>
+          <Show
+            when={value()}
+            fallback={<NoVehiclesSelected emptyText={props.emptyText} />}
+          >
+            {(selectedVehicle) => (
+              <SelectValue class='h-fit flex-1'>
+                <VehicleSelectItem selected {...selectedVehicle()} />
+              </SelectValue>
+            )}
+          </Show>
+        </SelectTrigger>
 
-      <SelectContent />
-    </Select>
+        <SelectContent class='max-h-48 overflow-y-auto' />
+      </Select>
     </Show>
   );
 };
@@ -72,9 +72,14 @@ const EmptyState: Component = () => {
   const { t } = useTranslations();
 
   return (
-    <div class='relative h-20 flex justify-center flex-col rounded-md border px-3 py-2'>
-      <p class='text-gray-500 text-sm'>{t('VEHICLES.NO_VEHICLES_REGISTERED')}</p>
-      <A href='/vehicles/new' class='text-brand-blue-400 underline text-sm w-fit'>
+    <div class='relative flex h-20 flex-col justify-center rounded-md border px-3 py-2'>
+      <p class='text-sm text-gray-500'>
+        {t('VEHICLES.NO_VEHICLES_REGISTERED')}
+      </p>
+      <A
+        href='/vehicles/new'
+        class='text-brand-blue-400 w-fit text-sm underline'
+      >
         {t('VEHICLES.ADD_VEHICLE')}
       </A>
     </div>
