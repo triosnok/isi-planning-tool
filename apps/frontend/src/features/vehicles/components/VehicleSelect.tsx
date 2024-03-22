@@ -5,7 +5,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useTranslations } from '@/features/i18n';
 import { VehicleDetails } from '@isi-insight/client';
+import { A } from '@solidjs/router';
 import {
   Icon123,
   IconCamera,
@@ -29,33 +31,37 @@ const VehicleSelect: Component<VehicleSelectProps> = (props) => {
     props.onChange?.(value);
   };
 
-  return (
-    <Select<VehicleDetails>
-      value={value()}
-      onChange={handleChange}
-      options={props.vehicles}
-      optionValue='id'
-      itemComponent={(props) => (
-        <SelectItem class='w-full' item={props.item}>
-          <VehicleSelectItem {...props.item.rawValue} />
-        </SelectItem>
-      )}
-    >
-      <SelectTrigger class='h-20'>
-        <Show
-          when={value()}
-          fallback={<NoVehiclesSelected emptyText={props.emptyText} />}
-        >
-          {(selectedVehicle) => (
-            <SelectValue class='h-fit flex-1'>
-              <VehicleSelectItem selected {...selectedVehicle()} />
-            </SelectValue>
-          )}
-        </Show>
-      </SelectTrigger>
+  const hasVehicles = () => props.vehicles.length > 0;
 
-      <SelectContent />
-    </Select>
+  return (
+    <Show when={hasVehicles()} fallback={<EmptyState />}>
+      <Select<VehicleDetails>
+        value={value()}
+        onChange={handleChange}
+        options={props.vehicles}
+        optionValue='id'
+        itemComponent={(props) => (
+          <SelectItem class='w-full' item={props.item}>
+            <VehicleSelectItem {...props.item.rawValue} />
+          </SelectItem>
+        )}
+      >
+        <SelectTrigger class='h-20'>
+          <Show
+            when={value()}
+            fallback={<NoVehiclesSelected emptyText={props.emptyText} />}
+          >
+            {(selectedVehicle) => (
+              <SelectValue class='h-fit flex-1'>
+                <VehicleSelectItem selected {...selectedVehicle()} />
+              </SelectValue>
+            )}
+          </Show>
+        </SelectTrigger>
+
+        <SelectContent class='max-h-48 overflow-y-auto' />
+      </Select>
+    </Show>
   );
 };
 
@@ -63,7 +69,27 @@ interface VehicleSelectItemProps extends VehicleDetails {
   selected?: boolean;
 }
 
+const EmptyState: Component = () => {
+  const { t } = useTranslations();
+
+  return (
+    <div class='relative flex h-20 flex-col justify-center rounded-md border px-3 py-2'>
+      <p class='text-sm text-gray-500'>
+        {t('VEHICLES.NO_VEHICLES_REGISTERED')}
+      </p>
+      <A
+        href='/vehicles/new'
+        class='text-brand-blue-400 w-fit text-sm underline'
+      >
+        {t('VEHICLES.ADD_VEHICLE')}
+      </A>
+    </div>
+  );
+};
+
 const VehicleSelectItem: Component<VehicleSelectItemProps> = (props) => {
+  const { t } = useTranslations();
+
   return (
     <div class='relative w-full rounded-md text-left'>
       <p class='text-lg font-semibold'>{props.model}</p>

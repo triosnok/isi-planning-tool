@@ -15,7 +15,7 @@ import no.isi.insight.planner.client.vehicle.view.CreateVehicleRequest;
 import no.isi.insight.planner.client.vehicle.view.UpdateVehicleRequest;
 import no.isi.insight.planner.client.vehicle.view.VehicleDetails;
 import no.isi.insight.planning.model.Vehicle;
-import no.isi.insight.planning.repository.VehicleJdbcRespotiory;
+import no.isi.insight.planning.repository.VehicleJdbcRepository;
 import no.isi.insight.planning.repository.VehicleJpaRepository;
 import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.error.model.BadRequestException;
@@ -25,7 +25,7 @@ import no.isi.insight.planning.error.model.BadRequestException;
 public class VehicleRestServiceImpl implements VehicleRestService {
 
   private final VehicleJpaRepository vehicleJpaRepository;
-  private final VehicleJdbcRespotiory vehicleJdbcRespotiory;
+  private final VehicleJdbcRepository vehicleJdbcRespotiory;
 
   @Override
   public ResponseEntity<VehicleDetails> createVehicle(

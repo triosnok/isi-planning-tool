@@ -10,6 +10,7 @@ export enum CacheKey {
   VEHICLE_DETAILS = 'VEHICLE',
   TRIP_LIST = 'TRIP_LIST',
   TRIP_DETAILS = 'TRIP',
+  PROJECT_RAILINGS = 'PROJECT_RAILINGS',
 }
 
 export const ACCESS_TOKEN_LOCALSTORAGE_KEY = 'accessToken';

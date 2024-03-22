@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,8 +42,8 @@ public interface VehicleRestService {
 
   @GetExchange
   ResponseEntity<List<VehicleDetails>> findAllVehicles(
-      @RequestParam Optional<LocalDate> availableFrom,
-      @RequestParam Optional<LocalDate> availableTo
+      @RequestParam @DateTimeFormat(iso = ISO.DATE_TIME) Optional<LocalDate> availableFrom,
+      @RequestParam @DateTimeFormat(iso = ISO.DATE_TIME) Optional<LocalDate> availableTo
   );
 
 }

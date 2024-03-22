@@ -80,7 +80,7 @@ export const useProjectPlansMutation = (projectId: string) => {
   const qc = useQueryClient();
 
   const create = createMutation(() => ({
-    mutationFn: async (plan: CreateProjectPlanRequest) => {
+    mutationFn: async (plan: Omit<CreateProjectPlanRequest, 'projectId'>) => {
       const response = await axios.post<CreateProjectPlanResponse>(
         `/api/v1/project-plans`,
         {
@@ -96,6 +96,9 @@ export const useProjectPlansMutation = (projectId: string) => {
       qc.invalidateQueries({ queryKey: [CacheKey.PROJECT_PLAN_LIST] });
       qc.invalidateQueries({
         queryKey: [CacheKey.PROJECT_PLAN_DETAILS, response.projectPlanId],
+      });
+      qc.invalidateQueries({
+        queryKey: [CacheKey.PROJECT_RAILINGS],
       });
     },
   }));
@@ -118,9 +121,9 @@ export const useProjectPlansQuery = (projectId: string) => {
 
 export const useProjectRailings = (projectId: Accessor<string | undefined>) => {
   return createQuery(() => ({
-    queryKey: [projectId()] as const,
+    queryKey: [CacheKey.PROJECT_RAILINGS, projectId()] as const,
     queryFn: async ({ queryKey }) => {
-      const [projectId] = queryKey;
+      const [_, projectId] = queryKey;
 
       if (projectId === undefined) return [];
 

@@ -1,0 +1,36 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Launch backend",
+      "request": "launch",
+      "mainClass": "no.isi.insight.planning.PlanningApplication",
+      "projectName": "backend"
+    },
+    {
+      "type": "java",
+      "name": "Launch backend (dev)",
+      "request": "launch",
+      "mainClass": "no.isi.insight.planning.PlanningApplicationDevelopment",
+      "projectName": "backend"
+    },
+    {
+      "type": "java",
+      "name": "Launch simulator",
+      "request": "launch",
+      "mainClass": "no.isi.insight.simulator.SimulatorApplication",
+      "projectName": "simulator"
+    },
+    {
+      "type": "java",
+      "name": "Launch init",
+      "request": "launch",
+      "mainClass": "no.isi.insight.planning.init.PlanningInitApplication",
+      "projectName": "init"
+    }
+  ]
+}
