@@ -90,6 +90,7 @@
     "ADD_VEHICLE": "Add vehicle",
     "NO_VEHICLE_SELECTED": "No vehicle selected.",
     "VIEW_DETAILS": "View details",
+    "NO_VEHICLES_REGISTERED": "No vehicles registered.",
     "FORM": {
       "REGISTRATION_NUMBER": "Registration number",
       "MODEL": "Model",

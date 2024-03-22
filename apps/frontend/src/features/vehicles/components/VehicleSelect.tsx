@@ -5,7 +5,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useTranslations } from '@/features/i18n';
 import { VehicleDetails } from '@isi-insight/client';
+import { A } from '@solidjs/router';
 import {
   Icon123,
   IconCamera,
@@ -28,7 +30,10 @@ const VehicleSelect: Component<VehicleSelectProps> = (props) => {
     props.onChange?.(value);
   };
 
+  const hasVehicles = () => props.vehicles.length > 0;
+
   return (
+    <Show when={hasVehicles()} fallback={<EmptyState />}>
     <Select<VehicleDetails>
       value={value()}
       onChange={handleChange}
@@ -55,6 +60,7 @@ const VehicleSelect: Component<VehicleSelectProps> = (props) => {
 
       <SelectContent />
     </Select>
+    </Show>
   );
 };
 
@@ -62,7 +68,22 @@ interface VehicleSelectItemProps extends VehicleDetails {
   selected?: boolean;
 }
 
+const EmptyState: Component = () => {
+  const { t } = useTranslations();
+
+  return (
+    <div class='relative h-20 flex justify-center flex-col rounded-md border px-3 py-2'>
+      <p class='text-gray-500 text-sm'>{t('VEHICLES.NO_VEHICLES_REGISTERED')}</p>
+      <A href='/vehicles/new' class='text-brand-blue-400 underline text-sm w-fit'>
+        {t('VEHICLES.ADD_VEHICLE')}
+      </A>
+    </div>
+  );
+};
+
 const VehicleSelectItem: Component<VehicleSelectItemProps> = (props) => {
+  const { t } = useTranslations();
+
   return (
     <div class='relative w-full rounded-md text-left'>
       <p class='text-lg font-semibold'>{props.model}</p>
@@ -79,7 +100,7 @@ const VehicleSelectItem: Component<VehicleSelectItemProps> = (props) => {
 
       <p class='text-success-500 absolute right-2 top-2 flex items-center gap-0.5 text-sm'>
         <IconCircleCheckFilled class='h-4 w-4' />
-        <span>Available</span>
+        <span>{t('GENERAL.STATUSES.AVAILABLE')}</span>
       </p>
     </div>
   );
