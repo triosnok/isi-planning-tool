@@ -17,7 +17,7 @@ import no.isi.insight.planning.utility.JdbcUtils;
 
 @Repository
 @RequiredArgsConstructor
-public class VehicleJdbcRespotiory {
+public class VehicleJdbcRepository {
   private final NamedParameterJdbcTemplate jdbcTemplate;
 
   // language=sql
@@ -53,6 +53,7 @@ public class VehicleJdbcRespotiory {
         ON v.vehicle_id = vr.fk_vehicle_id
       WHERE 1=1
         AND (:id IS NULL OR v.vehicle_id = :id::uuid)
+      ORDER BY vr.count ASC NULLS FIRST
     """;
 
   private static final RowMapper<VehicleDetails> VEHICLE_DETAILS_ROW_MAPPER = (rs, rowNum) -> {
