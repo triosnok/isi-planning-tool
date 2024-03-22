@@ -45,6 +45,22 @@ const PlanForm: Component<{
       id='new-project-plan-form'
       onSubmit={handleSubmit}
     >
+      <Label for='importUrl' class='mt-2'>
+        {t('RAILINGS.RAILING_IMPORT_URL')}
+      </Label>
+
+      <Field name='importUrl'>
+        {(field, props) => (
+          <Input
+            {...props}
+            type='url'
+            id='importUrl'
+            placeholder={t('GENERAL.URL')}
+            value={field.value}
+          />
+        )}
+      </Field>
+
       <div class='flex justify-between gap-2'>
         <div class='flex-1'>
           <Label for='startsAt'>{t('GENERAL.START_DATE')}</Label>
@@ -86,22 +102,6 @@ const PlanForm: Component<{
         onChange={(v) => setValue(form, 'vehicleId', v?.id ?? undefined)}
         emptyText={t('VEHICLES.NO_VEHICLE_SELECTED')}
       />
-
-      <Label for='importUrl' class='mt-2'>
-        {t('RAILINGS.RAILING_IMPORT_URL')}
-      </Label>
-
-      <Field name='importUrl'>
-        {(field, props) => (
-          <Input
-            {...props}
-            type='url'
-            id='importUrl'
-            placeholder={t('GENERAL.URL')}
-            value={field.value}
-          />
-        )}
-      </Field>
 
       <Button class='mt-2 grow' type='submit'>
         {t('GENERAL.IMPORT_AND_SAVE')}
