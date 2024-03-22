@@ -28,6 +28,7 @@ import {
   useTripMutation,
   useTripNoteMutation,
 } from '../api';
+import { useTranslations } from '@/features/i18n';
 
 const TripNoteSchema = z.object({
   note: z.string(),
@@ -69,6 +70,8 @@ const Trip: Component = () => {
     }
   };
 
+  const { t } = useTranslations();
+
   return (
     <>
       <div class='absolute bottom-0 w-full rounded-md bg-gray-50 p-2 md:bottom-auto md:left-4 md:top-4 md:w-1/2 lg:w-2/5 xl:w-1/3'>
@@ -79,7 +82,7 @@ const Trip: Component = () => {
               class='flex items-center text-sm text-gray-600 hover:underline'
             >
               <IconChevronLeft size={16} />
-              <p class='flex-none'>Back</p>
+              <p class='flex-none'>{t('NAVIGATION.BACK')}</p>
             </A>
           </div>
         </div>
@@ -87,7 +90,7 @@ const Trip: Component = () => {
           <div class='flex flex-col justify-between space-y-2 md:flex-row md:flex-wrap'>
             <div class='order-first md:order-none'>
               <h1 class='text-3xl font-bold'>
-                Project 1 - Trip {tripDetails.data?.sequenceNumber}
+                Project 1 - {t('TRIPS.TRIP')} {tripDetails.data?.sequenceNumber}
               </h1>
               <h2 class='text-sm'>21 Jan - 31 Mar</h2>
             </div>
@@ -95,7 +98,7 @@ const Trip: Component = () => {
               <DialogTrigger as={Button} class='order-last md:order-none'>
                 <div class='flex items-center gap-2'>
                   <IconMessage />
-                  <p class='md:hidden'>Add note</p>
+                  <p class='md:hidden'>{t('NOTES.ADD_NOTE')}</p>
                 </div>
               </DialogTrigger>
               <DialogContent class='sm:max-w-[425px]'>
@@ -119,7 +122,7 @@ const Trip: Component = () => {
                       />
                     )}
                   </Field>
-                  <Button type='submit'>Save</Button>
+                  <Button type='submit'>{t('GENERAL.SAVE')}</Button>
                 </Form>
               </DialogContent>
             </Dialog>
@@ -159,7 +162,7 @@ const Trip: Component = () => {
             variant='destructive'
             class='w-full md:hidden'
           >
-            End trip {tripDetails.data?.endedAt ? ' (ended)' : ''}
+            {t('TRIPS.END_TRIP')} {tripDetails.data?.endedAt ? ' (ended)' : ''}
           </Button>
         </div>
       </div>
@@ -169,7 +172,7 @@ const Trip: Component = () => {
           variant='destructive'
           class='flex w-full'
         >
-          End trip {tripDetails.data?.endedAt ? ' (ended)' : ''}
+          {t('TRIPS.END_TRIP')} {tripDetails.data?.endedAt ? ' (ended)' : ''}
         </Button>
       </div>
     </>

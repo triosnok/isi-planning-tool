@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { useTranslations } from '@/features/i18n';
 import { IconType, cn } from '@/lib/utils';
 import {
   Icon123,
@@ -16,10 +17,12 @@ export interface VehicleCardProps {
   camera: boolean;
   gnssId: string;
   onDetailsClick?: () => void;
-  class?: string; 
+  class?: string;
 }
 
 const VehicleCard: Component<VehicleCardProps> = (props) => {
+  const { t } = useTranslations();
+
   return (
     <div class={cn('overflow-hidden rounded-md border', props.class)}>
       <Show
@@ -27,15 +30,17 @@ const VehicleCard: Component<VehicleCardProps> = (props) => {
         fallback={
           <div class='flex h-24 flex-col items-center justify-center bg-gray-200 text-gray-500'>
             <IconPhotoX class='h-7 w-7' />
-            <span class='uppercase text-xs'>No image</span>
+            <span class='text-xs uppercase'>{t('GENERAL.NO_IMAGE')}</span>
           </div>
         }
       >
         {(url) => <img class='h-24 w-full' src={url()} />}
       </Show>
 
-      <div class='flex flex-col m-2'>
-        <h2 class='self-center text-xl font-semibold truncate max-w-full'>{props.name}</h2>
+      <div class='m-2 flex flex-col'>
+        <h2 class='max-w-full self-center truncate text-xl font-semibold'>
+          {props.name}
+        </h2>
         <VehicleStatus />
 
         <hr class='my-1 h-px w-full border-0 bg-gray-300' />
@@ -50,17 +55,19 @@ const VehicleCard: Component<VehicleCardProps> = (props) => {
         onClick={props.onDetailsClick}
         class='h-fit w-full rounded-none py-1'
       >
-        View details
+        {t('VEHICLES.VIEW_DETAILS')}
       </Button>
     </div>
   );
 };
 
 const VehicleStatus: Component = () => {
+  const { t } = useTranslations();
+
   return (
     <p class='text-success-600 flex items-center gap-0.5 self-center text-sm font-medium'>
       <IconCircleCheckFilled class='h-4 w-4' />
-      <span>Available</span>
+      <span>{t('GENERAL.STATUSES.AVAILABLE')}</span>
     </p>
   );
 };

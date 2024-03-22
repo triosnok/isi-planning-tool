@@ -12,6 +12,7 @@ import { useNavigate } from '@solidjs/router';
 import { Component, createSignal } from 'solid-js';
 import { z } from 'zod';
 import { useTripMutation } from '../api';
+import { useTranslations } from '@/features/i18n';
 
 export interface NewTripDialogProps {
   open: boolean;
@@ -33,6 +34,7 @@ const NewTripDialog: Component<NewTripDialogProps> = (props) => {
   const navigate = useNavigate();
 
   const { create } = useTripMutation();
+  const { t } = useTranslations();
 
   const handleSubmit = async (values: CreateTripSchemaValues) => {
     try {
@@ -51,13 +53,13 @@ const NewTripDialog: Component<NewTripDialogProps> = (props) => {
     <Dialog open={props.open} onOpenChange={props.onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New trip</DialogTitle>
+          <DialogTitle>{t('TRIPS.NEW_TRIP')}</DialogTitle>
         </DialogHeader>
 
         <VehicleSelect
           vehicles={vehicles.data ?? []}
           onChange={setSelectedVehicle}
-          emptyText='No vehicle selected.'
+          emptyText={t('VEHICLES.NO_VEHICLE_SELECTED')}
         />
 
         <Button
@@ -69,7 +71,7 @@ const NewTripDialog: Component<NewTripDialogProps> = (props) => {
             })
           }
         >
-          Start trip
+          {t('TRIPS.START_TRIP')}
         </Button>
       </DialogContent>
     </Dialog>

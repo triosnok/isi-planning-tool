@@ -29,11 +29,13 @@ import { useTripsDetailsQuery } from '../../trips/api';
 import NewTripDialog from '../../trips/components/NewTripDialog';
 import { useProjectDetailsQuery, useProjectPlansQuery } from '../api';
 import PlanCard from '../components/PlanCard';
+import { useTranslations } from '@/features/i18n';
 
 const Project: Component<LayoutProps> = (props) => {
   const params = useParams();
   const project = useProjectDetailsQuery(params.id);
   const plans = useProjectPlansQuery(params.id);
+  const { t } = useTranslations();
 
   const [selectedPlans, setSelectedPlans] = createSignal<string[]>([]);
   const [showNewTripDialog, setShowNewTripDialog] = createSignal(false);
@@ -64,7 +66,7 @@ const Project: Component<LayoutProps> = (props) => {
               class='flex items-center text-sm text-gray-600 hover:underline'
             >
               <IconChevronLeft size={16} />
-              <p class='flex-none'>Back</p>
+              <p class='flex-none'>{t('NAVIGATION.BACK')}</p>
             </A>
           </div>
 
@@ -96,7 +98,9 @@ const Project: Component<LayoutProps> = (props) => {
 
         <Accordion multiple={true} defaultValue={['plans']}>
           <AccordionItem value='plans'>
-            <AccordionTrigger>Plans ({plans.data?.length})</AccordionTrigger>
+            <AccordionTrigger>
+              {t('PLANS.TITLE')} ({plans.data?.length})
+            </AccordionTrigger>
             <AccordionContent class='flex flex-col space-y-2 p-2'>
               <Show
                 when={plans.data !== undefined && plans.data.length > 0}
@@ -107,7 +111,7 @@ const Project: Component<LayoutProps> = (props) => {
                   >
                     <IconPlus class='group-hover:text-brand-blue group-hover:bg-brand-blue-50/40 mb-1 h-16 w-16 rounded-full bg-gray-200 text-gray-400 transition-colors' />
                     <span class='group-hover:text-brand-blue text-gray-600 transition-colors'>
-                      Add plan
+                      {t('PLANS.ADD_PLAN')}
                     </span>
                   </A>
                 }
@@ -117,7 +121,7 @@ const Project: Component<LayoutProps> = (props) => {
                   class='text-brand-blue flex w-full items-center justify-end'
                 >
                   <IconPlus class='h-4 w-4' />
-                  <span>Add plan</span>
+                  <span>{t('PLANS.ADD_PLAN')}</span>
                 </A>
 
                 <For each={plans.data}>
@@ -138,9 +142,11 @@ const Project: Component<LayoutProps> = (props) => {
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value='trips'>
-            <AccordionTrigger>Trips ({trips.data?.length})</AccordionTrigger>
+            <AccordionTrigger>
+              {t('TRIPS.TITLE')} ({trips.data?.length})
+            </AccordionTrigger>
             <AccordionContent class='flex flex-col space-y-2 p-2'>
-              <Suspense fallback={<div class=''>Loading...</div>}>
+              <Suspense fallback={<div class=''>{t('FEEDBACK.LOADING')}</div>}>
                 <For each={trips.data}>
                   {(trip) => (
                     <A href={`/projects/${params.id}/trip/${trip.id}`}>
@@ -160,11 +166,11 @@ const Project: Component<LayoutProps> = (props) => {
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value='railings'>
-            <AccordionTrigger>Railings</AccordionTrigger>
+            <AccordionTrigger>{t('RAILINGS.TITLE')}</AccordionTrigger>
             <AccordionContent class='flex flex-col space-y-2 p-2'></AccordionContent>
           </AccordionItem>
           <AccordionItem value='deviations'>
-            <AccordionTrigger>Deviations</AccordionTrigger>
+            <AccordionTrigger>{t('DEVIATIONS.TITLE')}</AccordionTrigger>
             <AccordionContent class='flex flex-col space-y-2 p-2'></AccordionContent>
           </AccordionItem>
         </Accordion>
@@ -186,7 +192,7 @@ const Project: Component<LayoutProps> = (props) => {
           disabled={planId() === undefined}
           onClick={() => setShowNewTripDialog(true)}
         >
-          New trip
+          {t('TRIPS.NEW_TRIP')}
         </Button>
         {/* )} */}
       </div>

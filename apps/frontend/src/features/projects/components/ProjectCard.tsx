@@ -8,6 +8,7 @@ import {
   IconAlertCircleFilled,
   IconMessage,
 } from '@tabler/icons-solidjs';
+import { useTranslations } from '@/features/i18n';
 
 export interface ProjectCardProps {
   id?: string;
@@ -35,6 +36,8 @@ const ProjectCard: Component<ProjectCardProps> = ({
   noteAmount,
   progress,
 }) => {
+  const { t } = useTranslations();
+
   return (
     <div class='overflow-hidden truncate rounded-lg border hover:cursor-pointer hover:bg-gray-100'>
       <div class='p-2'>
@@ -65,11 +68,15 @@ const ProjectCard: Component<ProjectCardProps> = ({
               <IconCircleCheckFilled size={20} />
             </div>
             <div class='text-warning-500 flex flex-row-reverse items-center gap-1'>
-              <p>{deviationAmount} 3 deviations</p>
+              <p>
+                {deviationAmount} 3 {t('DEVIATIONS.TITLE')}
+              </p>
               <IconAlertCircleFilled size={20} />
             </div>
             <div class='flex flex-row-reverse items-center gap-1'>
-              <p>{noteAmount} 5 notes</p>
+              <p>
+                {noteAmount} 5 {t('NOTES.TITLE')}
+              </p>
               <IconMessage size={20} />
             </div>
           </div>

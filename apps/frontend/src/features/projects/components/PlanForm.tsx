@@ -2,6 +2,7 @@ import DatePicker from '@/components/temporal/DatePicker';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useTranslations } from '@/features/i18n';
 import { useVehiclesQuery } from '@/features/vehicles/api';
 import VehicleSelect from '@/features/vehicles/components/VehicleSelect';
 import {
@@ -31,6 +32,7 @@ const PlanForm: Component<{
     validate: zodForm(ProjectPlanSchema),
   });
 
+  const { t } = useTranslations();
   const vehicles = useVehiclesQuery();
 
   const handleSubmit: SubmitHandler<ProjectPlanForm> = async (values) => {
@@ -45,7 +47,7 @@ const PlanForm: Component<{
     >
       <div class='flex justify-between gap-2'>
         <div class='flex-1'>
-          <Label for='startsAt'>Start date</Label>
+          <Label for='startsAt'>{t('GENERAL.START_DATE')}</Label>
           <Field name='startsAt' type='string'>
             {(field) => (
               <DatePicker
@@ -60,7 +62,7 @@ const PlanForm: Component<{
         </div>
 
         <div class='flex-1'>
-          <Label for='endsAt'>End date</Label>
+          <Label for='endsAt'>{t('GENERAL.END_DATE')}</Label>
           <Field name='endsAt' type='string'>
             {(field) => (
               <DatePicker
@@ -76,17 +78,17 @@ const PlanForm: Component<{
       </div>
 
       <Label for='vehicle' class='mt-2'>
-        Vehicle
+        {t('VEHICLES.VEHICLE')}
       </Label>
 
       <VehicleSelect
         vehicles={vehicles.data ?? []}
         onChange={(v) => setValue(form, 'vehicleId', v?.id ?? undefined)}
-        emptyText='No vehicle selected.'
+        emptyText={t('VEHICLES.NO_VEHICLE_SELECTED')}
       />
 
       <Label for='importUrl' class='mt-2'>
-        Import railings
+        {t('RAILINGS.RAILING_IMPORT_URL')}
       </Label>
 
       <Field name='importUrl'>
@@ -95,14 +97,14 @@ const PlanForm: Component<{
             {...props}
             type='url'
             id='importUrl'
-            placeholder='URL'
+            placeholder={t('GENERAL.URL')}
             value={field.value}
           />
         )}
       </Field>
 
       <Button class='mt-2 grow' type='submit'>
-        Import and save
+        {t('GENERAL.IMPORT_AND_SAVE')}
       </Button>
     </Form>
   );

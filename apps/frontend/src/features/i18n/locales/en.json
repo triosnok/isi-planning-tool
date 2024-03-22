@@ -19,22 +19,35 @@
   },
   "GENERAL": {
     "SAVE": "Save",
+    "IMPORT_AND_SAVE": "Import and save",
     "START_DATE": "Start date",
     "END_DATE": "End date",
     "STATUSES": {
       "ONGOING": "Ongoing",
       "UPCOMING": "Upcoming",
-      "PREVIOUS": "Previous"
-    }
+      "PREVIOUS": "Previous",
+      "AVAILABLE": "Available"
+    },
+    "URL": "URL",
+    "NO_IMAGE": "No image"
+  },
+  "HOME": {
+    "TITLE": "Home"
   },
   "NAVIGATION": {
     "BACK": "Back",
     "SEARCH": "Search..."
   },
+  "NOTES": {
+    "TITLE": "Notes",
+    "NOTE": "Note",
+    "ADD_NOTE": "Add note"
+  },
   "PLANS": {
     "TITLE": "Plans",
     "PLAN": "Plan",
     "ADD_PLAN": "Add plan",
+    "NEW_PROJECT_PLAN": "New project plan",
     "FORM": {
       "IMPORT_RAILINGS": "Import railings"
     }
@@ -50,7 +63,8 @@
   },
   "RAILINGS": {
     "TITLE": "Railings",
-    "RAILING": "Railing"
+    "RAILING": "Railing",
+    "RAILING_IMPORT_URL": "Railing import URL"
   },
   "TRIPS": {
     "TITLE": "Trips",
@@ -58,6 +72,7 @@
     "NEW_TRIP": "New trip",
     "START_TRIP": "Start trip",
     "END_TRIP": "End trip",
+    "ONGOING_TRIPS": "Ongoing trips",
     "TRIP_INDICATORS": {
       "STORAGE_LEFT": "Storage left",
       "GPS": "GPS",
@@ -73,6 +88,8 @@
     "TITLE": "Vehicles",
     "VEHICLE": "Vehicle",
     "ADD_VEHICLE": "Add vehicle",
+    "NO_VEHICLE_SELECTED": "No vehicle selected.",
+    "VIEW_DETAILS": "View details",
     "FORM": {
       "REGISTRATION_NUMBER": "Registration number",
       "MODEL": "Model",

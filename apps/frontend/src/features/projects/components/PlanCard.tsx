@@ -1,3 +1,4 @@
+import { useTranslations } from '@/features/i18n';
 import { cn } from '@/lib/utils';
 import { IconCar, IconPencil, IconPoint } from '@tabler/icons-solidjs';
 import { Component } from 'solid-js';
@@ -15,6 +16,8 @@ export interface PlanCardProps {
 }
 
 const PlanCard: Component<PlanCardProps> = (props) => {
+  const { t } = useTranslations();
+
   return (
     <div
       onClick={props.onToggle}
@@ -41,7 +44,7 @@ const PlanCard: Component<PlanCardProps> = (props) => {
                 'text-success-700 text-xs'
               )}
             >
-              {props.ongoingTripAmount} ongoing trips
+              {props.ongoingTripAmount} {t('TRIPS.ONGOING_TRIPS')}
             </p>
             <h3 class='text-xl font-semibold'>
               {props.startsAt} - {props.endsAt}
@@ -56,7 +59,9 @@ const PlanCard: Component<PlanCardProps> = (props) => {
         <div class='flex flex-col items-end'>
           <IconPencil class='h-5 w-5' />
 
-          <p>{props.railingAmount} railings</p>
+          <p>
+            {props.railingAmount} {t('RAILINGS.TITLE')}
+          </p>
           <p>{props.length} m</p>
         </div>
       </div>

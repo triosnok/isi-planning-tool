@@ -21,10 +21,12 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { Switch } from '../ui/switch';
+import { useTranslations } from '@/features/i18n';
 
 const Header: Component = () => {
   const theme = useTheme();
   const signOut = useSignOutMutation();
+  const { t } = useTranslations();
 
   const handleSignOut = async () => {
     try {
@@ -36,7 +38,7 @@ const Header: Component = () => {
 
   return (
     <header class='bg-brand-blue flex items-center justify-between gap-4 px-4 py-2'>
-      <nav class='text-gray-50 flex flex-1 items-center justify-between'>
+      <nav class='flex flex-1 items-center justify-between text-gray-50'>
         <div class='flex flex-row items-center gap-4'>
           <A href='/' class='flex items-center gap-4 focus:outline-none'>
             <Logo variant='white' class='h-8' />
@@ -49,22 +51,22 @@ const Header: Component = () => {
           <ul class='hidden flex-row gap-4 md:flex'>
             <li>
               <A href='/' class='hover:underline'>
-                Home
+                {t('HOME.TITLE')}
               </A>
             </li>
             <li>
               <A href='/projects' class='hover:underline'>
-                Projects
+                {t('PROJECTS.TITLE')}
               </A>
             </li>
             <li>
               <A href='/' class='hover:underline'>
-                Users
+                {t('USERS.TITLE')}
               </A>
             </li>
             <li>
               <A href='/vehicles' class='hover:underline'>
-                Vehicles
+                {t('VEHICLES.TITLE')}
               </A>
             </li>
           </ul>
@@ -82,7 +84,7 @@ const Header: Component = () => {
 
         <input
           class='h-8 flex-1 bg-transparent px-2 focus:outline-none'
-          placeholder='Search...'
+          placeholder={t('NAVIGATION.SEARCH')}
         />
       </label>
 
@@ -99,16 +101,16 @@ const Header: Component = () => {
           <DropdownMenuContent>
             <DropdownMenuGroup class='md:hidden'>
               <DropdownMenuItem>
-                <A href='/'>Home</A>
+                <A href='/'>{t('HOME.TITLE')}</A>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <A href='/projects'>Projects</A>
+                <A href='/projects'>{t('PROJECTS.TITLE')}</A>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <A href='/'>Users</A>
+                <A href='/'>{t('USERS.TITLE')}</A>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <A href='/vehicles'>Vehicles</A>
+                <A href='/vehicles'>{t('VEHICLES.TITLE')}</A>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
             </DropdownMenuGroup>
@@ -132,7 +134,7 @@ const Header: Component = () => {
                 class='flex items-center gap-1'
               >
                 <IconLogout class='h-5 w-5' />
-                <span>Sign out</span>
+                <span>{t('AUTHENTICATION.SIGN_OUT')}</span>
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>

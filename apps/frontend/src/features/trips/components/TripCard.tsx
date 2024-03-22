@@ -1,3 +1,4 @@
+import { useTranslations } from '@/features/i18n';
 import {
   IconAlertCircleFilled,
   IconMessage,
@@ -32,11 +33,14 @@ const tripCardVariants = cva('relative overflow-hidden rounded-lg border p-2', {
 const TripCard: Component<TripCardProps> = (props) => {
   const validEndDate = dayjs(props.endedAt).isValid();
   const tripStatus = validEndDate ? 'inactive' : 'active';
+  const { t } = useTranslations();
 
   return (
     <div class={tripCardVariants({ status: tripStatus })}>
       <div class='flex flex-row items-center gap-2'>
-        <p class='text-base font-semibold'>Trip {props.sequenceNumber}</p>
+        <p class='text-base font-semibold'>
+          {t('TRIPS.TRIP')} {props.sequenceNumber}
+        </p>
         <p class='text-sm text-gray-500'>{props.startedAt}</p>
       </div>
 
@@ -56,13 +60,17 @@ const TripCard: Component<TripCardProps> = (props) => {
         {validEndDate && (
           <div class='flex flex-row gap-1'>
             <IconAlertCircleFilled size={20} class='text-warning-500' />
-            <p class='text-warning-500'>{props.deviations} deviations</p>
+            <p class='text-warning-500'>
+              {props.deviations} {t('DEVIATIONS.TITLE')}
+            </p>
           </div>
         )}
 
         <div class='flex flex-row justify-end gap-1'>
           <IconMessage size={20} />
-          <p>{props.notes} notes</p>
+          <p>
+            {props.notes} {t('NOTES.TITLE')}
+          </p>
         </div>
       </div>
     </div>

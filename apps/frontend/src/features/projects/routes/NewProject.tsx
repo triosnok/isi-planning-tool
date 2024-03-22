@@ -14,6 +14,7 @@ import { z } from 'zod';
 import { useProjectsMutation } from '../api';
 import DatePicker from '@/components/temporal/DatePicker';
 import dayjs from 'dayjs';
+import { useTranslations } from '@/features/i18n';
 
 const ProjectSchema = z.object({
   name: z.string(),
@@ -25,6 +26,7 @@ const ProjectSchema = z.object({
 type ProjectForm = z.infer<typeof ProjectSchema>;
 
 const NewProject: Component = () => {
+  const { t } = useTranslations();
   const [form, { Form, Field }] = createForm({
     validate: zodForm(ProjectSchema),
   });
@@ -53,13 +55,13 @@ const NewProject: Component = () => {
               class='flex items-center text-sm text-gray-600 hover:underline'
             >
               <IconChevronLeft size={16} />
-              <p class='flex-none'>Back</p>
+              <p class='flex-none'>{t('NAVIGATION.BACK')}</p>
             </A>
           </div>
         </div>
         <div>
-          <h1 class='text-4xl font-bold'>New project</h1>
-          <Label for='name'>Name</Label>
+          <h1 class='text-4xl font-bold'>{t('PROJECTS.NEW_PROJECT')}</h1>
+          <Label for='name'>{t('PROJECTS.FORM.PROJECT_NAME')}</Label>
           <Field name='name'>
             {(field, props) => (
               <Input
@@ -71,7 +73,9 @@ const NewProject: Component = () => {
               />
             )}
           </Field>
-          <Label for='referenceCode'>Project reference</Label>
+          <Label for='referenceCode'>
+            {t('PROJECTS.FORM.PROJECT_REFERENCE')}
+          </Label>
           <Field name='referenceCode'>
             {(field, props) => (
               <Input
@@ -85,7 +89,7 @@ const NewProject: Component = () => {
           </Field>
           <div class='flex justify-between gap-2'>
             <div>
-              <Label for='startsAt'>Start date</Label>
+              <Label for='startsAt'>{t('GENERAL.START_DATE')}</Label>
               <Field name='startsAt' type='string'>
                 {(field) => (
                   <DatePicker
@@ -98,7 +102,7 @@ const NewProject: Component = () => {
               </Field>
             </div>
             <div>
-              <Label for='endsAt'>End date</Label>
+              <Label for='endsAt'>{t('GENERAL.END_DATE')}</Label>
               <Field name='endsAt'>
                 {(field) => (
                   <DatePicker
@@ -115,7 +119,7 @@ const NewProject: Component = () => {
         </div>
       </div>
 
-      <Button type='submit'>Save</Button>
+      <Button type='submit'>{t('GENERAL.SAVE')}</Button>
     </Form>
   );
 };

@@ -2,11 +2,13 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useNavigate, useParams } from '@solidjs/router';
 import PlanForm, { ProjectPlanForm } from '../components/PlanForm';
 import { useProjectPlansMutation } from '../api';
+import { useTranslations } from '@/features/i18n';
 
 const NewProjectPlan = () => {
   const navigate = useNavigate();
   const params = useParams();
   const { create } = useProjectPlansMutation(params.id);
+  const { t } = useTranslations();
 
   const handleClose = (open: boolean) => {
     if (!open) {
@@ -26,7 +28,7 @@ const NewProjectPlan = () => {
   return (
     <Dialog open onOpenChange={handleClose}>
       <DialogContent>
-        <DialogTitle>New project plan</DialogTitle>
+        <DialogTitle>{t('PLANS.NEW_PROJECT_PLAN')}</DialogTitle>
         <PlanForm onSubmit={handleSubmit} />
       </DialogContent>
     </Dialog>
