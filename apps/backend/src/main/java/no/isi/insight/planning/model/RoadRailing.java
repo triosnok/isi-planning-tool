@@ -30,6 +30,9 @@ public class RoadRailing {
   @Column(name = "length")
   private Double length;
 
+  @Column(name = "own_geometry")
+  private boolean ownGeometry;
+
   public RoadRailing(
       Long id,
       LineString geometry,

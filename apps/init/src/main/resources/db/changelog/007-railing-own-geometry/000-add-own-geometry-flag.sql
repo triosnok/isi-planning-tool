@@ -1,0 +1,1 @@
+ALTER TABLE road_railing ADD COLUMN own_geometry BOOLEAN DEFAULT FALSE;

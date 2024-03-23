@@ -14,5 +14,21 @@ public enum RoadSide {
   LEFT_ACCESS,
   RIGHT_ACCESS,
   ROUNDABOUT_CENTRE,
-  LONGITUDINAL
+  LONGITUDINAL;
+
+  /**
+   * Returns the opposite side of the road, for sides where a direct opposite exists. Otherwise
+   * returns the same side.
+   * 
+   * @return the opposite side of the road
+   */
+  public RoadSide opposite() {
+    return switch (this) {
+      case LEFT -> RIGHT;
+      case RIGHT -> LEFT;
+      case MIDDLE_LEFT -> MIDDLE_RIGHT;
+      case MIDDLE_RIGHT -> MIDDLE_LEFT;
+      default -> this;
+    };
+  }
 }

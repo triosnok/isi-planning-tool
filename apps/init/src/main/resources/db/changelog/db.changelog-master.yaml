@@ -54,3 +54,10 @@ databaseChangeLog:
         - sqlFile:
             path: 006-road-segment/001-spatial-indexes.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: 007-railing-own-geometry
+      author: halvard
+      changes:
+        - sqlFile:
+            path: 007-railing-own-geometry/000-add-own-geometry-flag.sql
+            relativeToChangelogFile: true
