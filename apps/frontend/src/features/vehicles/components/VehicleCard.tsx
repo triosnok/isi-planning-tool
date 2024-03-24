@@ -24,11 +24,16 @@ const VehicleCard: Component<VehicleCardProps> = (props) => {
   const { t } = useTranslations();
 
   return (
-    <div class={cn('overflow-hidden rounded-md border', props.class)}>
+    <div
+      class={cn(
+        'overflow-hidden rounded-md border dark:border-gray-800',
+        props.class
+      )}
+    >
       <Show
         when={props.imageUrl}
         fallback={
-          <div class='flex h-24 flex-col items-center justify-center bg-gray-200 text-gray-500'>
+          <div class='flex h-24 flex-col items-center justify-center bg-gray-200 text-gray-500 dark:bg-gray-800 dark:text-gray-400'>
             <IconPhotoX class='h-7 w-7' />
             <span class='text-xs uppercase'>{t('GENERAL.NO_IMAGE')}</span>
           </div>
@@ -79,7 +84,7 @@ interface VehicleDetailProps {
 
 const VehicleDetail: Component<VehicleDetailProps> = (props) => {
   return (
-    <p class='flex items-center gap-1 text-sm text-gray-800'>
+    <p class='flex items-center gap-1 text-sm text-gray-800 dark:text-gray-300'>
       <props.icon class='h-5 w-5 text-gray-500' />
       <span class='truncate'>{props.text}</span>
     </p>

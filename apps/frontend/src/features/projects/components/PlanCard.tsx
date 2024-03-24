@@ -22,9 +22,9 @@ const PlanCard: Component<PlanCardProps> = (props) => {
     <div
       onClick={props.onToggle}
       class={cn(
-        'select-none overflow-hidden rounded-lg border transition-colors hover:cursor-pointer hover:bg-gray-100',
+        'select-none overflow-hidden rounded-lg border transition-colors hover:cursor-pointer hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-gray-900',
         props.selected &&
-          'border-brand-blue-500 bg-brand-blue-50/40 hover:bg-brand-blue-50/80'
+          'border-brand-blue-500 dark:border-brand-blue-600 bg-brand-blue-50/40 dark:bg-brand-blue-950/60 hover:bg-brand-blue-50/80 dark:hover:bg-brand-blue-950/80'
       )}
     >
       <div class='flex justify-between p-2'>
@@ -49,7 +49,7 @@ const PlanCard: Component<PlanCardProps> = (props) => {
             <h3 class='text-xl font-semibold'>
               {props.startsAt} - {props.endsAt}
             </h3>
-            <div class='flex items-center gap-1 text-gray-800'>
+            <div class='flex items-center gap-1 text-gray-800 dark:text-gray-300'>
               <IconCar class='h-5 w-5' />
               <p>{props.car}</p>
             </div>

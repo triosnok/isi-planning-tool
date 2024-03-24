@@ -13,7 +13,7 @@ const Progress: Component<ProgressPrimitive.ProgressRootProps> = (props) => {
       {props.children}
       <ProgressPrimitive.Track
         class={cn(
-          'relative h-4 w-full overflow-hidden bg-gray-200',
+          'relative h-4 w-full overflow-hidden bg-gray-200 dark:bg-gray-800',
           props.class
         )}
       >

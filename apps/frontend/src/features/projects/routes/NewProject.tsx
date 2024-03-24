@@ -15,6 +15,7 @@ import { useProjectsMutation } from '../api';
 import DatePicker from '@/components/temporal/DatePicker';
 import dayjs from 'dayjs';
 import { useTranslations } from '@/features/i18n';
+import BackLink from '@/components/navigation/BackLink';
 
 const ProjectSchema = z.object({
   name: z.string(),
@@ -49,15 +50,7 @@ const NewProject: Component = () => {
     >
       <div>
         <div class='flex flex-col'>
-          <div class='flex'>
-            <A
-              href='/projects'
-              class='flex items-center text-sm text-gray-600 hover:underline'
-            >
-              <IconChevronLeft size={16} />
-              <p class='flex-none'>{t('NAVIGATION.BACK')}</p>
-            </A>
-          </div>
+          <BackLink />
         </div>
         <div>
           <h1 class='text-4xl font-bold'>{t('PROJECTS.NEW_PROJECT')}</h1>

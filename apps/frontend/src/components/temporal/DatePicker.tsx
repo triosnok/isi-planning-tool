@@ -109,7 +109,7 @@ const DatePicker: Component<DatePickerProps> = (props) => {
                 <div class='flex items-center justify-between'>
                   <button
                     onClick={previous}
-                    class='rounded-md p-1 focus:bg-gray-200 focus:outline-none dark:focus:bg-gray-800'
+                    class='rounded-md p-1 focus:bg-gray-200 focus:outline-none dark:focus:bg-gray-900'
                   >
                     <IconChevronLeft />
                   </button>
@@ -118,7 +118,7 @@ const DatePicker: Component<DatePickerProps> = (props) => {
 
                   <button
                     onClick={next}
-                    class='rounded-md p-1 focus:bg-gray-200 focus:outline-none dark:focus:bg-gray-800'
+                    class='rounded-md p-1 focus:bg-gray-200 focus:outline-none dark:focus:bg-gray-900'
                   >
                     <IconChevronRight />
                   </button>
@@ -145,10 +145,10 @@ const DatePicker: Component<DatePickerProps> = (props) => {
                           class={cn(
                             'ring-brand-blue m-0.5 flex aspect-square w-8 items-center justify-center rounded-md ring-offset-2 focus:outline-none focus:ring-2',
                             'ring-offset-gray-50 hover:bg-gray-200',
-                            'dark:focus dark:ring-offset-gray-900 dark:hover:bg-gray-800',
+                            'dark:focus dark:ring-offset-gray-950 dark:hover:bg-gray-900',
                             day.isSame(reference(), 'month')
                               ? ''
-                              : 'text-gray-400',
+                              : 'text-gray-500',
                             selectedDate()?.isSame(day, 'day') &&
                               'bg-brand-blue focus:bg-brand-blue hover:bg-brand-blue dark:hover:bg-brand-blue text-gray-50'
                           )}

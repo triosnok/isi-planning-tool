@@ -74,7 +74,7 @@ const EmptyState: Component = () => {
 
   return (
     <div class='relative flex h-20 flex-col justify-center rounded-md border px-3 py-2'>
-      <p class='text-sm text-gray-500'>
+      <p class='text-sm text-gray-500 dark:text-gray-400'>
         {t('VEHICLES.NO_VEHICLES_REGISTERED')}
       </p>
       <A

@@ -17,7 +17,8 @@ const SelectTrigger: Component<SelectPrimitive.SelectTriggerProps> = (
   return (
     <SelectPrimitive.Trigger
       class={cn(
-        'border-gray-200 ring-offset-gray-50 placeholder:text-gray-500 focus:ring-gray-900 flex h-10 w-full items-center justify-between rounded-md border bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+        'flex h-10 w-full items-center justify-between rounded-md border border-gray-200 bg-transparent px-3 py-2 text-sm ring-offset-gray-50 placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-900 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+        'dark:border-gray-400 dark:focus-visible:ring-gray-400 dark:ring-offset-gray-400',
         props.class
       )}
       {...rest}
@@ -38,7 +39,7 @@ const SelectContent: Component<SelectPrimitive.SelectContentProps> = (
     <SelectPrimitive.Portal>
       <SelectPrimitive.Content
         class={cn(
-          'bg-gray-50 text-gray-950 animate-in fade-in-80 relative z-50 min-w-[8rem] overflow-hidden rounded-md border shadow-md',
+          'animate-in fade-in-80 relative z-50 min-w-[8rem] overflow-hidden rounded-md border bg-gray-50 shadow-md dark:border-gray-800 dark:bg-gray-950',
           props.class
         )}
         {...rest}
@@ -54,7 +55,8 @@ const SelectItem: Component<SelectPrimitive.SelectItemProps> = (props) => {
   return (
     <SelectPrimitive.Item
       class={cn(
-        'focus:bg-gray-200 relative mt-0 flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+        'relative mt-0 flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-gray-200 data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+        'dark:focus:bg-gray-900',
         props.class
       )}
       {...rest}
@@ -64,7 +66,9 @@ const SelectItem: Component<SelectPrimitive.SelectItemProps> = (props) => {
           <TbCheck class='size-4' />
         </SelectPrimitive.ItemIndicator>
       </span>
-      <SelectPrimitive.ItemLabel class='flex-1'>{props.children}</SelectPrimitive.ItemLabel>
+      <SelectPrimitive.ItemLabel class='flex-1'>
+        {props.children}
+      </SelectPrimitive.ItemLabel>
     </SelectPrimitive.Item>
   );
 };

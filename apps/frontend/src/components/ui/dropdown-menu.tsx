@@ -82,7 +82,10 @@ const DropdownMenuSeparator: Component<
   const [, rest] = splitProps(props, ['class']);
   return (
     <DropdownMenuPrimitive.Separator
-      class={cn('-mx-1 my-1 h-px bg-gray-100 dark:bg-gray-900', props.class)}
+      class={cn(
+        '-mx-1 my-1 h-px bg-gray-100 dark:border-gray-800 dark:bg-gray-900',
+        props.class
+      )}
       {...rest}
     />
   );

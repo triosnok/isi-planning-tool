@@ -8,6 +8,7 @@ import {
   useVehicleMutation,
 } from '../api';
 import VehicleForm from '../components/VehicleForm';
+import BackLink from '@/components/navigation/BackLink';
 
 const VehicleDetails: Component = () => {
   const r = useParams();
@@ -30,14 +31,8 @@ const VehicleDetails: Component = () => {
       <Header />
 
       <div class='flex flex-1'>
-        <main class='flex-1 px-6 py-4'>
-          <A
-            href='..'
-            class='-mb-2 -mt-3 flex w-fit items-center gap-0.5 focus:outline-none'
-          >
-            <IconChevronLeft class='h-4 w-4' />
-            <span class='text-sm font-medium'>Vehicles</span>
-          </A>
+        <main class='flex-1 px-6 pb-4 pt-2'>
+          <BackLink />
 
           <h1 class='flex items-center gap-1 text-4xl font-bold'>
             {vehicle.data?.model}
