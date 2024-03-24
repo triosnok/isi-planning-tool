@@ -12,6 +12,8 @@ module.exports = {
       },
     },
     colors: (utils) => ({
+      black: utils.colors.black,
+      white: utils.colors.white,
       gray: utils.colors.zinc,
       success: utils.colors.emerald,
       warning: utils.colors.yellow,
