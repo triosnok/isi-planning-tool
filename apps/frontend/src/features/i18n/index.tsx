@@ -34,6 +34,7 @@ export interface I18nContextValue {
   locale: Accessor<Locale>;
   setLocale: (locale: Locale) => void;
   dict: Resource<Dictionary>;
+  numberFormats: Accessor<Record<NumberType, Intl.NumberFormat>>;
 }
 
 const I18nContext = createContext<I18nContextValue>();
@@ -42,8 +43,21 @@ export const I18nProvider: Component<{ children: JSX.Element }> = (props) => {
   const [locale, setLocale] = createSignal<Locale>('en');
   const [dict] = createResource(locale, fetchDictionary);
 
+  const numberFormats = createMemo(() => {
+    return {
+      [NumberType.INTEGER]: new Intl.NumberFormat(locale(), {
+        style: 'decimal',
+        maximumFractionDigits: 0,
+      }),
+      [NumberType.DECIMAL]: new Intl.NumberFormat(locale(), {
+        style: 'decimal',
+        maximumFractionDigits: 2,
+      }),
+    };
+  });
+
   return (
-    <I18nContext.Provider value={{ locale, setLocale, dict }}>
+    <I18nContext.Provider value={{ locale, setLocale, dict, numberFormats }}>
       {props.children}
     </I18nContext.Provider>
   );
@@ -64,6 +78,11 @@ const useI18n = () => {
   return ctx;
 };
 
+export enum NumberType {
+  INTEGER = 'integer',
+  DECIMAL = 'decimal',
+}
+
 /**
  * Hook for retrieving translation functions for the current locale.
  *
@@ -73,5 +92,18 @@ export const useTranslations = () => {
   const ctx = useI18n();
   const t = i18n.translator(ctx.dict);
 
-  return { locale: ctx.locale, setLocale: ctx.setLocale, t };
+  /**
+   * Formats a number according to the current locale.
+   *
+   * @param value the number value to format
+   * @param type the type of number to format, defaults to DECIMAL
+   *
+   * @returns the formatted number
+   */
+  const n = (value: number, type?: NumberType) => {
+    const numberType = type ?? NumberType.DECIMAL;
+    return ctx.numberFormats()[numberType].format(value);
+  };
+
+  return { locale: ctx.locale, setLocale: ctx.setLocale, t, n };
 };
