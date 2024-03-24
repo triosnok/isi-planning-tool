@@ -92,12 +92,12 @@ public class VehicleJdbcRepository {
     params.addValue("available_from_date", null, Types.DATE);
     params.addValue("available_to_date", null, Types.DATE);
 
-    var resultStream = this.jdbcTemplate.query(FIND_VEHICLE_QUERY, params, VEHICLE_DETAILS_ROW_MAPPER).stream();
+    var results = this.jdbcTemplate.query(FIND_VEHICLE_QUERY, params, VEHICLE_DETAILS_ROW_MAPPER);
 
-    if (resultStream.count() > 1) {
+    if (results.size() > 1) {
       throw new IllegalStateException("Multiple vehicles found for id: " + id);
     }
 
-    return resultStream.findFirst();
+    return results.stream().findFirst();
   }
 }
