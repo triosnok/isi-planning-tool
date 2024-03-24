@@ -21,7 +21,7 @@
 
 @layer base {
   * {
-    @apply border-gray-200;
+    @apply border-gray-200 dark:border-gray-400;
   }
 
   body {
@@ -34,6 +34,18 @@
 
   .insight-map-tile-layer {
     @apply dark:brightness-95 dark:contrast-75 dark:hue-rotate-180 dark:invert;
+  }
+
+  ::-webkit-scrollbar {
+    @apply h-1.5 w-1.5;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-gray-400 hover:bg-gray-500 dark:bg-gray-800 dark:hover:bg-gray-700;
   }
 }
 
