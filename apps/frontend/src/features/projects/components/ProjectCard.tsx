@@ -1,87 +1,81 @@
-import { Component } from 'solid-js';
-import { Progress } from '../../../components/ui/progress';
+import { useTranslations } from '@/features/i18n';
+import { ProjectStatus } from '@isi-insight/client';
 import {
-  IconRoute,
-  IconRulerMeasure,
+  IconAlertCircleFilled,
   IconCalendarClock,
   IconCircleCheckFilled,
-  IconAlertCircleFilled,
   IconMessage,
+  IconRulerMeasure,
 } from '@tabler/icons-solidjs';
-import { useTranslations } from '@/features/i18n';
+import { Component, Show } from 'solid-js';
+import { Progress } from '@/components/ui/progress';
 
 export interface ProjectCardProps {
-  id?: string;
-  name?: string;
-  referenceCode?: string;
-  startsAt?: string;
-  endsAt?: string;
-  geoCharacteristics?: string;
-  coverage?: string;
-  status?: string;
-  deviationAmount?: number;
-  noteAmount?: number;
-  progress?: number;
+  name: string;
+  referenceCode: string;
+  startsAt: string;
+  endsAt: string;
+  status: ProjectStatus;
+  capturedLength: number;
+  totalLength: number;
+  deviations: number;
+  notes: number;
 }
 
-const ProjectCard: Component<ProjectCardProps> = ({
-  name,
-  referenceCode,
-  startsAt,
-  endsAt,
-  geoCharacteristics,
-  coverage,
-  status,
-  deviationAmount,
-  noteAmount,
-  progress,
-}) => {
-  const { t } = useTranslations();
+const ProjectCard: Component<ProjectCardProps> = (props) => {
+  const { t, n } = useTranslations();
+  const progress =
+    props.totalLength === 0
+      ? 0
+      : (props.capturedLength / props.totalLength) * 100;
 
   return (
     <div class='overflow-hidden truncate rounded-lg border hover:cursor-pointer hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-gray-900'>
-      <div class='p-2'>
-        <div class='flex justify-between'>
-          <div>
-            <h3 class='text-base font-semibold'>
-              {name} - {referenceCode}
-            </h3>
-            {/* <div class='flex items-center gap-1'>
-              <IconRoute size={20} />
-              <p>{geoCharacteristics}</p>
-            </div> */}
-            <div class='flex items-center gap-1'>
-              <IconRulerMeasure size={20} />
-              <p>{'2 000 / 10 000 m'}</p>
-              {/* <p>{coverage}</p> */}
-            </div>
-            <div class='flex items-center gap-1'>
-              <IconCalendarClock size={20} />
-              <p>
-                {startsAt} - {endsAt}
-              </p>
-            </div>
+      <div class='flex justify-between p-2'>
+        <div>
+          <h3 class='text-base font-semibold'>
+            {props.name} - {props.referenceCode}
+          </h3>
+          <div class='flex items-center gap-1'>
+            <IconRulerMeasure class='size-5' />
+            <p>
+              {n(props.capturedLength)} / {n(props.totalLength)} m
+            </p>
           </div>
-          <div class='text-right'>
-            <div class='text-success-500 flex flex-row-reverse items-center gap-1'>
-              <p>{status}</p>
-              <IconCircleCheckFilled size={20} />
-            </div>
-            <div class='text-warning-500 flex flex-row-reverse items-center gap-1'>
-              <p>
-                {deviationAmount} 3 {t('DEVIATIONS.TITLE')}
-              </p>
-              <IconAlertCircleFilled size={20} />
-            </div>
-            <div class='flex flex-row-reverse items-center gap-1'>
-              <p>
-                {noteAmount} 5 {t('NOTES.TITLE')}
-              </p>
-              <IconMessage size={20} />
-            </div>
+          <div class='flex items-center gap-1'>
+            <IconCalendarClock class='size-5' />
+            <p>
+              {props.startsAt} - {props.endsAt}
+            </p>
           </div>
         </div>
+
+        <div>
+          <div class='text-success-500 flex flex-row-reverse items-center gap-1'>
+            <p>{t(`PROJECTS.STATUS.${props.status}`)}</p>
+            <IconCircleCheckFilled class='size-5' />
+          </div>
+
+          <Show when={props.deviations !== 0}>
+            <div class='text-warning-500 flex flex-row-reverse items-center gap-1'>
+              <p>
+                {props.deviations} {t('DEVIATIONS.TITLE')?.toLowerCase()}
+              </p>
+              <IconAlertCircleFilled class='size-5' />
+            </div>
+          </Show>
+
+          <Show when={props.notes !== 0}>
+            <div class='flex flex-row-reverse items-center gap-1'>
+              <p>
+                {props.notes} {t('NOTES.TITLE')?.toLowerCase()}
+              </p>
+              <IconMessage class='size-5' />
+            </div>
+          </Show>
+        </div>
       </div>
+
       <Progress value={progress} />
     </div>
   );

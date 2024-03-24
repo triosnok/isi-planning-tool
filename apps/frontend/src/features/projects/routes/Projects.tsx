@@ -36,7 +36,7 @@ const Projects: Component = () => {
       <Accordion multiple={true} defaultValue={['ongoing', 'upcoming']}>
         <AccordionItem value='ongoing'>
           <AccordionTrigger>
-            {t('GENERAL.STATUSES.ONGOING')} ({ongoingProjects.data?.length})
+            {t('PROJECTS.STATUS.ONGOING')} ({ongoingProjects.data?.length})
           </AccordionTrigger>
           <AccordionContent class='flex flex-col space-y-2 p-2'>
             <For each={ongoingProjects.data}>
@@ -48,6 +48,10 @@ const Projects: Component = () => {
                     startsAt={dayjs(project.startsAt).format('DD MMM')}
                     endsAt={dayjs(project.endsAt).format('DD MMM')}
                     status={project.status}
+                    capturedLength={project.capturedLength}
+                    totalLength={project.totalLength}
+                    notes={project.notes}
+                    deviations={project.deviations}
                   />
                 </A>
               )}
@@ -56,7 +60,7 @@ const Projects: Component = () => {
         </AccordionItem>
         <AccordionItem value='upcoming'>
           <AccordionTrigger>
-            {t('GENERAL.STATUSES.UPCOMING')} ({upcomingProjects.data?.length})
+            {t('PROJECTS.STATUS.UPCOMING')} ({upcomingProjects.data?.length})
           </AccordionTrigger>
           <AccordionContent class='flex flex-col space-y-2 p-2'>
             <For each={upcomingProjects.data}>
@@ -68,6 +72,10 @@ const Projects: Component = () => {
                     startsAt={dayjs(project.startsAt).format('DD MMM')}
                     endsAt={dayjs(project.endsAt).format('DD MMM')}
                     status={project.status}
+                    capturedLength={project.capturedLength}
+                    totalLength={project.totalLength}
+                    notes={project.notes}
+                    deviations={project.deviations}
                   />
                 </A>
               )}
@@ -76,7 +84,7 @@ const Projects: Component = () => {
         </AccordionItem>
         <AccordionItem value='previous'>
           <AccordionTrigger>
-            {t('GENERAL.STATUSES.PREVIOUS')} ({previousProjects.data?.length})
+            {t('PROJECTS.STATUS.PREVIOUS')} ({previousProjects.data?.length})
           </AccordionTrigger>
           <AccordionContent class='flex flex-col space-y-2 p-2'>
             <For each={previousProjects.data}>
@@ -88,6 +96,10 @@ const Projects: Component = () => {
                     startsAt={dayjs(project.startsAt).format('DD MMM')}
                     endsAt={dayjs(project.endsAt).format('DD MMM')}
                     status={project.status}
+                    capturedLength={project.capturedLength}
+                    totalLength={project.totalLength}
+                    notes={project.notes}
+                    deviations={project.deviations}
                   />
                 </A>
               )}

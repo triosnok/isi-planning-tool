@@ -23,9 +23,6 @@
     "START_DATE": "Start date",
     "END_DATE": "End date",
     "STATUSES": {
-      "ONGOING": "Ongoing",
-      "UPCOMING": "Upcoming",
-      "PREVIOUS": "Previous",
       "AVAILABLE": "Available"
     },
     "URL": "URL",
@@ -59,6 +56,11 @@
     "FORM": {
       "PROJECT_NAME": "Project name",
       "PROJECT_REFERENCE": "Project reference"
+    },
+    "STATUS": {
+      "ONGOING": "Ongoing",
+      "UPCOMING": "Upcoming",
+      "PREVIOUS": "Previous"
     }
   },
   "RAILINGS": {
