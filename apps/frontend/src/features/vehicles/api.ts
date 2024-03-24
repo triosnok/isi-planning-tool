@@ -15,7 +15,7 @@ export const useVehiclesQuery = (
   return createQuery(() => ({
     queryKey: [CacheKey.VEHICLE_LIST, availableFrom, availableTo],
     queryFn: async ({ queryKey }) => {
-      const [availableFrom, availableTo] = queryKey;
+      const [_, availableFrom, availableTo] = queryKey;
 
       const params = new URLSearchParams();
 
