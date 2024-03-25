@@ -53,6 +53,7 @@
     "TITLE": "Projects",
     "PROJECT": "Project",
     "NEW_PROJECT": "New project",
+    "UPDATE_PROJECT": "Update project",
     "FORM": {
       "PROJECT_NAME": "Project name",
       "PROJECT_REFERENCE": "Project reference"

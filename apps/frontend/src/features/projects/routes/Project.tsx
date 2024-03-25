@@ -1,3 +1,4 @@
+import BackLink from '@/components/navigation/BackLink';
 import {
   Accordion,
   AccordionContent,
@@ -7,16 +8,15 @@ import {
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useProfile } from '@/features/auth/api';
+import { DateFormat, useTranslations } from '@/features/i18n';
 import TripCard from '@/features/trips/components/TripCard';
 import { LayoutProps, cn } from '@/lib/utils';
 import { A, useParams } from '@solidjs/router';
 import {
-  IconChevronLeft,
   IconCircleCheckFilled,
   IconEdit,
-  IconPlus,
+  IconPlus
 } from '@tabler/icons-solidjs';
-import dayjs from 'dayjs';
 import {
   Component,
   For,
@@ -29,8 +29,6 @@ import { useTripsDetailsQuery } from '../../trips/api';
 import NewTripDialog from '../../trips/components/NewTripDialog';
 import { useProjectDetailsQuery, useProjectPlansQuery } from '../api';
 import PlanCard from '../components/PlanCard';
-import { DateFormat, useTranslations } from '@/features/i18n';
-import BackLink from '@/components/navigation/BackLink';
 
 const Project: Component<LayoutProps> = (props) => {
   const params = useParams();
@@ -84,7 +82,7 @@ const Project: Component<LayoutProps> = (props) => {
                   <p class='text-sm'>{project.data?.status}</p>
                 </div>
               </div>
-              <A href=''>
+              <A href={`/projects/${project.data?.id}/update`}>
                 <Button>
                   <IconEdit />
                 </Button>
