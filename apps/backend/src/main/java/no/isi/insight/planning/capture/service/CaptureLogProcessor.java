@@ -20,7 +20,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import no.isi.insight.planner.client.trip.view.CameraPosition;
+import no.isi.insight.planning.client.trip.view.CameraPosition;
 import no.isi.insight.planning.capture.config.CaptureProcessingConfig;
 import no.isi.insight.planning.capture.model.CameraLogEntry;
 import no.isi.insight.planning.capture.model.PositionLogEntry;

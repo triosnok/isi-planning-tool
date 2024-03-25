@@ -8,11 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import no.isi.insight.planner.client.project.ProjectRestService;
-import no.isi.insight.planner.client.project.view.CreateProjectRequest;
-import no.isi.insight.planner.client.project.view.ProjectDetails;
-import no.isi.insight.planner.client.project.view.ProjectStatus;
-import no.isi.insight.planner.client.project.view.RoadRailing;
+import no.isi.insight.planning.client.project.ProjectRestService;
+import no.isi.insight.planning.client.project.view.CreateProjectRequest;
+import no.isi.insight.planning.client.project.view.ProjectDetails;
+import no.isi.insight.planning.client.project.view.ProjectStatus;
+import no.isi.insight.planning.client.project.view.RoadRailing;
 import no.isi.insight.planning.model.Project;
 import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.repository.ProjectJdbcRepository;

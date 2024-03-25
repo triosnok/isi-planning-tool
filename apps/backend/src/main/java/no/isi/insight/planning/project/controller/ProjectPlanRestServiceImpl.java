@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import no.isi.insight.planner.client.project.ProjectPlanRestService;
-import no.isi.insight.planner.client.project.view.CreateProjectPlanRequest;
-import no.isi.insight.planner.client.project.view.ProjectPlanDetails;
-import no.isi.insight.planner.client.project.view.UpdateProjectPlanRequest;
+import no.isi.insight.planning.client.project.ProjectPlanRestService;
+import no.isi.insight.planning.client.project.view.CreateProjectPlanRequest;
+import no.isi.insight.planning.client.project.view.ProjectPlanDetails;
+import no.isi.insight.planning.client.project.view.UpdateProjectPlanRequest;
 import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.model.ProjectPlan;
 import no.isi.insight.planning.model.Vehicle;

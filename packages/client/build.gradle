@@ -27,9 +27,9 @@ generateTypeScript {
   mapDate = 'asString'
   nullabilityDefinition = 'nullAndUndefinedInlineUnion'
   nullableAnnotations = [
-    'no.isi.insight.planner.client.annotation.Optional'
+    'no.isi.insight.planning.client.annotation.Optional'
   ]
   classesWithAnnotations = [
-    'no.isi.insight.planner.client.annotation.GenerateTypeScript'
+    'no.isi.insight.planning.client.annotation.GenerateTypeScript'
   ]
 }

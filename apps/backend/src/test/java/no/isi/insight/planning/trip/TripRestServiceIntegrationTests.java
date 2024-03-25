@@ -16,8 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.http.HttpHeaders;
 
 import lombok.RequiredArgsConstructor;
-import no.isi.insight.planner.client.trip.view.CreateTripRequest;
-import no.isi.insight.planner.client.trip.view.TripDetails;
+import no.isi.insight.planning.client.trip.view.CreateTripRequest;
+import no.isi.insight.planning.client.trip.view.TripDetails;
 import no.isi.insight.planning.annotation.IntegrationTest;
 import no.isi.insight.planning.auth.service.UserAccountService;
 import no.isi.insight.planning.model.Project;

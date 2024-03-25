@@ -1,6 +1,6 @@
 package no.isi.insight.planning.utility;
 
-import no.isi.insight.planner.client.geometry.Geometry;
+import no.isi.insight.planning.client.geometry.Geometry;
 
 public class GeometryUtils {
 

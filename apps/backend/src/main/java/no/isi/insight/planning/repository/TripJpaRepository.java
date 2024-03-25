@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 
-import no.isi.insight.planner.client.trip.view.TripDetails;
+import no.isi.insight.planning.client.trip.view.TripDetails;
 import no.isi.insight.planning.model.Trip;
 
 public interface TripJpaRepository extends Repository<Trip, UUID> {
@@ -23,7 +23,7 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
 
   // language=sql
   @Query("""
-    SELECT new no.isi.insight.planner.client.trip.view.TripDetails(
+    SELECT new no.isi.insight.planning.client.trip.view.TripDetails(
       t.id,
       d.fullName,
       t.startedAt,

@@ -11,11 +11,11 @@ import org.springframework.web.util.WebUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import no.isi.insight.planner.client.auth.AuthRestService;
-import no.isi.insight.planner.client.auth.view.SignInRequest;
-import no.isi.insight.planner.client.auth.view.SignInResponse;
-import no.isi.insight.planner.client.auth.view.UserProfile;
-import no.isi.insight.planner.client.auth.view.UserRole;
+import no.isi.insight.planning.client.auth.AuthRestService;
+import no.isi.insight.planning.client.auth.view.SignInRequest;
+import no.isi.insight.planning.client.auth.view.SignInResponse;
+import no.isi.insight.planning.client.auth.view.UserProfile;
+import no.isi.insight.planning.client.auth.view.UserRole;
 import no.isi.insight.planning.auth.TokenClaim;
 import no.isi.insight.planning.auth.TokenType;
 import no.isi.insight.planning.auth.UserAccountDetailsAdapter;

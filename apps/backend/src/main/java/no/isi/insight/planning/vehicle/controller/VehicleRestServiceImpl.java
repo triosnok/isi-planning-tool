@@ -10,10 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import no.isi.insight.planner.client.vehicle.VehicleRestService;
-import no.isi.insight.planner.client.vehicle.view.CreateVehicleRequest;
-import no.isi.insight.planner.client.vehicle.view.UpdateVehicleRequest;
-import no.isi.insight.planner.client.vehicle.view.VehicleDetails;
+import no.isi.insight.planning.client.vehicle.VehicleRestService;
+import no.isi.insight.planning.client.vehicle.view.CreateVehicleRequest;
+import no.isi.insight.planning.client.vehicle.view.UpdateVehicleRequest;
+import no.isi.insight.planning.client.vehicle.view.VehicleDetails;
 import no.isi.insight.planning.model.Vehicle;
 import no.isi.insight.planning.repository.VehicleJdbcRepository;
 import no.isi.insight.planning.repository.VehicleJpaRepository;

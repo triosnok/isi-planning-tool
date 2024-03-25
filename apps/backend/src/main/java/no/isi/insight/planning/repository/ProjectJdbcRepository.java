@@ -11,8 +11,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
-import no.isi.insight.planner.client.project.view.ProjectDetails;
-import no.isi.insight.planner.client.project.view.ProjectStatus;
+import no.isi.insight.planning.client.project.view.ProjectDetails;
+import no.isi.insight.planning.client.project.view.ProjectStatus;
 import no.isi.insight.planning.utility.JdbcUtils;
 
 @Repository

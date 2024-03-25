@@ -9,8 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import no.isi.insight.planner.client.capture.CaptureRestService;
-import no.isi.insight.planner.client.trip.view.CameraPosition;
+import no.isi.insight.planning.client.capture.CaptureRestService;
+import no.isi.insight.planning.client.trip.view.CameraPosition;
 import no.isi.insight.planning.capture.service.CaptureLogProcessor;
 import no.isi.insight.planning.repository.TripRailingCaptureJdbcRepository;
 

@@ -7,8 +7,8 @@ import org.springframework.web.client.support.RestClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 import lombok.RequiredArgsConstructor;
-import no.isi.insight.planner.client.auth.AuthRestService;
-import no.isi.insight.planner.client.capture.CaptureRestService;
+import no.isi.insight.planning.client.auth.AuthRestService;
+import no.isi.insight.planning.client.capture.CaptureRestService;
 
 @Configuration
 @RequiredArgsConstructor

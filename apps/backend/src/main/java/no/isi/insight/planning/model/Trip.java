@@ -19,7 +19,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import no.isi.insight.planner.client.trip.view.CameraPosition;
+import no.isi.insight.planning.client.trip.view.CameraPosition;
 
 @Getter
 @Setter

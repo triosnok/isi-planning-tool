@@ -11,8 +11,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
-import no.isi.insight.planner.client.geometry.Geometry;
-import no.isi.insight.planner.client.project.view.RoadRailing;
+import no.isi.insight.planning.client.geometry.Geometry;
+import no.isi.insight.planning.client.project.view.RoadRailing;
 
 @Repository
 @RequiredArgsConstructor

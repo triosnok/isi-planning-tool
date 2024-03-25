@@ -11,8 +11,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
-import no.isi.insight.planner.client.vehicle.view.CreateVehicleRequest;
-import no.isi.insight.planner.client.vehicle.view.UpdateVehicleRequest;
+import no.isi.insight.planning.client.vehicle.view.CreateVehicleRequest;
+import no.isi.insight.planning.client.vehicle.view.UpdateVehicleRequest;
 import no.isi.insight.planning.annotation.IntegrationTest;
 import no.isi.insight.planning.model.Vehicle;
 

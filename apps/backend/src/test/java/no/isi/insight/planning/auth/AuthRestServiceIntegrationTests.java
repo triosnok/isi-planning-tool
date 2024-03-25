@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
-import no.isi.insight.planner.client.auth.view.SignInRequest;
+import no.isi.insight.planning.client.auth.view.SignInRequest;
 import no.isi.insight.planning.annotation.IntegrationTest;
 import no.isi.insight.planning.auth.service.JwtService;
 import no.isi.insight.planning.auth.service.UserAccountService;

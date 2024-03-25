@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import no.isi.insight.planner.client.auth.AuthRestService;
-import no.isi.insight.planner.client.auth.view.SignInRequest;
+import no.isi.insight.planning.client.auth.AuthRestService;
+import no.isi.insight.planning.client.auth.view.SignInRequest;
 
 @Slf4j
 @Component

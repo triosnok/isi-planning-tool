@@ -6,10 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import no.isi.insight.planner.client.trip.TripNoteRestService;
-import no.isi.insight.planner.client.trip.view.CreateTripNoteRequest;
-import no.isi.insight.planner.client.trip.view.TripNoteDetails;
-import no.isi.insight.planner.client.trip.view.UpdateTripNoteRequest;
+import no.isi.insight.planning.client.trip.TripNoteRestService;
+import no.isi.insight.planning.client.trip.view.CreateTripNoteRequest;
+import no.isi.insight.planning.client.trip.view.TripNoteDetails;
+import no.isi.insight.planning.client.trip.view.UpdateTripNoteRequest;
 import no.isi.insight.planning.auth.annotation.DriverAuthorization;
 import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.model.Trip;

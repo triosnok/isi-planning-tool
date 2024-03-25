@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.locationtech.jts.geom.Point;
 
-import no.isi.insight.planner.client.trip.view.CameraPosition;
+import no.isi.insight.planning.client.trip.view.CameraPosition;
 
 public record ProcessedLogEntry(
   Point point,

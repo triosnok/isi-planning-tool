@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
-import no.isi.insight.planner.client.vehicle.view.VehicleDetails;
+import no.isi.insight.planning.client.vehicle.view.VehicleDetails;
 import no.isi.insight.planning.utility.JdbcUtils;
 
 @Repository
