@@ -14,6 +14,10 @@ dependencies {
 }
 
 jib {
+  from {
+    image = 'eclipse-temurin:21-jre'
+  }
+
   to {
     image = 'ghcr.io/triosnok/isi-planning-tool-init'
     tags = ['latest', version]

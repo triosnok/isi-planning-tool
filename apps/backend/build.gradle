@@ -38,6 +38,10 @@ tasks.named('test') {
 }
 
 jib {
+  from {
+    image = 'eclipse-temurin:21-jre'
+  }
+
   to {
     image = 'ghcr.io/triosnok/isi-planning-tool-backend'
     tags = ['latest', version]
