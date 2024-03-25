@@ -29,14 +29,14 @@ import { useTripsDetailsQuery } from '../../trips/api';
 import NewTripDialog from '../../trips/components/NewTripDialog';
 import { useProjectDetailsQuery, useProjectPlansQuery } from '../api';
 import PlanCard from '../components/PlanCard';
-import { useTranslations } from '@/features/i18n';
+import { DateFormat, useTranslations } from '@/features/i18n';
 import BackLink from '@/components/navigation/BackLink';
 
 const Project: Component<LayoutProps> = (props) => {
   const params = useParams();
   const project = useProjectDetailsQuery(params.id);
   const plans = useProjectPlansQuery(params.id);
-  const { t } = useTranslations();
+  const { t, d } = useTranslations();
 
   const [selectedPlans, setSelectedPlans] = createSignal<string[]>([]);
   const [showNewTripDialog, setShowNewTripDialog] = createSignal(false);
@@ -70,8 +70,14 @@ const Project: Component<LayoutProps> = (props) => {
               <div>
                 <h1 class='text-4xl font-bold'>{project.data?.name}</h1>
                 <h2>
-                  {dayjs(project.data?.startsAt).format('MMM D')} -{' '}
-                  {dayjs(project.data?.endsAt).format('MMM D')}
+                  <Show when={project.data} fallback='...'>
+                    {(data) => (
+                      <>
+                        {d(data().startsAt, DateFormat.MONTH_DAY)} -{' '}
+                        {d(data().endsAt, DateFormat.MONTH_DAY)}
+                      </>
+                    )}
+                  </Show>
                 </h2>
                 <div class='text-success-500 flex items-center gap-1'>
                   <IconCircleCheckFilled size={16} />
@@ -129,8 +135,8 @@ const Project: Component<LayoutProps> = (props) => {
                   {(plan) => (
                     <PlanCard
                       car={plan.vehicleModel}
-                      startsAt={dayjs(plan.startsAt).format('MMM D')}
-                      endsAt={dayjs(plan.endsAt).format('MMM D')}
+                      startsAt={d(plan.startsAt, DateFormat.MONTH_DAY)}
+                      endsAt={d(plan.endsAt, DateFormat.MONTH_DAY)}
                       length={Number(plan.meters.toFixed(0))}
                       ongoingTripAmount={0}
                       railingAmount={plan.railings}
@@ -153,8 +159,8 @@ const Project: Component<LayoutProps> = (props) => {
                     <A href={`/projects/${params.id}/trip/${trip.id}`}>
                       <TripCard
                         sequenceNumber={trip.sequenceNumber}
-                        startedAt={dayjs(trip.startedAt).format('DD/MM/YYYY')}
-                        endedAt={dayjs(trip.endedAt).format('DD MMM')}
+                        startedAt={d(trip.startedAt)}
+                        endedAt={d(trip.endedAt)}
                         deviations={trip.deviations}
                         notes={trip.noteCount}
                         length={320}

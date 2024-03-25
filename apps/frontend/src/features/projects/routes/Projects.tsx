@@ -12,13 +12,13 @@ import { IconPlus } from '@tabler/icons-solidjs';
 import { Component, For } from 'solid-js';
 import { useProjectsQuery } from '../api';
 import dayjs from 'dayjs';
-import { useTranslations } from '@/features/i18n';
+import { DateFormat, useTranslations } from '@/features/i18n';
 
 const Projects: Component = () => {
   const ongoingProjects = useProjectsQuery('ONGOING');
   const upcomingProjects = useProjectsQuery('UPCOMING');
   const previousProjects = useProjectsQuery('PREVIOUS');
-  const { t } = useTranslations();
+  const { t, d } = useTranslations();
 
   return (
     <div>
@@ -45,8 +45,8 @@ const Projects: Component = () => {
                   <ProjectCard
                     name={project.name}
                     referenceCode={project.referenceCode}
-                    startsAt={dayjs(project.startsAt).format('DD MMM')}
-                    endsAt={dayjs(project.endsAt).format('DD MMM')}
+                    startsAt={d(project.startsAt, DateFormat.MONTH_DAY)}
+                    endsAt={d(project.endsAt, DateFormat.MONTH_DAY)}
                     status={project.status}
                     capturedLength={project.capturedLength}
                     totalLength={project.totalLength}
@@ -69,8 +69,8 @@ const Projects: Component = () => {
                   <ProjectCard
                     name={project.name}
                     referenceCode={project.referenceCode}
-                    startsAt={dayjs(project.startsAt).format('DD MMM')}
-                    endsAt={dayjs(project.endsAt).format('DD MMM')}
+                    startsAt={d(project.startsAt, DateFormat.MONTH_DAY)}
+                    endsAt={d(project.endsAt, DateFormat.MONTH_DAY)}
                     status={project.status}
                     capturedLength={project.capturedLength}
                     totalLength={project.totalLength}
@@ -93,8 +93,8 @@ const Projects: Component = () => {
                   <ProjectCard
                     name={project.name}
                     referenceCode={project.referenceCode}
-                    startsAt={dayjs(project.startsAt).format('DD MMM')}
-                    endsAt={dayjs(project.endsAt).format('DD MMM')}
+                    startsAt={d(project.startsAt, DateFormat.MONTH_DAY)}
+                    endsAt={d(project.endsAt, DateFormat.MONTH_DAY)}
                     status={project.status}
                     capturedLength={project.capturedLength}
                     totalLength={project.totalLength}

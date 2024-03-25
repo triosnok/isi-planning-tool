@@ -1,4 +1,5 @@
 import * as i18n from '@solid-primitives/i18n';
+import dayjs from 'dayjs';
 import {
   Accessor,
   Component,
@@ -34,7 +35,8 @@ export interface I18nContextValue {
   locale: Accessor<Locale>;
   setLocale: (locale: Locale) => void;
   dict: Resource<Dictionary>;
-  numberFormats: Accessor<Record<NumberType, Intl.NumberFormat>>;
+  numberFormats: Accessor<Record<NumberFormat, Intl.NumberFormat>>;
+  dateFormats: Accessor<Record<DateFormat, string>>;
 }
 
 const I18nContext = createContext<I18nContextValue>();
@@ -45,19 +47,30 @@ export const I18nProvider: Component<{ children: JSX.Element }> = (props) => {
 
   const numberFormats = createMemo(() => {
     return {
-      [NumberType.INTEGER]: new Intl.NumberFormat(locale(), {
+      [NumberFormat.INTEGER]: new Intl.NumberFormat(locale(), {
         style: 'decimal',
         maximumFractionDigits: 0,
       }),
-      [NumberType.DECIMAL]: new Intl.NumberFormat(locale(), {
+      [NumberFormat.DECIMAL]: new Intl.NumberFormat(locale(), {
         style: 'decimal',
         maximumFractionDigits: 2,
       }),
     };
   });
 
+  const dateFormats = createMemo(() => {
+    return {
+      [DateFormat.MONTH_DAY]: 'MMM D',
+      [DateFormat.DATE]: 'L',
+      [DateFormat.DATETIME]: 'L LT',
+      [DateFormat.TIME]: 'LT',
+    };
+  });
+
   return (
-    <I18nContext.Provider value={{ locale, setLocale, dict, numberFormats }}>
+    <I18nContext.Provider
+      value={{ locale, setLocale, dict, numberFormats, dateFormats }}
+    >
       {props.children}
     </I18nContext.Provider>
   );
@@ -78,9 +91,16 @@ const useI18n = () => {
   return ctx;
 };
 
-export enum NumberType {
+export enum NumberFormat {
   INTEGER = 'integer',
   DECIMAL = 'decimal',
+}
+
+export enum DateFormat {
+  MONTH_DAY = 'month_day',
+  DATE = 'date',
+  DATETIME = 'datetime',
+  TIME = 'time',
 }
 
 /**
@@ -96,14 +116,28 @@ export const useTranslations = () => {
    * Formats a number according to the current locale.
    *
    * @param value the number value to format
-   * @param type the type of number to format, defaults to DECIMAL
+   * @param format the format to use, defaults to DECIMAL
    *
    * @returns the formatted number
    */
-  const n = (value: number, type?: NumberType) => {
-    const numberType = type ?? NumberType.DECIMAL;
-    return ctx.numberFormats()[numberType].format(value);
+  const n = (value: number, format?: NumberFormat) => {
+    const numberFormat = format ?? NumberFormat.DECIMAL;
+    return ctx.numberFormats()[numberFormat].format(value);
   };
 
-  return { locale: ctx.locale, setLocale: ctx.setLocale, t, n };
+  /**
+   * Formats a date according to the current locale.
+   *
+   * @param value the date value to format
+   * @param format the format to use, defaults to DATETIME
+   *
+   * @returns the formatted date
+   */
+  const d = (value: Date | string, format?: DateFormat) => {
+    const dateFormat = format ?? DateFormat.DATETIME;
+    const formats = ctx.dateFormats();
+    return dayjs(value).format(formats[dateFormat]);
+  };
+
+  return { locale: ctx.locale, setLocale: ctx.setLocale, t, n, d };
 };
