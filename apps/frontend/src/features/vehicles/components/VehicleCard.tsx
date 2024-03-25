@@ -9,6 +9,7 @@ import {
   IconPhotoX,
 } from '@tabler/icons-solidjs';
 import { Component, Show } from 'solid-js';
+import VehicleStatus from './VehicleStatus';
 
 export interface VehicleCardProps {
   imageUrl: string;
@@ -16,6 +17,7 @@ export interface VehicleCardProps {
   registrationNumber: string;
   camera: boolean;
   gnssId: string;
+  available: boolean;
   onDetailsClick?: () => void;
   class?: string;
 }
@@ -46,7 +48,8 @@ const VehicleCard: Component<VehicleCardProps> = (props) => {
         <h2 class='max-w-full self-center truncate text-xl font-semibold'>
           {props.name}
         </h2>
-        <VehicleStatus />
+
+        <VehicleStatus available={props.available} class='self-center' />
 
         <hr class='my-1 h-px w-full border-0 bg-gray-300 dark:bg-gray-700' />
 
@@ -63,17 +66,6 @@ const VehicleCard: Component<VehicleCardProps> = (props) => {
         {t('VEHICLES.VIEW_DETAILS')}
       </Button>
     </div>
-  );
-};
-
-const VehicleStatus: Component = () => {
-  const { t } = useTranslations();
-
-  return (
-    <p class='text-success-600 flex items-center gap-0.5 self-center text-sm font-medium'>
-      <IconCircleCheckFilled class='h-4 w-4' />
-      <span>{t('GENERAL.STATUSES.AVAILABLE')}</span>
-    </p>
   );
 };
 

@@ -100,6 +100,10 @@
       "DESCRIPTION": "Description",
       "UPDATE_VEHICLE": "Update vehicle",
       "CREATE_VEHICLE": "Create vehicle"
+    },
+    "STATUS": {
+      "AVAILABLE": "Available",
+      "UNAVAILBLE": "Unavailable"
     }
   }
 }

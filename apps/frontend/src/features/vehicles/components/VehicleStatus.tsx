@@ -1,5 +1,5 @@
+import { useTranslations } from '@/features/i18n';
 import { cn } from '@/lib/utils';
-import { VehicleDetails } from '@isi-insight/client';
 import {
   IconCircleCheckFilled,
   IconCircleXFilled,
@@ -7,23 +7,36 @@ import {
 import { Component, Show } from 'solid-js';
 
 export interface VehicleStatusProps {
-  vehicle: VehicleDetails;
+  available: boolean;
+  class?: string;
 }
 
 const VehicleStatus: Component<VehicleStatusProps> = (props) => {
+  const { t } = useTranslations();
+
   return (
     <Show
-      when={props.vehicle.available}
+      when={props.available}
       fallback={
-        <p class='text-error-500 absolute right-2 top-2 flex items-center gap-0.5 text-sm'>
+        <p
+          class={cn(
+            'text-error-500 flex items-center gap-0.5 text-sm',
+            props.class
+          )}
+        >
           <IconCircleXFilled class='h-4 w-4' />
-          <span>Unavailable</span>
+          <span>{t('VEHICLES.STATUS.UNAVAILBLE')}</span>
         </p>
       }
     >
-      <p class='text-success-500 absolute right-2 top-2 flex items-center gap-0.5 text-sm'>
+      <p
+        class={cn(
+          'text-success-500 flex items-center gap-0.5 text-sm',
+          props.class
+        )}
+      >
         <IconCircleCheckFilled class='h-4 w-4' />
-        <span>Available</span>
+        <span>{t('VEHICLES.STATUS.AVAILABLE')}</span>
       </p>
     </Show>
   );

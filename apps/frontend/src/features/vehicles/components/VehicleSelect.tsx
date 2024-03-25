@@ -104,7 +104,10 @@ const VehicleSelectItem: Component<VehicleSelectItemProps> = (props) => {
         <span>{props.camera ? 'Yes' : 'No'}</span>
       </p>
 
-      <VehicleStatus vehicle={props} />
+      <VehicleStatus
+        available={props.available}
+        class='absolute right-2 top-2'
+      />
     </div>
   );
 };
