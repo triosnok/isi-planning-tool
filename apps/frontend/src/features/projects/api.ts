@@ -1,9 +1,6 @@
 import { CacheKey } from '@/api';
 import {
-  CreateTripNoteRequest,
-  CreateTripRequest,
   RoadRailing,
-  TripDetails,
   type CreateProjectPlanRequest,
   type CreateProjectPlanResponse,
   type CreateProjectRequest,
@@ -52,6 +49,16 @@ export const useProjectDetailsQuery = (id: string) => {
   }));
 };
 
+export const ProjectSchema = z.object({
+  projectId: z.string().optional(),
+  name: z.string().min(1),
+  referenceCode: z.string(),
+  startsAt: z.string().datetime(),
+  endsAt: z.string().datetime().optional(),
+});
+
+export type ProjectSchemaValues = z.infer<typeof ProjectSchema>;
+
 export const useProjectsMutation = () => {
   const qc = useQueryClient();
 
@@ -73,7 +80,25 @@ export const useProjectsMutation = () => {
     },
   }));
 
-  return { create };
+  const update = createMutation(() => ({
+    mutationFn: async (project: ProjectSchemaValues) => {
+      const response = await axios.put<ProjectDetails>(
+        `/api/v1/projects/${project.projectId}`,
+        project
+      );
+
+      return response.data;
+    },
+
+    onSuccess: (response) => {
+      qc.invalidateQueries({ queryKey: [CacheKey.PROJECT_LIST] });
+      qc.invalidateQueries({
+        queryKey: [CacheKey.PROJECT_DETAILS, response.id],
+      });
+    },
+  }));
+
+  return { create, update };
 };
 
 export const useProjectPlansMutation = (projectId: string) => {

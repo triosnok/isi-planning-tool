@@ -74,6 +74,13 @@ export interface RoadRailing {
     captureGrade: number;
 }
 
+export interface UpdateProjectRequest {
+    name: string;
+    referenceCode: string;
+    startsAt: DateAsString;
+    endsAt?: DateAsString | null;
+}
+
 export interface CreateTripNoteRequest {
     tripId: string;
     note: string;
