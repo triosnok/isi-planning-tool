@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
+import org.springframework.web.service.annotation.PutExchange;
 
 import no.isi.insight.planning.client.project.view.CreateProjectRequest;
 import no.isi.insight.planning.client.project.view.ProjectDetails;
 import no.isi.insight.planning.client.project.view.ProjectStatus;
 import no.isi.insight.planning.client.project.view.RoadRailing;
+import no.isi.insight.planning.client.project.view.UpdateProjectRequest;
 
 @HttpExchange("/api/v1/projects")
 public interface ProjectRestService {
@@ -64,4 +66,11 @@ public interface ProjectRestService {
   ResponseEntity<ProjectDetails> getProject(
       @PathVariable UUID projectId
   );
+
+  @PutExchange("/{projectId}")
+  ResponseEntity<ProjectDetails> updateProject(
+      @PathVariable UUID projectId,
+      @RequestBody UpdateProjectRequest request
+  );
+
 }

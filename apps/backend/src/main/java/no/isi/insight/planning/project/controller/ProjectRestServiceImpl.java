@@ -13,8 +13,9 @@ import no.isi.insight.planning.client.project.view.CreateProjectRequest;
 import no.isi.insight.planning.client.project.view.ProjectDetails;
 import no.isi.insight.planning.client.project.view.ProjectStatus;
 import no.isi.insight.planning.client.project.view.RoadRailing;
-import no.isi.insight.planning.model.Project;
+import no.isi.insight.planning.client.project.view.UpdateProjectRequest;
 import no.isi.insight.planning.error.model.NotFoundException;
+import no.isi.insight.planning.model.Project;
 import no.isi.insight.planning.repository.ProjectJdbcRepository;
 import no.isi.insight.planning.repository.ProjectJpaRepository;
 import no.isi.insight.planning.repository.RoadRailingJdbcRepository;
@@ -71,5 +72,25 @@ public class ProjectRestServiceImpl implements ProjectRestService {
   ) {
     var projects = this.projectJdbcRepository.findProjects(status);
     return ResponseEntity.ok(projects);
+  }
+
+  @Override
+  public ResponseEntity<ProjectDetails> updateProject(
+      UUID projectId,
+      UpdateProjectRequest request
+  ) {
+    var project = this.projectJpaRepository.findById(projectId)
+      .orElseThrow(() -> new NotFoundException("Project not found"));
+
+    project.setName(request.name());
+    project.setReferenceCode(request.referenceCode());
+    project.setStartsAt(request.startsAt());
+    project.setEndsAt(request.endsAt());
+
+    var updatedProject = this.projectJpaRepository.save(project);
+
+    var projectDetails = this.projectJdbcRepository.findById(updatedProject.getId());
+
+    return ResponseEntity.ok(projectDetails.get());
   }
 }
