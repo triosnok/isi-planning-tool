@@ -2,6 +2,7 @@ plugins {
   id 'java-conventions'
   alias libs.plugins.spring.boot
   alias libs.plugins.spring.dependencies
+  alias libs.plugins.jib
 }
 
 dependencies {
@@ -10,4 +11,18 @@ dependencies {
   implementation 'org.liquibase:liquibase-core'
   compileOnly 'org.projectlombok:lombok'
   annotationProcessor 'org.projectlombok:lombok'
+}
+
+jib {
+  to {
+    image = 'ghcr.io/triosnok/isi-planning-tool-init'
+    tags = ['latest', version]
+  }
+
+  container {
+    labels = [
+      'org.opencontainers.image.source': 'https://github.com/triosnok/isi-planning-tool',
+      'org.opencontainers.image.description': 'Init container image for isi-planning-tool'
+    ]
+  }
 }

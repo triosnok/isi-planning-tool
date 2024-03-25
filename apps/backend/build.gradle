@@ -2,6 +2,7 @@ plugins {
   id 'java-conventions'
   alias libs.plugins.spring.boot
   alias libs.plugins.spring.dependencies
+  alias libs.plugins.jib
 }
 
 dependencies {
@@ -34,4 +35,18 @@ dependencies {
 
 tasks.named('test') {
   useJUnitPlatform()
+}
+
+jib {
+  to {
+    image = 'ghcr.io/triosnok/isi-planning-tool-backend'
+    tags = ['latest', version]
+  }
+
+  container {
+    labels = [
+      'org.opencontainers.image.source': 'https://github.com/triosnok/isi-planning-tool',
+      'org.opencontainers.image.description': 'Backend container image for isi-planning-tool'
+    ]
+  }
 }

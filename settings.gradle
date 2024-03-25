@@ -11,6 +11,7 @@ dependencyResolutionManagement {
     libs {
       plugin('spring-boot', 'org.springframework.boot').version('3.2.4')
       plugin('spring-dependencies', 'io.spring.dependency-management').version('1.1.4')
+      plugin('jib', 'com.google.cloud.tools.jib').version('3.4.1')
     }
   }
 }
