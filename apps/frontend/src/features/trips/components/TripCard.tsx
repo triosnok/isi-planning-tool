@@ -7,7 +7,7 @@ import {
 } from '@tabler/icons-solidjs';
 import { cva } from 'class-variance-authority';
 import dayjs from 'dayjs';
-import { Component } from 'solid-js';
+import { Component, Show } from 'solid-js';
 export interface TripCardProps {
   sequenceNumber: number;
   startedAt: string;
@@ -21,8 +21,10 @@ export interface TripCardProps {
 const tripCardVariants = cva('relative overflow-hidden rounded-lg border p-2', {
   variants: {
     status: {
-      active: 'border-success-600 bg-success-50 text-success-950',
-      inactive: 'border-gray-200 bg-gray-50 text-gray-950',
+      active:
+        'border-success-600 bg-success-50 text-success-950 dark:bg-success-950 dark:text-success-50',
+      inactive:
+        'border-gray-200 bg-gray-50 dark:bg-gray-900 dark:border-gray-800',
     },
   },
   defaultVariants: {
@@ -41,33 +43,35 @@ const TripCard: Component<TripCardProps> = (props) => {
         <p class='text-base font-semibold'>
           {t('TRIPS.TRIP')} {props.sequenceNumber}
         </p>
-        <p class='text-sm text-gray-500'>{props.startedAt}</p>
+        <p class='text-sm text-gray-500 dark:text-gray-400'>
+          {props.startedAt}
+        </p>
       </div>
 
       <div class='flex flex-col'>
         <div class='flex flex-row gap-1'>
-          <IconSteeringWheel size={20} />
+          <IconSteeringWheel class='size-5' />
           <p>{props.car}</p>
         </div>
 
         <div class='flex flex-row gap-1'>
-          <IconRulerMeasure size={20} />
+          <IconRulerMeasure class='size-5' />
           <p>{props.length} km</p>
         </div>
       </div>
 
       <div class='absolute right-0 top-0 p-2'>
-        {validEndDate && (
+        <Show when={validEndDate}>
           <div class='flex flex-row gap-1'>
-            <IconAlertCircleFilled size={20} class='text-warning-500' />
+            <IconAlertCircleFilled class='text-warning-500 size-5' />
             <p class='text-warning-500'>
               {props.deviations} {t('DEVIATIONS.TITLE')}
             </p>
           </div>
-        )}
+        </Show>
 
         <div class='flex flex-row justify-end gap-1'>
-          <IconMessage size={20} />
+          <IconMessage class='size-5' />
           <p>
             {props.notes} {t('NOTES.TITLE')}
           </p>

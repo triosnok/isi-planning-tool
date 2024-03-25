@@ -29,6 +29,7 @@ import {
   useTripNoteMutation,
 } from '../api';
 import { useTranslations } from '@/features/i18n';
+import BackLink from '@/components/navigation/BackLink';
 
 const TripNoteSchema = z.object({
   note: z.string(),
@@ -74,16 +75,10 @@ const Trip: Component = () => {
 
   return (
     <>
-      <div class='absolute bottom-0 w-full rounded-md bg-gray-50 p-2 md:bottom-auto md:left-4 md:top-4 md:w-1/2 lg:w-2/5 xl:w-1/3'>
+      <div class='absolute bottom-0 w-full rounded-md bg-gray-50 p-2 md:bottom-auto md:left-4 md:top-4 md:w-1/2 lg:w-2/5 xl:w-1/3 dark:bg-gray-900'>
         <div class='flex flex-col'>
           <div class='hidden md:flex'>
-            <A
-              href={`/projects/${params.projectId}`}
-              class='flex items-center text-sm text-gray-600 hover:underline'
-            >
-              <IconChevronLeft size={16} />
-              <p class='flex-none'>{t('NAVIGATION.BACK')}</p>
-            </A>
+            <BackLink href='../..' />
           </div>
         </div>
         <div class='space-y-2'>
@@ -166,7 +161,7 @@ const Trip: Component = () => {
           </Button>
         </div>
       </div>
-      <div class='absolute bottom-4 left-4 hidden w-full rounded-md bg-gray-50 p-2 md:block md:w-1/2 lg:w-2/5 xl:w-1/3'>
+      <div class='absolute bottom-4 left-4 hidden w-full rounded-md bg-gray-50 dark:bg-gray-900 p-2 md:block md:w-1/2 lg:w-2/5 xl:w-1/3'>
         <Button
           onClick={handleEndTrip}
           variant='destructive'
