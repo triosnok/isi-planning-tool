@@ -48,7 +48,7 @@ const VehicleCard: Component<VehicleCardProps> = (props) => {
         </h2>
         <VehicleStatus />
 
-        <hr class='my-1 h-px w-full border-0 bg-gray-300' />
+        <hr class='my-1 h-px w-full border-0 bg-gray-300 dark:bg-gray-700' />
 
         <VehicleDetail icon={Icon123} text={props.registrationNumber} />
         <VehicleDetail icon={IconCamera} text={props.camera ? 'Yes' : 'No'} />
