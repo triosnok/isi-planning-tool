@@ -18,19 +18,22 @@ export interface TripCardProps {
   car?: string;
 }
 
-const tripCardVariants = cva('relative overflow-hidden rounded-lg border p-2', {
-  variants: {
-    status: {
-      active:
-        'border-success-600 bg-success-50 text-success-950 dark:bg-success-950 dark:text-success-50',
-      inactive:
-        'border-gray-200 bg-gray-50 dark:bg-gray-900 dark:border-gray-800',
+const tripCardVariants = cva(
+  'relative transition-colors hover:cursor-pointer overflow-hidden rounded-lg border p-2',
+  {
+    variants: {
+      status: {
+        active:
+          'border-success-600 hover:bg-success-100 dark:hover:bg-success-900 bg-success-50 text-success-950 dark:bg-success-950 dark:text-success-50',
+        inactive:
+          'border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 bg-gray-50 dark:bg-gray-900 dark:border-gray-800',
+      },
     },
-  },
-  defaultVariants: {
-    status: 'active',
-  },
-});
+    defaultVariants: {
+      status: 'active',
+    },
+  }
+);
 
 const TripCard: Component<TripCardProps> = (props) => {
   const validEndDate = dayjs(props.endedAt).isValid();
