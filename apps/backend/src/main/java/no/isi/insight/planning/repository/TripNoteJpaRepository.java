@@ -1,5 +1,6 @@
 package no.isi.insight.planning.repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,5 +16,9 @@ public interface TripNoteJpaRepository extends Repository<TripNote, UUID> {
 
   Optional<TripNote> findById(
       UUID id
+  );
+
+  List<TripNote> getNotesByTripId(
+      UUID tripId
   );
 }
