@@ -26,7 +26,7 @@ const tripCardVariants = cva(
         active:
           'border-success-600 hover:bg-success-100 dark:hover:bg-success-900 bg-success-50 text-success-950 dark:bg-success-950 dark:text-success-50',
         inactive:
-          'border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 bg-gray-50 dark:bg-gray-900 dark:border-gray-800',
+          'border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900 bg-gray-50 dark:bg-gray-950 dark:border-gray-800',
       },
     },
     defaultVariants: {
