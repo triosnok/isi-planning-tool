@@ -27,3 +27,7 @@ no.isi.insight.planning:
   integration.nvdb:
     client-name: isi-insight-dev
     base-url: https://nvdbapiles-v3.atlas.vegvesen.no
+  integration.minio:
+    url: ${MINIO_URL}
+    access-key: ${MINIO_ACCESS_KEY}
+    secret-key: ${MINIO_SECRET_KEY}

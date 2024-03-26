@@ -16,6 +16,7 @@ dependencies {
   implementation 'org.hibernate:hibernate-spatial:6.4.1.Final'
   implementation 'org.locationtech.jts:jts:1.19.0'
   implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv'
+  implementation 'io.minio:minio:8.5.9'
   compileOnly 'org.projectlombok:lombok'
   developmentOnly project(':apps:init')
   developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -29,6 +30,7 @@ dependencies {
   testImplementation 'org.springframework.security:spring-security-test'
   testImplementation 'org.testcontainers:junit-jupiter'
   testImplementation 'org.testcontainers:postgresql'
+  testImplementation 'org.testcontainers:minio'
   testRuntimeOnly project(':apps:init')
   testCompileOnly 'org.springframework.boot:spring-boot-devtools'
 }

@@ -1,3 +1,11 @@
+spring:
+  data.jdbc.repositories.enabled: false
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
 no.isi.insight.planning:
   auth:
     token-issuer: isi-insight
@@ -10,3 +18,6 @@ no.isi.insight.planning:
   integration.nvdb:
     client-name: isi-insight-dev
     base-url: https://nvdbapiles-v3.atlas.vegvesen.no
+  integration.minio:
+    access-key: minioadmin
+    secret-key: minioadmin

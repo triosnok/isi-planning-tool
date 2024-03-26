@@ -5,6 +5,7 @@ import org.springframework.boot.devtools.restart.RestartScope;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
+import org.testcontainers.containers.MinIOContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import no.isi.insight.planning.auth.service.UserAccountService;
@@ -19,6 +20,13 @@ public class PlanningApplicationDevelopment {
   @ServiceConnection
   PostgreSQLContainer<?> postgresContainer() {
     return new PostgreSQLContainer<>(TestcontainersConfiguration.POSTGIS_IMAGE_NAME);
+  }
+  
+  @Bean
+  @RestartScope
+  @ServiceConnection
+  MinIOContainer minioContainer() {
+    return new MinIOContainer("minio/minio:RELEASE.2024-03-21T23-13-43Z");
   }
 
   public static void main(
