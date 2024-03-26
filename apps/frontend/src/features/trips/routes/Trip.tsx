@@ -1,3 +1,4 @@
+import BackLink from '@/components/navigation/BackLink';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -10,26 +11,20 @@ import {
 import { Indicator } from '@/components/ui/indicator';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
+import { useTranslations } from '@/features/i18n';
 import { SubmitHandler, createForm, zodForm } from '@modular-forms/solid';
-import { A, useNavigate, useParams } from '@solidjs/router';
+import { useNavigate, useParams } from '@solidjs/router';
 import {
-  IconChevronLeft,
   IconCurrentLocation,
   IconDatabase,
   IconMessage,
   IconPhoto,
   IconVideo,
 } from '@tabler/icons-solidjs';
-import dayjs from 'dayjs';
-import { Component, createSignal } from 'solid-js';
+import { Component, Show, createSignal } from 'solid-js';
 import { z } from 'zod';
-import {
-  useTripDetailsQuery,
-  useTripMutation,
-  useTripNoteMutation,
-} from '../api';
-import { useTranslations } from '@/features/i18n';
-import BackLink from '@/components/navigation/BackLink';
+import { useTripDetailsQuery, useTripNoteMutation } from '../api';
+import TripSummaryDialog from '../components/TripSummaryDialog';
 
 const TripNoteSchema = z.object({
   note: z.string(),
@@ -40,32 +35,19 @@ type TripNoteForm = z.infer<typeof TripNoteSchema>;
 const Trip: Component = () => {
   const params = useParams();
   const { create } = useTripNoteMutation(params.tripId);
-  const { update } = useTripMutation();
   const navigate = useNavigate();
   const [form, { Form, Field }] = createForm({
     validate: zodForm(TripNoteSchema),
   });
   const tripDetails = useTripDetailsQuery(params.tripId);
 
+  const [showSummaryDialog, setShowSummaryDialog] = createSignal(false);
   const [isDialogOpen, setIsDialogOpen] = createSignal(false);
 
   const handleSubmit: SubmitHandler<TripNoteForm> = async (values) => {
     try {
       await create.mutateAsync({ ...values, tripId: params.tripId });
       setIsDialogOpen(false);
-    } catch (error) {
-      // ignored
-    }
-  };
-
-  const handleEndTrip = async () => {
-    try {
-      await update.mutateAsync({
-        tripId: params.tripId,
-        endedAt: dayjs().toDate(),
-      });
-
-      navigate('../..');
     } catch (error) {
       // ignored
     }
@@ -152,24 +134,35 @@ const Trip: Component = () => {
               status='55%'
             />
           </section>
-          <Button
-            onClick={handleEndTrip}
-            variant='destructive'
-            class='w-full md:hidden'
-          >
-            {t('TRIPS.END_TRIP')} {tripDetails.data?.endedAt ? ' (ended)' : ''}
-          </Button>
+
+          <TripSummaryDialog
+            tripId={params.tripId}
+            open={showSummaryDialog()}
+            onOpenChange={setShowSummaryDialog}
+          />
+
+          <Show when={!tripDetails.data?.endedAt}>
+            <Button
+              onClick={() => setShowSummaryDialog(true)}
+              variant='destructive'
+              class='w-full md:hidden'
+            >
+              {t('TRIPS.END_TRIP')}
+            </Button>
+          </Show>
         </div>
       </div>
-      <div class='absolute bottom-4 left-4 hidden w-full rounded-md bg-gray-50 dark:bg-gray-900 p-2 md:block md:w-1/2 lg:w-2/5 xl:w-1/3'>
-        <Button
-          onClick={handleEndTrip}
-          variant='destructive'
-          class='flex w-full'
-        >
-          {t('TRIPS.END_TRIP')} {tripDetails.data?.endedAt ? ' (ended)' : ''}
-        </Button>
-      </div>
+      <Show when={!tripDetails.data?.endedAt}>
+        <div class='absolute bottom-4 left-4 hidden w-full rounded-md bg-gray-50 p-2 md:block md:w-1/2 lg:w-2/5 xl:w-1/3 dark:bg-gray-900'>
+          <Button
+            onClick={() => setShowSummaryDialog(true)}
+            variant='destructive'
+            class='flex w-full'
+          >
+            {t('TRIPS.END_TRIP')}
+          </Button>
+        </div>
+      </Show>
     </>
   );
 };
