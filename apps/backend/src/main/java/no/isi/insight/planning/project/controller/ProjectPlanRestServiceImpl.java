@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import no.isi.insight.planning.auth.annotation.DriverAuthorization;
+import no.isi.insight.planning.auth.annotation.PlannerAuthorization;
 import no.isi.insight.planning.client.project.ProjectPlanRestService;
 import no.isi.insight.planning.client.project.view.CreateProjectPlanRequest;
 import no.isi.insight.planning.client.project.view.ProjectPlanDetails;
@@ -34,6 +36,7 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
   private final VehicleJpaRepository vehicleJpaRepository;
 
   @Override
+  @DriverAuthorization
   public ResponseEntity<List<ProjectPlanDetails>> getPlans(
       UUID projectId
   ) {
@@ -51,6 +54,7 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
   }
 
   @Override
+  @PlannerAuthorization
   public ResponseEntity<ProjectPlanDetails> createPlan(
       CreateProjectPlanRequest request
   ) {
@@ -86,6 +90,7 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
   }
 
   @Override
+  @PlannerAuthorization
   public ResponseEntity<ProjectPlanDetails> updatePlan(
       UUID planId,
       UpdateProjectPlanRequest request

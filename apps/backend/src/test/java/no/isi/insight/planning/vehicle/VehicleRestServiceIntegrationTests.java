@@ -9,12 +9,17 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.http.HttpHeaders;
 
 import lombok.RequiredArgsConstructor;
+import no.isi.insight.planning.annotation.IntegrationTest;
+import no.isi.insight.planning.auth.service.UserAccountService;
 import no.isi.insight.planning.client.vehicle.view.CreateVehicleRequest;
 import no.isi.insight.planning.client.vehicle.view.UpdateVehicleRequest;
-import no.isi.insight.planning.annotation.IntegrationTest;
+import no.isi.insight.planning.model.UserAccount;
+import no.isi.insight.planning.model.UserAccountRole;
 import no.isi.insight.planning.model.Vehicle;
+import no.isi.insight.planning.utility.AuthTestUtils;
 
 @IntegrationTest
 @RequiredArgsConstructor
@@ -22,8 +27,11 @@ class VehicleRestServiceIntegrationTests {
 
   private final MockMvc mockMvc;
   private final ObjectMapper objectMapper;
+  private final UserAccountService userService;
+  private final AuthTestUtils authTestUtils;
 
   private CreateVehicleRequest vehicle;
+  private UserAccount userAccount;
 
   @BeforeEach
   void setup() {
@@ -35,20 +43,29 @@ class VehicleRestServiceIntegrationTests {
       "A car",
       "gnss-123"
     );
+
+    this.userAccount = this.userService
+      .createAccount("Planner", "test@invalid.no", "", "pass", UserAccountRole.PLANNER);
+
   }
 
   @AfterEach
   void cleanup() {
     this.vehicle = null;
+
+    this.userService.deleteAccount(this.userAccount);
   }
 
   @Test
   void canCreateVehicle() throws Exception {
+    var authorization = this.authTestUtils.generateAuthorizationHeader(this.userAccount);
+
     this.mockMvc
       .perform(
         MockMvcRequestBuilders.post("/api/v1/vehicles")
           .contentType(MediaType.APPLICATION_JSON)
           .content(this.objectMapper.writeValueAsString(this.vehicle))
+          .header(HttpHeaders.AUTHORIZATION, authorization)
       )
       .andExpect(MockMvcResultMatchers.status().isOk())
       .andExpect(MockMvcResultMatchers.jsonPath("$.id").isString())
@@ -63,11 +80,14 @@ class VehicleRestServiceIntegrationTests {
 
   @Test
   void canSaveAndUpdateVehicle() throws Exception {
+    var authorization = this.authTestUtils.generateAuthorizationHeader(this.userAccount);
+
     var savedVehicle = this.mockMvc
       .perform(
         MockMvcRequestBuilders.post("/api/v1/vehicles")
           .contentType(MediaType.APPLICATION_JSON)
           .content(this.objectMapper.writeValueAsString(this.vehicle))
+          .header(HttpHeaders.AUTHORIZATION, authorization)
       )
       .andExpect(MockMvcResultMatchers.status().isOk())
       .andReturn()
@@ -91,6 +111,7 @@ class VehicleRestServiceIntegrationTests {
         MockMvcRequestBuilders.put("/api/v1/vehicles/" + vehicleDetails.getId())
           .contentType(MediaType.APPLICATION_JSON)
           .content(this.objectMapper.writeValueAsString(updateRequest))
+          .header(HttpHeaders.AUTHORIZATION, authorization)
       )
       .andExpect(MockMvcResultMatchers.status().isOk())
       .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(vehicleDetails.getId().toString()))
@@ -105,11 +126,14 @@ class VehicleRestServiceIntegrationTests {
 
   @Test
   void canSaveAndFindVehicle() throws Exception {
+    var authorization = this.authTestUtils.generateAuthorizationHeader(this.userAccount);
+
     var savedVehicle = this.mockMvc
       .perform(
         MockMvcRequestBuilders.post("/api/v1/vehicles")
           .contentType(MediaType.APPLICATION_JSON)
           .content(this.objectMapper.writeValueAsString(this.vehicle))
+          .header(HttpHeaders.AUTHORIZATION, authorization)
       )
       .andExpect(MockMvcResultMatchers.status().isOk())
       .andReturn()
@@ -120,7 +144,9 @@ class VehicleRestServiceIntegrationTests {
 
     this.mockMvc
       .perform(
-        MockMvcRequestBuilders.get("/api/v1/vehicles/" + vehicleDetails.getId()).contentType(MediaType.APPLICATION_JSON)
+        MockMvcRequestBuilders.get("/api/v1/vehicles/" + vehicleDetails.getId())
+          .contentType(MediaType.APPLICATION_JSON)
+          .header(HttpHeaders.AUTHORIZATION, authorization)
       )
       .andExpect(MockMvcResultMatchers.status().isOk())
       .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(vehicleDetails.getId().toString()))

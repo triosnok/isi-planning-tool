@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import no.isi.insight.planning.auth.annotation.DriverAuthorization;
+import no.isi.insight.planning.auth.annotation.PlannerAuthorization;
 import no.isi.insight.planning.client.project.ProjectRestService;
 import no.isi.insight.planning.client.project.view.CreateProjectRequest;
 import no.isi.insight.planning.client.project.view.ProjectDetails;
@@ -28,6 +30,7 @@ public class ProjectRestServiceImpl implements ProjectRestService {
   private final ProjectJdbcRepository projectJdbcRepository;
 
   @Override
+  @PlannerAuthorization
   public ResponseEntity<ProjectDetails> createProject(
       CreateProjectRequest request
   ) {
@@ -47,6 +50,7 @@ public class ProjectRestServiceImpl implements ProjectRestService {
   }
 
   @Override
+  @DriverAuthorization
   public ResponseEntity<List<RoadRailing>> getRailings(
       UUID projectId,
       Optional<UUID> planId,
@@ -58,6 +62,7 @@ public class ProjectRestServiceImpl implements ProjectRestService {
   }
 
   @Override
+  @DriverAuthorization
   public ResponseEntity<ProjectDetails> getProject(
       UUID projectId
   ) {
@@ -67,6 +72,7 @@ public class ProjectRestServiceImpl implements ProjectRestService {
   }
 
   @Override
+  @DriverAuthorization
   public ResponseEntity<List<ProjectDetails>> getProjects(
       Optional<ProjectStatus> status
   ) {
@@ -75,6 +81,7 @@ public class ProjectRestServiceImpl implements ProjectRestService {
   }
 
   @Override
+  @PlannerAuthorization
   public ResponseEntity<ProjectDetails> updateProject(
       UUID projectId,
       UpdateProjectRequest request

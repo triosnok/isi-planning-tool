@@ -9,11 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import no.isi.insight.planning.auth.annotation.DriverAuthorization;
 import no.isi.insight.planning.client.trip.TripRestService;
 import no.isi.insight.planning.client.trip.view.CreateTripRequest;
 import no.isi.insight.planning.client.trip.view.TripDetails;
 import no.isi.insight.planning.client.trip.view.UpdateTripRequest;
-import no.isi.insight.planning.auth.annotation.DriverAuthorization;
 import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.model.ProjectPlan;
 import no.isi.insight.planning.model.Trip;
@@ -73,6 +73,7 @@ public class TripRestServiceImpl implements TripRestService {
   }
 
   @Override
+  @DriverAuthorization
   public ResponseEntity<TripDetails> getTrip(
       UUID tripId
   ) {
@@ -97,6 +98,7 @@ public class TripRestServiceImpl implements TripRestService {
   }
 
   @Override
+  @DriverAuthorization
   public ResponseEntity<List<TripDetails>> getTrips(
       UUID projectId,
       Optional<List<UUID>> planId
@@ -107,6 +109,7 @@ public class TripRestServiceImpl implements TripRestService {
   }
 
   @Override
+  @DriverAuthorization
   public ResponseEntity<TripDetails> updateTrip(
       UUID tripId,
       UpdateTripRequest request

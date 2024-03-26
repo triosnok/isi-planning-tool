@@ -52,6 +52,7 @@ public class TripNoteRestServiceImpl implements TripNoteRestService {
   }
 
   @Override
+  @DriverAuthorization
   public ResponseEntity<TripNoteDetails> updateNote(
       UUID noteId,
       UpdateTripNoteRequest request
@@ -74,6 +75,7 @@ public class TripNoteRestServiceImpl implements TripNoteRestService {
   }
 
   @Override
+  @DriverAuthorization
   public ResponseEntity<List<TripNoteDetails>> getNotesByTripId(
       UUID tripId
   ) {
@@ -94,6 +96,7 @@ public class TripNoteRestServiceImpl implements TripNoteRestService {
   }
 
   @Override
+  @DriverAuthorization
   public ResponseEntity<TripNoteDetails> deleteNote(
       UUID noteId
   ) {

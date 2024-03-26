@@ -10,15 +10,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import no.isi.insight.planning.auth.annotation.DriverAuthorization;
+import no.isi.insight.planning.auth.annotation.PlannerAuthorization;
 import no.isi.insight.planning.client.vehicle.VehicleRestService;
 import no.isi.insight.planning.client.vehicle.view.CreateVehicleRequest;
 import no.isi.insight.planning.client.vehicle.view.UpdateVehicleRequest;
 import no.isi.insight.planning.client.vehicle.view.VehicleDetails;
+import no.isi.insight.planning.error.model.BadRequestException;
+import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.model.Vehicle;
 import no.isi.insight.planning.repository.VehicleJdbcRepository;
 import no.isi.insight.planning.repository.VehicleJpaRepository;
-import no.isi.insight.planning.error.model.NotFoundException;
-import no.isi.insight.planning.error.model.BadRequestException;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,6 +30,7 @@ public class VehicleRestServiceImpl implements VehicleRestService {
   private final VehicleJdbcRepository vehicleJdbcRespotiory;
 
   @Override
+  @PlannerAuthorization
   public ResponseEntity<VehicleDetails> createVehicle(
       CreateVehicleRequest request
   ) {
@@ -58,6 +61,7 @@ public class VehicleRestServiceImpl implements VehicleRestService {
   }
 
   @Override
+  @PlannerAuthorization
   public ResponseEntity<VehicleDetails> updateVehicle(
       UUID id,
       UpdateVehicleRequest request
@@ -80,6 +84,7 @@ public class VehicleRestServiceImpl implements VehicleRestService {
   }
 
   @Override
+  @DriverAuthorization
   public ResponseEntity<VehicleDetails> findVehicle(
       UUID id
   ) {
@@ -90,6 +95,7 @@ public class VehicleRestServiceImpl implements VehicleRestService {
   }
 
   @Override
+  @DriverAuthorization
   public ResponseEntity<List<VehicleDetails>> findAllVehicles(
       Optional<LocalDate> availableFrom,
       Optional<LocalDate> availableTo

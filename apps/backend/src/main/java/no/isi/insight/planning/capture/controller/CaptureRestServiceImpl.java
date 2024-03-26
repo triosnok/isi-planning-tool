@@ -9,9 +9,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import no.isi.insight.planning.auth.annotation.PlannerAuthorization;
+import no.isi.insight.planning.capture.service.CaptureLogProcessor;
 import no.isi.insight.planning.client.capture.CaptureRestService;
 import no.isi.insight.planning.client.trip.view.CameraPosition;
-import no.isi.insight.planning.capture.service.CaptureLogProcessor;
 import no.isi.insight.planning.repository.TripRailingCaptureJdbcRepository;
 
 @Slf4j
@@ -22,6 +23,7 @@ public class CaptureRestServiceImpl implements CaptureRestService {
   private final TripRailingCaptureJdbcRepository railingCaptureJdbcRepository;
 
   @Override
+  @PlannerAuthorization
   public void uploadLogs(
       UUID tripId,
       MultipartFile gnssLog,
