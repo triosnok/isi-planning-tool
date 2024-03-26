@@ -103,7 +103,7 @@ class TripNoteRestServiceIntegrationTests {
   }
 
   @Test
-  void createTripNote() throws Exception {
+  void canCreateTripNote() throws Exception {
     var authorization = this.authTestUtils.generateAuthorizationHeader(this.userAccount);
 
     this.mockMvc
@@ -119,7 +119,7 @@ class TripNoteRestServiceIntegrationTests {
   }
 
   @Test
-  void updateTripNote() throws Exception {
+  void canUpdateTripNote() throws Exception {
     var authorization = this.authTestUtils.generateAuthorizationHeader(this.userAccount);
 
     var response = this.mockMvc
@@ -149,7 +149,7 @@ class TripNoteRestServiceIntegrationTests {
   }
 
   @Test
-  void getTripNotesByTripId() throws Exception {
+  void canFindTripNotesByTripId() throws Exception {
     var authorization = this.authTestUtils.generateAuthorizationHeader(this.userAccount);
 
     this.mockMvc
@@ -183,7 +183,7 @@ class TripNoteRestServiceIntegrationTests {
   }
 
   @Test
-  void deleteTripNote() throws Exception {
+  void canDeleteTripNote() throws Exception {
     var authorization = this.authTestUtils.generateAuthorizationHeader(this.userAccount);
 
     var response = this.mockMvc
