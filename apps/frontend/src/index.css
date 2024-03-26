@@ -2,13 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.leaflet-pane,
-.leaflet-top,
-.leaflet-bottom,
-.leaflet-control {
-  z-index: auto !important;
-}
-
 @layer base {
   :root {
     --radius: 0.5rem;
@@ -30,10 +23,6 @@
     font-feature-settings:
       'rlig' 1,
       'calt' 1;
-  }
-
-  .insight-map-tile-layer {
-    @apply dark:brightness-95 dark:contrast-75 dark:hue-rotate-180 dark:invert;
   }
 
   ::-webkit-scrollbar {
