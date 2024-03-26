@@ -44,6 +44,7 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
   }
 
   @Override
+  @DriverAuthorization
   public ResponseEntity<ProjectPlanDetails> getPlan(
       UUID planId
   ) {
