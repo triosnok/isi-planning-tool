@@ -16,25 +16,33 @@ import no.isi.insight.planning.client.project.view.CreateProjectPlanRequest;
 import no.isi.insight.planning.client.project.view.ProjectPlanDetails;
 import no.isi.insight.planning.client.project.view.UpdateProjectPlanRequest;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Project Plans")
 @HttpExchange("/api/v1/project-plans")
 public interface ProjectPlanRestService {
 
   @GetExchange
+  @Operation(summary = "Lists all project plans for a project")
   ResponseEntity<List<ProjectPlanDetails>> getPlans(
       @RequestParam UUID projectId
   );
 
   @GetExchange("/{planId}")
+  @Operation(summary = "Gets a project plan by id")
   ResponseEntity<ProjectPlanDetails> getPlan(
       @PathVariable UUID planId
   );
 
   @PostExchange
+  @Operation(summary = "Creates a new project plan")
   ResponseEntity<ProjectPlanDetails> createPlan(
       @RequestBody CreateProjectPlanRequest request
   );
 
   @PutExchange("/{planId}")
+  @Operation(summary = "Updates a project plan")
   ResponseEntity<ProjectPlanDetails> updatePlan(
       @PathVariable UUID planId,
       @RequestBody UpdateProjectPlanRequest request

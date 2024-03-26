@@ -6,10 +6,12 @@ import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import no.isi.insight.planning.client.auth.view.SignInRequest;
 import no.isi.insight.planning.client.auth.view.SignInResponse;
 import no.isi.insight.planning.client.auth.view.UserProfile;
 
+@Tag(name = "Authentication")
 @HttpExchange("/api/v1/auth")
 public interface AuthRestService {
 

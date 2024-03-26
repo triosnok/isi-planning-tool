@@ -13,10 +13,12 @@ import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 import org.springframework.web.service.annotation.PutExchange;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import no.isi.insight.planning.client.trip.view.CreateTripRequest;
 import no.isi.insight.planning.client.trip.view.TripDetails;
 import no.isi.insight.planning.client.trip.view.UpdateTripRequest;
 
+@Tag(name = "Trips")
 @HttpExchange("/api/v1/trips")
 public interface TripRestService {
 

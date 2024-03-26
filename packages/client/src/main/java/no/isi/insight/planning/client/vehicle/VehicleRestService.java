@@ -17,10 +17,12 @@ import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 import org.springframework.web.service.annotation.PutExchange;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import no.isi.insight.planning.client.vehicle.view.CreateVehicleRequest;
 import no.isi.insight.planning.client.vehicle.view.UpdateVehicleRequest;
 import no.isi.insight.planning.client.vehicle.view.VehicleDetails;
 
+@Tag(name = "Vehicles")
 @HttpExchange("/api/v1/vehicles")
 public interface VehicleRestService {
 

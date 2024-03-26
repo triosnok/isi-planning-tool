@@ -13,12 +13,14 @@ import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 import org.springframework.web.service.annotation.PutExchange;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import no.isi.insight.planning.client.project.view.CreateProjectRequest;
 import no.isi.insight.planning.client.project.view.ProjectDetails;
 import no.isi.insight.planning.client.project.view.ProjectStatus;
 import no.isi.insight.planning.client.project.view.RoadRailing;
 import no.isi.insight.planning.client.project.view.UpdateProjectRequest;
 
+@Tag(name = "Projects")
 @HttpExchange("/api/v1/projects")
 public interface ProjectRestService {
 
