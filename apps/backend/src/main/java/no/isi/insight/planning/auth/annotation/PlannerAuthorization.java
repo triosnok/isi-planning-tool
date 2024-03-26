@@ -8,10 +8,14 @@ import java.lang.annotation.Target;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import no.isi.insight.planning.swagger.config.SwaggerConfig;
+
 @Inherited
 @Target({
     ElementType.METHOD, ElementType.TYPE
 })
 @Retention(RetentionPolicy.RUNTIME)
 @PreAuthorize("hasAuthority('PLANNER')")
+@SecurityRequirement(name = SwaggerConfig.SECURITY_SCHEME)
 public @interface PlannerAuthorization {}
