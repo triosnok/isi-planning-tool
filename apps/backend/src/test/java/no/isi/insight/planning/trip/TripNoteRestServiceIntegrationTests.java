@@ -17,10 +17,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.http.HttpHeaders;
 
 import lombok.RequiredArgsConstructor;
-import no.isi.insight.planning.client.trip.view.CreateTripNoteRequest;
-import no.isi.insight.planning.client.trip.view.UpdateTripNoteRequest;
 import no.isi.insight.planning.annotation.IntegrationTest;
 import no.isi.insight.planning.auth.service.UserAccountService;
+import no.isi.insight.planning.client.trip.view.CreateTripNoteRequest;
+import no.isi.insight.planning.client.trip.view.UpdateTripNoteRequest;
 import no.isi.insight.planning.model.Project;
 import no.isi.insight.planning.model.ProjectPlan;
 import no.isi.insight.planning.model.Trip;
@@ -146,6 +146,65 @@ class TripNoteRestServiceIntegrationTests {
       .andExpect(MockMvcResultMatchers.status().isOk())
       .andExpect(MockMvcResultMatchers.jsonPath("$.id").isString())
       .andExpect(MockMvcResultMatchers.jsonPath("$.note").value("Updated note"));
+  }
+
+  @Test
+  void getTripNotesByTripId() throws Exception {
+    var authorization = this.authTestUtils.generateAuthorizationHeader(this.userAccount);
+
+    this.mockMvc
+      .perform(
+        MockMvcRequestBuilders.post("/api/v1/trip-notes")
+          .header(HttpHeaders.AUTHORIZATION, authorization)
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(this.objectMapper.writeValueAsString(this.tripNote))
+      )
+      .andExpect(MockMvcResultMatchers.status().isOk());
+
+    this.mockMvc
+      .perform(
+        MockMvcRequestBuilders.get("/api/v1/trip-notes")
+          .header(HttpHeaders.AUTHORIZATION, authorization)
+          .param("tripId", this.trip.getId().toString())
+      )
+      .andExpect(MockMvcResultMatchers.status().isOk())
+      .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").isString())
+      .andExpect(MockMvcResultMatchers.jsonPath("$[0].note").isString());
+
+    this.mockMvc
+      .perform(
+        MockMvcRequestBuilders.get("/api/v1/trip-notes")
+          .header(HttpHeaders.AUTHORIZATION, authorization)
+          .param("tripId", this.trip.getId().toString())
+      )
+      .andExpect(MockMvcResultMatchers.status().isOk())
+      .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").doesNotExist())
+      .andExpect(MockMvcResultMatchers.jsonPath("$[1].note").doesNotExist());
+  }
+
+  @Test
+  void deleteTripNote() throws Exception {
+    var authorization = this.authTestUtils.generateAuthorizationHeader(this.userAccount);
+
+    var response = this.mockMvc
+      .perform(
+        MockMvcRequestBuilders.post("/api/v1/trip-notes")
+          .header(HttpHeaders.AUTHORIZATION, authorization)
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(this.objectMapper.writeValueAsString(this.tripNote))
+      )
+      .andExpect(MockMvcResultMatchers.status().isOk())
+      .andReturn();
+
+    var noteId = this.objectMapper.readTree(response.getResponse().getContentAsString()).get("id").asText();
+
+    this.mockMvc
+      .perform(
+        MockMvcRequestBuilders.delete("/api/v1/trip-notes")
+          .header(HttpHeaders.AUTHORIZATION, authorization)
+          .param("noteId", noteId)
+      )
+      .andExpect(MockMvcResultMatchers.status().isOk());
   }
 
 }
