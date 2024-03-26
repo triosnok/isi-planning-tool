@@ -15,7 +15,7 @@ import { A, useParams } from '@solidjs/router';
 import {
   IconCircleCheckFilled,
   IconEdit,
-  IconPlus
+  IconPlus,
 } from '@tabler/icons-solidjs';
 import {
   Component,
@@ -157,8 +157,8 @@ const Project: Component<LayoutProps> = (props) => {
                     <A href={`/projects/${params.id}/trip/${trip.id}`}>
                       <TripCard
                         sequenceNumber={trip.sequenceNumber}
-                        startedAt={d(trip.startedAt)}
-                        endedAt={d(trip.endedAt)}
+                        startedAt={d(trip.startedAt, DateFormat.MONTH_DAY)}
+                        endedAt={d(trip.endedAt, DateFormat.MONTH_DAY)}
                         deviations={trip.deviations}
                         notes={trip.noteCount}
                         length={320}
