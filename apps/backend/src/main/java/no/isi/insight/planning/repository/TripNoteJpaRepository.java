@@ -21,4 +21,8 @@ public interface TripNoteJpaRepository extends Repository<TripNote, UUID> {
   List<TripNote> getNotesByTripId(
       UUID tripId
   );
+
+  void deleteById(
+      UUID id
+  );
 }

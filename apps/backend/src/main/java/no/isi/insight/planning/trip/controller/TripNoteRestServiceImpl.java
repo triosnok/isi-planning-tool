@@ -92,4 +92,22 @@ public class TripNoteRestServiceImpl implements TripNoteRestService {
         .collect(Collectors.toList())
     );
   }
+
+  @Override
+  public ResponseEntity<TripNoteDetails> deleteNote(
+      UUID noteId
+  ) {
+    TripNote tripNote = tripNoteJpaRepository.findById(noteId)
+      .orElseThrow(() -> new NotFoundException("Note not found"));
+
+    tripNoteJpaRepository.deleteById(tripNote.getId());
+
+    return ResponseEntity.ok(
+      new TripNoteDetails(
+        tripNote.getId(),
+        tripNote.getNote(),
+        GeometryUtils.toClientGeometry(tripNote.getPosition())
+      )
+    );
+  }
 }
