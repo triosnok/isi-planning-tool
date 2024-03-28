@@ -24,4 +24,12 @@ public record ProjectDetails(
     return ProjectStatus.fromDates(startsAt, endsAt);
   }
 
+  public double getProgress() {
+    if (totalLength == 0) {
+      return 0;
+    }
+
+    return capturedLength / totalLength * 100;
+  }
+
 }
