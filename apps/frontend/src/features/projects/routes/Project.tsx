@@ -34,7 +34,7 @@ const Project: Component<LayoutProps> = (props) => {
   const params = useParams();
   const project = useProjectDetailsQuery(params.id);
   const plans = useProjectPlansQuery(params.id);
-  const { t, d } = useTranslations();
+  const { t, d, n } = useTranslations();
 
   const [selectedPlans, setSelectedPlans] = createSignal<string[]>([]);
   const [showNewTripDialog, setShowNewTripDialog] = createSignal(false);
@@ -91,8 +91,8 @@ const Project: Component<LayoutProps> = (props) => {
             <div class='text-center'>
               <Progress class='rounded-lg' value={project.data?.progress} />
               <p>
-                {project.data?.capturedLength} /{' '}
-                {project.data?.totalLength.toFixed(0)} m
+                {n(project.data?.capturedLength ?? 0)} /{' '}
+                {n(project.data?.totalLength ?? 0)} m
               </p>
             </div>
           </div>
