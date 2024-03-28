@@ -1,8 +1,8 @@
 import { RoadRailing } from '@isi-insight/client';
 import Leaflet from 'leaflet';
+import 'leaflet-textpath';
 import { Component, createEffect, onCleanup } from 'solid-js';
 import { parse, useMap } from './MapRoot';
-import 'leaflet-textpath';
 
 export interface MapRailingLayerProps {
   railings?: RoadRailing[];
@@ -20,7 +20,7 @@ const MapRailingLayer: Component<MapRailingLayerProps> = (props) => {
 
   createEffect(() => {
     const polylines = props.railings?.map((railing) => {
-      const ls = parse(railing.geometry.wkt);
+      const ls = parse(railing.geometry);
       const line = Leaflet.polyline(ls, {
         color: getRailingColor(railing.captureGrade),
         weight: 4,
