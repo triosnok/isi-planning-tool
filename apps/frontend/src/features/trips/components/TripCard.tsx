@@ -64,7 +64,7 @@ const TripCard: Component<TripCardProps> = (props) => {
       </div>
 
       <div class='absolute right-0 top-0 p-2'>
-        <Show when={validEndDate}>
+        <Show when={validEndDate && props.deviations}>
           <div class='flex flex-row gap-1'>
             <IconAlertCircleFilled class='text-warning-500 size-5' />
             <p class='text-warning-500'>
@@ -72,13 +72,14 @@ const TripCard: Component<TripCardProps> = (props) => {
             </p>
           </div>
         </Show>
-
-        <div class='flex flex-row justify-end gap-1'>
-          <IconMessage class='size-5' />
-          <p>
-            {props.notes} {t('NOTES.TITLE')}
-          </p>
-        </div>
+        <Show when={props.notes}>
+          <div class='flex flex-row justify-end gap-1'>
+            <IconMessage class='size-5' />
+            <p>
+              {props.notes} {t('NOTES.TITLE')}
+            </p>
+          </div>
+        </Show>
       </div>
     </div>
   );
