@@ -1,19 +1,9 @@
 import BackLink from '@/components/navigation/BackLink';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import { Indicator } from '@/components/ui/indicator';
-import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { useTranslations } from '@/features/i18n';
-import { SubmitHandler, createForm, zodForm } from '@modular-forms/solid';
-import { useNavigate, useParams } from '@solidjs/router';
+import { useParams } from '@solidjs/router';
 import {
   IconCurrentLocation,
   IconDatabase,
@@ -22,42 +12,23 @@ import {
   IconVideo,
 } from '@tabler/icons-solidjs';
 import { Component, Show, createSignal } from 'solid-js';
-import { z } from 'zod';
-import { useTripDetailsQuery, useTripNoteMutation } from '../api';
+import { useTripDetailsQuery } from '../api';
 import TripSummaryDialog from '../components/TripSummaryDialog';
-
-const TripNoteSchema = z.object({
-  note: z.string(),
-});
-
-type TripNoteForm = z.infer<typeof TripNoteSchema>;
+import TripNoteModule from '../components/TripNoteModule';
 
 const Trip: Component = () => {
   const params = useParams();
-  const { create } = useTripNoteMutation(params.tripId);
-  const navigate = useNavigate();
-  const [form, { Form, Field }] = createForm({
-    validate: zodForm(TripNoteSchema),
-  });
   const tripDetails = useTripDetailsQuery(params.tripId);
 
   const [showSummaryDialog, setShowSummaryDialog] = createSignal(false);
-  const [isDialogOpen, setIsDialogOpen] = createSignal(false);
 
-  const handleSubmit: SubmitHandler<TripNoteForm> = async (values) => {
-    try {
-      await create.mutateAsync({ ...values, tripId: params.tripId });
-      setIsDialogOpen(false);
-    } catch (error) {
-      // ignored
-    }
-  };
+  const [showTripNoteModule, setShowTripNoteModule] = createSignal(false);
 
   const { t } = useTranslations();
 
   return (
     <>
-      <div class='absolute bottom-0 w-full rounded-md bg-gray-50 p-2 md:bottom-auto md:left-4 md:top-4 md:w-1/2 lg:w-2/5 xl:w-1/3 dark:bg-gray-900'>
+      <section class='absolute bottom-0 w-full rounded-md bg-gray-50 p-2 md:bottom-auto md:left-4 md:top-4 md:w-1/2 lg:w-2/5 xl:w-1/3 dark:bg-gray-900'>
         <div class='flex flex-col'>
           <div class='hidden md:flex'>
             <BackLink href='../..' />
@@ -71,19 +42,17 @@ const Trip: Component = () => {
               </h1>
               <h2 class='text-sm'>21 Jan - 31 Mar</h2>
             </div>
-            <Dialog open={isDialogOpen()} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger as={Button} class='order-last md:order-none'>
-                <div class='flex items-center gap-2'>
-                  <IconMessage />
-                  <p class='md:hidden'>{t('NOTES.ADD_NOTE')}</p>
-                </div>
-              </DialogTrigger>
-              <DialogContent class='sm:max-w-[425px]'>
-                <DialogHeader>
-                  <DialogTitle>Add note</DialogTitle>
-                  <DialogDescription>Add a note to this trip</DialogDescription>
-                </DialogHeader>
-                <Form
+            <Button
+              onClick={() => setShowTripNoteModule(true)}
+              class='order-last md:order-none'
+            >
+              <div class='flex items-center gap-2'>
+                <IconMessage />
+                <p class='md:hidden'>{t('NOTES.ADD_NOTE')}</p>
+              </div>
+            </Button>
+
+            {/* <Form
                   id='add-trip-note'
                   onSubmit={handleSubmit}
                   class='flex flex-col gap-4'
@@ -100,9 +69,8 @@ const Trip: Component = () => {
                     )}
                   </Field>
                   <Button type='submit'>{t('GENERAL.SAVE')}</Button>
-                </Form>
-              </DialogContent>
-            </Dialog>
+                </Form> */}
+
             <div class='order-2 w-full text-center md:order-none'>
               <Progress class='rounded-lg' value={20} />
               <p>{'2 000 / 10 000 m'}</p>
@@ -151,9 +119,18 @@ const Trip: Component = () => {
             </Button>
           </Show>
         </div>
-      </div>
+      </section>
+
+      <Show when={showTripNoteModule()}>
+        <TripNoteModule
+          tripId={params.tripId}
+          open={showTripNoteModule()}
+          onOpenChange={setShowTripNoteModule}
+        />
+      </Show>
+
       <Show when={!tripDetails.data?.endedAt}>
-        <div class='absolute bottom-4 left-4 hidden w-full rounded-md bg-gray-50 p-2 md:block md:w-1/2 lg:w-2/5 xl:w-1/3 dark:bg-gray-900'>
+        <section class='absolute bottom-4 left-4 hidden w-full rounded-md bg-gray-50 p-2 md:block md:w-1/2 lg:w-2/5 xl:w-1/3 dark:bg-gray-900'>
           <Button
             onClick={() => setShowSummaryDialog(true)}
             variant='destructive'
@@ -161,7 +138,7 @@ const Trip: Component = () => {
           >
             {t('TRIPS.END_TRIP')}
           </Button>
-        </div>
+        </section>
       </Show>
     </>
   );
