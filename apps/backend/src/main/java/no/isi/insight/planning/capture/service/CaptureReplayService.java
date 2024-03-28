@@ -11,15 +11,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.springframework.context.event.EventListener;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.isi.insight.planning.capture.model.ProcessedLogEntry;
-import no.isi.insight.planning.client.capture.view.CaptureDetails;
 import no.isi.insight.planning.trip.event.TripEndedEvent;
 import no.isi.insight.planning.trip.event.TripStartedEvent;
 
@@ -31,7 +29,6 @@ import no.isi.insight.planning.trip.event.TripStartedEvent;
 @RequiredArgsConstructor
 public class CaptureReplayService {
   private final CaptureReplayFileService fileService;
-  private final ObjectMapper objectMapper;
   private final Map<UUID, List<SseEmitter>> emitters = new HashMap<>();
   private final Map<UUID, CaptureLogReplay> replays = new HashMap<>();
   private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
@@ -46,7 +43,7 @@ public class CaptureReplayService {
   public SseEmitter createEmitter(
       UUID tripId
   ) {
-    var emitter = new SseEmitter();
+    var emitter = new SseEmitter(Long.MAX_VALUE);
 
     emitter.onCompletion(() -> {
       if (this.emitters.containsKey(tripId)) {
@@ -97,8 +94,8 @@ public class CaptureReplayService {
           if (cd.isPresent() && this.emitters.containsKey(tripId)) {
             var event = SseEmitter.event()
               .id(UUID.randomUUID().toString())
-              .name("capture")
-              .data(this.objectMapper.writeValueAsString(cd.get()))
+              .name("message")
+              .data(cd.get(), MediaType.APPLICATION_JSON)
               .build();
 
             for (var emitter : this.emitters.get(tripId)) {
@@ -125,14 +122,10 @@ public class CaptureReplayService {
    * 
    * @return the capture details, if available
    */
-  public Optional<CaptureDetails> getCaptureDetails(
+  public boolean hasTrip(
       UUID tripId
   ) {
-    if (!this.replays.containsKey(tripId)) {
-      return Optional.empty();
-    }
-
-    return this.replays.get(tripId).getCaptureDetails();
+    return this.replays.containsKey(tripId);
   }
 
   /**
