@@ -76,6 +76,13 @@
     "START_TRIP": "Start trip",
     "END_TRIP": "End trip",
     "ONGOING_TRIPS": "Ongoing trips",
+    "TRIP_SUMMARY": {
+      "TITLE": "Trip summary",
+      "AMOUNT_OF_IMAGES_TAKEN": "Amount of images taken",
+      "LEFT": "Left",
+      "RIGHT": "Right",
+      "TOP": "Top"
+    },
     "TRIP_INDICATORS": {
       "STORAGE_LEFT": "Storage left",
       "GPS": "GPS",
