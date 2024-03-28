@@ -52,6 +52,7 @@ const Projects: Component = () => {
                     totalLength={project.totalLength}
                     notes={project.notes}
                     deviations={project.deviations}
+                    progress={project.progress}
                   />
                 </A>
               )}
@@ -76,6 +77,7 @@ const Projects: Component = () => {
                     totalLength={project.totalLength}
                     notes={project.notes}
                     deviations={project.deviations}
+                    progress={project.progress}
                   />
                 </A>
               )}
@@ -100,6 +102,7 @@ const Projects: Component = () => {
                     totalLength={project.totalLength}
                     notes={project.notes}
                     deviations={project.deviations}
+                    progress={project.progress}
                   />
                 </A>
               )}

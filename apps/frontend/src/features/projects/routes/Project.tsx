@@ -89,8 +89,11 @@ const Project: Component<LayoutProps> = (props) => {
               </A>
             </div>
             <div class='text-center'>
-              <Progress class='rounded-lg' value={20} />
-              <p>{'2 000 / 10 000 m'}</p>
+              <Progress class='rounded-lg' value={project.data?.progress} />
+              <p>
+                {project.data?.capturedLength} /{' '}
+                {project.data?.totalLength.toFixed(0)} m
+              </p>
             </div>
           </div>
         </div>

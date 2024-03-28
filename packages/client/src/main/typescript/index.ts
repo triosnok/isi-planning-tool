@@ -55,6 +55,7 @@ export interface ProjectDetails {
     totalLength: number;
     deviations: number;
     notes: number;
+    progress: number;
     status: ProjectStatus;
 }
 

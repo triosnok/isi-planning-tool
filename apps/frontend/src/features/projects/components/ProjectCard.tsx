@@ -20,14 +20,11 @@ export interface ProjectCardProps {
   totalLength: number;
   deviations: number;
   notes: number;
+  progress: number;
 }
 
 const ProjectCard: Component<ProjectCardProps> = (props) => {
   const { t, n } = useTranslations();
-  const progress =
-    props.totalLength === 0
-      ? 0
-      : (props.capturedLength / props.totalLength) * 100;
 
   return (
     <div class='overflow-hidden truncate rounded-lg border hover:cursor-pointer hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-gray-900'>
@@ -76,7 +73,7 @@ const ProjectCard: Component<ProjectCardProps> = (props) => {
         </div>
       </div>
 
-      <Progress value={progress} />
+      <Progress value={props.progress} />
     </div>
   );
 };
