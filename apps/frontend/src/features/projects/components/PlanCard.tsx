@@ -16,7 +16,7 @@ export interface PlanCardProps {
 }
 
 const PlanCard: Component<PlanCardProps> = (props) => {
-  const { t } = useTranslations();
+  const { t, n } = useTranslations();
 
   return (
     <div
@@ -62,7 +62,7 @@ const PlanCard: Component<PlanCardProps> = (props) => {
           <p>
             {props.railingAmount} {t('RAILINGS.TITLE')}
           </p>
-          <p>{props.length} m</p>
+          <p>{n(props.length)} m</p>
         </div>
       </div>
     </div>
