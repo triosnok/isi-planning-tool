@@ -20,12 +20,13 @@ import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import no.isi.insight.planning.client.trip.view.CameraPosition;
 import no.isi.insight.planning.capture.config.CaptureProcessingConfig;
 import no.isi.insight.planning.capture.model.CameraLogEntry;
 import no.isi.insight.planning.capture.model.PositionLogEntry;
 import no.isi.insight.planning.capture.model.ProcessedLogEntry;
+import no.isi.insight.planning.client.trip.view.CameraPosition;
 import no.isi.insight.planning.geometry.GeometryService;
+import no.isi.insight.planning.utility.GeometryUtils;
 
 @Slf4j
 @Service
@@ -41,12 +42,11 @@ public class CaptureLogProcessor {
       CaptureProcessingConfig processingConfig,
       GeometryService geometryService
   ) {
-    this.mapper = new CsvMapper();
-    this.mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    this.mapper = CsvMapper.builder().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).build();
     this.gnssSchema = this.mapper.schemaFor(PositionLogEntry.class).withHeader().withColumnReordering(true);
     this.cameraSchema = this.mapper.schemaFor(CameraLogEntry.class).withHeader().withColumnReordering(true);
-    this.geometryService = geometryService;
     this.maxDeltaMs = processingConfig.getMaxDeltaMs();
+    this.geometryService = geometryService;
   }
 
   /**
@@ -85,7 +85,7 @@ public class CaptureLogProcessor {
       cameraIterators.put(position, iterator);
     }
 
-    int gnssSkips = 0;
+    int noImages = 0;
     int leftCount = 0;
     int rightCount = 0;
     int topCount = 0;
@@ -113,11 +113,9 @@ public class CaptureLogProcessor {
       var matches = List.of(left, right, top);
 
       if (!matches.stream().anyMatch(e -> e.should(CameraResultType.KEEP))) {
-        gnssSkips++;
-        continue;
+        noImages++;
       }
 
-      var point = this.geometryService.createPoint(gnss.getLongitude(), gnss.getLatitude());
       var timestamp = LocalDateTime.ofInstant(Instant.ofEpochMilli(gnss.getTimestamp()), ZoneId.systemDefault());
 
       var images = new HashMap<CameraPosition, String>();
@@ -136,8 +134,11 @@ public class CaptureLogProcessor {
         }
       }
 
+      var point = this.geometryService.createPoint(gnss.getLongitude(), gnss.getLatitude());
+      point.setSRID(4326);
+
       var processed = new ProcessedLogEntry(
-        point,
+        GeometryUtils.toClientGeometry(point),
         gnss.getHeading(),
         timestamp,
         images
@@ -147,8 +148,8 @@ public class CaptureLogProcessor {
     }
 
     log.info(
-      "Finished processing capture logs. Skipped {} GNSS entries. [LEFT={},RIGHT={},TOP={}]",
-      gnssSkips,
+      "Finished processing capture logs. {} GNSS entries have no images. [LEFT={},RIGHT={},TOP={}]",
+      noImages,
       leftCount,
       rightCount,
       topCount

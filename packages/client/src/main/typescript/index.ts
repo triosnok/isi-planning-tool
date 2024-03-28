@@ -17,6 +17,17 @@ export interface UserProfile {
     role: UserRole;
 }
 
+export interface CaptureDetails {
+    usedStorage: number;
+    totalStorage: number;
+    position: Geometry;
+    heading: number;
+    gpsSignal: number;
+    activeCapture: boolean;
+    images: { [P in CameraPosition]?: number };
+    storageUsage: number;
+}
+
 export interface Geometry {
     wkt: string;
     srid: number;
@@ -90,6 +101,8 @@ export interface CreateTripNoteRequest {
 export interface CreateTripRequest {
     planId: string;
     vehicleId: string;
+    captureLogId?: string | null;
+    replaySpeed?: number | null;
 }
 
 export interface TripDetails {
@@ -151,6 +164,8 @@ export interface VehicleDetails {
 export type DateAsString = string;
 
 export type UserRole = "DRIVER" | "PLANNER";
+
+export type CaptureAction = "RESUME" | "PAUSE";
 
 export type ProjectStatus = "UPCOMING" | "ONGOING" | "PREVIOUS";
 

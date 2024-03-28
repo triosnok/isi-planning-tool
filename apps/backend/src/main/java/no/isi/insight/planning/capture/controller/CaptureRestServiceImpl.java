@@ -1,31 +1,42 @@
 package no.isi.insight.planning.capture.controller;
 
 import java.nio.file.Files;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import no.isi.insight.planning.auth.annotation.DriverAuthorization;
 import no.isi.insight.planning.auth.annotation.PlannerAuthorization;
 import no.isi.insight.planning.capture.service.CaptureLogProcessor;
+import no.isi.insight.planning.capture.service.CaptureReplayFileService;
+import no.isi.insight.planning.capture.service.CaptureReplayService;
 import no.isi.insight.planning.client.capture.CaptureRestService;
+import no.isi.insight.planning.client.capture.view.CaptureAction;
+import no.isi.insight.planning.client.capture.view.CaptureDetails;
 import no.isi.insight.planning.client.trip.view.CameraPosition;
-import no.isi.insight.planning.repository.TripRailingCaptureJdbcRepository;
+import no.isi.insight.planning.error.model.NotFoundException;
+import no.isi.insight.planning.repository.TripJpaRepository;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 public class CaptureRestServiceImpl implements CaptureRestService {
   private final CaptureLogProcessor logProcessor;
-  private final TripRailingCaptureJdbcRepository railingCaptureJdbcRepository;
+  private final TripJpaRepository tripJpaRepository;
+  private final CaptureReplayFileService captureReplayFileService;
+  private final CaptureReplayService captureReplayService;
 
   @Override
   @PlannerAuthorization
   public void uploadLogs(
-      UUID tripId,
+      String logIdentifier,
       MultipartFile gnssLog,
       MultipartFile topCameraLog,
       MultipartFile leftCameraLog,
@@ -62,16 +73,55 @@ public class CaptureRestServiceImpl implements CaptureRestService {
       );
 
       var logEntries = this.logProcessor.processLogs(gnssLogTemp, cameraLogs);
-      this.railingCaptureJdbcRepository.saveRailingCapture(tripId, logEntries);
 
       gnssLogTemp.delete();
       topCameraLogTemp.delete();
       leftCameraLogTemp.delete();
       rightCameraLogTemp.delete();
 
+      this.captureReplayFileService.saveCapture(logIdentifier, logEntries);
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  @Override
+  @DriverAuthorization
+  public List<String> getCaptureLogs() {
+    return this.captureReplayFileService.listCaptures();
+  }
+
+  @Override
+  @DriverAuthorization
+  public ResponseEntity<CaptureDetails> captureAction(
+      UUID tripId,
+      CaptureAction action
+  ) {
+    var cd = this.captureReplayService.getCaptureDetails(tripId)
+      .orElseThrow(() -> new NotFoundException("No ongoing capture"));
+
+    switch (action) {
+      case RESUME -> this.captureReplayService.resumeReplay(tripId);
+      case PAUSE -> this.captureReplayService.pauseReplay(tripId);
+    }
+
+    return ResponseEntity.ok(cd);
+  }
+
+  @Override
+  @DriverAuthorization
+  public SseEmitter streamCapture(
+      UUID tripId
+  ) {
+    var trip = this.tripJpaRepository.findById(tripId).orElseThrow(() -> new NotFoundException("Trip not found"));
+
+    if (trip.isEnded()) {
+      log.warn("Trip was ended");
+    }
+
+    var emitter = this.captureReplayService.createEmitter(tripId);
+
+    return emitter;
   }
 
 }

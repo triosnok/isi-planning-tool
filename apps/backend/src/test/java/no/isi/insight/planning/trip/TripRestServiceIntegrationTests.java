@@ -81,7 +81,9 @@ class TripRestServiceIntegrationTests {
 
     this.trip = new CreateTripRequest(
       projectPlan.getId(),
-      vehicle.getId()
+      vehicle.getId(),
+      null,
+      null
     );
 
     String uniquePlannerEmail = UUID.randomUUID().toString() + "@email.invalid";

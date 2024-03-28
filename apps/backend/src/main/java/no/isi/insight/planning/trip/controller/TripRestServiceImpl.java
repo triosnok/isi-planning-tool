@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +22,8 @@ import no.isi.insight.planning.model.Vehicle;
 import no.isi.insight.planning.repository.ProjectPlanJpaRepository;
 import no.isi.insight.planning.repository.TripJpaRepository;
 import no.isi.insight.planning.repository.VehicleJpaRepository;
+import no.isi.insight.planning.trip.event.TripEndedEvent;
+import no.isi.insight.planning.trip.event.TripStartedEvent;
 import no.isi.insight.planning.utility.RequestUtils;
 
 @RestController
@@ -29,6 +32,7 @@ public class TripRestServiceImpl implements TripRestService {
   private final TripJpaRepository tripJpaRepository;
   private final ProjectPlanJpaRepository planJpaRepository;
   private final VehicleJpaRepository vehicleJpaRepository;
+  private final ApplicationEventPublisher eventPublisher;
 
   @Override
   @DriverAuthorization
@@ -56,6 +60,14 @@ public class TripRestServiceImpl implements TripRestService {
     );
 
     Trip savedTrip = tripJpaRepository.save(trip);
+
+    this.eventPublisher.publishEvent(
+      new TripStartedEvent(
+        savedTrip.getId(),
+        request.captureLogId(),
+        request.replaySpeed()
+      )
+    );
 
     return ResponseEntity.ok(
       new TripDetails(
@@ -121,6 +133,8 @@ public class TripRestServiceImpl implements TripRestService {
     trip.setCameraLogs(request.cameraLogs());
 
     Trip savedTrip = tripJpaRepository.save(trip);
+
+    this.eventPublisher.publishEvent(new TripEndedEvent(tripId));
 
     var noteCount = tripJpaRepository.countTripNotesByTripId(trip.getId());
 

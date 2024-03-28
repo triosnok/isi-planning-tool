@@ -67,7 +67,7 @@ public class TripRailingCaptureJdbcRepository {
         log.error("Failed to serialize images", e);
       }
 
-      params.addValue("position", entry.point().toText());
+      params.addValue("position", entry.position().wkt());
       params.addValue("timestamp", entry.timestamp());
       params.addValue("heading", entry.heading());
       params.addValue("images", imagesJson);
@@ -82,7 +82,7 @@ public class TripRailingCaptureJdbcRepository {
     // language=sql
     final var insertRailingsQuery = """
       WITH base_candidate AS (
-	      SELECT
+       SELECT
           rr.road_railing_id,
           ST_ClosestPoint(rr.geometry, ttrl.position) AS rail_closest,
           ttrl.timestamp,
@@ -94,7 +94,7 @@ public class TripRailingCaptureJdbcRepository {
           ON ST_DWithin(ttrl.POSITION, rr.geometry, 4)
       ),
       projected_candidate AS (
-        SELECT 
+        SELECT
           bc.road_railing_id,
           bc.timestamp,
           bc.position,
@@ -109,11 +109,11 @@ public class TripRailingCaptureJdbcRepository {
         FROM base_candidate bc
       ),
       candidate AS (
-        SELECT 
+        SELECT
           *,
-          (CASE 
+          (CASE
             WHEN pc.angle BETWEEN 0 AND 179 THEN 'RIGHT'
-			      WHEN pc.angle BETWEEN 180 AND 360 THEN 'LEFT'
+         WHEN pc.angle BETWEEN 180 AND 360 THEN 'LEFT'
           END) AS railing_side
         FROM projected_candidate pc
       )
@@ -133,7 +133,7 @@ public class TripRailingCaptureJdbcRepository {
         ON pprr.fk_road_railing_id = c.road_railing_id
       WHERE 1=1
         AND (t.trip_id = :tripId)
-      	AND (CASE 
+      	AND (CASE
       	  WHEN c.railing_side = 'LEFT' THEN c.images->>'LEFT' IS NOT NULL
       	  WHEN c.railing_side = 'RIGHT' THEN c.images->>'RIGHT' IS NOT NULL
       	  ELSE FALSE

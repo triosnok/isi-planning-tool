@@ -79,4 +79,9 @@ public class Trip {
     this.startedAt = startedAt;
     this.sequenceNumber = sequenceNumber;
   }
+
+  public boolean isEnded() {
+    return this.endedAt != null;
+  }
+
 }
