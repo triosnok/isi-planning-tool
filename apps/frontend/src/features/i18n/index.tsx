@@ -55,6 +55,10 @@ export const I18nProvider: Component<{ children: JSX.Element }> = (props) => {
         style: 'decimal',
         maximumFractionDigits: 2,
       }),
+      [NumberFormat.PERCENTAGE]: new Intl.NumberFormat(locale(), {
+        style: 'percent',
+        maximumFractionDigits: 0,
+      }),
     };
   });
 
@@ -94,6 +98,7 @@ const useI18n = () => {
 export enum NumberFormat {
   INTEGER = 'integer',
   DECIMAL = 'decimal',
+  PERCENTAGE = 'percentage',
 }
 
 export enum DateFormat {
@@ -110,7 +115,7 @@ export enum DateFormat {
  */
 export const useTranslations = () => {
   const ctx = useI18n();
-  const t = i18n.translator(ctx.dict);
+  const t = i18n.translator(ctx.dict, i18n.resolveTemplate);
 
   /**
    * Formats a number according to the current locale.
@@ -120,7 +125,8 @@ export const useTranslations = () => {
    *
    * @returns the formatted number
    */
-  const n = (value: number, format?: NumberFormat) => {
+  const n = (value?: number, format?: NumberFormat) => {
+    if (value === undefined) return '';
     const numberFormat = format ?? NumberFormat.DECIMAL;
     return ctx.numberFormats()[numberFormat].format(value);
   };
@@ -133,7 +139,9 @@ export const useTranslations = () => {
    *
    * @returns the formatted date
    */
-  const d = (value: Date | string, format?: DateFormat) => {
+  const d = (value?: Date | string, format?: DateFormat) => {
+    if (value === undefined) return '';
+
     const dateFormat = format ?? DateFormat.DATETIME;
     const formats = ctx.dateFormats();
     return dayjs(value).format(formats[dateFormat]);

@@ -4,7 +4,7 @@ import { splitProps } from 'solid-js';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 
-import { cn } from '@/lib/utils';
+import { IconType, cn } from '@/lib/utils';
 
 const indicatorVariants = cva('rounded-lg border-2 p-2 truncate', {
   variants: {
@@ -27,7 +27,7 @@ const indicatorVariants = cva('rounded-lg border-2 p-2 truncate', {
 export interface IndicatorProps
   extends ComponentProps<'div'>,
     VariantProps<typeof indicatorVariants> {
-  icon: JSX.Element;
+  icon: IconType;
   indicates: string;
   status: string;
 }
@@ -50,7 +50,7 @@ const Indicator: Component<IndicatorProps> = (props) => {
       )}
       {...rest}
     >
-      {local.icon}
+      <local.icon />
       {local.indicates}
       <span>{local.status}</span>
     </div>

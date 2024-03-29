@@ -1,3 +1,4 @@
+import MapCarLayer from '@/components/map/MapCarLayer';
 import BackLink from '@/components/navigation/BackLink';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,9 +12,11 @@ import {
 import { Indicator } from '@/components/ui/indicator';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
-import { useTranslations } from '@/features/i18n';
+import { DateFormat, NumberFormat, useTranslations } from '@/features/i18n';
+import { useProjectDetailsQuery } from '@/features/projects/api';
+import { CaptureAction } from '@isi-insight/client';
 import { SubmitHandler, createForm, zodForm } from '@modular-forms/solid';
-import { useNavigate, useParams } from '@solidjs/router';
+import { useParams } from '@solidjs/router';
 import {
   IconCurrentLocation,
   IconDatabase,
@@ -23,7 +26,12 @@ import {
 } from '@tabler/icons-solidjs';
 import { Component, Show, createSignal } from 'solid-js';
 import { z } from 'zod';
-import { useTripDetailsQuery, useTripNoteMutation } from '../api';
+import {
+  useTripCaptureAction,
+  useTripCaptureDetails,
+  useTripDetailsQuery,
+  useTripNoteMutation,
+} from '../api';
 import TripSummaryDialog from '../components/TripSummaryDialog';
 
 const TripNoteSchema = z.object({
@@ -34,12 +42,15 @@ type TripNoteForm = z.infer<typeof TripNoteSchema>;
 
 const Trip: Component = () => {
   const params = useParams();
+  const project = useProjectDetailsQuery(params.projectId);
   const { create } = useTripNoteMutation(params.tripId);
-  const navigate = useNavigate();
-  const [form, { Form, Field }] = createForm({
+  const captureDetails = useTripCaptureDetails(params.tripId);
+  const captureAction = useTripCaptureAction(params.tripId);
+  const [_form, { Form, Field }] = createForm({
     validate: zodForm(TripNoteSchema),
   });
   const tripDetails = useTripDetailsQuery(params.tripId);
+  const { t, d, n } = useTranslations();
 
   const [showSummaryDialog, setShowSummaryDialog] = createSignal(false);
   const [isDialogOpen, setIsDialogOpen] = createSignal(false);
@@ -53,11 +64,15 @@ const Trip: Component = () => {
     }
   };
 
-  const { t } = useTranslations();
+  const handleCaptureAction = () => {
+    const isCapturing = captureDetails()?.activeCapture;
+    const action: CaptureAction = isCapturing ? 'PAUSE' : 'RESUME';
+    captureAction.mutate(action);
+  };
 
   return (
     <>
-      <div class='absolute bottom-0 w-full rounded-md bg-gray-50 p-2 md:bottom-auto md:left-4 md:top-4 md:w-1/2 lg:w-2/5 xl:w-1/3 dark:bg-gray-900'>
+      <div class='absolute bottom-0 w-full rounded-md border bg-gray-50 p-2 shadow md:bottom-auto md:left-4 md:top-4 md:w-1/2 lg:w-2/5 xl:w-1/3 dark:border-gray-800 dark:bg-gray-950'>
         <div class='flex flex-col'>
           <div class='hidden md:flex'>
             <BackLink href='../..' />
@@ -67,9 +82,14 @@ const Trip: Component = () => {
           <div class='flex flex-col justify-between space-y-2 md:flex-row md:flex-wrap'>
             <div class='order-first md:order-none'>
               <h1 class='text-3xl font-bold'>
-                Project 1 - {t('TRIPS.TRIP')} {tripDetails.data?.sequenceNumber}
+                {project.data?.name} - {t('TRIPS.TRIP')}{' '}
+                {tripDetails.data?.sequenceNumber}
               </h1>
-              <h2 class='text-sm'>21 Jan - 31 Mar</h2>
+              <span class='text-sm'>
+                {d(project.data?.startsAt, DateFormat.MONTH_DAY)}
+                {' - '}
+                {d(project.data?.endsAt, DateFormat.MONTH_DAY)}
+              </span>
             </div>
             <Dialog open={isDialogOpen()} onOpenChange={setIsDialogOpen}>
               <DialogTrigger as={Button} class='order-last md:order-none'>
@@ -104,32 +124,45 @@ const Trip: Component = () => {
               </DialogContent>
             </Dialog>
             <div class='order-2 w-full text-center md:order-none'>
-              <Progress class='rounded-lg' value={20} />
-              <p>{'2 000 / 10 000 m'}</p>
+              <Progress class='rounded-lg' value={project.data?.progress} />
+              <p>
+                {n(project.data?.capturedLength, NumberFormat.INTEGER)}
+                {' / '}
+                {n(project.data?.totalLength, NumberFormat.INTEGER)}
+                {' m'}
+              </p>
             </div>
           </div>
           <section class='grid grid-cols-2 gap-2 text-sm md:grid-cols-4'>
             <Indicator
-              variant={'warning'}
-              icon={<IconDatabase />}
+              variant='warning'
+              icon={IconDatabase}
               indicates='Storage left'
-              status='20%'
+              status={n(
+                captureDetails()?.storageRemaining,
+                NumberFormat.PERCENTAGE
+              )}
             />
+
             <Indicator
-              variant={'success'}
-              icon={<IconCurrentLocation />}
+              variant='success'
+              icon={IconCurrentLocation}
               indicates='GPS'
-              status='100%'
+              status={n(captureDetails()?.gpsSignal, NumberFormat.PERCENTAGE)}
             />
+
             <Indicator
-              variant={'undetermined'}
-              icon={<IconVideo />}
+              variant={
+                captureDetails()?.activeCapture ? 'success' : 'undetermined'
+              }
+              icon={IconVideo}
               indicates='Capture'
-              status='Inactive'
+              status={captureDetails()?.activeCapture ? 'Active' : 'Inactive'}
             />
+
             <Indicator
-              variant={'error'}
-              icon={<IconPhoto />}
+              variant='error'
+              icon={IconPhoto}
               indicates='Capture rate'
               status='55%'
             />
@@ -139,6 +172,7 @@ const Trip: Component = () => {
             tripId={params.tripId}
             open={showSummaryDialog()}
             onOpenChange={setShowSummaryDialog}
+            captureDetails={captureDetails()}
           />
 
           <Show when={!tripDetails.data?.endedAt}>
@@ -152,8 +186,24 @@ const Trip: Component = () => {
           </Show>
         </div>
       </div>
+
+      <Show when={captureDetails()}>
+        {(dt) => (
+          <MapCarLayer heading={dt().heading} position={dt().position} />
+        )}
+      </Show>
+
       <Show when={!tripDetails.data?.endedAt}>
-        <div class='absolute bottom-4 left-4 hidden w-full rounded-md bg-gray-50 p-2 md:block md:w-1/2 lg:w-2/5 xl:w-1/3 dark:bg-gray-900'>
+        <div class='absolute bottom-4 left-4 hidden w-full rounded-md bg-gray-50 p-2 md:block md:w-1/2 lg:w-2/5 xl:w-1/3 dark:bg-gray-950'>
+          <Button onClick={handleCaptureAction} class='w-full'>
+            <Show
+              when={!captureDetails()?.activeCapture}
+              fallback={<span>Stop capture</span>}
+            >
+              <span>Start capture</span>
+            </Show>
+          </Button>
+
           <Button
             onClick={() => setShowSummaryDialog(true)}
             variant='destructive'

@@ -5,8 +5,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useTranslations } from '@/features/i18n';
-import { CameraPosition } from '@isi-insight/client';
+import { NumberFormat, useTranslations } from '@/features/i18n';
+import { CameraPosition, CaptureDetails } from '@isi-insight/client';
 import { useNavigate } from '@solidjs/router';
 import {
   IconAlertCircleFilled,
@@ -26,6 +26,7 @@ import { ImageAnalysis, ImageStatus, getImageAnalysis } from '../utils';
 export interface TripSummaryDialogProps {
   open: boolean;
   tripId: string;
+  captureDetails?: CaptureDetails;
   onOpenChange: (open: boolean) => void;
 }
 
@@ -38,7 +39,7 @@ export type TripSummarySchemaValues = z.infer<typeof TripSummarySchema>;
 const TripSummaryDialog: Component<TripSummaryDialogProps> = (props) => {
   const navigate = useNavigate();
   const { update } = useTripMutation();
-  const { t } = useTranslations();
+  const { t, n } = useTranslations();
 
   const handleSubmit = async (values: TripSummarySchemaValues) => {
     try {
@@ -53,6 +54,8 @@ const TripSummaryDialog: Component<TripSummaryDialogProps> = (props) => {
     }
   };
 
+  const analysis = () => getImageAnalysis(props.captureDetails?.images ?? {});
+
   return (
     <Dialog open={props.open} onOpenChange={props.onOpenChange}>
       <DialogContent>
@@ -60,13 +63,16 @@ const TripSummaryDialog: Component<TripSummaryDialogProps> = (props) => {
           <DialogTitle>{t('TRIPS.TRIP_SUMMARY.TITLE')}</DialogTitle>
         </DialogHeader>
 
-        <ImageSummary
-          analysis={getImageAnalysis({
-            LEFT: 24000,
-            RIGHT: 23993,
-            TOP: 12111,
+        <p>
+          {t('TRIPS.TRIP_SUMMARY.TOTAL_RAILING_METERS_CAPTURED', {
+            meters: n(
+              props.captureDetails?.metersCaptured ?? 0,
+              NumberFormat.INTEGER
+            ),
           })}
-        />
+        </p>
+
+        <ImageSummary analysis={analysis()} />
 
         <Button
           variant='destructive'
@@ -183,7 +189,9 @@ const ImageSummary: Component<ImageSummaryProps> = (props) => {
         <For each={props.analysis.remarks}>
           {(remark) => (
             <li>
-              <span class='-ml-2'>{t(`TRIPS.TRIP_SUMMARY.REMARKS.${remark}`)}</span>
+              <span class='-ml-2'>
+                {t(`TRIPS.TRIP_SUMMARY.REMARKS.${remark}`)}
+              </span>
             </li>
           )}
         </For>

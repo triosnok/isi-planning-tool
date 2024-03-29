@@ -17,6 +17,11 @@ export interface UserProfile {
     role: UserRole;
 }
 
+export interface CaptureActionRequest {
+    tripId: string;
+    action: CaptureAction;
+}
+
 export interface CaptureDetails {
     usedStorage: number;
     totalStorage: number;
@@ -24,8 +29,15 @@ export interface CaptureDetails {
     heading: number;
     gpsSignal: number;
     activeCapture: boolean;
+    metersCaptured: number;
     images: { [P in CameraPosition]?: number };
-    storageUsage: number;
+    storageRemaining: number;
+}
+
+export interface CaptureLogDetails {
+    name: string;
+    updatedAt: DateAsString;
+    size: number;
 }
 
 export interface Geometry {

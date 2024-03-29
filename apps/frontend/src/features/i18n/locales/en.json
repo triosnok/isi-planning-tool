@@ -78,6 +78,7 @@
     "ONGOING_TRIPS": "Ongoing trips",
     "TRIP_SUMMARY": {
       "TITLE": "Trip summary",
+      "TOTAL_RAILING_METERS_CAPTURED": "A total of {{ meters }} meters of railing has been captured",
       "AMOUNT_OF_IMAGES_TAKEN": "Amount of images taken",
       "LEFT": "Left",
       "RIGHT": "Right",
