@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { useTripNoteMutation } from '../api';
-import { Component } from 'solid-js';
+import { Component, createSignal } from 'solid-js';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { IconSend2, IconPencil, IconTrash } from '@tabler/icons-solidjs';
@@ -25,7 +25,7 @@ const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
   const [form, { Form, Field }] = createForm({
     validate: zodForm(TripNoteSchema),
   });
-
+  const [selectedNote, setSelectedNote] = createSignal(false);
 
   const handleSubmit: SubmitHandler<TripNoteForm> = async (values) => {
     try {
@@ -34,7 +34,7 @@ const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
       // ignored
     }
   };
-  
+
   const { t } = useTranslations();
 
   return (
@@ -53,10 +53,11 @@ const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
             placeholder={t('NOTES.NOTE') + '...'}
           />
 
-          <div class='bg-brand-blue hover:bg-brand-blue-800/90 rounded-full p-2'>
+          <Button class='size-10 rounded-full p-0'>
             <IconSend2 class='size-5 text-gray-50' />
-          </div>
+          </Button>
         </label>
+
         <div class='flex justify-between space-x-2'>
           <Button class='w-full bg-gray-100 hover:bg-gray-100'>
             <IconPencil class='text-gray-600' />
@@ -70,6 +71,8 @@ const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
       <TripNoteCard
         timestamp='01/31/2024 9:43 AM'
         note='Guardrail missing. Pls fix.'
+        onToggle={() => setSelectedNote(!selectedNote())}
+        selected={selectedNote()}
       />
     </section>
   );

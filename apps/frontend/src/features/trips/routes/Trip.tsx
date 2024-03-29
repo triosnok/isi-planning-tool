@@ -21,7 +21,6 @@ const Trip: Component = () => {
   const tripDetails = useTripDetailsQuery(params.tripId);
 
   const [showSummaryDialog, setShowSummaryDialog] = createSignal(false);
-
   const [showTripNoteModule, setShowTripNoteModule] = createSignal(false);
 
   const { t } = useTranslations();
@@ -43,7 +42,7 @@ const Trip: Component = () => {
               <h2 class='text-sm'>21 Jan - 31 Mar</h2>
             </div>
             <Button
-              onClick={() => setShowTripNoteModule(true)}
+              onClick={() => setShowTripNoteModule(!showTripNoteModule())}
               class='order-last md:order-none'
             >
               <div class='flex items-center gap-2'>
