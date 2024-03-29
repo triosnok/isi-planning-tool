@@ -46,7 +46,8 @@ public class TripNoteRestServiceImpl implements TripNoteRestService {
       new TripNoteDetails(
         savedTripNote.getId(),
         savedTripNote.getNote(),
-        GeometryUtils.toClientGeometry(savedTripNote.getPosition())
+        GeometryUtils.toClientGeometry(savedTripNote.getPosition()),
+        savedTripNote.getAudit().getCreatedAt()
       )
     );
   }
@@ -69,7 +70,8 @@ public class TripNoteRestServiceImpl implements TripNoteRestService {
       new TripNoteDetails(
         savedTripNote.getId(),
         savedTripNote.getNote(),
-        GeometryUtils.toClientGeometry(savedTripNote.getPosition())
+        GeometryUtils.toClientGeometry(savedTripNote.getPosition()),
+        savedTripNote.getAudit().getCreatedAt()
       )
     );
   }
@@ -88,7 +90,8 @@ public class TripNoteRestServiceImpl implements TripNoteRestService {
           tripNote -> new TripNoteDetails(
             tripNote.getId(),
             tripNote.getNote(),
-            GeometryUtils.toClientGeometry(tripNote.getPosition())
+            GeometryUtils.toClientGeometry(tripNote.getPosition()),
+            tripNote.getAudit().getCreatedAt()
           )
         )
         .collect(Collectors.toList())
@@ -109,7 +112,8 @@ public class TripNoteRestServiceImpl implements TripNoteRestService {
       new TripNoteDetails(
         tripNote.getId(),
         tripNote.getNote(),
-        GeometryUtils.toClientGeometry(tripNote.getPosition())
+        GeometryUtils.toClientGeometry(tripNote.getPosition()),
+        tripNote.getAudit().getCreatedAt()
       )
     );
   }

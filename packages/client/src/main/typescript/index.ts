@@ -121,6 +121,7 @@ export interface TripNoteDetails {
     id: string;
     note: string;
     geometry: Geometry;
+    createdAt: DateAsString;
 }
 
 export interface UpdateTripRequest {
