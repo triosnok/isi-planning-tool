@@ -39,6 +39,7 @@ export const parse = (geometry: Geometry) => {
     .replace('LINESTRING(', '')
     .replace('LINESTRING Z(', '')
     .replace('POINT(', '')
+    .replace('POINT (', '')
     .replace(')', '');
 
   const rawCoords = stripped.split(',');
@@ -59,6 +60,7 @@ export const parse = (geometry: Geometry) => {
 };
 
 export const parsePoint = (geometry: Geometry) => {
+  console.log(geometry);
   const points = parse(geometry);
 
   if (points.length < 1) {
