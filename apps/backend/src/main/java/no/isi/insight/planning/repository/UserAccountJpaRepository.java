@@ -1,5 +1,6 @@
 package no.isi.insight.planning.repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,5 +21,7 @@ public interface UserAccountJpaRepository extends Repository<UserAccount, UUID> 
   void delete(
       UserAccount userAccount
   );
+
+  List<UserAccount> findAll();
 
 }
