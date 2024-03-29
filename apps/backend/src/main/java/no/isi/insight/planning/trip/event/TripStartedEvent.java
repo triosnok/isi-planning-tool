@@ -1,5 +1,5 @@
 package no.isi.insight.planning.trip.event;
 
-import java.util.UUID;
+import no.isi.insight.planning.model.Trip;
 
-public record TripStartedEvent(UUID tripId, String captureLogId, Integer replaySpeed) {}
+public record TripStartedEvent(Trip trip, String captureLogId, Integer replaySpeed) {}

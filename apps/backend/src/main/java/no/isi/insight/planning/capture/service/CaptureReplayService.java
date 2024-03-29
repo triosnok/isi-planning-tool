@@ -20,7 +20,10 @@ import lombok.extern.slf4j.Slf4j;
 import no.isi.insight.planning.capture.model.ProcessedLogEntry;
 import no.isi.insight.planning.client.trip.view.CameraPosition;
 import no.isi.insight.planning.geometry.GeometryService;
+import no.isi.insight.planning.model.Trip;
+import no.isi.insight.planning.model.TripRailingCapture;
 import no.isi.insight.planning.repository.RoadRailingJpaRepository;
+import no.isi.insight.planning.repository.TripRailingCaptureJpaRepository;
 import no.isi.insight.planning.trip.event.TripEndedEvent;
 import no.isi.insight.planning.trip.event.TripStartedEvent;
 
@@ -32,6 +35,7 @@ import no.isi.insight.planning.trip.event.TripStartedEvent;
 @RequiredArgsConstructor
 public class CaptureReplayService {
   private final CaptureReplayFileService fileService;
+  private final TripRailingCaptureJpaRepository railingCaptureJpaRepository;
   private final RoadRailingJpaRepository roadRailingJpaRepository;
   private final GeometryService geometryService;
   private final Map<UUID, List<SseEmitter>> emitters = new HashMap<>();
@@ -64,15 +68,16 @@ public class CaptureReplayService {
   /**
    * Starts replaying a given trip.
    * 
-   * @param tripId     the trip to replay
+   * @param trip       the trip to replay
    * @param logEntries the log entries to replay
    * @param speed      the speed to replay the log at
    */
   private void startReplay(
-      UUID tripId,
+      Trip trip,
       List<ProcessedLogEntry> logEntries,
       Optional<Integer> speed
   ) {
+    var tripId = trip.getId();
     var railings = this.roadRailingJpaRepository.findAllByTripIdEager(tripId);
     var matcher = new CaptureRailingMatcher(
       railings,
@@ -90,6 +95,7 @@ public class CaptureReplayService {
 
         var gpsPoint = this.geometryService.parsePoint(logEntry.position().wkt());
         var point = this.geometryService.transformGpsToRail(gpsPoint.get());
+        point.setSRID(25833);
 
         var match = matcher.matchRailing(point, logEntry.heading());
 
@@ -105,10 +111,18 @@ public class CaptureReplayService {
           default -> true;
         };
 
-        if (isValidMatch || isOwnGeometry) {
-          // TODO: Save the matched entry to the database, not sure if flushing a save is feasible in this
-          // thread
+        if (isValidMatch || !isOwnGeometry) {
           logReplay.incrementMetersCaptured();
+
+          var capture = new TripRailingCapture(
+            trip,
+            match.get().railing(),
+            logEntry.timestamp(),
+            point,
+            logEntry.images()
+          );
+
+          this.railingCaptureJpaRepository.save(capture);
         }
       }
     );
@@ -224,7 +238,7 @@ public class CaptureReplayService {
     var logEntries = this.fileService.getCapture(event.captureLogId());
     var speed = Optional.ofNullable(event.replaySpeed());
 
-    this.startReplay(event.tripId(), logEntries, speed);
+    this.startReplay(event.trip(), logEntries, speed);
   }
 
   /**

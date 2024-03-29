@@ -63,7 +63,7 @@ public class TripRestServiceImpl implements TripRestService {
 
     this.eventPublisher.publishEvent(
       new TripStartedEvent(
-        savedTrip.getId(),
+        savedTrip,
         request.captureLogId(),
         request.replaySpeed()
       )
