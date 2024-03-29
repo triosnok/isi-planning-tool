@@ -44,11 +44,9 @@ class CaptureLogReplayTests {
       (logEntry, logReplay) -> {}
     );
 
-    replay.resume();
-    replay.replaySecond();
-
     var details = replay.getCaptureDetails();
     assertEquals("POINT(1 0)", details.get().position().wkt());
+    replay.resume();
 
     replay.replaySecond();
     details = replay.getCaptureDetails();
