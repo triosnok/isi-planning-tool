@@ -40,7 +40,8 @@ class CaptureLogReplayTests {
     var log = this.generateLog();
     var replay = new CaptureLogReplay(
       log,
-      1
+      1,
+      (logEntry, logReplay) -> {}
     );
 
     replay.resume();
@@ -67,7 +68,8 @@ class CaptureLogReplayTests {
     var log = this.generateLog();
     var replay = new CaptureLogReplay(
       log,
-      1
+      1,
+      (logEntry, logReplay) -> {}
     );
 
     replay.resume();

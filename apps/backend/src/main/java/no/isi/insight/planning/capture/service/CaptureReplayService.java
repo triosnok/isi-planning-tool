@@ -18,6 +18,9 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.isi.insight.planning.capture.model.ProcessedLogEntry;
+import no.isi.insight.planning.client.trip.view.CameraPosition;
+import no.isi.insight.planning.geometry.GeometryService;
+import no.isi.insight.planning.repository.RoadRailingJpaRepository;
 import no.isi.insight.planning.trip.event.TripEndedEvent;
 import no.isi.insight.planning.trip.event.TripStartedEvent;
 
@@ -29,6 +32,8 @@ import no.isi.insight.planning.trip.event.TripStartedEvent;
 @RequiredArgsConstructor
 public class CaptureReplayService {
   private final CaptureReplayFileService fileService;
+  private final RoadRailingJpaRepository roadRailingJpaRepository;
+  private final GeometryService geometryService;
   private final Map<UUID, List<SseEmitter>> emitters = new HashMap<>();
   private final Map<UUID, CaptureLogReplay> replays = new HashMap<>();
   private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
@@ -68,9 +73,44 @@ public class CaptureReplayService {
       List<ProcessedLogEntry> logEntries,
       Optional<Integer> speed
   ) {
+    var railings = this.roadRailingJpaRepository.findAllByTripIdEager(tripId);
+    var matcher = new CaptureRailingMatcher(
+      railings,
+      this.geometryService,
+      4
+    );
+
     var replay = new CaptureLogReplay(
       logEntries,
-      speed.orElse(1)
+      speed.orElse(1),
+      (logEntry, logReplay) -> {
+        if (logEntry.images().size() == 0) {
+          return;
+        }
+
+        var gpsPoint = this.geometryService.parsePoint(logEntry.position().wkt());
+        var point = this.geometryService.transformGpsToRail(gpsPoint.get());
+
+        var match = matcher.matchRailing(point, logEntry.heading());
+
+        if (match.isEmpty()) {
+          return;
+        }
+
+        var isOwnGeometry = match.get().railing().isOwnGeometry();
+        var side = match.get().roadSegment().getSide();
+        var isValidMatch = switch (side) {
+          case LEFT -> logEntry.images().containsKey(CameraPosition.LEFT);
+          case RIGHT -> logEntry.images().containsKey(CameraPosition.RIGHT);
+          default -> true;
+        };
+
+        if (isValidMatch || isOwnGeometry) {
+          // TODO: Save the matched entry to the database, not sure if flushing a save is feasible in this
+          // thread
+          logReplay.incrementMetersCaptured();
+        }
+      }
     );
 
     this.replays.put(tripId, replay);

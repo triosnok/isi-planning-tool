@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import no.isi.insight.planning.client.capture.view.CaptureActionRequest;
+import no.isi.insight.planning.client.capture.view.CaptureLogDetails;
 
 @Tag(name = "Capture")
 @HttpExchange("/api/v1/capture")
@@ -30,7 +31,7 @@ public interface CaptureRestService {
   );
 
   @GetExchange("/logs")
-  List<String> getCaptureLogs();
+  List<CaptureLogDetails> getCaptureLogs();
 
   @GetExchange("/stream")
   SseEmitter streamCapture(

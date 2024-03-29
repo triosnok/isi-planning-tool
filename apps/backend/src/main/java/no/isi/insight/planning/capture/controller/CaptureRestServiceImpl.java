@@ -19,6 +19,7 @@ import no.isi.insight.planning.capture.service.CaptureReplayFileService;
 import no.isi.insight.planning.capture.service.CaptureReplayService;
 import no.isi.insight.planning.client.capture.CaptureRestService;
 import no.isi.insight.planning.client.capture.view.CaptureActionRequest;
+import no.isi.insight.planning.client.capture.view.CaptureLogDetails;
 import no.isi.insight.planning.client.trip.view.CameraPosition;
 import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.repository.TripJpaRepository;
@@ -86,7 +87,7 @@ public class CaptureRestServiceImpl implements CaptureRestService {
 
   @Override
   @DriverAuthorization
-  public List<String> getCaptureLogs() {
+  public List<CaptureLogDetails> getCaptureLogs() {
     return this.captureReplayFileService.listCaptures();
   }
 
