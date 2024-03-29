@@ -59,11 +59,11 @@ const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
         </label>
 
         <div class='flex justify-between space-x-2'>
-          <Button class='w-full bg-gray-100 hover:bg-gray-100'>
-            <IconPencil class='text-gray-600' />
+          <Button class='w-full bg-gray-100 hover:bg-gray-100 dark:bg-gray-800'>
+            <IconPencil class='text-gray-600 dark:text-gray-400' />
           </Button>
-          <Button class='w-full bg-gray-100 hover:bg-gray-100'>
-            <IconTrash class='text-gray-600' />
+          <Button class='w-full bg-gray-100 hover:bg-gray-100 dark:bg-gray-800'>
+            <IconTrash class='text-gray-600 dark:text-gray-400' />
           </Button>
         </div>
       </div>
