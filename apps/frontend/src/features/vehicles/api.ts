@@ -6,14 +6,15 @@ import {
   useQueryClient,
 } from '@tanstack/solid-query';
 import axios from 'axios';
+import { Accessor } from 'solid-js';
 import { z } from 'zod';
 
 export const useVehiclesQuery = (
-  availableFrom?: string,
-  availableTo?: string
+  availableFrom?: Accessor<string | undefined>,
+  availableTo?: Accessor<string | undefined>
 ) => {
   return createQuery(() => ({
-    queryKey: [CacheKey.VEHICLE_LIST, availableFrom, availableTo],
+    queryKey: [CacheKey.VEHICLE_LIST, availableFrom?.(), availableTo?.()],
     queryFn: async ({ queryKey }) => {
       const [_, availableFrom, availableTo] = queryKey;
 
