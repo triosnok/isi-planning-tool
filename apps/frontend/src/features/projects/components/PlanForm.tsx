@@ -8,7 +8,6 @@ import VehicleSelect from '@/features/vehicles/components/VehicleSelect';
 import {
   SubmitHandler,
   createForm,
-  getValues,
   setValue,
   zodForm,
 } from '@modular-forms/solid';
@@ -69,9 +68,7 @@ const PlanForm: Component<{
               <DatePicker
                 value={dayjs(field.value).toDate()}
                 class='w-full'
-                onChange={(v) =>
-                  setValue(form, 'startsAt', v!.toISOString() ?? undefined)
-                }
+                onChange={(v) => setValue(form, 'startsAt', v!.toISOString())}
               />
             )}
           </Field>
@@ -84,9 +81,7 @@ const PlanForm: Component<{
               <DatePicker
                 value={dayjs(field.value).toDate()}
                 class='w-full'
-                onChange={(v) =>
-                  setValue(form, 'endsAt', v!.toISOString() ?? undefined)
-                }
+                onChange={(v) => setValue(form, 'endsAt', v!.toISOString())}
               />
             )}
           </Field>
@@ -97,11 +92,15 @@ const PlanForm: Component<{
         {t('VEHICLES.VEHICLE')}
       </Label>
 
-      <VehicleSelect
-        vehicles={vehicles.data ?? []}
-        onChange={(v) => setValue(form, 'vehicleId', v?.id ?? undefined)}
-        emptyText={t('VEHICLES.NO_VEHICLE_SELECTED')}
-      />
+      <Field name='vehicleId'>
+        {(_field) => (
+          <VehicleSelect
+            vehicles={vehicles.data ?? []}
+            onChange={(v) => setValue(form, 'vehicleId', v?.id)}
+            emptyText={t('VEHICLES.NO_VEHICLE_SELECTED')}
+          />
+        )}
+      </Field>
 
       <Button class='mt-2 grow' type='submit'>
         {t('GENERAL.IMPORT_AND_SAVE')}
