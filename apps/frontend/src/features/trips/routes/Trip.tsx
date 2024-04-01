@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Indicator } from '@/components/ui/indicator';
+import { Indicator, IndicatorVariant } from '@/components/ui/indicator';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { DateFormat, NumberFormat, useTranslations } from '@/features/i18n';
@@ -24,7 +24,7 @@ import {
   IconPhoto,
   IconVideo,
 } from '@tabler/icons-solidjs';
-import { Component, Show, createSignal } from 'solid-js';
+import { Component, Show, createMemo, createSignal } from 'solid-js';
 import { z } from 'zod';
 import {
   useTripCaptureAction,
@@ -33,6 +33,7 @@ import {
   useTripNoteMutation,
 } from '../api';
 import TripSummaryDialog from '../components/TripSummaryDialog';
+import { ImageStatus, getImageAnalysis } from '../utils';
 
 const TripNoteSchema = z.object({
   note: z.string(),
@@ -63,6 +64,41 @@ const Trip: Component = () => {
       // ignored
     }
   };
+
+  const storageIndicator = createMemo(() => {
+    const storage = captureDetails()?.storageRemaining;
+
+    if (storage === undefined) return IndicatorVariant.UNDETERMINED;
+    if (storage >= 0.5) return IndicatorVariant.SUCCESS;
+    if (storage >= 0.25) return IndicatorVariant.WARNING;
+    return IndicatorVariant.ERROR;
+  });
+
+  const gpsIndicator = createMemo(() => {
+    const gpsSignal = captureDetails()?.gpsSignal;
+
+    if (gpsSignal === undefined) return IndicatorVariant.UNDETERMINED;
+    if (gpsSignal >= 0.95) return IndicatorVariant.SUCCESS;
+    if (gpsSignal >= 0.75) return IndicatorVariant.WARNING;
+    return IndicatorVariant.ERROR;
+  });
+
+  const imageIndicator = createMemo(() => {
+    const images = captureDetails()?.images;
+
+    if (images === undefined) return IndicatorVariant.UNDETERMINED;
+
+    const analysis = getImageAnalysis(captureDetails()?.images ?? {});
+
+    switch (analysis.overall) {
+      case ImageStatus.OK:
+        return IndicatorVariant.SUCCESS;
+      case ImageStatus.WITHIN_TOLERANCE:
+        return IndicatorVariant.WARNING;
+      case ImageStatus.OUT_OF_TOLERANCE:
+        return IndicatorVariant.ERROR;
+    }
+  });
 
   const handleCaptureAction = () => {
     const isCapturing = captureDetails()?.activeCapture;
@@ -135,7 +171,7 @@ const Trip: Component = () => {
           </div>
           <section class='grid grid-cols-2 gap-2 text-sm md:grid-cols-4'>
             <Indicator
-              variant='warning'
+              variant={storageIndicator()}
               icon={IconDatabase}
               indicates='Storage left'
               status={n(
@@ -145,7 +181,7 @@ const Trip: Component = () => {
             />
 
             <Indicator
-              variant='success'
+              variant={gpsIndicator()}
               icon={IconCurrentLocation}
               indicates='GPS'
               status={n(captureDetails()?.gpsSignal, NumberFormat.PERCENTAGE)}
@@ -153,7 +189,9 @@ const Trip: Component = () => {
 
             <Indicator
               variant={
-                captureDetails()?.activeCapture ? 'success' : 'undetermined'
+                captureDetails()?.activeCapture
+                  ? IndicatorVariant.SUCCESS
+                  : IndicatorVariant.UNDETERMINED
               }
               icon={IconVideo}
               indicates='Capture'
@@ -161,10 +199,10 @@ const Trip: Component = () => {
             />
 
             <Indicator
-              variant='error'
+              variant={imageIndicator()}
               icon={IconPhoto}
-              indicates='Capture rate'
-              status='55%'
+              indicates='Images'
+              status=''
             />
           </section>
 
