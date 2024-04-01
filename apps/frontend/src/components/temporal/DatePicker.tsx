@@ -29,12 +29,22 @@ const DatePicker: Component<DatePickerProps> = (props) => {
   const weekdays = dayjs.weekdaysShort();
   weekdays.push(weekdays.shift()!); // move sunday to the end
 
+  const emitChange = (date?: Dayjs) => {
+    let processed = date?.startOf('day');
+
+    if (processed) {
+      processed = processed.add(processed.utcOffset(), 'minute');
+    }
+
+    props.onChange?.(processed?.toDate());
+  };
+
   const handleChange = (date: Dayjs) => {
     const diff = date.month() - reference().month();
     const navigate = diff > 0 ? next : previous;
     if (diff !== 0) navigate();
     setSelectedDate(date);
-    props.onChange?.(date.toDate());
+    emitChange(date);
   };
 
   const handleOpenChange = (open: boolean) => {
@@ -50,7 +60,7 @@ const DatePicker: Component<DatePickerProps> = (props) => {
   ) => {
     event.preventDefault();
     setSelectedDate(undefined);
-    props.onChange?.(undefined);
+    emitChange(undefined);
   };
 
   const handleFocus = () => {
@@ -58,7 +68,7 @@ const DatePicker: Component<DatePickerProps> = (props) => {
   };
 
   onMount(() => {
-    if (props.value) props.onChange?.(selectedDate()?.toDate());
+    if (props.value) emitChange(selectedDate());
   });
 
   return (
