@@ -69,6 +69,11 @@
     "RAILING": "Railing",
     "RAILING_IMPORT_URL": "Railing import URL"
   },
+  "ROADS": {
+    "TITLE": "Roads",
+    "RAILING": "Road",
+    "NO_ROADS_AVAILABLE": "No roads available"
+  },
   "TRIPS": {
     "TITLE": "Trips",
     "TRIP": "Trip",
