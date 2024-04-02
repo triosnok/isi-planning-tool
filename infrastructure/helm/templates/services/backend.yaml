@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "backend.name" . }}
+type: Opaque
+data:
+  {{- $secretObj := (lookup "v1" "Secret" .Release.Namespace (include "backend.name" .) ) | default dict }}
+  {{- $secretData := (get $secretObj "data") | default dict }}
+  {{- $accessTokenSecret := (get $secretData "AUTH_ACCESS_TOKEN_SECRET") | default (randAlphaNum 48 | b64enc) }}
+  AUTH_ACCESS_TOKEN_SECRET: {{ $accessTokenSecret | b64enc }}
+  {{- $secretObj := (lookup "v1" "Secret" .Release.Namespace (include "backend.name" .) ) | default dict }}
+  {{- $secretData := (get $secretObj "data") | default dict }}
+  {{- $refreshTokenSecret := (get $secretData "AUTH_REFRESH_TOKEN_SECRET") | default (randAlphaNum 48 | b64enc) }}
+  AUTH_REFRESH_TOKEN_SECRET: {{ $refreshTokenSecret | b64enc }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "backend.name" . }}
+  labels:
+    {{ include "chart.labels" . }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "backend.name" . }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ include "backend.name" . }}
+    spec:
+      initContainers:
+      - name: "init-{{ include "backend.name" . }}"
+        image: "ghcr.io/triosnok/isi-planning-tool-init:{{ .Values.version }}"
+        imagePullPolicy: IfNotPresent
+        envFrom:
+          - secretRef:
+              name: {{ include "postgres.name" . }}
+        env:
+          - name: POSTGRES_DB
+            value: {{ include "postgres.database" . }}
+          - name: POSTGRES_HOST
+            value: {{ include "postgres.name" . }}
+          - name: POSTGRES_PORT
+            value: {{ include "postgres.port" . | quote }}
+
+      containers:
+      - name: {{ include "backend.name" . }}
+        image: "ghcr.io/triosnok/isi-planning-tool-backend:{{ .Values.version }}"
+        imagePullPolicy: IfNotPresent
+        ports: 
+        - containerPort: {{ include "backend.port" . }}
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: {{ include "backend.port" . }}
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: {{ include "backend.port" . }}
+        envFrom:
+          - secretRef:
+              name: {{ include "backend.name" . }}
+          - secretRef:
+              name: {{ include "postgres.name" . }}
+          - secretRef:
+              name: {{ include "minio.name" . }}
+        env:
+          - name: POSTGRES_DB
+            value: {{ include "postgres.database" . }}
+          - name: POSTGRES_HOST
+            value: {{ include "postgres.name" . }}
+          - name: POSTGRES_PORT
+            value: {{ include "postgres.port" . | quote }}
+          - name: MINIO_URL
+            value: "http://{{ include "minio.name" . }}:{{ include "minio.port.api" . }}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "backend.name" . }}
+  labels:
+    {{ include "chart.labels" . }}
+spec:
+  selector:
+    app: {{ include "backend.name" . }}
+  ports:
+  - port: {{ include "backend.port" . }}
+    targetPort: {{ include "backend.port" . }}
+    protocol: TCP
