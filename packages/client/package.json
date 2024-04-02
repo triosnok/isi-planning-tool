@@ -1,6 +1,6 @@
 {
   "name": "@isi-insight/client",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "src/main/typescript/index.ts",
   "module": "src/main/typescript/index.ts",
