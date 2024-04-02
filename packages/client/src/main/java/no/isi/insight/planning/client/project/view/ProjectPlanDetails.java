@@ -10,6 +10,8 @@ import no.isi.insight.planning.client.annotation.GenerateTypeScript;
 @GenerateTypeScript
 public record ProjectPlanDetails(
   UUID id,
+  UUID projectId,
+  String projectName,
   LocalDate startsAt,
   LocalDate endsAt,
   String vehicleModel,
