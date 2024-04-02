@@ -56,10 +56,6 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
       CreateUserAccountRequest request
   ) {
 
-    if (!request.passwordMatchesConfirmation()) {
-      throw new IllegalArgumentException("Password and password confirmation do not match.");
-    }
-
     UserAccountRole role = switch (request.role()) {
       case PLANNER -> UserAccountRole.PLANNER;
       case DRIVER -> UserAccountRole.DRIVER;
@@ -83,5 +79,4 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
       )
     );
   }
-
 }

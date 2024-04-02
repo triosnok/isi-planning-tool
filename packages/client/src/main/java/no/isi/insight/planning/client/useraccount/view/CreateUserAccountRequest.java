@@ -19,7 +19,7 @@ public record CreateUserAccountRequest(
 ) {
 
   @AssertTrue
-  public boolean passwordMatchesConfirmation() {
+  boolean isPasswordConfirmationValid() {
     return this.password.equals(this.passwordConfirmation);
   }
 }
