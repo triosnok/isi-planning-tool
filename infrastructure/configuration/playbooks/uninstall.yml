@@ -1,0 +1,10 @@
+---
+- name: Install cluster
+  hosts: openstack
+  vars_files:
+    - ../vars.yml
+  roles:
+    - name: Uninstall k3s
+      role: xanmanning.k3s
+      vars:
+        k3s_state: uninstalled
