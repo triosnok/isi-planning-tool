@@ -107,8 +107,8 @@ jobs:
           file: apps/frontend/Dockerfile
           push: true
           tags: |
-            ghcr.io/thedatasnok/isi-planning-tool-frontend:latest
-            ghcr.io/thedatasnok/isi-planning-tool-frontend:${{ github.ref_name }}
+            ghcr.io/triosnok/isi-planning-tool-frontend:latest
+            ghcr.io/triosnok/isi-planning-tool-frontend:${{ github.ref_name }}
 
   deploy_demo:
     name: Deploy demo environment
