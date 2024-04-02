@@ -16,11 +16,13 @@ const ProjectsLayout: Component<LayoutProps> = (props) => {
   const railings = useProjectRailings(projectId);
 
   return (
-    <div class='flex h-svh w-svw flex-col'>
+    <div class='flex h-svh w-svw flex-col overflow-hidden'>
       <Header />
 
-      <main class='flex flex-1'>
-        <aside class='w-full md:w-96 flex-shrink-0'>{props.children}</aside>
+      <main class='flex flex-1 overflow-hidden'>
+        <aside class='w-full flex-shrink-0 overflow-hidden md:w-96'>
+          {props.children}
+        </aside>
 
         <div class='flex-1'>
           <MapRoot class='relative h-full w-full' customZoom>

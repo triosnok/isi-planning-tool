@@ -56,8 +56,8 @@ const Project: Component<LayoutProps> = (props) => {
   };
 
   return (
-    <div class='flex h-full flex-col justify-between'>
-      <div>
+    <div class='flex h-full flex-col justify-between overflow-hidden'>
+      <div class='flex-1 flex flex-col overflow-hidden'>
         <div class='flex flex-col p-2'>
           <div class='flex'>
             <BackLink />
@@ -98,7 +98,7 @@ const Project: Component<LayoutProps> = (props) => {
           </div>
         </div>
 
-        <Accordion multiple={true} defaultValue={['plans']}>
+        <Accordion multiple={true} defaultValue={['plans']} class='flex flex-col flex-1 overflow-y-auto'>
           <AccordionItem value='plans'>
             <AccordionTrigger>
               {t('PLANS.TITLE')} ({plans.data?.length})
