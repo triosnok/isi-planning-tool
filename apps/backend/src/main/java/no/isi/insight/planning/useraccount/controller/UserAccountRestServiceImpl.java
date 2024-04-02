@@ -30,7 +30,7 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
   @PlannerAuthorization
   public ResponseEntity<List<UserAccountDetails>> findAllUserAccounts() {
 
-    List<UserAccount> userAccounts = userAccountJpaRepository.findAll();
+    List<UserAccount> userAccounts = this.userAccountJpaRepository.findAll();
 
     List<UserAccountDetails> userAccountDetailsList = userAccounts.stream().map(account -> {
       UserRole role = switch (account.getRole()) {
@@ -56,12 +56,16 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
       CreateUserAccountRequest request
   ) {
 
+    if (!request.passwordMatchesConfirmation()) {
+      throw new IllegalArgumentException("Password and password confirmation do not match.");
+    }
+
     UserAccountRole role = switch (request.role()) {
       case PLANNER -> UserAccountRole.PLANNER;
       case DRIVER -> UserAccountRole.DRIVER;
     };
 
-    var userAccount = userService
+    var userAccount = this.userService
       .createAccount(request.fullName(), request.email(), request.phoneNumber(), request.password(), role);
 
     UserRole userRole = switch (userAccount.getRole()) {
@@ -79,4 +83,5 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
       )
     );
   }
+
 }

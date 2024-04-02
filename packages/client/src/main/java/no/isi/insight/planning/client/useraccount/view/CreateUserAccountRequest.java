@@ -1,5 +1,6 @@
 package no.isi.insight.planning.client.useraccount.view;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -13,5 +14,12 @@ public record CreateUserAccountRequest(
   @NotBlank String email,
   String phoneNumber,
   @NotBlank String password,
+  @NotBlank String passwordConfirmation,
   @NotNull UserRole role
-) {}
+) {
+
+  @AssertTrue
+  public boolean passwordMatchesConfirmation() {
+    return this.password.equals(this.passwordConfirmation);
+  }
+}
