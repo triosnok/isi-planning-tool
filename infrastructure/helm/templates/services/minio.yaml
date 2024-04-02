@@ -44,10 +44,17 @@ spec:
       - name: {{ include "minio.name" . }}
         image: "minio/minio:RELEASE.2024-03-21T23-13-43Z"
         imagePullPolicy: IfNotPresent
-        command: server /data --console-address ":9001"
+        args: 
+        - server 
+        - /data 
+        - --console-address 
+        - ":9001"
         ports:
-          - name: minio
-            containerPort: {{ include "minio.port" . }}
+          - name: minio-api
+            containerPort: {{ include "minio.port.api" . }}
+            protocol: TCP
+          - name: minio-ui
+            containerPort: {{ include "minio.port.ui" . }}
             protocol: TCP
         envFrom:
           - secretRef:
@@ -70,9 +77,11 @@ spec:
   selector:
     app: {{ include "minio.name" . }}
   ports:
-  - port: {{ include "minio.port.api" . }}
+  - name: api
+    port: {{ include "minio.port.api" . }}
     targetPort: {{ include "minio.port.api" . }}
     protocol: TCP
-  - port: {{ include "minio.port.ui" . }}
+  - name: ui
+    port: {{ include "minio.port.ui" . }}
     targetPort: {{ include "minio.port.ui" . }}
     protocol: TCP
