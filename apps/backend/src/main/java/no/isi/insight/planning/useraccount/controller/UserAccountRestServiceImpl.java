@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.isi.insight.planning.auth.annotation.PlannerAuthorization;
+import no.isi.insight.planning.auth.service.UserAccountService;
 import no.isi.insight.planning.client.auth.view.UserRole;
 import no.isi.insight.planning.client.useraccount.UserAccountRestService;
+import no.isi.insight.planning.client.useraccount.view.CreateUserAccountRequest;
 import no.isi.insight.planning.client.useraccount.view.UserAccountDetails;
 import no.isi.insight.planning.model.UserAccount;
+import no.isi.insight.planning.model.UserAccountRole;
 import no.isi.insight.planning.repository.UserAccountJpaRepository;
 
 @Slf4j
@@ -21,6 +24,7 @@ import no.isi.insight.planning.repository.UserAccountJpaRepository;
 public class UserAccountRestServiceImpl implements UserAccountRestService {
 
   private final UserAccountJpaRepository userAccountJpaRepository;
+  private final UserAccountService userService;
 
   @Override
   @PlannerAuthorization
@@ -44,5 +48,35 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
     }).collect(Collectors.toList());
 
     return ResponseEntity.ok(userAccountDetailsList);
+  }
+
+  @Override
+  @PlannerAuthorization
+  public ResponseEntity<UserAccountDetails> createUserAccount(
+      CreateUserAccountRequest request
+  ) {
+
+    UserAccountRole role = switch (request.role()) {
+      case PLANNER -> UserAccountRole.PLANNER;
+      case DRIVER -> UserAccountRole.DRIVER;
+    };
+
+    var userAccount = userService
+      .createAccount(request.fullName(), request.email(), request.phoneNumber(), request.password(), role);
+
+    UserRole userRole = switch (userAccount.getRole()) {
+      case PLANNER -> UserRole.PLANNER;
+      case DRIVER -> UserRole.DRIVER;
+    };
+
+    return ResponseEntity.ok(
+      new UserAccountDetails(
+        userAccount.getUserAccountId(),
+        userAccount.getFullName(),
+        userAccount.getEmail(),
+        userAccount.getPhoneNumber(),
+        userRole
+      )
+    );
   }
 }
