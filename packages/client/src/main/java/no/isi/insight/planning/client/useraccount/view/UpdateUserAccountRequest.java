@@ -9,7 +9,7 @@ import no.isi.insight.planning.client.auth.view.UserRole;
 
 @Builder
 @GenerateTypeScript
-public record CreateUserAccountRequest(
+public record UpdateUserAccountRequest(
   @NotBlank String fullName,
   @NotBlank String email,
   String phoneNumber,
