@@ -3,7 +3,8 @@ name: Continuous Integration
 on:
   push:
     branches:
-      - "*"
+      - '*'
+  workflow_call:
 
 jobs:
   frotend-build:
@@ -21,7 +22,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "pnpm"
+          cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install
@@ -38,7 +39,7 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: "temurin"
+          distribution: 'temurin'
           java-version: 21
 
       - name: Set up gradle
@@ -59,7 +60,7 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: "temurin"
+          distribution: 'temurin'
           java-version: 21
 
       - name: Set up Gradle
@@ -78,7 +79,7 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: "temurin"
+          distribution: 'temurin'
           java-version: 21
 
       - name: Set up gradle
