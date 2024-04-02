@@ -22,6 +22,10 @@ public interface UserAccountJpaRepository extends Repository<UserAccount, UUID> 
       UserAccount userAccount
   );
 
+  Optional<UserAccount> findById(
+      UUID id
+  );
+
   List<UserAccount> findAll();
 
 }

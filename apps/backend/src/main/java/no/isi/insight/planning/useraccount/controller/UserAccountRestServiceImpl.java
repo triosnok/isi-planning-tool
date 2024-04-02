@@ -1,6 +1,7 @@
 package no.isi.insight.planning.useraccount.controller;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import no.isi.insight.planning.auth.service.UserAccountService;
 import no.isi.insight.planning.client.auth.view.UserRole;
 import no.isi.insight.planning.client.useraccount.UserAccountRestService;
 import no.isi.insight.planning.client.useraccount.view.CreateUserAccountRequest;
+import no.isi.insight.planning.client.useraccount.view.UpdateUserAccountRequest;
 import no.isi.insight.planning.client.useraccount.view.UserAccountDetails;
 import no.isi.insight.planning.model.UserAccount;
 import no.isi.insight.planning.model.UserAccountRole;
@@ -75,6 +77,37 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
         userAccount.getFullName(),
         userAccount.getEmail(),
         userAccount.getPhoneNumber(),
+        userRole
+      )
+    );
+  }
+
+  @Override
+  @PlannerAuthorization
+  public ResponseEntity<UserAccountDetails> updateUserAccount(
+      UpdateUserAccountRequest request,
+      UUID id
+  ) {
+
+    UserAccountRole role = switch (request.role()) {
+      case PLANNER -> UserAccountRole.PLANNER;
+      case DRIVER -> UserAccountRole.DRIVER;
+    };
+
+    var updatedUserAccount = this.userService
+      .updateAccount(id, request.fullName(), request.email(), request.phoneNumber(), request.password(), role);
+
+    UserRole userRole = switch (updatedUserAccount.getRole()) {
+      case PLANNER -> UserRole.PLANNER;
+      case DRIVER -> UserRole.DRIVER;
+    };
+
+    return ResponseEntity.ok(
+      new UserAccountDetails(
+        updatedUserAccount.getUserAccountId(),
+        updatedUserAccount.getFullName(),
+        updatedUserAccount.getEmail(),
+        updatedUserAccount.getPhoneNumber(),
         userRole
       )
     );
