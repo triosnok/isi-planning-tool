@@ -126,8 +126,8 @@ jobs:
         uses: azure/k8s-set-context@v3
         with:
           method: service-account
-          k8s-url: ${{ env.K8S_URL }}
-          k8s-secret: ${{ env.K8S_SECRET }}
+          k8s-url: ${{ vars.K8S_URL }}
+          k8s-secret: ${{ secrets.K8S_SECRET }}
 
       - name: Set up helm
         uses: azure/setup-helm@v4
@@ -138,7 +138,7 @@ jobs:
           helm upgrade isi-planning-tool ./infrastructure/helm \
             --kube-insecure-skip-tls-verify \
             --install \
-            --namespace ${{ env.K8S_NAMESPACE }} \
+            --namespace ${{ vars.K8S_NAMESPACE }} \
             --set version=${{ github.ref_name }} \
-            --set hostname=${{ env.HOSTNAME }} \
+            --set hostname=${{ vars.HOSTNAME }} \
             --set clusterIssuer=letsencrypt
