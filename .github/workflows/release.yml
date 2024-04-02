@@ -4,8 +4,6 @@ on:
   push:
     tags:
       - '*'
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
@@ -17,6 +15,9 @@ jobs:
     name: Publish init artifact
     needs: [continuous_integration]
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,6 +33,13 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build & publish docker image
         run: ./gradlew :apps:init:jib
@@ -40,6 +48,9 @@ jobs:
     name: Publish backend artifact
     needs: [continuous_integration]
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -56,13 +67,23 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build & publish docker image
         run: ./gradlew :apps:backend:jib
 
   publish_frontend:
-    name: Build frontend artifact
+    name: Publish frontend artifact
     needs: [continuous_integration]
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -73,7 +94,8 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - uses: docker/login-action@v3
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
