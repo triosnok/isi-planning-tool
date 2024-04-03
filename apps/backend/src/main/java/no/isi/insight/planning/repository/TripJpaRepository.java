@@ -54,11 +54,12 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
       SELECT
         COALESCE(MAX(t.sequenceNumber) + 1, 1)
       FROM Trip t
-      INNER JOIN t.projectPlan
-      WHERE t.projectPlan.id = :planId
+      INNER JOIN t.projectPlan pp
+      INNER JOIN pp.project p
+      WHERE p.id = :projectId
     """)
   int findNextSequenceNumber(
-      @Param("planId") UUID planId
+      @Param("projectId") UUID projectId
   );
 
   // language=sql
