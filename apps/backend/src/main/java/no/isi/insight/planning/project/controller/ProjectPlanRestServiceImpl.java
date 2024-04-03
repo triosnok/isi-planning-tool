@@ -121,4 +121,12 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
     return ResponseEntity.ok(details.get());
   }
 
+  @Override
+  @DriverAuthorization
+  public ResponseEntity<List<ProjectPlanDetails>> getPlansByVehicle(
+      UUID vehicleId
+  ) {
+    return ResponseEntity.ok(this.projectPlanJdbcRepository.findByVehicleId(vehicleId));
+  }
+
 }

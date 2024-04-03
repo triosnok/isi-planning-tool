@@ -51,6 +51,7 @@ public class ProjectPlanJdbcRepository {
       WHERE 1=1
         AND (:id IS NULL OR pp.project_plan_id = :id::uuid)
         AND (:projectId IS NULL OR pp.fk_project_id = :projectId::uuid)
+        AND (:vehicleId IS NULL OR pp.fk_vehicle_id = :vehicleId::uuid)
     """;
 
   private static final RowMapper<ProjectPlanDetails> PLAN_DETAILS_MAPPER = (rs, i) -> {
@@ -82,6 +83,7 @@ public class ProjectPlanJdbcRepository {
 
     params.addValue("id", id, Types.VARCHAR);
     params.addValue("projectId", null, Types.VARCHAR);
+    params.addValue("vehicleId", null, Types.VARCHAR);
 
     return Optional.ofNullable(this.jdbcTemplate.queryForObject(PLAN_DETAILS_QUERY, params, PLAN_DETAILS_MAPPER));
   }
@@ -93,8 +95,20 @@ public class ProjectPlanJdbcRepository {
 
     params.addValue("id", null, Types.VARCHAR);
     params.addValue("projectId", projectId, Types.VARCHAR);
+    params.addValue("vehicleId", null, Types.VARCHAR);
 
     return this.jdbcTemplate.query(PLAN_DETAILS_QUERY, params, PLAN_DETAILS_MAPPER);
   }
 
+  public List<ProjectPlanDetails> findByVehicleId(
+      UUID vehicleId
+  ) {
+    var params = new MapSqlParameterSource();
+
+    params.addValue("id", null, Types.VARCHAR);
+    params.addValue("projectId", null, Types.VARCHAR);
+    params.addValue("vehicleId", vehicleId, Types.VARCHAR);
+
+    return this.jdbcTemplate.query(PLAN_DETAILS_QUERY, params, PLAN_DETAILS_MAPPER);
+  }
 }
