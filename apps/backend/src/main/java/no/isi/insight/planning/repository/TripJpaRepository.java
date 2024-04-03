@@ -40,14 +40,26 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
     INNER JOIN t.projectPlan pp
     INNER JOIN pp.project p
     INNER JOIN t.driver d
+    INNER JOIN t.vehicle v
     WHERE 1=1
-      AND p.id = :projectId
+      AND (:projectId IS NULL OR p.id = :projectId)
+      AND (:driverId IS NULL OR d.userAccountId = :driverId)
+      AND (:vehicleId IS NULL OR v.id = :vehicleId)
       AND COALESCE(:planIds, NULL) IS NULL OR pp.id IN (:planIds)
     """)
-  List<TripDetails> findAllByProjectId(
-      @Param("projectId") UUID projectId,
+  List<TripDetails> findAll(
+      @Param("projectId") Optional<UUID> projectId,
+      @Param("driverId") Optional<UUID> driverId,
+      @Param("vehicleId") Optional<UUID> vehicleId,
       @Param("planIds") List<UUID> planIds
   );
+
+  default List<TripDetails> findAllByProjectId(
+      UUID projectId,
+      List<UUID> planIds
+  ) {
+    return this.findAll(Optional.of(projectId), Optional.empty(), Optional.empty(), planIds);
+  }
 
   // language=sql
   @Query("""
@@ -72,29 +84,16 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
       @Param("tripId") UUID tripId
   );
 
-  // language=sql
-  @Query("""
-    SELECT new no.isi.insight.planning.client.trip.view.TripDetails(
-      t.id,
-      d.fullName,
-      t.startedAt,
-      t.endedAt,
-      t.gnssLog,
-      t.cameraLogs,
-      t.sequenceNumber,
-      COALESCE(
-        (SELECT COUNT(tn) FROM TripNote tn WHERE tn.trip.id = t.id),
-        0
-      ),
-      0
-    )  FROM Trip t
-    INNER JOIN t.driver d
-    INNER JOIN t.vehicle v
-    WHERE 1=1
-      AND v.id = :vehicleId
-    """)
-  List<TripDetails> findAllByVehicleId(
-      @Param("vehicleId") UUID vehicleId
-  );
+  default List<TripDetails> findAllByVehicleId(
+      UUID vehicleId
+  ) {
+    return this.findAll(Optional.empty(), Optional.empty(), Optional.of(vehicleId), null);
+  }
+
+  default List<TripDetails> findAllByDriverId(
+      UUID driverId
+  ) {
+    return this.findAll(Optional.empty(), Optional.of(driverId), Optional.empty(), null);
+  }
 
 }

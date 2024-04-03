@@ -13,6 +13,7 @@ import org.springframework.web.service.annotation.PostExchange;
 import org.springframework.web.service.annotation.PutExchange;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import no.isi.insight.planning.client.trip.view.TripDetails;
 import no.isi.insight.planning.client.useraccount.view.CreateUserAccountRequest;
 import no.isi.insight.planning.client.useraccount.view.UpdateUserAccountRequest;
 import no.isi.insight.planning.client.useraccount.view.UserAccountDetails;
@@ -34,4 +35,10 @@ public interface UserAccountRestService {
       @Validated @RequestBody UpdateUserAccountRequest request,
       @PathVariable UUID id
   );
+
+  @GetExchange("/{id}/trips")
+  ResponseEntity<List<TripDetails>> findTripsByUserId(
+      @PathVariable UUID id
+  );
+
 }

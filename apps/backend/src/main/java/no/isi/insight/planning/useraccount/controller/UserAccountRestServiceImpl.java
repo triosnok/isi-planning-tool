@@ -8,25 +8,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import no.isi.insight.planning.auth.annotation.DriverAuthorization;
 import no.isi.insight.planning.auth.annotation.PlannerAuthorization;
 import no.isi.insight.planning.auth.service.UserAccountService;
 import no.isi.insight.planning.client.auth.view.UserRole;
+import no.isi.insight.planning.client.trip.view.TripDetails;
 import no.isi.insight.planning.client.useraccount.UserAccountRestService;
 import no.isi.insight.planning.client.useraccount.view.CreateUserAccountRequest;
 import no.isi.insight.planning.client.useraccount.view.UpdateUserAccountRequest;
 import no.isi.insight.planning.client.useraccount.view.UserAccountDetails;
+import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.model.UserAccount;
 import no.isi.insight.planning.model.UserAccountRole;
+import no.isi.insight.planning.repository.TripJpaRepository;
 import no.isi.insight.planning.repository.UserAccountJpaRepository;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class UserAccountRestServiceImpl implements UserAccountRestService {
 
   private final UserAccountJpaRepository userAccountJpaRepository;
   private final UserAccountService userService;
+  private final TripJpaRepository tripJpaRepository;
 
   @Override
   @PlannerAuthorization
@@ -112,4 +115,16 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
       )
     );
   }
+
+  @Override
+  @DriverAuthorization
+  public ResponseEntity<List<TripDetails>> findTripsByUserId(
+      UUID id
+  ) {
+    this.userAccountJpaRepository.findById(id)
+      .orElseThrow(() -> new NotFoundException("Could not find user with id: %s".formatted(id.toString())));
+
+    return ResponseEntity.ok(this.tripJpaRepository.findAllByDriverId(id));
+  }
+
 }
