@@ -3,15 +3,18 @@ package no.isi.insight.planning.capture.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.linearref.LengthIndexedLine;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import no.isi.insight.planning.capture.model.RailingMatchResult;
 import no.isi.insight.planning.geometry.GeometryService;
 import no.isi.insight.planning.model.RoadDirection;
 import no.isi.insight.planning.model.RoadRailing;
 
+@Slf4j
 @RequiredArgsConstructor
 public class CaptureRailingMatcher {
   private final List<RoadRailing> railings;
@@ -40,7 +43,6 @@ public class CaptureRailingMatcher {
 
         if (geometry.intersects(left) || geometry.intersects(right)) {
           matchedRailing = railing;
-          System.out.println("matched a railing...");
           break;
         }
       }
@@ -66,14 +68,28 @@ public class CaptureRailingMatcher {
     var startIdx = Math.max(nearestPoint - 0.5, indexedSegment.getStartIndex());
     var endIdx = Math.min(nearestPoint + 0.5, indexedSegment.getEndIndex());
 
-    var segment = indexedSegment.extractPoint(startIdx);
+    var nearest = indexedSegment.extractPoint(nearestPoint);
+
+    if (!this.isWithinHeight(point.getCoordinate(), nearest)) {
+      return Optional.empty();
+    }
+
+    var segmentStart = indexedSegment.extractPoint(startIdx);
     var segmentEnd = indexedSegment.extractPoint(endIdx);
 
     var segmentAngle = Math
-      .toDegrees(Math.atan2(segmentEnd.getY() - segment.getY(), segmentEnd.getX() - segment.getX()));
+      .toDegrees(Math.atan2(segmentEnd.getY() - segmentStart.getY(), segmentEnd.getX() - segmentStart.getX()));
     var inferredDirection = this.getDirection(segmentAngle, heading);
 
     if (inferredDirection != roadSegment.getDirection()) {
+      log.debug(
+        "Segment direction mismatch: inferred={}, actual={}, segmentId={}, railingId={}",
+        inferredDirection,
+        roadSegment.getDirection(),
+        roadSegment.getId(),
+        matchedRailing.getId()
+      );
+
       return Optional.empty();
     }
 
@@ -87,7 +103,7 @@ public class CaptureRailingMatcher {
     return Optional.of(result);
   }
 
-  public RoadDirection getDirection(
+  private RoadDirection getDirection(
       double angle,
       double referenceAngle
   ) {
@@ -98,5 +114,17 @@ public class CaptureRailingMatcher {
     }
 
     return RoadDirection.AGAINST;
+  }
+
+  private static final double MAX_HEIGHT_DELTA = 1.0;
+
+  private boolean isWithinHeight(
+      Coordinate reference,
+      Coordinate nearest
+  ) {
+    var refZ = reference.getZ();
+    var nearZ = nearest.getZ();
+
+    return refZ == Double.NaN || nearZ == Double.NaN || Math.abs(refZ - nearZ) < MAX_HEIGHT_DELTA;
   }
 }
