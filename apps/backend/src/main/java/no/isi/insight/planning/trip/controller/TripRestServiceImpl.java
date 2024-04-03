@@ -152,4 +152,14 @@ public class TripRestServiceImpl implements TripRestService {
       )
     );
   }
+
+  @Override
+  @DriverAuthorization
+  public ResponseEntity<List<TripDetails>> getTripsByVehicleId(
+      UUID vehicleId
+  ) {
+    List<TripDetails> trips = tripJpaRepository.findAllByVehicleId(vehicleId);
+    return ResponseEntity.ok(trips);
+  }
+
 }

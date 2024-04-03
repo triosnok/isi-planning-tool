@@ -72,4 +72,29 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
       @Param("tripId") UUID tripId
   );
 
+  // language=sql
+  @Query("""
+    SELECT new no.isi.insight.planning.client.trip.view.TripDetails(
+      t.id,
+      d.fullName,
+      t.startedAt,
+      t.endedAt,
+      t.gnssLog,
+      t.cameraLogs,
+      t.sequenceNumber,
+      COALESCE(
+        (SELECT COUNT(tn) FROM TripNote tn WHERE tn.trip.id = t.id),
+        0
+      ),
+      0
+    )  FROM Trip t
+    INNER JOIN t.driver d
+    INNER JOIN t.vehicle v
+    WHERE 1=1
+      AND v.id = :vehicleId
+    """)
+  List<TripDetails> findAllByVehicleId(
+      @Param("vehicleId") UUID vehicleId
+  );
+
 }
