@@ -202,4 +202,33 @@ class TripRestServiceIntegrationTests {
       .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(tripDetails.id().toString()));
   }
 
+  @Test
+  void canSaveAndFindTripByVehicleId() throws Exception {
+    var plannerAuthorization = this.authTestUtils.generateAuthorizationHeader(this.plannerUserAccount);
+    var driverAuthorization = this.authTestUtils.generateAuthorizationHeader(this.driverUserAccount);
+
+    var savedTrip = this.mockMvc
+      .perform(
+        MockMvcRequestBuilders.post("/api/v1/trips")
+          .contentType(MediaType.APPLICATION_JSON)
+          .header(HttpHeaders.AUTHORIZATION, plannerAuthorization)
+          .content(this.objectMapper.writeValueAsString(this.trip))
+      )
+      .andExpect(MockMvcResultMatchers.status().isOk())
+      .andReturn()
+      .getResponse()
+      .getContentAsString();
+
+    var tripDetails = this.objectMapper.readValue(savedTrip, TripDetails.class);
+
+    this.mockMvc
+      .perform(
+        MockMvcRequestBuilders.get("/api/v1/trips/vehicle/" + vehicle.getId())
+          .contentType(MediaType.APPLICATION_JSON)
+          .header(HttpHeaders.AUTHORIZATION, driverAuthorization)
+      )
+      .andExpect(MockMvcResultMatchers.status().isOk())
+      .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(tripDetails.id().toString()));
+  }
+
 }
