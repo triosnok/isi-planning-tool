@@ -7,6 +7,7 @@ import {
   CreateTripNoteRequest,
   CreateTripRequest,
   TripDetails,
+  TripNoteDetails,
 } from '@isi-insight/client';
 import {
   createMutation,
@@ -101,6 +102,19 @@ export const useTripNoteMutation = (tripId: string) => {
   return { create };
 };
 
+export const useTripNoteDetailsQuery = (tripId: string) => {
+  return createQuery(() => ({
+    queryKey: [CacheKey.TRIP_NOTE_DETAILS, CacheKey.TRIP_NOTE_LIST],
+    queryFn: async () => {
+      const response = await axios.get<TripNoteDetails[]>(
+        `/api/v1/trip-notes?tripId=${tripId}`
+      );
+
+      return response.data;
+    }
+  }))
+};
+
 /**
  * Hook for performing action on a trips capture.
  *
@@ -155,5 +169,5 @@ export const useCaptureLogsQuery = () => {
 
       return response.data;
     },
-  }));
-};
+  }))
+}

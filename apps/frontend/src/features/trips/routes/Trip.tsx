@@ -1,21 +1,9 @@
 import MapCarLayer from '@/components/map/MapCarLayer';
 import BackLink from '@/components/navigation/BackLink';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import { Indicator, IndicatorVariant } from '@/components/ui/indicator';
-import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { DateFormat, NumberFormat, useTranslations } from '@/features/i18n';
-import { useProjectDetailsQuery } from '@/features/projects/api';
-import { CaptureAction } from '@isi-insight/client';
-import { SubmitHandler, createForm, zodForm } from '@modular-forms/solid';
 import { useParams } from '@solidjs/router';
 import {
   IconCurrentLocation,
@@ -24,46 +12,28 @@ import {
   IconPhoto,
   IconVideo,
 } from '@tabler/icons-solidjs';
-import { Component, Show, createMemo, createSignal } from 'solid-js';
-import { z } from 'zod';
+import { Component, Show, createSignal, createMemo } from 'solid-js';
 import {
   useTripCaptureAction,
   useTripCaptureDetails,
   useTripDetailsQuery,
-  useTripNoteMutation,
 } from '../api';
 import TripSummaryDialog from '../components/TripSummaryDialog';
+import TripNoteModule from '../components/TripNoteModule';
+import { useProjectDetailsQuery } from '@/features/projects/api';
+import { CaptureAction } from '@isi-insight/client';
 import { ImageStatus, getImageAnalysis } from '../utils';
-
-const TripNoteSchema = z.object({
-  note: z.string(),
-});
-
-type TripNoteForm = z.infer<typeof TripNoteSchema>;
 
 const Trip: Component = () => {
   const params = useParams();
-  const project = useProjectDetailsQuery(params.projectId);
-  const { create } = useTripNoteMutation(params.tripId);
-  const captureDetails = useTripCaptureDetails(params.tripId);
-  const captureAction = useTripCaptureAction(params.tripId);
-  const [_form, { Form, Field }] = createForm({
-    validate: zodForm(TripNoteSchema),
-  });
   const tripDetails = useTripDetailsQuery(params.tripId);
   const { t, d, n } = useTranslations();
+  const project = useProjectDetailsQuery(params.projectId);
+  const captureDetails = useTripCaptureDetails(params.tripId);
+  const captureAction = useTripCaptureAction(params.tripId);
 
   const [showSummaryDialog, setShowSummaryDialog] = createSignal(false);
-  const [isDialogOpen, setIsDialogOpen] = createSignal(false);
-
-  const handleSubmit: SubmitHandler<TripNoteForm> = async (values) => {
-    try {
-      await create.mutateAsync({ ...values, tripId: params.tripId });
-      setIsDialogOpen(false);
-    } catch (error) {
-      // ignored
-    }
-  };
+  const [showTripNoteModule, setShowTripNoteModule] = createSignal(false);
 
   const storageIndicator = createMemo(() => {
     const storage = captureDetails()?.storageRemaining;
@@ -108,7 +78,7 @@ const Trip: Component = () => {
 
   return (
     <>
-      <div class='absolute bottom-0 w-full rounded-md border bg-gray-50 p-2 shadow md:bottom-auto md:left-4 md:top-4 md:w-1/2 lg:w-2/5 xl:w-1/3 dark:border-gray-800 dark:bg-gray-950'>
+      <section class='absolute bottom-0 w-full rounded-md bg-gray-50 p-2 md:bottom-auto md:left-4 md:top-4 md:w-1/2 lg:w-2/5 xl:w-1/3 dark:bg-gray-900'>
         <div class='flex flex-col'>
           <div class='hidden md:flex'>
             <BackLink href='../..' />
@@ -127,19 +97,17 @@ const Trip: Component = () => {
                 {d(project.data?.endsAt, DateFormat.MONTH_DAY)}
               </span>
             </div>
-            <Dialog open={isDialogOpen()} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger as={Button} class='order-last md:order-none'>
-                <div class='flex items-center gap-2'>
-                  <IconMessage />
-                  <p class='md:hidden'>{t('NOTES.ADD_NOTE')}</p>
-                </div>
-              </DialogTrigger>
-              <DialogContent class='sm:max-w-[425px]'>
-                <DialogHeader>
-                  <DialogTitle>Add note</DialogTitle>
-                  <DialogDescription>Add a note to this trip</DialogDescription>
-                </DialogHeader>
-                <Form
+            <Button
+              onClick={() => setShowTripNoteModule(!showTripNoteModule())}
+              class='order-last md:order-none'
+            >
+              <div class='flex items-center gap-2'>
+                <IconMessage />
+                <p class='md:hidden'>{t('NOTES.ADD_NOTE')}</p>
+              </div>
+            </Button>
+
+            {/* <Form
                   id='add-trip-note'
                   onSubmit={handleSubmit}
                   class='flex flex-col gap-4'
@@ -156,9 +124,8 @@ const Trip: Component = () => {
                     )}
                   </Field>
                   <Button type='submit'>{t('GENERAL.SAVE')}</Button>
-                </Form>
-              </DialogContent>
-            </Dialog>
+                </Form> */}
+
             <div class='order-2 w-full text-center md:order-none'>
               <Progress class='rounded-lg' value={project.data?.progress} />
               <p>
@@ -223,7 +190,15 @@ const Trip: Component = () => {
             </Button>
           </Show>
         </div>
-      </div>
+      </section>
+
+      <Show when={showTripNoteModule()}>
+        <TripNoteModule
+          tripId={params.tripId}
+          open={showTripNoteModule()}
+          onOpenChange={setShowTripNoteModule}
+        />
+      </Show>
 
       <Show when={captureDetails()}>
         {(dt) => (

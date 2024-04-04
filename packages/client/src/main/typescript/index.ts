@@ -98,6 +98,15 @@ export interface RoadRailing {
     captureGrade: number;
 }
 
+export interface RoadSegmentDetails {
+    id: string;
+    railing: string;
+    geometry: string;
+    direction: string;
+    side: string;
+    lastImportedAt: DateAsString;
+}
+
 export interface UpdateProjectRequest {
     name: string;
     referenceCode: string;
@@ -133,6 +142,7 @@ export interface TripNoteDetails {
     id: string;
     note: string;
     geometry: Geometry;
+    createdAt: DateAsString;
 }
 
 export interface UpdateTripRequest {
