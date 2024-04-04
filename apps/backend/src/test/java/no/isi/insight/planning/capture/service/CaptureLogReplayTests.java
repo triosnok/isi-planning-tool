@@ -40,14 +40,13 @@ class CaptureLogReplayTests {
     var log = this.generateLog();
     var replay = new CaptureLogReplay(
       log,
-      1
+      1,
+      (logEntry, logReplay) -> {}
     );
-
-    replay.resume();
-    replay.replaySecond();
 
     var details = replay.getCaptureDetails();
     assertEquals("POINT(1 0)", details.get().position().wkt());
+    replay.resume();
 
     replay.replaySecond();
     details = replay.getCaptureDetails();
@@ -67,7 +66,8 @@ class CaptureLogReplayTests {
     var log = this.generateLog();
     var replay = new CaptureLogReplay(
       log,
-      1
+      1,
+      (logEntry, logReplay) -> {}
     );
 
     replay.resume();

@@ -1,8 +1,9 @@
+import MapCarLayer from '@/components/map/MapCarLayer';
 import BackLink from '@/components/navigation/BackLink';
 import { Button } from '@/components/ui/button';
-import { Indicator } from '@/components/ui/indicator';
+import { Indicator, IndicatorVariant } from '@/components/ui/indicator';
 import { Progress } from '@/components/ui/progress';
-import { useTranslations } from '@/features/i18n';
+import { DateFormat, NumberFormat, useTranslations } from '@/features/i18n';
 import { useParams } from '@solidjs/router';
 import {
   IconCurrentLocation,
@@ -11,19 +12,69 @@ import {
   IconPhoto,
   IconVideo,
 } from '@tabler/icons-solidjs';
-import { Component, Show, createSignal } from 'solid-js';
-import { useTripDetailsQuery } from '../api';
+import { Component, Show, createSignal, createMemo } from 'solid-js';
+import {
+  useTripCaptureAction,
+  useTripCaptureDetails,
+  useTripDetailsQuery,
+} from '../api';
 import TripSummaryDialog from '../components/TripSummaryDialog';
 import TripNoteModule from '../components/TripNoteModule';
+import { useProjectDetailsQuery } from '@/features/projects/api';
+import { CaptureAction } from '@isi-insight/client';
+import { ImageStatus, getImageAnalysis } from '../utils';
 
 const Trip: Component = () => {
   const params = useParams();
   const tripDetails = useTripDetailsQuery(params.tripId);
+  const { t, d, n } = useTranslations();
+  const project = useProjectDetailsQuery(params.projectId);
+  const captureDetails = useTripCaptureDetails(params.tripId);
+  const captureAction = useTripCaptureAction(params.tripId);
 
   const [showSummaryDialog, setShowSummaryDialog] = createSignal(false);
   const [showTripNoteModule, setShowTripNoteModule] = createSignal(false);
 
-  const { t } = useTranslations();
+  const storageIndicator = createMemo(() => {
+    const storage = captureDetails()?.storageRemaining;
+
+    if (storage === undefined) return IndicatorVariant.UNDETERMINED;
+    if (storage >= 0.5) return IndicatorVariant.SUCCESS;
+    if (storage >= 0.25) return IndicatorVariant.WARNING;
+    return IndicatorVariant.ERROR;
+  });
+
+  const gpsIndicator = createMemo(() => {
+    const gpsSignal = captureDetails()?.gpsSignal;
+
+    if (gpsSignal === undefined) return IndicatorVariant.UNDETERMINED;
+    if (gpsSignal >= 0.95) return IndicatorVariant.SUCCESS;
+    if (gpsSignal >= 0.75) return IndicatorVariant.WARNING;
+    return IndicatorVariant.ERROR;
+  });
+
+  const imageIndicator = createMemo(() => {
+    const images = captureDetails()?.images;
+
+    if (images === undefined) return IndicatorVariant.UNDETERMINED;
+
+    const analysis = getImageAnalysis(captureDetails()?.images ?? {});
+
+    switch (analysis.overall) {
+      case ImageStatus.OK:
+        return IndicatorVariant.SUCCESS;
+      case ImageStatus.WITHIN_TOLERANCE:
+        return IndicatorVariant.WARNING;
+      case ImageStatus.OUT_OF_TOLERANCE:
+        return IndicatorVariant.ERROR;
+    }
+  });
+
+  const handleCaptureAction = () => {
+    const isCapturing = captureDetails()?.activeCapture;
+    const action: CaptureAction = isCapturing ? 'PAUSE' : 'RESUME';
+    captureAction.mutate(action);
+  };
 
   return (
     <>
@@ -37,9 +88,14 @@ const Trip: Component = () => {
           <div class='flex flex-col justify-between space-y-2 md:flex-row md:flex-wrap'>
             <div class='order-first md:order-none'>
               <h1 class='text-3xl font-bold'>
-                Project 1 - {t('TRIPS.TRIP')} {tripDetails.data?.sequenceNumber}
+                {project.data?.name} - {t('TRIPS.TRIP')}{' '}
+                {tripDetails.data?.sequenceNumber}
               </h1>
-              <h2 class='text-sm'>21 Jan - 31 Mar</h2>
+              <span class='text-sm'>
+                {d(project.data?.startsAt, DateFormat.MONTH_DAY)}
+                {' - '}
+                {d(project.data?.endsAt, DateFormat.MONTH_DAY)}
+              </span>
             </div>
             <Button
               onClick={() => setShowTripNoteModule(!showTripNoteModule())}
@@ -71,34 +127,49 @@ const Trip: Component = () => {
                 </Form> */}
 
             <div class='order-2 w-full text-center md:order-none'>
-              <Progress class='rounded-lg' value={20} />
-              <p>{'2 000 / 10 000 m'}</p>
+              <Progress class='rounded-lg' value={project.data?.progress} />
+              <p>
+                {n(project.data?.capturedLength, NumberFormat.INTEGER)}
+                {' / '}
+                {n(project.data?.totalLength, NumberFormat.INTEGER)}
+                {' m'}
+              </p>
             </div>
           </div>
           <section class='grid grid-cols-2 gap-2 text-sm md:grid-cols-4'>
             <Indicator
-              variant={'warning'}
-              icon={<IconDatabase />}
+              variant={storageIndicator()}
+              icon={IconDatabase}
               indicates='Storage left'
-              status='20%'
+              status={n(
+                captureDetails()?.storageRemaining,
+                NumberFormat.PERCENTAGE
+              )}
             />
+
             <Indicator
-              variant={'success'}
-              icon={<IconCurrentLocation />}
+              variant={gpsIndicator()}
+              icon={IconCurrentLocation}
               indicates='GPS'
-              status='100%'
+              status={n(captureDetails()?.gpsSignal, NumberFormat.PERCENTAGE)}
             />
+
             <Indicator
-              variant={'undetermined'}
-              icon={<IconVideo />}
+              variant={
+                captureDetails()?.activeCapture
+                  ? IndicatorVariant.SUCCESS
+                  : IndicatorVariant.UNDETERMINED
+              }
+              icon={IconVideo}
               indicates='Capture'
-              status='Inactive'
+              status={captureDetails()?.activeCapture ? 'Active' : 'Inactive'}
             />
+
             <Indicator
-              variant={'error'}
-              icon={<IconPhoto />}
-              indicates='Capture rate'
-              status='55%'
+              variant={imageIndicator()}
+              icon={IconPhoto}
+              indicates='Images'
+              status=''
             />
           </section>
 
@@ -106,6 +177,7 @@ const Trip: Component = () => {
             tripId={params.tripId}
             open={showSummaryDialog()}
             onOpenChange={setShowSummaryDialog}
+            captureDetails={captureDetails()}
           />
 
           <Show when={!tripDetails.data?.endedAt}>
@@ -128,8 +200,23 @@ const Trip: Component = () => {
         />
       </Show>
 
+      <Show when={captureDetails()}>
+        {(dt) => (
+          <MapCarLayer heading={dt().heading} position={dt().position} />
+        )}
+      </Show>
+
       <Show when={!tripDetails.data?.endedAt}>
-        <section class='absolute bottom-4 left-4 hidden w-full rounded-md bg-gray-50 p-2 md:block md:w-1/2 lg:w-2/5 xl:w-1/3 dark:bg-gray-900'>
+        <div class='absolute bottom-4 left-4 hidden w-full rounded-md bg-gray-50 p-2 md:block md:w-1/2 lg:w-2/5 xl:w-1/3 dark:bg-gray-950'>
+          <Button onClick={handleCaptureAction} class='w-full'>
+            <Show
+              when={!captureDetails()?.activeCapture}
+              fallback={<span>Stop capture</span>}
+            >
+              <span>Start capture</span>
+            </Show>
+          </Button>
+
           <Button
             onClick={() => setShowSummaryDialog(true)}
             variant='destructive'
@@ -137,7 +224,7 @@ const Trip: Component = () => {
           >
             {t('TRIPS.END_TRIP')}
           </Button>
-        </section>
+        </div>
       </Show>
     </>
   );

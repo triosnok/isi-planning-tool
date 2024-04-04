@@ -19,6 +19,7 @@ import io.minio.PutObjectArgs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.isi.insight.planning.capture.model.ProcessedLogEntry;
+import no.isi.insight.planning.client.capture.view.CaptureLogDetails;
 
 @Slf4j
 @Service
@@ -42,15 +43,22 @@ public class CaptureReplayFileService {
    * 
    * @return the list of capture identifiers
    */
-  public List<String> listCaptures() {
+  public List<CaptureLogDetails> listCaptures() {
     var request = ListObjectsArgs.builder().bucket(BUCKET_NAME).build();
-    var results = new ArrayList<String>();
+    var results = new ArrayList<CaptureLogDetails>();
     var it = this.minio.listObjects(request).iterator();
 
     try {
       while (it.hasNext()) {
         var item = it.next().get();
-        results.add(item.objectName());
+
+        var log = new CaptureLogDetails(
+          item.objectName(),
+          item.lastModified().toLocalDateTime(),
+          item.size()
+        );
+
+        results.add(log);
       }
     } catch (Exception e) {
       // TODO: handle exception

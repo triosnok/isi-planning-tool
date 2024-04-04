@@ -1,0 +1,52 @@
+import groovy.json.JsonSlurper
+import groovy.json.JsonBuilder
+
+/**
+ * This task updates the version of all packages in the monorepo to align them.
+ * It includes the version in every package.json as well as the gradle.properties file.
+ * 
+ * Original version: https://github.com/thedatasnok/webshop/blob/main/build.gradle
+ */
+abstract class UpdateVersionTask extends DefaultTask {
+
+  @Input
+  String newVersion
+
+  @TaskAction
+  void updateVersion() {
+    updateNpmVersions()
+    updateGradleVersion()
+
+    project.exec {
+      commandLine "git", "add", "package.json", "apps/*/package.json", "packages/*/package.json", "gradle.properties"
+    }
+    
+    project.exec {
+      commandLine "git", "commit", "-m", "build: update version for release `${newVersion}`"
+    }
+
+    project.exec {
+      commandLine "git", "tag", "-a", "${newVersion}", "-m", "Release v${newVersion}"
+    }
+  }
+
+  void updateNpmVersions() {
+    project.fileTree("${project.projectDir}").matching {
+      include "package.json"
+      include "apps/*/package.json"
+      include "packages/*/package.json"
+    }.each {
+      it.text = it.text.replaceAll(/"version": ".*"/, "\"version\": \"${newVersion}\"")
+    }
+  }
+
+  void updateGradleVersion() {
+    def file = project.file("${project.projectDir}/gradle.properties")
+    file.text = file.text.replaceAll(/version=.*/, "version=${newVersion}")
+  }
+
+}
+
+tasks.register('updateVersion', UpdateVersionTask) {
+  newVersion = System.getProperty("newVersion")
+}

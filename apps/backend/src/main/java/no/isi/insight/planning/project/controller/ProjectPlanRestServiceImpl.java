@@ -120,5 +120,4 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
 
     return ResponseEntity.ok(details.get());
   }
-
 }

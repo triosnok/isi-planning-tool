@@ -14,15 +14,16 @@ public record CaptureDetails(
   double heading,
   float gpsSignal,
   boolean activeCapture,
+  int metersCaptured,
   Map<CameraPosition, Long> images
 ) {
 
-  public float getStorageUsage() {
+  public float getStorageRemaining() {
     if (this.totalStorage == 0) {
       return 0;
     }
 
-    return this.usedStorage / this.totalStorage * 100;
+    return this.usedStorage / this.totalStorage;
   }
 
 }

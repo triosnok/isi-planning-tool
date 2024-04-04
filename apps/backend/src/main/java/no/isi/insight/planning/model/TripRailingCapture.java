@@ -18,6 +18,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import no.isi.insight.planning.client.trip.view.CameraPosition;
 
 @Getter
 @Entity
@@ -41,9 +42,6 @@ public class TripRailingCapture {
   @JoinColumn(name = "fk_road_railing_id", referencedColumnName = RoadRailing.PRIMARY_KEY)
   private RoadRailing railing;
 
-  @Column(name = "sequence_number")
-  private int sequenceNumber;
-
   @Column(name = "captured_at")
   private LocalDateTime capturedAt;
 
@@ -52,19 +50,17 @@ public class TripRailingCapture {
 
   @JdbcTypeCode(SqlTypes.JSON)
   @Column(name = "image_urls")
-  private Map<String, String> imageUrls;
+  private Map<CameraPosition, String> imageUrls;
 
   public TripRailingCapture(
       Trip trip,
       RoadRailing railing,
-      int sequenceNumber,
       LocalDateTime capturedAt,
       Point position,
-      Map<String, String> imageUrls
+      Map<CameraPosition, String> imageUrls
   ) {
     this.trip = trip;
     this.railing = railing;
-    this.sequenceNumber = sequenceNumber;
     this.capturedAt = capturedAt;
     this.position = position;
     this.imageUrls = imageUrls;

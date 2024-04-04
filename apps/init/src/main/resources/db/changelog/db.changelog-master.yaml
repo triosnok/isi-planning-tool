@@ -61,3 +61,10 @@ databaseChangeLog:
         - sqlFile:
             path: 007-railing-own-geometry/000-add-own-geometry-flag.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: 008-deviation
+      author: halvard
+      changes:
+        - sqlFile:
+            path: 008-deviation/000-deviation-table.sql
+            relativeToChangelogFile: true

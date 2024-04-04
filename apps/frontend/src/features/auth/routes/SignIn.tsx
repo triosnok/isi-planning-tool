@@ -29,61 +29,57 @@ const SignIn: Component = () => {
   };
 
   return (
-    <div>
-      <main>
-        <div class='flex h-screen items-center justify-center'>
-          <div class='flex w-full max-w-md flex-col items-center justify-center rounded-lg border border-gray-100 py-6 shadow-lg'>
-            <Logo class='h-28' />
+    <div class='flex h-screen items-center justify-center'>
+      <main class='flex w-full max-w-md flex-col items-center justify-center rounded-lg border border-gray-100 py-6 shadow-lg dark:border-gray-800 dark:bg-gray-900'>
+        <Logo class='h-28' />
 
-            <Form
-              id='sign-in-form'
-              class='flex w-full flex-col gap-2 px-4'
-              onSubmit={handleSubmit}
-            >
-              <h1 class='font-title mt-2 text-center text-xl font-semibold'>
-                Sign in to inSight
-              </h1>
+        <Form
+          id='sign-in-form'
+          class='flex w-full flex-col gap-2 px-4'
+          onSubmit={handleSubmit}
+        >
+          <h1 class='font-title mt-2 text-center text-xl font-semibold'>
+            Sign in to inSight
+          </h1>
 
-              <Label for='email' class='font-semibold'>
-                E-mail
-              </Label>
-              <Field name='email'>
-                {(field, props) => (
-                  <Input
-                    {...props}
-                    type='email'
-                    id='email'
-                    placeholder='E-mail'
-                    value={field.value}
-                  />
-                )}
-              </Field>
+          <Label for='email' class='font-semibold'>
+            E-mail
+          </Label>
+          <Field name='email'>
+            {(field, props) => (
+              <Input
+                {...props}
+                type='email'
+                id='email'
+                placeholder='E-mail'
+                value={field.value}
+              />
+            )}
+          </Field>
 
-              <Label for='password' class='font-semibold'>
-                Password
-              </Label>
-              <Field name='password'>
-                {(field, props) => (
-                  <Input
-                    {...props}
-                    type='password'
-                    id='password'
-                    placeholder='Password'
-                    value={field.value}
-                  />
-                )}
-              </Field>
+          <Label for='password' class='font-semibold'>
+            Password
+          </Label>
+          <Field name='password'>
+            {(field, props) => (
+              <Input
+                {...props}
+                type='password'
+                id='password'
+                placeholder='Password'
+                value={field.value}
+              />
+            )}
+          </Field>
 
-              <div class='flex justify-end'>
-                <A class='text-sm hover:underline' href=''>
-                  Forgot password?
-                </A>
-              </div>
-
-              <Button class='mt-4'>Sign in</Button>
-            </Form>
+          <div class='flex justify-end'>
+            <A class='text-sm hover:underline' href=''>
+              Forgot password?
+            </A>
           </div>
-        </div>
+
+          <Button class='mt-4'>Sign in</Button>
+        </Form>
       </main>
     </div>
   );

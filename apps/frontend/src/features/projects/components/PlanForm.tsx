@@ -8,12 +8,12 @@ import VehicleSelect from '@/features/vehicles/components/VehicleSelect';
 import {
   SubmitHandler,
   createForm,
-  getValues,
+  getValue,
   setValue,
   zodForm,
 } from '@modular-forms/solid';
 import dayjs from 'dayjs';
-import { Component } from 'solid-js';
+import { Component, createSignal } from 'solid-js';
 import { z } from 'zod';
 
 const ProjectPlanSchema = z.object({
@@ -28,12 +28,15 @@ export type ProjectPlanForm = z.infer<typeof ProjectPlanSchema>;
 const PlanForm: Component<{
   onSubmit?: (values: ProjectPlanForm) => void;
 }> = (props) => {
+  const [availableFrom, setAvailableFrom] = createSignal<string>();
+  const [availableTo, setAvailableTo] = createSignal<string>();
+
   const [form, { Form, Field }] = createForm({
     validate: zodForm(ProjectPlanSchema),
   });
 
   const { t } = useTranslations();
-  const vehicles = useVehiclesQuery();
+  const vehicles = useVehiclesQuery(availableFrom, availableTo);
 
   const handleSubmit: SubmitHandler<ProjectPlanForm> = async (values) => {
     props.onSubmit?.(values);
@@ -69,9 +72,10 @@ const PlanForm: Component<{
               <DatePicker
                 value={dayjs(field.value).toDate()}
                 class='w-full'
-                onChange={(v) =>
-                  setValue(form, 'startsAt', v!.toISOString() ?? undefined)
-                }
+                onChange={(v) => {
+                  setAvailableFrom(v!.toISOString());
+                  setValue(form, 'startsAt', v!.toISOString());
+                }}
               />
             )}
           </Field>
@@ -84,9 +88,10 @@ const PlanForm: Component<{
               <DatePicker
                 value={dayjs(field.value).toDate()}
                 class='w-full'
-                onChange={(v) =>
-                  setValue(form, 'endsAt', v!.toISOString() ?? undefined)
-                }
+                onChange={(v) => {
+                  setAvailableTo(v!.toISOString());
+                  setValue(form, 'endsAt', v!.toISOString());
+                }}
               />
             )}
           </Field>
@@ -97,11 +102,15 @@ const PlanForm: Component<{
         {t('VEHICLES.VEHICLE')}
       </Label>
 
-      <VehicleSelect
-        vehicles={vehicles.data ?? []}
-        onChange={(v) => setValue(form, 'vehicleId', v?.id ?? undefined)}
-        emptyText={t('VEHICLES.NO_VEHICLE_SELECTED')}
-      />
+      <Field name='vehicleId'>
+        {(_field) => (
+          <VehicleSelect
+            vehicles={vehicles.data ?? []}
+            onChange={(v) => setValue(form, 'vehicleId', v?.id)}
+            emptyText={t('VEHICLES.NO_VEHICLE_SELECTED')}
+          />
+        )}
+      </Field>
 
       <Button class='mt-2 grow' type='submit'>
         {t('GENERAL.IMPORT_AND_SAVE')}

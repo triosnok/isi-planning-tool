@@ -8,11 +8,7 @@ import {
 import { useTranslations } from '@/features/i18n';
 import { VehicleDetails } from '@isi-insight/client';
 import { A } from '@solidjs/router';
-import {
-  Icon123,
-  IconCamera,
-  IconCircleCheckFilled,
-} from '@tabler/icons-solidjs';
+import { Icon123, IconCamera } from '@tabler/icons-solidjs';
 import { Component, Show, createSignal } from 'solid-js';
 import VehicleStatus from './VehicleStatus';
 

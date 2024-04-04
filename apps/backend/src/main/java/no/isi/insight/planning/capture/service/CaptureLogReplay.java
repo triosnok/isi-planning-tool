@@ -15,7 +15,9 @@ public class CaptureLogReplay {
   private final ListIterator<ProcessedLogEntry> log;
   private final int speed;
   private final Map<CameraPosition, Long> images;
+  private final CaptureLogListener listener;
 
+  private int metersCaptured;
   private boolean playing;
   private ProcessedLogEntry previousEntry;
 
@@ -27,12 +29,23 @@ public class CaptureLogReplay {
    */
   public CaptureLogReplay(
       List<ProcessedLogEntry> log,
-      int speed
+      int speed,
+      CaptureLogListener listener
   ) {
     this.log = log.listIterator();
     this.speed = speed;
     this.images = new HashMap<>();
+    this.listener = listener;
+    this.metersCaptured = 0;
+
+    // play the first second of the log to start with
+    this.playing = true;
+    this.replaySecond();
     this.playing = false;
+  }
+
+  public void incrementMetersCaptured() {
+    this.metersCaptured++;
   }
 
   /**
@@ -75,6 +88,8 @@ public class CaptureLogReplay {
       if (this.previousEntry == null) {
         this.previousEntry = current;
       }
+
+      this.listener.onLogEntry(current, this);
     }
 
     this.previousEntry = current;
@@ -119,8 +134,9 @@ public class CaptureLogReplay {
         0L,
         this.previousEntry.position(),
         this.previousEntry.heading(),
-        50.0f,
+        0.99f,
         this.playing,
+        this.metersCaptured,
         this.images
       )
     );

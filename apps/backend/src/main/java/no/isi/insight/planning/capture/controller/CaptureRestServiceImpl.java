@@ -18,8 +18,8 @@ import no.isi.insight.planning.capture.service.CaptureLogProcessor;
 import no.isi.insight.planning.capture.service.CaptureReplayFileService;
 import no.isi.insight.planning.capture.service.CaptureReplayService;
 import no.isi.insight.planning.client.capture.CaptureRestService;
-import no.isi.insight.planning.client.capture.view.CaptureAction;
-import no.isi.insight.planning.client.capture.view.CaptureDetails;
+import no.isi.insight.planning.client.capture.view.CaptureActionRequest;
+import no.isi.insight.planning.client.capture.view.CaptureLogDetails;
 import no.isi.insight.planning.client.trip.view.CameraPosition;
 import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.repository.TripJpaRepository;
@@ -87,29 +87,29 @@ public class CaptureRestServiceImpl implements CaptureRestService {
 
   @Override
   @DriverAuthorization
-  public List<String> getCaptureLogs() {
+  public List<CaptureLogDetails> getCaptureLogs() {
     return this.captureReplayFileService.listCaptures();
   }
 
   @Override
   @DriverAuthorization
-  public ResponseEntity<CaptureDetails> captureAction(
-      UUID tripId,
-      CaptureAction action
+  public ResponseEntity<Void> captureAction(
+      CaptureActionRequest request
   ) {
-    var cd = this.captureReplayService.getCaptureDetails(tripId)
-      .orElseThrow(() -> new NotFoundException("No ongoing capture"));
-
-    switch (action) {
-      case RESUME -> this.captureReplayService.resumeReplay(tripId);
-      case PAUSE -> this.captureReplayService.pauseReplay(tripId);
+    if (!this.captureReplayService.hasTrip(request.tripId())) {
+      throw new NotFoundException("No ongoing capture");
     }
 
-    return ResponseEntity.ok(cd);
+    switch (request.action()) {
+      case RESUME -> this.captureReplayService.resumeReplay(request.tripId());
+      case PAUSE -> this.captureReplayService.pauseReplay(request.tripId());
+    }
+
+    return ResponseEntity.ok().build();
   }
 
   @Override
-  @DriverAuthorization
+  // @DriverAuthorization
   public SseEmitter streamCapture(
       UUID tripId
   ) {

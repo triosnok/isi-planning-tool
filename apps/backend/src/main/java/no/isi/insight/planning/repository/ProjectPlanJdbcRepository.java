@@ -32,6 +32,8 @@ public class ProjectPlanJdbcRepository {
       )
       SELECT
         pp.project_plan_id,
+        pp.fk_project_id,
+        p.name AS project_name,
         pp.starts_at,
         pp.ends_at,
         v.model,
@@ -44,13 +46,17 @@ public class ProjectPlanJdbcRepository {
         ON pp.fk_vehicle_id = v.vehicle_id
       LEFT JOIN railing_aggregate ra
         ON pp.project_plan_id = ra.fk_project_plan_id
+      LEFT JOIN project p
+        ON pp.fk_project_id = p.project_id
       WHERE 1=1
         AND (:id IS NULL OR pp.project_plan_id = :id::uuid)
         AND (:projectId IS NULL OR pp.fk_project_id = :projectId::uuid)
+        AND (:vehicleId IS NULL OR pp.fk_vehicle_id = :vehicleId::uuid)
     """;
 
   private static final RowMapper<ProjectPlanDetails> PLAN_DETAILS_MAPPER = (rs, i) -> {
     var id = rs.getString("project_plan_id");
+    var project_id = rs.getString("fk_project_id");
 
     if (rs.wasNull()) {
       return null;
@@ -58,6 +64,8 @@ public class ProjectPlanJdbcRepository {
 
     return ProjectPlanDetails.builder()
       .id(UUID.fromString(id))
+      .projectId(UUID.fromString(project_id))
+      .projectName(rs.getString("project_name"))
       .startsAt(rs.getDate("starts_at").toLocalDate())
       .endsAt(rs.getDate("ends_at").toLocalDate())
       .vehicleModel(rs.getString("model"))
@@ -75,6 +83,7 @@ public class ProjectPlanJdbcRepository {
 
     params.addValue("id", id, Types.VARCHAR);
     params.addValue("projectId", null, Types.VARCHAR);
+    params.addValue("vehicleId", null, Types.VARCHAR);
 
     return Optional.ofNullable(this.jdbcTemplate.queryForObject(PLAN_DETAILS_QUERY, params, PLAN_DETAILS_MAPPER));
   }
@@ -86,8 +95,20 @@ public class ProjectPlanJdbcRepository {
 
     params.addValue("id", null, Types.VARCHAR);
     params.addValue("projectId", projectId, Types.VARCHAR);
+    params.addValue("vehicleId", null, Types.VARCHAR);
 
     return this.jdbcTemplate.query(PLAN_DETAILS_QUERY, params, PLAN_DETAILS_MAPPER);
   }
 
+  public List<ProjectPlanDetails> findByVehicleId(
+      UUID vehicleId
+  ) {
+    var params = new MapSqlParameterSource();
+
+    params.addValue("id", null, Types.VARCHAR);
+    params.addValue("projectId", null, Types.VARCHAR);
+    params.addValue("vehicleId", vehicleId, Types.VARCHAR);
+
+    return this.jdbcTemplate.query(PLAN_DETAILS_QUERY, params, PLAN_DETAILS_MAPPER);
+  }
 }

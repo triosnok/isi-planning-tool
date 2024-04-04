@@ -14,8 +14,8 @@ import org.springframework.web.service.annotation.PostExchange;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import no.isi.insight.planning.client.capture.view.CaptureAction;
-import no.isi.insight.planning.client.capture.view.CaptureDetails;
+import no.isi.insight.planning.client.capture.view.CaptureActionRequest;
+import no.isi.insight.planning.client.capture.view.CaptureLogDetails;
 
 @Tag(name = "Capture")
 @HttpExchange("/api/v1/capture")
@@ -31,7 +31,7 @@ public interface CaptureRestService {
   );
 
   @GetExchange("/logs")
-  List<String> getCaptureLogs();
+  List<CaptureLogDetails> getCaptureLogs();
 
   @GetExchange("/stream")
   SseEmitter streamCapture(
@@ -39,9 +39,8 @@ public interface CaptureRestService {
   );
 
   @PostExchange("/actions")
-  ResponseEntity<CaptureDetails> captureAction(
-      @RequestParam UUID tripId,
-      @RequestBody CaptureAction action
+  ResponseEntity<Void> captureAction(
+      @RequestBody CaptureActionRequest request
   );
 
 }

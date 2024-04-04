@@ -2,6 +2,7 @@ package no.isi.insight.planning.repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
@@ -14,6 +15,20 @@ public interface RoadRailingJpaRepository extends Repository<RoadRailing, Long> 
 
   Optional<RoadRailing> findById(
       Long id
+  );
+
+  // language=sql
+  @Query("""
+      SELECT
+        r
+      FROM Trip t
+      INNER JOIN t.projectPlan pp
+      INNER JOIN pp.railings r
+      JOIN FETCH r.roadSegments
+      WHERE t.id = :tripId
+    """)
+  List<RoadRailing> findAllByTripIdEager(
+      @Param("tripId") UUID tripId
   );
 
   @Query("SELECT r FROM RoadRailing r WHERE r.id IN (:ids)")

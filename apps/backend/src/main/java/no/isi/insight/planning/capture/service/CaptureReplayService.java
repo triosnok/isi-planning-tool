@@ -11,15 +11,19 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.springframework.context.event.EventListener;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.isi.insight.planning.capture.model.ProcessedLogEntry;
-import no.isi.insight.planning.client.capture.view.CaptureDetails;
+import no.isi.insight.planning.client.trip.view.CameraPosition;
+import no.isi.insight.planning.geometry.GeometryService;
+import no.isi.insight.planning.model.Trip;
+import no.isi.insight.planning.model.TripRailingCapture;
+import no.isi.insight.planning.repository.RoadRailingJpaRepository;
+import no.isi.insight.planning.repository.TripRailingCaptureJpaRepository;
 import no.isi.insight.planning.trip.event.TripEndedEvent;
 import no.isi.insight.planning.trip.event.TripStartedEvent;
 
@@ -31,7 +35,9 @@ import no.isi.insight.planning.trip.event.TripStartedEvent;
 @RequiredArgsConstructor
 public class CaptureReplayService {
   private final CaptureReplayFileService fileService;
-  private final ObjectMapper objectMapper;
+  private final TripRailingCaptureJpaRepository railingCaptureJpaRepository;
+  private final RoadRailingJpaRepository roadRailingJpaRepository;
+  private final GeometryService geometryService;
   private final Map<UUID, List<SseEmitter>> emitters = new HashMap<>();
   private final Map<UUID, CaptureLogReplay> replays = new HashMap<>();
   private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
@@ -46,7 +52,7 @@ public class CaptureReplayService {
   public SseEmitter createEmitter(
       UUID tripId
   ) {
-    var emitter = new SseEmitter();
+    var emitter = new SseEmitter(Long.MAX_VALUE);
 
     emitter.onCompletion(() -> {
       if (this.emitters.containsKey(tripId)) {
@@ -62,18 +68,63 @@ public class CaptureReplayService {
   /**
    * Starts replaying a given trip.
    * 
-   * @param tripId     the trip to replay
+   * @param trip       the trip to replay
    * @param logEntries the log entries to replay
    * @param speed      the speed to replay the log at
    */
   private void startReplay(
-      UUID tripId,
+      Trip trip,
       List<ProcessedLogEntry> logEntries,
       Optional<Integer> speed
   ) {
+    var tripId = trip.getId();
+    var railings = this.roadRailingJpaRepository.findAllByTripIdEager(tripId);
+    var matcher = new CaptureRailingMatcher(
+      railings,
+      this.geometryService,
+      4
+    );
+
     var replay = new CaptureLogReplay(
       logEntries,
-      speed.orElse(1)
+      speed.orElse(1),
+      (logEntry, logReplay) -> {
+        if (logEntry.images().size() == 0) {
+          return;
+        }
+
+        var gpsPoint = this.geometryService.parsePoint(logEntry.position().wkt());
+        var point = this.geometryService.transformGpsToRail(gpsPoint.get());
+        point.setSRID(25833);
+
+        var match = matcher.matchRailing(point, logEntry.heading());
+
+        if (match.isEmpty()) {
+          return;
+        }
+
+        var isOwnGeometry = match.get().railing().isOwnGeometry();
+        var side = match.get().roadSegment().getSide();
+        var isValidMatch = switch (side) {
+          case LEFT -> logEntry.images().containsKey(CameraPosition.LEFT);
+          case RIGHT -> logEntry.images().containsKey(CameraPosition.RIGHT);
+          default -> true;
+        };
+
+        if (isValidMatch || !isOwnGeometry) {
+          logReplay.incrementMetersCaptured();
+
+          var capture = new TripRailingCapture(
+            trip,
+            match.get().railing(),
+            logEntry.timestamp(),
+            point,
+            logEntry.images()
+          );
+
+          this.railingCaptureJpaRepository.save(capture);
+        }
+      }
     );
 
     this.replays.put(tripId, replay);
@@ -97,8 +148,8 @@ public class CaptureReplayService {
           if (cd.isPresent() && this.emitters.containsKey(tripId)) {
             var event = SseEmitter.event()
               .id(UUID.randomUUID().toString())
-              .name("capture")
-              .data(this.objectMapper.writeValueAsString(cd.get()))
+              .name("message")
+              .data(cd.get(), MediaType.APPLICATION_JSON)
               .build();
 
             for (var emitter : this.emitters.get(tripId)) {
@@ -125,14 +176,10 @@ public class CaptureReplayService {
    * 
    * @return the capture details, if available
    */
-  public Optional<CaptureDetails> getCaptureDetails(
+  public boolean hasTrip(
       UUID tripId
   ) {
-    if (!this.replays.containsKey(tripId)) {
-      return Optional.empty();
-    }
-
-    return this.replays.get(tripId).getCaptureDetails();
+    return this.replays.containsKey(tripId);
   }
 
   /**
@@ -191,7 +238,7 @@ public class CaptureReplayService {
     var logEntries = this.fileService.getCapture(event.captureLogId());
     var speed = Optional.ofNullable(event.replaySpeed());
 
-    this.startReplay(event.tripId(), logEntries, speed);
+    this.startReplay(event.trip(), logEntries, speed);
   }
 
   /**

@@ -35,11 +35,11 @@ public class RoadSegment {
   private LineString geometry;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "direction")
+  @Column(name = "direction_of_road")
   private RoadDirection direction;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "side")
+  @Column(name = "side_of_road")
   private RoadSide side;
 
   @UpdateTimestamp

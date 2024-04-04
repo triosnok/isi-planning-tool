@@ -22,9 +22,10 @@ public class RoadRailingJdbcRepository {
   /**
    * Finds all stored railings for a project, with optional scoping by plan or trip.
    * 
-   * @param projectId the project id
-   * @param planId    the plan id (optional)
-   * @param tripId    the trip id (optional)
+   * @param projectId     the project id
+   * @param planId        the plan id (optional)
+   * @param tripId        the trip id (optional)
+   * @param hideCompleted whether to hide railings that are considered fully captured
    * 
    * @return a list of railings
    */
@@ -42,7 +43,12 @@ public class RoadRailingJdbcRepository {
             trc.fk_road_railing_id,
             COUNT(*) AS captured_length
           FROM trip_railing_capture trc
-          GROUP BY trc.fk_road_railing_id, trc.fk_trip_id
+          INNER JOIN trip t
+            ON trc.fk_trip_id = t.trip_id
+          INNER JOIN project_plan pp
+            ON t.fk_project_plan_id = pp.project_plan_id
+          WHERE pp.fk_project_id = :projectId
+          GROUP BY trc.fk_road_railing_id, trc.fk_trip_id, t.fk_project_plan_id, pp.fk_project_id
         )
         SELECT
           ST_AsText(ST_Force2D(rr.geometry)) AS wkt,

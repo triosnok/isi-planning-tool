@@ -40,25 +40,38 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
     INNER JOIN t.projectPlan pp
     INNER JOIN pp.project p
     INNER JOIN t.driver d
+    INNER JOIN t.vehicle v
     WHERE 1=1
-      AND p.id = :projectId
+      AND (:projectId IS NULL OR p.id = :projectId)
+      AND (:driverId IS NULL OR d.userAccountId = :driverId)
+      AND (:vehicleId IS NULL OR v.id = :vehicleId)
       AND COALESCE(:planIds, NULL) IS NULL OR pp.id IN (:planIds)
     """)
-  List<TripDetails> findAllByProjectId(
-      @Param("projectId") UUID projectId,
+  List<TripDetails> findAll(
+      @Param("projectId") Optional<UUID> projectId,
+      @Param("driverId") Optional<UUID> driverId,
+      @Param("vehicleId") Optional<UUID> vehicleId,
       @Param("planIds") List<UUID> planIds
   );
+
+  default List<TripDetails> findAllByProjectId(
+      UUID projectId,
+      List<UUID> planIds
+  ) {
+    return this.findAll(Optional.of(projectId), Optional.empty(), Optional.empty(), planIds);
+  }
 
   // language=sql
   @Query("""
       SELECT
         COALESCE(MAX(t.sequenceNumber) + 1, 1)
       FROM Trip t
-      INNER JOIN t.projectPlan
-      WHERE t.projectPlan.id = :planId
+      INNER JOIN t.projectPlan pp
+      INNER JOIN pp.project p
+      WHERE p.id = :projectId
     """)
   int findNextSequenceNumber(
-      @Param("planId") UUID planId
+      @Param("projectId") UUID projectId
   );
 
   // language=sql
@@ -70,5 +83,17 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
   Long countTripNotesByTripId(
       @Param("tripId") UUID tripId
   );
+
+  default List<TripDetails> findAllByVehicleId(
+      UUID vehicleId
+  ) {
+    return this.findAll(Optional.empty(), Optional.empty(), Optional.of(vehicleId), null);
+  }
+
+  default List<TripDetails> findAllByDriverId(
+      UUID driverId
+  ) {
+    return this.findAll(Optional.empty(), Optional.of(driverId), Optional.empty(), null);
+  }
 
 }

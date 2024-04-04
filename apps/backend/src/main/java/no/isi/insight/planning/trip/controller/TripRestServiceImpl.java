@@ -49,7 +49,7 @@ public class TripRestServiceImpl implements TripRestService {
     var userAccount = RequestUtils.getRequestingUserAccount()
       .orElseThrow(() -> new NotFoundException("User not found"));
 
-    var sequenceNumber = tripJpaRepository.findNextSequenceNumber(plan.getId());
+    var sequenceNumber = tripJpaRepository.findNextSequenceNumber(plan.getProject().getId());
 
     Trip trip = new Trip(
       vehicle,
@@ -63,7 +63,7 @@ public class TripRestServiceImpl implements TripRestService {
 
     this.eventPublisher.publishEvent(
       new TripStartedEvent(
-        savedTrip.getId(),
+        savedTrip,
         request.captureLogId(),
         request.replaySpeed()
       )

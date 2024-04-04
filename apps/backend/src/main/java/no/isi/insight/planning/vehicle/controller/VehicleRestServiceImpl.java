@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import no.isi.insight.planning.auth.annotation.DriverAuthorization;
 import no.isi.insight.planning.auth.annotation.PlannerAuthorization;
+import no.isi.insight.planning.client.project.view.ProjectPlanDetails;
+import no.isi.insight.planning.client.trip.view.TripDetails;
 import no.isi.insight.planning.client.vehicle.VehicleRestService;
 import no.isi.insight.planning.client.vehicle.view.CreateVehicleRequest;
 import no.isi.insight.planning.client.vehicle.view.UpdateVehicleRequest;
@@ -19,6 +21,8 @@ import no.isi.insight.planning.client.vehicle.view.VehicleDetails;
 import no.isi.insight.planning.error.model.BadRequestException;
 import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.model.Vehicle;
+import no.isi.insight.planning.repository.ProjectPlanJdbcRepository;
+import no.isi.insight.planning.repository.TripJpaRepository;
 import no.isi.insight.planning.repository.VehicleJdbcRepository;
 import no.isi.insight.planning.repository.VehicleJpaRepository;
 
@@ -28,6 +32,8 @@ public class VehicleRestServiceImpl implements VehicleRestService {
 
   private final VehicleJpaRepository vehicleJpaRepository;
   private final VehicleJdbcRepository vehicleJdbcRespotiory;
+  private final ProjectPlanJdbcRepository projectPlanJdbcRepository;
+  private final TripJpaRepository tripJpaRepository;
 
   @Override
   @PlannerAuthorization
@@ -108,6 +114,24 @@ public class VehicleRestServiceImpl implements VehicleRestService {
 
     var vehicles = this.vehicleJdbcRespotiory.findVehicles(availableFrom, availableTo);
     return ResponseEntity.ok(vehicles);
+  }
+
+  @Override
+  @DriverAuthorization
+  public ResponseEntity<List<ProjectPlanDetails>> findPlansByVehicleId(
+      UUID id
+  ) {
+    var plans = this.projectPlanJdbcRepository.findByVehicleId(id);
+    return ResponseEntity.ok(plans);
+  }
+
+  @Override
+  @DriverAuthorization
+  public ResponseEntity<List<TripDetails>> findTripsByVehicleId(
+      UUID id
+  ) {
+    var trips = this.tripJpaRepository.findAllByVehicleId(id);
+    return ResponseEntity.ok(trips);
   }
 
 }

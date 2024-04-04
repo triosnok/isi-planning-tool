@@ -32,8 +32,8 @@ public class VehicleJdbcRepository {
             WHEN (:available_from_date IS NOT NULL AND :available_to_date IS NULL)
                 THEN :available_from_date BETWEEN pp.starts_at AND pp.ends_at
             WHEN (:available_from_date IS NOT NULL AND :available_to_date IS NOT NULL)
-                THEN pp.starts_at BETWEEN :available_from_date AND :available_to_date
-                OR pp.ends_at BETWEEN :available_from_date AND :available_to_date
+                THEN pp.starts_at <= :available_to_date
+                AND pp.ends_at >= :available_from_date
             ELSE NOW() BETWEEN pp.starts_at AND pp.ends_at
           END)
         GROUP BY pp.fk_vehicle_id
