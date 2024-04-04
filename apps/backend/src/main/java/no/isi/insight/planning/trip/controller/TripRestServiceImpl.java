@@ -72,6 +72,9 @@ public class TripRestServiceImpl implements TripRestService {
     return ResponseEntity.ok(
       new TripDetails(
         savedTrip.getId(),
+        savedTrip.getProjectPlan().getProject().getId(),
+        savedTrip.getProjectPlan().getId(),
+        savedTrip.getProjectPlan().getProject().getName(),
         savedTrip.getDriver().getFullName(),
         savedTrip.getStartedAt(),
         savedTrip.getEndedAt(),
@@ -97,6 +100,9 @@ public class TripRestServiceImpl implements TripRestService {
     return ResponseEntity.ok(
       new TripDetails(
         trip.getId(),
+        trip.getProjectPlan().getId(),
+        trip.getProjectPlan().getProject().getId(),
+        trip.getProjectPlan().getProject().getName(),
         trip.getDriver().getFullName(),
         trip.getStartedAt(),
         trip.getEndedAt(),
@@ -141,6 +147,9 @@ public class TripRestServiceImpl implements TripRestService {
     return ResponseEntity.ok(
       new TripDetails(
         savedTrip.getId(),
+        savedTrip.getProjectPlan().getId(),
+        savedTrip.getProjectPlan().getProject().getId(),
+        savedTrip.getProjectPlan().getProject().getName(),
         savedTrip.getDriver().getFullName(),
         savedTrip.getStartedAt(),
         savedTrip.getEndedAt(),

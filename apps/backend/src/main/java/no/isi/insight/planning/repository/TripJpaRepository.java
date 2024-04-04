@@ -25,6 +25,9 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
   @Query("""
     SELECT new no.isi.insight.planning.client.trip.view.TripDetails(
       t.id,
+      pp.id,
+      p.id,
+      p.name,
       d.fullName,
       t.startedAt,
       t.endedAt,

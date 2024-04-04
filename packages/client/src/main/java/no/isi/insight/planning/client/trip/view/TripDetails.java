@@ -1,8 +1,8 @@
 package no.isi.insight.planning.client.trip.view;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 import java.util.Map;
+import java.util.UUID;
 
 import lombok.Builder;
 import no.isi.insight.planning.client.annotation.GenerateTypeScript;
@@ -11,6 +11,9 @@ import no.isi.insight.planning.client.annotation.GenerateTypeScript;
 @GenerateTypeScript
 public record TripDetails(
   UUID id,
+  UUID projectPlanId,
+  UUID projectId,
+  String project,
   String driver,
   LocalDateTime startedAt,
   LocalDateTime endedAt,
