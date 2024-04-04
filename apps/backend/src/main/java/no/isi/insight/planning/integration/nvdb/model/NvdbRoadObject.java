@@ -63,7 +63,12 @@ public record NvdbRoadObject(
     @JsonAlias("kortform") String shortform
   ) {}
 
-  public static record RoadSystem(Long id) {}
+  public static record RoadSystem(
+    Long id,
+    @JsonAlias("vegkategori") String category,
+    @JsonAlias("fase") String phase,
+    @JsonAlias("nummer") Integer number
+  ) {}
 
   public static enum Direction {
     MED,

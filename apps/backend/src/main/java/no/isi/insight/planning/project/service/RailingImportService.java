@@ -44,14 +44,27 @@ public class RailingImportService {
     """;
 
   // language=sql
+  private static final String UPSERT_ROAD_SYSTEM_QUERY = """
+      INSERT INTO road_system (road_system_id, road_category, road_phase, road_number)
+      VALUES (:id, :category, :phase, :roadNumber)
+      ON CONFLICT (road_system_id) DO UPDATE SET
+        road_category = EXCLUDED.road_category,
+        road_phase = EXCLUDED.road_phase,
+        road_number = EXCLUDED.road_number,
+        last_imported_at = NOW()
+    """;
+
+  // language=sql
   private static final String UPSERT_ROAD_SEGMENT_QUERY = """
-      INSERT INTO road_segment (fk_road_railing_id, road_segment_id, geometry, length, side_of_road, direction_of_road)
-      VALUES (:railingId, :externalId, ST_GeomFromText(:geometry, 5973), :length, :side::road_side, :direction::road_direction)
+      INSERT INTO road_segment (fk_road_railing_id, road_segment_id, geometry, length, side_of_road, direction_of_road, road_system_reference, fk_road_system_id)
+      VALUES (:railingId, :externalId, ST_GeomFromText(:geometry, 5973), :length, :side::road_side, :direction::road_direction, :roadSystemReference, :roadSystemId)
       ON CONFLICT (fk_road_railing_id, road_segment_id) DO UPDATE SET
         geometry = EXCLUDED.geometry,
         length = EXCLUDED.length,
         side_of_road = EXCLUDED.side_of_road,
         direction_of_road = EXCLUDED.direction_of_road,
+        road_system_reference = EXCLUDED.road_system_reference,
+        fk_road_system_id = EXCLUDED.fk_road_system_id,
         last_imported_at = NOW()
     """;
 
@@ -63,16 +76,19 @@ public class RailingImportService {
     var railings = this.importService.importRoadObjects(url, NvdbRoadObjectType.RAILING, Map.of("inkluder", "alle"));
 
     var railingParams = new ArrayList<MapSqlParameterSource>(railings.size());
+    var roadSystemParams = new ArrayList<MapSqlParameterSource>();
     var roadSegmentsParams = new ArrayList<MapSqlParameterSource>();
     var railingIds = new ArrayList<Long>();
 
     for (var railing : railings) {
       railingIds.add(railing.id());
       railingParams.add(this.mapRailingParams(railing));
+      roadSystemParams.addAll(this.mapRoadSystemParams(railing));
       roadSegmentsParams.addAll(this.mapRoadSegmentParams(railing));
     }
 
     this.jdbcTemplate.batchUpdate(UPSERT_ROAD_RAILING_QUERY, railingParams.toArray(MapSqlParameterSource[]::new));
+    this.jdbcTemplate.batchUpdate(UPSERT_ROAD_SYSTEM_QUERY, roadSystemParams.toArray(MapSqlParameterSource[]::new));
     this.jdbcTemplate.batchUpdate(UPSERT_ROAD_SEGMENT_QUERY, roadSegmentsParams.toArray(MapSqlParameterSource[]::new));
 
     return this.railingJpaRepository.findAllByIds(railingIds);
@@ -91,6 +107,23 @@ public class RailingImportService {
     params.addValue("length", roadObject.location().length());
 
     return params;
+  }
+
+  private List<MapSqlParameterSource> mapRoadSystemParams(
+      NvdbRoadObject roadObject
+  ) {
+    var sqlParams = roadObject.roadSegments().stream().map(segment -> {
+      var system = segment.roadSystemReference().system();
+
+      var params = new MapSqlParameterSource();
+      params.addValue("id", system.id());
+      params.addValue("category", system.category());
+      params.addValue("phase", system.phase());
+      params.addValue("roadNumber", system.number());
+      return params;
+    }).toList();
+
+    return sqlParams;
   }
 
   private List<MapSqlParameterSource> mapRoadSegmentParams(
@@ -132,6 +165,8 @@ public class RailingImportService {
       params.addValue("geometry", ls.toText());
       params.addValue("length", segment.length());
       params.addValue("direction", segmentDirection.name());
+      params.addValue("roadSystemReference", segment.roadSystemReference().shortform());
+      params.addValue("roadSystemId", segment.roadSystemReference().system().id());
       params.addValue("side", side);
       return params;
     }).filter(Objects::nonNull).toList();

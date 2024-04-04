@@ -68,3 +68,16 @@ databaseChangeLog:
         - sqlFile:
             path: 008-deviation/000-deviation-table.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: 009-segment-details
+      author: halvard
+      changes:
+        - sqlFile:
+            path: 009-segment-details/000-add-capture-segment-reference.sql
+            relativeToChangelogFile: true
+        - sqlFile:
+            path: 009-segment-details/001-add-road-system-table.sql
+            relativeToChangelogFile: true
+        - sqlFile:
+            path: 009-segment-details/002-add-road-details.sql
+            relativeToChangelogFile: true

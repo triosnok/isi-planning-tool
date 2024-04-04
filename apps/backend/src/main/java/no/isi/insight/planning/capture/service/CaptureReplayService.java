@@ -116,7 +116,7 @@ public class CaptureReplayService {
 
           var capture = new TripRailingCapture(
             trip,
-            match.get().railing(),
+            match.get().roadSegment(),
             logEntry.timestamp(),
             point,
             logEntry.images()

@@ -14,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinColumns;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -39,8 +40,11 @@ public class TripRailingCapture {
   private Trip trip;
 
   @ManyToOne
-  @JoinColumn(name = "fk_road_railing_id", referencedColumnName = RoadRailing.PRIMARY_KEY)
-  private RoadRailing railing;
+  @JoinColumns({
+      @JoinColumn(name = "fk_road_railing_id", referencedColumnName = "fk_road_railing_id"),
+      @JoinColumn(name = "fk_road_segment_id", referencedColumnName = "road_segment_id")
+  })
+  private RoadSegment roadSegment;
 
   @Column(name = "captured_at")
   private LocalDateTime capturedAt;
@@ -54,16 +58,20 @@ public class TripRailingCapture {
 
   public TripRailingCapture(
       Trip trip,
-      RoadRailing railing,
+      RoadSegment segment,
       LocalDateTime capturedAt,
       Point position,
       Map<CameraPosition, String> imageUrls
   ) {
     this.trip = trip;
-    this.railing = railing;
+    this.roadSegment = segment;
     this.capturedAt = capturedAt;
     this.position = position;
     this.imageUrls = imageUrls;
+  }
+
+  public RoadRailing getRailing() {
+    return this.roadSegment.getRailing();
   }
 
 }
