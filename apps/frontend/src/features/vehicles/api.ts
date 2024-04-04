@@ -1,5 +1,9 @@
 import { CacheKey } from '@/api';
-import { CreateVehicleRequest, VehicleDetails } from '@isi-insight/client';
+import {
+  CreateVehicleRequest,
+  TripDetails,
+  VehicleDetails
+} from '@isi-insight/client';
 import {
   createMutation,
   createQuery,
@@ -26,6 +30,19 @@ export const useVehiclesQuery = (
 
       const response = await axios.get<VehicleDetails[]>(
         `/api/v1/vehicles?${params.toString()}`
+      );
+
+      return response.data;
+    },
+  }));
+};
+
+export const useTripsByVehicleQuery = (vehicleId: string) => {
+  return createQuery(() => ({
+    queryKey: [CacheKey.TRIP_LIST, vehicleId],
+    queryFn: async () => {
+      const response = await axios.get<TripDetails[]>(
+        `/api/v1/vehicles/${vehicleId}/trips`
       );
 
       return response.data;

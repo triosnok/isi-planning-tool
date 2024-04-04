@@ -78,12 +78,14 @@ export interface ProjectDetails {
     totalLength: number;
     deviations: number;
     notes: number;
-    progress: number;
     status: ProjectStatus;
+    progress: number;
 }
 
 export interface ProjectPlanDetails {
     id: string;
+    projectId: string;
+    projectName: string;
     startsAt: DateAsString;
     endsAt: DateAsString;
     vehicleModel: string;
@@ -128,6 +130,9 @@ export interface CreateTripRequest {
 
 export interface TripDetails {
     id: string;
+    projectPlanId: string;
+    projectId: string;
+    project: string;
     driver: string;
     startedAt: DateAsString;
     endedAt: DateAsString;
@@ -149,6 +154,32 @@ export interface UpdateTripRequest {
     endedAt: DateAsString;
     gnssLog: string;
     cameraLogs: { [P in CameraPosition]?: string };
+}
+
+export interface CreateUserAccountRequest {
+    fullName: string;
+    email: string;
+    phoneNumber: string;
+    password: string;
+    passwordConfirmation: string;
+    role: UserRole;
+}
+
+export interface UpdateUserAccountRequest {
+    fullName: string;
+    email: string;
+    phoneNumber: string;
+    password: string;
+    passwordConfirmation: string;
+    role: UserRole;
+}
+
+export interface UserAccountDetails {
+    id: string;
+    fullName: string;
+    email: string;
+    phoneNumber: string;
+    role: UserRole;
 }
 
 export interface CreateVehicleRequest {
