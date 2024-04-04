@@ -46,11 +46,4 @@ public interface ProjectPlanRestService {
       @PathVariable UUID planId,
       @RequestBody UpdateProjectPlanRequest request
   );
-
-  @GetExchange("/vehicle/{vehicleId}")
-  @Operation(summary = "Lists all project plans for a given vehicle")
-  ResponseEntity<List<ProjectPlanDetails>> getPlansByVehicle(
-      @PathVariable UUID vehicleId
-  );
-
 }

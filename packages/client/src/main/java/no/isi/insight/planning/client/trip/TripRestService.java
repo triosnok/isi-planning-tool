@@ -43,10 +43,4 @@ public interface TripRestService {
       @PathVariable UUID tripId,
       @RequestBody UpdateTripRequest request
   );
-
-  @GetExchange("/vehicle/{vehicleId}")
-  ResponseEntity<List<TripDetails>> getTripsByVehicleId(
-      @PathVariable UUID vehicleId
-  );
-
 }

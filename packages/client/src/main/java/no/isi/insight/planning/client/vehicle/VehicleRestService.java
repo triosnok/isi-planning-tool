@@ -18,6 +18,8 @@ import org.springframework.web.service.annotation.PostExchange;
 import org.springframework.web.service.annotation.PutExchange;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import no.isi.insight.planning.client.project.view.ProjectPlanDetails;
+import no.isi.insight.planning.client.trip.view.TripDetails;
 import no.isi.insight.planning.client.vehicle.view.CreateVehicleRequest;
 import no.isi.insight.planning.client.vehicle.view.UpdateVehicleRequest;
 import no.isi.insight.planning.client.vehicle.view.VehicleDetails;
@@ -46,6 +48,16 @@ public interface VehicleRestService {
   ResponseEntity<List<VehicleDetails>> findAllVehicles(
       @RequestParam @DateTimeFormat(iso = ISO.DATE_TIME) Optional<LocalDate> availableFrom,
       @RequestParam @DateTimeFormat(iso = ISO.DATE_TIME) Optional<LocalDate> availableTo
+  );
+
+  @GetExchange("/{id}/plans")
+  ResponseEntity<List<ProjectPlanDetails>> findPlansByVehicleId(
+      @PathVariable UUID id
+  );
+
+  @GetExchange("/{id}/trips")
+  ResponseEntity<List<TripDetails>> findTripsByVehicleId(
+      @PathVariable UUID id
   );
 
 }
