@@ -28,12 +28,12 @@ const MapRailingLayer: Component<MapRailingLayerProps> = (props) => {
         smoothFactor: 1,
       });
 
-      line.setText('  ►  ', {
-        repeat: true,
-        center: true,
-        offset: 10,
-        attributes: { fill: getRailingColor(railing.captureGrade)! },
-      });
+      // line.setText('  ►  ', {
+      //   repeat: true,
+      //   center: true,
+      //   offset: 10,
+      //   attributes: { fill: getRailingColor(railing.captureGrade)! },
+      // });
 
       return line;
     });

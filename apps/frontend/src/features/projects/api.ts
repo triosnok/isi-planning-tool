@@ -144,16 +144,25 @@ export const useProjectPlansQuery = (projectId: string) => {
   }));
 };
 
-export const useProjectRailings = (projectId: Accessor<string | undefined>) => {
+export const useProjectRailings = (
+  projectId: Accessor<string | undefined>,
+  planIds: Accessor<string[]>
+) => {
   return createQuery(() => ({
-    queryKey: [CacheKey.PROJECT_RAILINGS, projectId()] as const,
+    queryKey: [CacheKey.PROJECT_RAILINGS, projectId(), planIds()] as const,
     queryFn: async ({ queryKey }) => {
-      const [_, projectId] = queryKey;
+      const [_, projectId, planIds] = queryKey;
 
       if (projectId === undefined) return [];
 
+      const params = new URLSearchParams();
+
+      planIds.forEach((planId) => {
+        params.append('planId', planId);
+      });
+
       const response = await axios.get<RoadRailing[]>(
-        `/api/v1/projects/${projectId}/railings`
+        `/api/v1/projects/${projectId}/railings?${params.toString()}`
       );
 
       return response.data;

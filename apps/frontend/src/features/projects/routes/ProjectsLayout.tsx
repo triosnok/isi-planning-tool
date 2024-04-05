@@ -6,6 +6,7 @@ import { useParams } from '@solidjs/router';
 import { Component, createMemo } from 'solid-js';
 import { useProjectRailings } from '../api';
 import MapZoomControls from '@/components/map/MapZoomControls';
+import { useSelectedPlans } from '../utils';
 
 const ProjectsLayout: Component<LayoutProps> = (props) => {
   const params = useParams();
@@ -13,7 +14,8 @@ const ProjectsLayout: Component<LayoutProps> = (props) => {
     return params.id;
   }, params.id);
 
-  const railings = useProjectRailings(projectId);
+  const [selectedPlans] = useSelectedPlans();
+  const railings = useProjectRailings(projectId, selectedPlans);
 
   return (
     <div class='flex h-svh w-svw flex-col overflow-hidden'>
