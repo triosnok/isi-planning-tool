@@ -24,6 +24,7 @@
   "dependencies": {
     "@isi-insight/client": "workspace:*",
     "@kobalte/core": "^0.12.1",
+    "@kobalte/tailwindcss": "^0.9.0",
     "@modular-forms/solid": "^0.20.0",
     "@solid-primitives/i18n": "^2.0.1",
     "@solid-primitives/media": "^2.2.8",
