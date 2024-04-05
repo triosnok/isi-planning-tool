@@ -53,7 +53,7 @@ public class ProjectRestServiceImpl implements ProjectRestService {
   @DriverAuthorization
   public ResponseEntity<List<RoadRailing>> getRailings(
       UUID projectId,
-      Optional<UUID> planId,
+      List<UUID> planId,
       Optional<UUID> tripId,
       Optional<Boolean> hideCompleted
   ) {
