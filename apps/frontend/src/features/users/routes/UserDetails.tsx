@@ -1,5 +1,5 @@
 import Header from '@/components/layout/Header';
-import { A, useParams } from '@solidjs/router';
+import { A, useNavigate, useParams } from '@solidjs/router';
 import { IconChevronLeft } from '@tabler/icons-solidjs';
 import { Component, Show } from 'solid-js';
 import {
@@ -19,6 +19,7 @@ const UserDetails: Component = () => {
   const user = useUserDetailsQuery(params.id);
   const { update } = useUserMutation();
   const { t } = useTranslations();
+  const navigate = useNavigate();
 
   const trips = useTripsByUserQuery(params.id);
 
@@ -28,6 +29,7 @@ const UserDetails: Component = () => {
         userId: params.id,
         ...user,
       });
+      navigate('/users');
     } catch (error) {
       console.error('Failed to update user');
     }
