@@ -10,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,12 +20,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "road_railing")
 public class RoadRailing {
 
   public static final String PRIMARY_KEY = "road_railing_id";
 
   @Id
+  @EqualsAndHashCode.Include
   @Column(name = PRIMARY_KEY)
   private Long id;
 
