@@ -8,4 +8,12 @@ import no.isi.insight.planning.client.auth.view.UserRole;
 
 @Builder
 @GenerateTypeScript
-public record UserAccountDetails(UUID id, String fullName, String email, String phoneNumber, UserRole role) {}
+public record UserAccountDetails(
+    UUID id,
+    String fullName,
+    String email,
+    String phoneNumber,
+    UserRole role
+    //String status
+    //String imageUrl
+) {}
