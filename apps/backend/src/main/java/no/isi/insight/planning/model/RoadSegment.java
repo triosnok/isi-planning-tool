@@ -46,6 +46,9 @@ public class RoadSegment {
   @Column(name = "side_of_road")
   private RoadSide side;
 
+  @Column(name = "road_system_reference")
+  private String roadSystemReference;
+
   @UpdateTimestamp
   @Column(name = "last_imported_at")
   private LocalDateTime lastImportedAt;
