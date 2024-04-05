@@ -1,6 +1,7 @@
 import { CacheKey } from '@/api';
 import {
   CreateUserAccountRequest,
+  TripDetails,
   UserAccountDetails,
   UserRole,
 } from '@isi-insight/client';
@@ -19,6 +20,19 @@ export const useUsersQuery = () => {
       const params = new URLSearchParams();
       const response = await axios.get<UserAccountDetails[]>(
         `/api/v1/user-accounts?${params.toString()}`
+      );
+
+      return response.data;
+    },
+  }));
+};
+
+export const useTripsByUserQuery = (userId: string) => {
+  return createQuery(() => ({
+    queryKey: [CacheKey.TRIP_LIST, userId],
+    queryFn: async () => {
+      const response = await axios.get<TripDetails[]>(
+        `/api/v1/user-accounts/${userId}/trips`
       );
 
       return response.data;

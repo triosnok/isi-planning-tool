@@ -4,13 +4,14 @@ import { IconType, cn } from '@/lib/utils';
 import { IconPhone, IconPhotoX, IconMail } from '@tabler/icons-solidjs';
 import { Component, Show } from 'solid-js';
 import UserStatus from './UserStatus';
+import { UserRole } from '@isi-insight/client';
 
 export interface UserCardProps {
   imageUrl?: string;
   name: string;
   email: string;
   phoneNumber: string;
-  role: string;
+  role: UserRole;
   status: string;
   onDetailsClick?: () => void;
   class?: string;
@@ -22,7 +23,7 @@ const UserCard: Component<UserCardProps> = (props) => {
   return (
     <div
       class={cn(
-        'overflow-hidden rounded-md border py-2 dark:border-gray-800',
+        'overflow-hidden rounded-md border pt-2 dark:border-gray-800',
         props.class
       )}
     >
@@ -53,15 +54,13 @@ const UserCard: Component<UserCardProps> = (props) => {
         <UserDetail icon={IconMail} text={props.phoneNumber} />
       </div>
 
-      <Show when={props.role === 'driver'}>
-        <Button
-          type='button'
-          onClick={props.onDetailsClick}
-          class='h-fit w-full rounded-none py-1'
-        >
-          {t('USERS.VIEW_DRIVER_LOG')}
-        </Button>
-      </Show>
+      <Button
+        type='button'
+        onClick={props.onDetailsClick}
+        class='h-fit w-full rounded-none py-1'
+      >
+        {t('USERS.VIEW_DRIVER_LOG')}
+      </Button>
     </div>
   );
 };
