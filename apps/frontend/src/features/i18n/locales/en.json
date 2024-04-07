@@ -93,6 +93,17 @@
         "TOP_SIDE_IMBALANCE": "Unexpected amount of top images"
       }
     },
+    "TRIP_TABLE": {
+      "START": "Start",
+      "STOP": "Stop",
+      "NAME": "Name",
+      "DRIVER": "Driver",
+      "CAPTURE_REMARKS": "Capture remarks",
+      "METERS_OF_RAILING_CAPTURED": "Meters of railing captured",
+      "DEVIATIONS": "Deviations",
+      "NOTES": "Notes",
+      "LINKS": "Links"
+    },
     "TRIP_INDICATORS": {
       "STORAGE_LEFT": "Storage left",
       "GPS": "GPS",
