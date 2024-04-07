@@ -140,6 +140,7 @@ public class CaptureLogProcessor {
       var processed = new ProcessedLogEntry(
         GeometryUtils.toClientGeometry(point),
         gnss.getHeading(),
+        gnss.getHeight(),
         timestamp,
         images
       );

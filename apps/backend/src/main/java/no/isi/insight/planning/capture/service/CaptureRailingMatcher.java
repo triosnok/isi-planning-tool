@@ -13,6 +13,7 @@ import no.isi.insight.planning.capture.model.RailingMatchResult;
 import no.isi.insight.planning.geometry.GeometryService;
 import no.isi.insight.planning.model.RoadDirection;
 import no.isi.insight.planning.model.RoadRailing;
+import no.isi.insight.planning.model.RoadSide;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -33,7 +34,7 @@ public class CaptureRailingMatcher {
     RoadRailing matchedRailing = null;
 
     if (this.lastMatchedRailing != null && (left.intersects(this.lastMatchedRailing.getGeometry())
-        || right.intersects(this.lastMatchedRailing.getGeometry()))) {
+        ^ right.intersects(this.lastMatchedRailing.getGeometry()))) {
       matchedRailing = this.lastMatchedRailing;
     }
 
@@ -41,7 +42,7 @@ public class CaptureRailingMatcher {
       for (var railing : this.railings) {
         var geometry = railing.getGeometry();
 
-        if (geometry.intersects(left) || geometry.intersects(right)) {
+        if (geometry.intersects(left) ^ geometry.intersects(right)) {
           matchedRailing = railing;
           break;
         }
@@ -50,6 +51,12 @@ public class CaptureRailingMatcher {
 
     if (matchedRailing == null || matchedRailing.getRoadSegments().size() == 0) {
       return Optional.empty();
+    }
+
+    var matchedSide = RoadSide.LEFT;
+
+    if (matchedRailing.getGeometry().intersects(right)) {
+      matchedSide = RoadSide.RIGHT;
     }
 
     this.lastMatchedRailing = matchedRailing;
@@ -97,7 +104,8 @@ public class CaptureRailingMatcher {
       point,
       heading,
       matchedRailing,
-      roadSegment
+      roadSegment,
+      matchedSide
     );
 
     return Optional.of(result);
