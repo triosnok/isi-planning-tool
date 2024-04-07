@@ -15,8 +15,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @NoArgsConstructor
 @Table(name = TripRailingDeviation.TABLE_NAME)
@@ -26,6 +28,7 @@ public class TripRailingDeviation {
   public static final String PRIMARY_KEY = "trip_railing_deviation_id";
 
   @Id
+  @Column(name = PRIMARY_KEY)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private UUID id;
 

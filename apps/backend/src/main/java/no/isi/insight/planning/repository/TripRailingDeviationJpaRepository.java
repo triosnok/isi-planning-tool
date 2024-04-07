@@ -1,13 +1,18 @@
 package no.isi.insight.planning.repository;
 
-import java.util.UUID;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.repository.Repository;
 
 import no.isi.insight.planning.model.TripRailingDeviation;
 
-public interface TripRailingDeviationJpaRepository extends Repository<UUID, TripRailingDeviation> {
+public interface TripRailingDeviationJpaRepository extends Repository<TripRailingDeviation, UUID> {
+
+  Optional<TripRailingDeviation> findById(
+      UUID id
+  );
 
   TripRailingDeviation save(
       TripRailingDeviation deviation
@@ -15,6 +20,10 @@ public interface TripRailingDeviationJpaRepository extends Repository<UUID, Trip
 
   List<TripRailingDeviation> saveAll(
       Iterable<TripRailingDeviation> deviations
+  );
+
+  void delete(
+      TripRailingDeviation deviation
   );
 
 }

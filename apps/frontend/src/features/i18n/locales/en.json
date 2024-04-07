@@ -93,17 +93,6 @@
         "TOP_SIDE_IMBALANCE": "Unexpected amount of top images"
       }
     },
-    "TRIP_TABLE": {
-      "START": "Start",
-      "STOP": "Stop",
-      "NAME": "Name",
-      "DRIVER": "Driver",
-      "CAPTURE_REMARKS": "Capture Remarks",
-      "METERS_OF_RAILING_CAPTURED": "Meters of Railing Captured",
-      "DEVIATIONS": "Deviations",
-      "NOTES": "Notes",
-      "LINKS": "Links"
-    },
     "TRIP_INDICATORS": {
       "STORAGE_LEFT": "Storage left",
       "GPS": "GPS",
@@ -113,7 +102,26 @@
   },
   "USERS": {
     "TITLE": "Users",
-    "USER": "User"
+    "USER": "User",
+    "ADD_USER": "Add user",
+    "DRIVING": "Driving",
+    "VIEW_DRIVER_LOG": "View driver log",
+    "FORM": {
+      "NAME": "Name",
+      "EMAIL": "E-mail",
+      "PHONE_NUMBER": "Phone number",
+      "ROLE": "Role",
+      "PASSWORD": "Password",
+      "CONFIRM_PASSWORD": "Confirm password",
+      "UPDATE_USER": "Update user",
+      "CREATE_USER": "Create user"
+    },
+    "ROLES": {
+      "PLANNER": "Planner",
+      "PLANNER_DESCRIPTION": "Can create new projects, manage users and vehicles",
+      "DRIVER": "Driver",
+      "DRIVER_DESCRIPTION": "Can add new trips to capture data in a project"
+    }
   },
   "VEHICLES": {
     "TITLE": "Vehicles",

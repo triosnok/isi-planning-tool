@@ -11,7 +11,7 @@ import { useProfile } from '@/features/auth/api';
 import { DateFormat, useTranslations } from '@/features/i18n';
 import TripCard from '@/features/trips/components/TripCard';
 import { LayoutProps, cn } from '@/lib/utils';
-import { A, useParams } from '@solidjs/router';
+import { A, useParams, useSearchParams } from '@solidjs/router';
 import {
   IconCircleCheckFilled,
   IconEdit,
@@ -29,17 +29,16 @@ import { useTripsDetailsQuery } from '../../trips/api';
 import NewTripDialog from '../../trips/components/NewTripDialog';
 import { useProjectDetailsQuery, useProjectPlansQuery } from '../api';
 import PlanCard from '../components/PlanCard';
+import { useSelectedPlans } from '../utils';
 
 const Project: Component<LayoutProps> = (props) => {
   const params = useParams();
   const project = useProjectDetailsQuery(params.id);
   const plans = useProjectPlansQuery(params.id);
   const { t, d, n } = useTranslations();
-
-  const [selectedPlans, setSelectedPlans] = createSignal<string[]>([]);
+  const [selectedPlans, setSelectedPlans] = useSelectedPlans();
   const [showNewTripDialog, setShowNewTripDialog] = createSignal(false);
   const trips = useTripsDetailsQuery(params.id, selectedPlans);
-  const profile = useProfile();
 
   const planId = createMemo(() => {
     return selectedPlans().length === 1 ? selectedPlans()[0] : undefined;
@@ -49,7 +48,7 @@ const Project: Component<LayoutProps> = (props) => {
     const plans = selectedPlans();
 
     if (plans.includes(planId)) {
-      setSelectedPlans((p) => p.filter((id) => id !== planId));
+      setSelectedPlans(plans.filter((id) => id !== planId));
     } else {
       setSelectedPlans([...plans, planId]);
     }
@@ -57,7 +56,7 @@ const Project: Component<LayoutProps> = (props) => {
 
   return (
     <div class='flex h-full flex-col justify-between overflow-hidden'>
-      <div class='flex-1 flex flex-col overflow-hidden'>
+      <div class='flex flex-1 flex-col overflow-hidden'>
         <div class='flex flex-col p-2'>
           <div class='flex'>
             <BackLink />
@@ -98,7 +97,11 @@ const Project: Component<LayoutProps> = (props) => {
           </div>
         </div>
 
-        <Accordion multiple={true} defaultValue={['plans']} class='flex flex-col flex-1 overflow-y-auto'>
+        <Accordion
+          multiple={true}
+          defaultValue={['plans']}
+          class='flex flex-1 flex-col overflow-y-auto'
+        >
           <AccordionItem value='plans'>
             <AccordionTrigger>
               {t('PLANS.TITLE')} ({plans.data?.length})

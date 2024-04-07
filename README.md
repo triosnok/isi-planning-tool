@@ -21,6 +21,7 @@
 │   ├── backend
 │   ├── frontend
 │   └── init # init container (migrations)
+├── infrastructure # ansible scripts & Helm chart
 └── packages
     └── client # spring http interfaces & generated typescript definitions
 ```
@@ -30,6 +31,14 @@
 Generally, code is organized into features.
 For Java code this means, namespacing using packages.
 
+```bash
+.
+└── no.isi.insight.planning
+    ├── capture
+    ├── project
+    └── vehicle
+```
+
 For TypeScript code, code is organized into feature folders.
 Inspired by [Bulletproof React](https://github.com/alan2207/bulletproof-react).
 
@@ -37,11 +46,11 @@ Inspired by [Bulletproof React](https://github.com/alan2207/bulletproof-react).
 .
 ├── components # global components
 ├── features
-│   ├── vehicles
+│   ├── projects
 │   │   ├── api
 │   │   ├── components
 │   │   └── routes
-│   └── projects
+│   └── vehicles
 │       ├── api
 │       ├── components
 │       └── routes

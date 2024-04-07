@@ -13,21 +13,25 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @Table(name = "road_segment")
 public class RoadSegment {
 
   @Id
+  @EqualsAndHashCode.Include
   @Column(name = "road_segment_id")
   private String id;
-
+  
   @Id
   @ManyToOne
+  @EqualsAndHashCode.Include
   @JoinColumn(name = "fk_road_railing_id", referencedColumnName = RoadRailing.PRIMARY_KEY)
   private RoadRailing railing;
 
@@ -41,6 +45,9 @@ public class RoadSegment {
   @Enumerated(EnumType.STRING)
   @Column(name = "side_of_road")
   private RoadSide side;
+
+  @Column(name = "road_system_reference")
+  private String roadSystemReference;
 
   @UpdateTimestamp
   @Column(name = "last_imported_at")

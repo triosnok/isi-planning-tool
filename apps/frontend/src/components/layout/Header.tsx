@@ -60,7 +60,7 @@ const Header: Component = () => {
               </A>
             </li>
             <li>
-              <A href='/' class='hover:underline'>
+              <A href='/users' class='hover:underline'>
                 {t('USERS.TITLE')}
               </A>
             </li>

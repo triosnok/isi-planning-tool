@@ -36,7 +36,7 @@ public interface ProjectRestService {
   @GetExchange("/{projectId}/railings")
   ResponseEntity<List<RoadRailing>> getRailings(
       @PathVariable UUID projectId,
-      @RequestParam Optional<UUID> planId,
+      @RequestParam(required = false) List<UUID> planId,
       @RequestParam Optional<UUID> tripId,
       @RequestParam Optional<Boolean> hideCompleted
   );
