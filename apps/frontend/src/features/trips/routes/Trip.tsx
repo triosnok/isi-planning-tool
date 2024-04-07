@@ -35,6 +35,13 @@ const Trip: Component = () => {
   const [showSummaryDialog, setShowSummaryDialog] = createSignal(false);
   const [showTripNoteModule, setShowTripNoteModule] = createSignal(false);
 
+  const progressValue = () => {
+    const captureValue = captureDetails()?.metersCaptured ?? 0;
+    const projectValue = project.data?.capturedLength ?? 0;
+
+    return captureValue + projectValue;
+  };
+
   const storageIndicator = createMemo(() => {
     const storage = captureDetails()?.storageRemaining;
 
@@ -127,9 +134,9 @@ const Trip: Component = () => {
                 </Form> */}
 
             <div class='order-2 w-full text-center md:order-none'>
-              <Progress class='rounded-lg' value={project.data?.progress} />
+              <Progress class='rounded-lg' value={progressValue()} />
               <p>
-                {n(project.data?.capturedLength, NumberFormat.INTEGER)}
+                {n(progressValue(), NumberFormat.INTEGER)}
                 {' / '}
                 {n(project.data?.totalLength, NumberFormat.INTEGER)}
                 {' m'}
