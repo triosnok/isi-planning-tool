@@ -103,27 +103,28 @@ public class CaptureReplayService {
           return;
         }
 
-        var isOwnGeometry = match.get().railing().isOwnGeometry();
-        var side = match.get().roadSegment().getSide();
+        var side = match.get().side();
         var isValidMatch = switch (side) {
           case LEFT -> logEntry.images().containsKey(CameraPosition.LEFT);
           case RIGHT -> logEntry.images().containsKey(CameraPosition.RIGHT);
           default -> true;
         };
 
-        if (isValidMatch || !isOwnGeometry) {
-          logReplay.incrementMetersCaptured();
-
-          var capture = new TripRailingCapture(
-            trip,
-            match.get().roadSegment(),
-            logEntry.timestamp(),
-            point,
-            logEntry.images()
-          );
-
-          this.railingCaptureJpaRepository.save(capture);
+        if (!isValidMatch) {
+          return;
         }
+
+        logReplay.incrementMetersCaptured();
+
+        var capture = new TripRailingCapture(
+          trip,
+          match.get().roadSegment(),
+          logEntry.timestamp(),
+          point,
+          logEntry.images()
+        );
+
+        this.railingCaptureJpaRepository.save(capture);
       }
     );
 

@@ -88,16 +88,12 @@ public class CaptureRailingMatcher {
       .toDegrees(Math.atan2(segmentEnd.getY() - segmentStart.getY(), segmentEnd.getX() - segmentStart.getX()));
     var inferredDirection = this.getDirection(segmentAngle, heading);
 
-    if (inferredDirection != roadSegment.getDirection()) {
-      log.debug(
-        "Segment direction mismatch: inferred={}, actual={}, segmentId={}, railingId={}",
-        inferredDirection,
-        roadSegment.getDirection(),
-        roadSegment.getId(),
-        matchedRailing.getId()
-      );
-
-      return Optional.empty();
+    if (!matchedRailing.isOwnGeometry()) {
+      if (inferredDirection != roadSegment.getDirection()) {
+        matchedSide = roadSegment.getSide();
+      } else {
+        matchedSide = roadSegment.getSide().opposite();
+      }
     }
 
     var result = new RailingMatchResult(
