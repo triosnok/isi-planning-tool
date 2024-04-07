@@ -45,7 +45,6 @@ const TripSummaryDialog: Component<TripSummaryDialogProps> = (props) => {
     try {
       await update.mutateAsync({
         tripId: values.tripId,
-        endedAt: dayjs().toDate(),
       });
 
       navigate('../..');

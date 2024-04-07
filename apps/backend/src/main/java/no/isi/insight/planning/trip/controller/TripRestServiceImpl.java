@@ -134,7 +134,7 @@ public class TripRestServiceImpl implements TripRestService {
   ) {
     Trip trip = tripJpaRepository.findById(tripId).orElseThrow(() -> new NotFoundException("Trip not found"));
 
-    trip.setEndedAt(request.endedAt());
+    trip.setEndedAt(LocalDateTime.now());
     trip.setGnssLog(request.gnssLog());
     trip.setCameraLogs(request.cameraLogs());
 
