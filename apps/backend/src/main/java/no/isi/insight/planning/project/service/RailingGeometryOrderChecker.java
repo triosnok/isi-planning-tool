@@ -5,66 +5,78 @@ import java.util.List;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.linearref.LengthIndexedLine;
 
+import no.isi.insight.planning.model.RoadDirection;
+
 /**
  * Responsible for checking whether or not railings and their related segments have correctly
  * ordered geometries.
  */
-public class RailingGeometryOrderChecker {
+public class RailingGeometryOrderChecker<T> {
   private final LineString railing;
-  private final List<RoadSegmentReverser> segments;
+  private final List<RoadSegmentReverser<T>> segments;
 
-  private boolean isFlipped;
+  private boolean flipped;
 
-  private static final int SEGMENT_SAMPLE_SIZE = 40;
+  private static final int SEGMENT_SAMPLE_SIZE = 10;
+  private static final double FLIPPED_THRESHOLD = 0.75;
 
   public RailingGeometryOrderChecker(
       LineString railing,
-      List<RoadSegmentReverser> segments
+      List<RoadSegmentReverser<T>> segments
   ) {
     this.railing = railing;
     this.segments = segments;
-    this.isFlipped = false;
+    this.flipped = false;
 
     this.check();
   }
 
   private void check() {
     var indexedRailing = new LengthIndexedLine(this.railing);
+    var railingEnd = indexedRailing.getEndIndex();
     var flippedCount = 0;
 
     for (var segment : this.segments) {
       var indexedSegment = new LengthIndexedLine(segment.getGeometry());
+      var direction = segment.getDirection();
       var segmentEnd = indexedSegment.getEndIndex();
-      var segmentLength = segmentEnd / SEGMENT_SAMPLE_SIZE;
+      var partLength = segmentEnd / SEGMENT_SAMPLE_SIZE;
       var inSameDirection = 0;
 
       for (int i = 0; i < SEGMENT_SAMPLE_SIZE - 1; i++) {
-        var current = indexedSegment.extractPoint(i * segmentLength);
-        var next = indexedSegment.extractPoint((i + 1) * segmentLength);
+        var current = indexedSegment.extractPoint(i * partLength);
+        var next = indexedSegment.extractPoint((i + 1) * partLength);
 
         var nearestCurrent = indexedRailing.extractPoint(indexedRailing.project(current));
-        var nearestNext = indexedRailing.extractPoint(indexedRailing.project(next));
+        var nearestNext = indexedRailing
+          .extractPoint(Math.min(indexedRailing.project(current) + partLength, railingEnd));
 
-        var segmentDeg = Math.toDegrees(Math.atan2(next.y - current.y, next.x - current.y));
+        var segmentDeg = Math.toDegrees(Math.atan2(next.y - current.y, next.x - current.x));
         var railingDeg = Math.toDegrees(Math.atan2(nearestNext.y - nearestCurrent.y, nearestNext.x - nearestCurrent.x));
 
-        if (Math.abs(segmentDeg - railingDeg) < 180) {
+        var delta = Math.abs(segmentDeg - railingDeg);
+
+        if ((delta < 180 && direction == RoadDirection.WITH) || (delta >= 180 && direction == RoadDirection.AGAINST)) {
           inSameDirection++;
         }
       }
 
-      var fractionInSameDirection = inSameDirection / SEGMENT_SAMPLE_SIZE - 1;
+      var fractionInSameDirection = (double) inSameDirection / (SEGMENT_SAMPLE_SIZE - 1);
 
-      if (fractionInSameDirection < 0.10) {
+      if (fractionInSameDirection < (1 - FLIPPED_THRESHOLD)) {
         flippedCount++;
       }
     }
 
-    this.isFlipped = flippedCount == this.segments.size();
+    this.flipped = flippedCount == this.segments.size();
+  }
+
+  public boolean isFlipped() {
+    return this.flipped;
   }
 
   public LineString getGeometry() {
-    return this.isFlipped ? this.railing.reverse() : this.railing;
+    return this.flipped ? this.railing.reverse() : this.railing;
   }
 
 }
