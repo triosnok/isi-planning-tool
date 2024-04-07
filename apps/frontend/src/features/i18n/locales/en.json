@@ -95,14 +95,16 @@
     },
     "TRIP_TABLE": {
       "START": "Start",
-      "STOP": "Stop",
+      "DURATION": "Duration",
       "NAME": "Name",
       "DRIVER": "Driver",
       "CAPTURE_REMARKS": "Capture remarks",
       "METERS_OF_RAILING_CAPTURED": "Meters of railing captured",
       "DEVIATIONS": "Deviations",
       "NOTES": "Notes",
-      "LINKS": "Links"
+      "LINKS": "Links",
+      "GO_TO_TRIP": "Go to trip",
+      "GO_TO_PLAN": "Go to plan"
     },
     "TRIP_INDICATORS": {
       "STORAGE_LEFT": "Storage left",
