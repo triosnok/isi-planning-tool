@@ -113,10 +113,20 @@ public class CaptureRestServiceImpl implements CaptureRestService {
   public SseEmitter streamCapture(
       UUID tripId
   ) {
-    var trip = this.tripJpaRepository.findById(tripId).orElseThrow(() -> new NotFoundException("Trip not found"));
+    this.tripJpaRepository.findById(tripId).orElseThrow(() -> new NotFoundException("Trip not found"));
 
-    if (trip.isEnded()) {
-      log.warn("Trip was ended");
+    if (!this.captureReplayService.hasTrip(tripId)) {
+      var emitter = new SseEmitter();
+
+      try {
+        emitter.send(SseEmitter.event().name("ended").build());
+      } catch (Exception e) {
+        // failed to send event
+      }
+
+      emitter.complete();
+
+      return emitter;
     }
 
     var emitter = this.captureReplayService.createEmitter(tripId);

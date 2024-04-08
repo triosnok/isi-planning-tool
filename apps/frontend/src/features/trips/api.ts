@@ -111,8 +111,8 @@ export const useTripNoteDetailsQuery = (tripId: string) => {
       );
 
       return response.data;
-    }
-  }))
+    },
+  }));
 };
 
 /**
@@ -149,8 +149,10 @@ export const useTripCaptureDetails = (tripId: string) => {
       setDetails(details);
     });
 
+    es.addEventListener('ended', () => es.close());
+
     onCleanup(() => {
-      es.close();
+      if (es.readyState !== es.CLOSED) es.close();
     });
   });
 
@@ -169,5 +171,5 @@ export const useCaptureLogsQuery = () => {
 
       return response.data;
     },
-  }))
-}
+  }));
+};
