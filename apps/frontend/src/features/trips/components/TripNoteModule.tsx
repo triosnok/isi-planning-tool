@@ -1,18 +1,12 @@
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { DateFormat, useTranslations } from '@/features/i18n';
+import { SubmitHandler, createForm, zodForm } from '@modular-forms/solid';
+import { IconPencil, IconSend2, IconTrash } from '@tabler/icons-solidjs';
+import { Component, For, createMemo, createSignal } from 'solid-js';
 import { z } from 'zod';
 import { useTripNoteDetailsQuery, useTripNoteMutation } from '../api';
-import { Component, For, createMemo, createSignal } from 'solid-js';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { IconSend2, IconPencil, IconTrash } from '@tabler/icons-solidjs';
 import TripNoteCard from './TripNoteCard';
-import { DateFormat, useTranslations } from '@/features/i18n';
-import {
-  Field,
-  SubmitHandler,
-  createForm,
-  zodForm,
-} from '@modular-forms/solid';
-import { Input } from '@/components/ui/input';
 
 export interface TripNoteModuleProps {
   tripId: string;
@@ -69,7 +63,7 @@ const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
   const { t, d } = useTranslations();
 
   return (
-    <section class='absolute left-4 top-64 hidden w-full overflow-hidden rounded-md bg-gray-50 p-2 md:block md:w-1/2 lg:w-2/5 xl:w-1/3 dark:bg-gray-900'>
+    <section class='flex h-full flex-col overflow-hidden rounded-md bg-gray-50 p-2 dark:bg-gray-900'>
       <div class='space-y-2'>
         <p class='text-2xl font-semibold'>Notes</p>
 
@@ -106,16 +100,18 @@ const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
         </div>
       </div>
 
-      <For each={notes.data}>
-        {(note) => (
-          <TripNoteCard
-            createdAt={d(note.createdAt, DateFormat.DATETIME)}
-            note={note.note}
-            onToggle={() => handleTripNoteToggled(note.id)}
-            selected={selectedTripNotes().includes(note.id)}
-          />
-        )}
-      </For>
+      <div class='my-2 space-y-2 overflow-y-auto pb-1'>
+        <For each={notes.data}>
+          {(note) => (
+            <TripNoteCard
+              createdAt={d(note.createdAt, DateFormat.DATETIME)}
+              note={note.note}
+              onToggle={() => handleTripNoteToggled(note.id)}
+              selected={selectedTripNotes().includes(note.id)}
+            />
+          )}
+        </For>
+      </div>
     </section>
   );
 };
