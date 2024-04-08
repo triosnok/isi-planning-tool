@@ -12,6 +12,8 @@ import org.springframework.web.util.WebUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.isi.insight.planning.client.auth.AuthRestService;
+import no.isi.insight.planning.client.auth.view.ForgotPasswordRequest;
+import no.isi.insight.planning.client.auth.view.ResetPasswordRequest;
 import no.isi.insight.planning.client.auth.view.SignInRequest;
 import no.isi.insight.planning.client.auth.view.SignInResponse;
 import no.isi.insight.planning.client.auth.view.UserProfile;
@@ -21,6 +23,8 @@ import no.isi.insight.planning.auth.TokenType;
 import no.isi.insight.planning.auth.UserAccountDetailsAdapter;
 import no.isi.insight.planning.auth.annotation.Authenticated;
 import no.isi.insight.planning.auth.service.JwtService;
+import no.isi.insight.planning.auth.service.PasswordResetCodeService;
+import no.isi.insight.planning.auth.service.UserAccountService;
 import no.isi.insight.planning.repository.UserAccountJpaRepository;
 import no.isi.insight.planning.utility.RequestUtils;
 
@@ -31,6 +35,8 @@ public class AuthRestServiceImpl implements AuthRestService {
   private final AuthenticationManager authenticationManager;
   private final UserAccountJpaRepository userAccountJpaRepository;
   private final JwtService jwtService;
+  private final UserAccountService userAccountService;
+  private final PasswordResetCodeService passwordResetCodeService;
 
   @Override
   @Authenticated
@@ -123,4 +129,42 @@ public class AuthRestServiceImpl implements AuthRestService {
 
     return ResponseEntity.ok().build();
   }
+
+  @Override
+  public ResponseEntity<Void> forgotPassword(
+      ForgotPasswordRequest request
+  ) {
+    this.userAccountJpaRepository.findByEmail(request.email()).ifPresent(user -> {
+      var code = this.passwordResetCodeService.createCode(user);
+      // TODO: remove logging & send the code by email
+      log.info("Created reset code for user[email={}]: {}", user.getEmail(), code);
+    });
+
+    return ResponseEntity.ok().build();
+  }
+
+  @Override
+  public ResponseEntity<Void> resetPassword(
+      ResetPasswordRequest request
+  ) {
+    var foundUser = this.passwordResetCodeService.findUserByValidCode(request.code());
+
+    if (foundUser.isPresent()) {
+      var user = foundUser.get();
+
+      this.userAccountService.updateAccount(
+        user.getUserAccountId(),
+        user.getFullName(),
+        user.getEmail(),
+        user.getPhoneNumber(),
+        request.password(),
+        user.getRole()
+      );
+
+      this.passwordResetCodeService.markUsed(request.code());
+    }
+
+    return ResponseEntity.ok().build();
+  }
+
 }

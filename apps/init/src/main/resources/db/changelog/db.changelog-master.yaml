@@ -81,3 +81,10 @@ databaseChangeLog:
         - sqlFile:
             path: 009-segment-details/002-add-road-details.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: 010-password-resets
+      author: halvard
+      changes:
+        - sqlFile:
+            path: 010-password-resets/000-add-reset-code-table.sql
+            relativeToChangelogFile: true

@@ -7,6 +7,8 @@ import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import no.isi.insight.planning.client.auth.view.ForgotPasswordRequest;
+import no.isi.insight.planning.client.auth.view.ResetPasswordRequest;
 import no.isi.insight.planning.client.auth.view.SignInRequest;
 import no.isi.insight.planning.client.auth.view.SignInResponse;
 import no.isi.insight.planning.client.auth.view.UserProfile;
@@ -28,5 +30,15 @@ public interface AuthRestService {
 
   @GetExchange("/refresh")
   ResponseEntity<SignInResponse> refresh();
+
+  @PostExchange("/forgot-password")
+  ResponseEntity<Void> forgotPassword(
+      @RequestBody ForgotPasswordRequest request
+  );
+
+  @PostExchange("/reset-password")
+  ResponseEntity<Void> resetPassword(
+      @RequestBody ResetPasswordRequest request
+  );
 
 }
