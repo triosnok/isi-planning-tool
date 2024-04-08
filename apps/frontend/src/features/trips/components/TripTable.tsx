@@ -167,7 +167,9 @@ export const Pagination: Component<PaginationProps> = (props) => {
 
       <Button
         onClick={() => props.setCurrentPage(props.currentPage + 1)}
-        disabled={props.currentPage === props.totalPages}
+        disabled={
+          props.currentPage === props.totalPages || props.totalPages === 0
+        }
         class='h-6 rounded-full px-1'
       >
         <IconChevronRight class='ml-1 size-5' />
