@@ -134,9 +134,11 @@ const TripTable: Component<TripTableProps> = (props) => {
                     <A href={`/projects/${trip.projectId}/trip/${trip.id}`}>
                       {t('TRIPS.TRIP_TABLE.GO_TO_TRIP')}
                     </A>
-
-                    {/* //TODO: Add link to plan */}
-                    <A href=''>{t('TRIPS.TRIP_TABLE.GO_TO_PLAN')}</A>
+                    <A
+                      href={`/projects/${trip.projectId}?plans=${trip.projectPlanId}`}
+                    >
+                      {t('TRIPS.TRIP_TABLE.GO_TO_PLAN')}
+                    </A>
                   </div>
                 </TableCell>
               </TableRow>
