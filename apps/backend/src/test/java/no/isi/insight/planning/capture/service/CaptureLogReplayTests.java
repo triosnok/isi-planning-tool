@@ -26,6 +26,7 @@ class CaptureLogReplayTests {
             4326
           ),
           0.0,
+          0.0,
           startTime.plusSeconds(i),
           Map.of()
         )
