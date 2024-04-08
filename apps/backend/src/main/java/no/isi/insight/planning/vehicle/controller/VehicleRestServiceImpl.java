@@ -122,6 +122,7 @@ public class VehicleRestServiceImpl implements VehicleRestService {
       UUID id
   ) {
     var plans = this.projectPlanJdbcRepository.findByVehicleId(id);
+
     return ResponseEntity.ok(plans);
   }
 
@@ -130,7 +131,8 @@ public class VehicleRestServiceImpl implements VehicleRestService {
   public ResponseEntity<List<TripDetails>> findTripsByVehicleId(
       UUID id
   ) {
-    var trips = this.tripJpaRepository.findAllByVehicleId(id);
+    var trips = this.tripJpaRepository.findAllByVehicleId(id).reversed();
+
     return ResponseEntity.ok(trips);
   }
 
