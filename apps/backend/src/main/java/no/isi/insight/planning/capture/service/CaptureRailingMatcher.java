@@ -8,14 +8,12 @@ import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.linearref.LengthIndexedLine;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import no.isi.insight.planning.capture.model.RailingMatchResult;
 import no.isi.insight.planning.geometry.GeometryService;
 import no.isi.insight.planning.model.RoadDirection;
 import no.isi.insight.planning.model.RoadRailing;
 import no.isi.insight.planning.model.RoadSide;
 
-@Slf4j
 @RequiredArgsConstructor
 public class CaptureRailingMatcher {
   private final List<RoadRailing> railings;
@@ -126,13 +124,9 @@ public class CaptureRailingMatcher {
       Coordinate reference,
       Coordinate nearest
   ) {
-    return true;
-    // TODO: GNSS height requires special processing to be able to compare them
-    // once that is in place, we can probably uncomment this
+    var refZ = reference.getZ();
+    var nearZ = nearest.getZ();
 
-    // var refZ = reference.getZ();
-    // var nearZ = nearest.getZ();
-
-    // return refZ == Double.NaN || nearZ == Double.NaN || Math.abs(refZ - nearZ) < MAX_HEIGHT_DELTA;
+    return Double.isNaN(refZ) || Double.isNaN(nearZ) || Math.abs(refZ - nearZ) < MAX_HEIGHT_DELTA;
   }
 }
