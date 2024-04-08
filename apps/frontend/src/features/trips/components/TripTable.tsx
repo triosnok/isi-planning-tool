@@ -62,9 +62,9 @@ const TripTable: Component<TripTableProps> = (props) => {
   };
 
   return (
-    <div>
-      <div class='flex flex-row items-center justify-between'>
-        <Input placeholder={t('NAVIGATION.SEARCH')} class='mt-4 w-fit' />
+    <>
+      <div class='mt-4 flex flex-row items-center justify-between'>
+        <Input placeholder={t('NAVIGATION.SEARCH')} class='w-fit' />
         <Pagination
           itemsPerPage={itemsPerPage}
           totalItems={totalPages()}
@@ -133,7 +133,7 @@ const TripTable: Component<TripTableProps> = (props) => {
           </For>
         </TableBody>
       </Table>
-    </div>
+    </>
   );
 };
 
