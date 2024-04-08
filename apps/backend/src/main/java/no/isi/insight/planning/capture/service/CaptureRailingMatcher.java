@@ -55,7 +55,7 @@ public class CaptureRailingMatcher {
 
     var matchedSide = RoadSide.LEFT;
 
-    if (matchedRailing.getGeometry().intersects(right)) {
+    if (right.intersects(matchedRailing.getGeometry())) {
       matchedSide = RoadSide.RIGHT;
     }
 
@@ -126,9 +126,13 @@ public class CaptureRailingMatcher {
       Coordinate reference,
       Coordinate nearest
   ) {
-    var refZ = reference.getZ();
-    var nearZ = nearest.getZ();
+    return true;
+    // TODO: GNSS height requires special processing to be able to compare them
+    // once that is in place, we can probably uncomment this
 
-    return refZ == Double.NaN || nearZ == Double.NaN || Math.abs(refZ - nearZ) < MAX_HEIGHT_DELTA;
+    // var refZ = reference.getZ();
+    // var nearZ = nearest.getZ();
+
+    // return refZ == Double.NaN || nearZ == Double.NaN || Math.abs(refZ - nearZ) < MAX_HEIGHT_DELTA;
   }
 }
