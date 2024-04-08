@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Indicator, IndicatorVariant } from '@/components/ui/indicator';
 import { Progress } from '@/components/ui/progress';
 import { DateFormat, NumberFormat, useTranslations } from '@/features/i18n';
+import { useProjectDetailsQuery } from '@/features/projects/api';
+import { CaptureAction } from '@isi-insight/client';
 import { useParams } from '@solidjs/router';
 import {
   IconCurrentLocation,
@@ -12,16 +14,14 @@ import {
   IconPhoto,
   IconVideo,
 } from '@tabler/icons-solidjs';
-import { Component, Show, createSignal, createMemo } from 'solid-js';
+import { Component, Show, createMemo, createSignal } from 'solid-js';
 import {
   useTripCaptureAction,
   useTripCaptureDetails,
   useTripDetailsQuery,
 } from '../api';
-import TripSummaryDialog from '../components/TripSummaryDialog';
 import TripNoteModule from '../components/TripNoteModule';
-import { useProjectDetailsQuery } from '@/features/projects/api';
-import { CaptureAction } from '@isi-insight/client';
+import TripSummaryDialog from '../components/TripSummaryDialog';
 import { ImageStatus, getImageAnalysis } from '../utils';
 
 const Trip: Component = () => {
@@ -48,7 +48,7 @@ const Trip: Component = () => {
 
     if (goal === undefined) return 0;
 
-    return value / goal * 100;
+    return (value / goal) * 100;
   };
 
   const storageIndicator = createMemo(() => {
@@ -94,153 +94,138 @@ const Trip: Component = () => {
 
   return (
     <>
-      <section class='absolute bottom-0 w-full rounded-md bg-gray-50 p-2 md:bottom-auto md:left-4 md:top-4 md:w-1/2 lg:w-2/5 xl:w-1/3 dark:bg-gray-900'>
-        <div class='flex flex-col'>
-          <div class='hidden md:flex'>
-            <BackLink href='../..' />
-          </div>
-        </div>
-        <div class='space-y-2'>
-          <div class='flex flex-col justify-between space-y-2 md:flex-row md:flex-wrap'>
-            <div class='order-first md:order-none'>
-              <h1 class='text-3xl font-bold'>
-                {project.data?.name} - {t('TRIPS.TRIP')}{' '}
-                {tripDetails.data?.sequenceNumber}
-              </h1>
-              <span class='text-sm'>
-                {d(project.data?.startsAt, DateFormat.MONTH_DAY)}
-                {' - '}
-                {d(project.data?.endsAt, DateFormat.MONTH_DAY)}
-              </span>
+      <div class='absolute left-0 top-0 flex h-full w-full flex-col gap-2 overflow-hidden max-md:flex-col-reverse md:w-1/2 md:p-4 lg:w-2/5 xl:w-1/3'>
+        <section class='bg-gray-50 p-2 max-md:rounded-t-lg md:rounded-md dark:bg-gray-900'>
+          <div class='flex flex-col'>
+            <div class='hidden md:flex'>
+              <BackLink href='../..' />
             </div>
-            <Button
-              onClick={() => setShowTripNoteModule(!showTripNoteModule())}
-              class='order-last md:order-none'
-            >
-              <div class='flex items-center gap-2'>
-                <IconMessage />
-                <p class='md:hidden'>{t('NOTES.ADD_NOTE')}</p>
+          </div>
+          <div class='space-y-2'>
+            <div class='flex flex-col justify-between space-y-2 md:flex-row md:flex-wrap'>
+              <div class='order-first md:order-none'>
+                <h1 class='text-3xl font-bold'>
+                  {project.data?.name} - {t('TRIPS.TRIP')}{' '}
+                  {tripDetails.data?.sequenceNumber}
+                </h1>
+                <span class='text-sm'>
+                  {d(project.data?.startsAt, DateFormat.MONTH_DAY)}
+                  {' - '}
+                  {d(project.data?.endsAt, DateFormat.MONTH_DAY)}
+                </span>
               </div>
+              <Button
+                onClick={() => setShowTripNoteModule(!showTripNoteModule())}
+                class='order-last md:order-none'
+              >
+                <div class='flex items-center gap-2'>
+                  <IconMessage />
+                  <p class='md:hidden'>{t('NOTES.ADD_NOTE')}</p>
+                </div>
+              </Button>
+
+              <div class='order-2 w-full text-center md:order-none'>
+                <Progress class='rounded-lg' value={progressPercent()} />
+                <p>
+                  {n(progressValue(), NumberFormat.INTEGER)}
+                  {' / '}
+                  {n(project.data?.totalLength, NumberFormat.INTEGER)}
+                  {' m'}
+                </p>
+              </div>
+            </div>
+            <section class='grid grid-cols-2 gap-2 text-sm md:grid-cols-4'>
+              <Indicator
+                variant={storageIndicator()}
+                icon={IconDatabase}
+                indicates='Storage left'
+                status={n(
+                  captureDetails()?.storageRemaining,
+                  NumberFormat.PERCENTAGE
+                )}
+              />
+
+              <Indicator
+                variant={gpsIndicator()}
+                icon={IconCurrentLocation}
+                indicates='GPS'
+                status={n(captureDetails()?.gpsSignal, NumberFormat.PERCENTAGE)}
+              />
+
+              <Indicator
+                variant={
+                  captureDetails()?.activeCapture
+                    ? IndicatorVariant.SUCCESS
+                    : IndicatorVariant.UNDETERMINED
+                }
+                icon={IconVideo}
+                indicates='Capture'
+                status={captureDetails()?.activeCapture ? 'Active' : 'Inactive'}
+              />
+
+              <Indicator
+                variant={imageIndicator()}
+                icon={IconPhoto}
+                indicates='Images'
+                status=''
+              />
+            </section>
+
+            <TripSummaryDialog
+              tripId={params.tripId}
+              open={showSummaryDialog()}
+              onOpenChange={setShowSummaryDialog}
+              captureDetails={captureDetails()}
+            />
+
+            <Show when={!tripDetails.data?.endedAt}>
+              <Button
+                onClick={() => setShowSummaryDialog(true)}
+                variant='destructive'
+                class='w-full md:hidden'
+              >
+                {t('TRIPS.END_TRIP')}
+              </Button>
+            </Show>
+          </div>
+        </section>
+
+        <div class='relative flex-1 overflow-hidden max-md:hidden'>
+          <Show when={showTripNoteModule()}>
+            <TripNoteModule
+              tripId={params.tripId}
+              open={showTripNoteModule()}
+              onOpenChange={setShowTripNoteModule}
+            />
+          </Show>
+        </div>
+
+        <Show when={!tripDetails.data?.endedAt}>
+          <div class='w-full space-y-2 rounded-md bg-gray-50 p-2 max-md:hidden dark:bg-gray-950'>
+            <Button onClick={handleCaptureAction} class='w-full'>
+              <Show
+                when={!captureDetails()?.activeCapture}
+                fallback={<span>Stop capture</span>}
+              >
+                <span>Start capture</span>
+              </Show>
             </Button>
 
-            {/* <Form
-                  id='add-trip-note'
-                  onSubmit={handleSubmit}
-                  class='flex flex-col gap-4'
-                >
-                  <Field name='note'>
-                    {(field, props) => (
-                      <Input
-                        {...props}
-                        type='text'
-                        id='note'
-                        placeholder='Note'
-                        value={field.value}
-                      />
-                    )}
-                  </Field>
-                  <Button type='submit'>{t('GENERAL.SAVE')}</Button>
-                </Form> */}
-
-            <div class='order-2 w-full text-center md:order-none'>
-              <Progress class='rounded-lg' value={progressPercent()} />
-              <p>
-                {n(progressValue(), NumberFormat.INTEGER)}
-                {' / '}
-                {n(project.data?.totalLength, NumberFormat.INTEGER)}
-                {' m'}
-              </p>
-            </div>
-          </div>
-          <section class='grid grid-cols-2 gap-2 text-sm md:grid-cols-4'>
-            <Indicator
-              variant={storageIndicator()}
-              icon={IconDatabase}
-              indicates='Storage left'
-              status={n(
-                captureDetails()?.storageRemaining,
-                NumberFormat.PERCENTAGE
-              )}
-            />
-
-            <Indicator
-              variant={gpsIndicator()}
-              icon={IconCurrentLocation}
-              indicates='GPS'
-              status={n(captureDetails()?.gpsSignal, NumberFormat.PERCENTAGE)}
-            />
-
-            <Indicator
-              variant={
-                captureDetails()?.activeCapture
-                  ? IndicatorVariant.SUCCESS
-                  : IndicatorVariant.UNDETERMINED
-              }
-              icon={IconVideo}
-              indicates='Capture'
-              status={captureDetails()?.activeCapture ? 'Active' : 'Inactive'}
-            />
-
-            <Indicator
-              variant={imageIndicator()}
-              icon={IconPhoto}
-              indicates='Images'
-              status=''
-            />
-          </section>
-
-          <TripSummaryDialog
-            tripId={params.tripId}
-            open={showSummaryDialog()}
-            onOpenChange={setShowSummaryDialog}
-            captureDetails={captureDetails()}
-          />
-
-          <Show when={!tripDetails.data?.endedAt}>
             <Button
               onClick={() => setShowSummaryDialog(true)}
               variant='destructive'
-              class='w-full md:hidden'
+              class='flex w-full'
             >
               {t('TRIPS.END_TRIP')}
             </Button>
-          </Show>
-        </div>
-      </section>
-
-      <Show when={showTripNoteModule()}>
-        <TripNoteModule
-          tripId={params.tripId}
-          open={showTripNoteModule()}
-          onOpenChange={setShowTripNoteModule}
-        />
-      </Show>
+          </div>
+        </Show>
+      </div>
 
       <Show when={captureDetails()}>
         {(dt) => (
           <MapCarLayer heading={dt().heading} position={dt().position} />
         )}
-      </Show>
-
-      <Show when={!tripDetails.data?.endedAt}>
-        <div class='absolute bottom-4 left-4 hidden w-full rounded-md bg-gray-50 p-2 md:block md:w-1/2 lg:w-2/5 xl:w-1/3 dark:bg-gray-950'>
-          <Button onClick={handleCaptureAction} class='w-full'>
-            <Show
-              when={!captureDetails()?.activeCapture}
-              fallback={<span>Stop capture</span>}
-            >
-              <span>Start capture</span>
-            </Show>
-          </Button>
-
-          <Button
-            onClick={() => setShowSummaryDialog(true)}
-            variant='destructive'
-            class='flex w-full'
-          >
-            {t('TRIPS.END_TRIP')}
-          </Button>
-        </div>
       </Show>
     </>
   );
