@@ -9,6 +9,7 @@ import no.isi.insight.planning.client.trip.view.CameraPosition;
 public record ProcessedLogEntry(
   Geometry position,
   Double heading,
+  Double height,
   LocalDateTime timestamp,
   Map<CameraPosition, String> images
 ) {}

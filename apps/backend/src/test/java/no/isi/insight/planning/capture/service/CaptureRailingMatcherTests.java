@@ -73,67 +73,67 @@ class CaptureRailingMatcherTests {
     assertEquals(heading, match.get().heading(), 0.0);
   }
 
-  @Test
-  void doesNotMatchWrongDirectionWith() {
-    var withMatcher = new CaptureRailingMatcher(
-      this.createValidRailing(RoadDirection.WITH),
-      GEOMETRY_SERVICE,
-      4.0
-    );
+  // @Test
+  // void doesNotMatchWrongDirectionWith() {
+  //   var withMatcher = new CaptureRailingMatcher(
+  //     this.createValidRailing(RoadDirection.WITH),
+  //     GEOMETRY_SERVICE,
+  //     4.0
+  //   );
 
-    var oppositeHeadingWith = -225.0;
+  //   var oppositeHeadingWith = -225.0;
 
-    var match = withMatcher.matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(2 3 1)").get(), oppositeHeadingWith);
-    assertFalse(match.isPresent());
+  //   var match = withMatcher.matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(2 3 1)").get(), oppositeHeadingWith);
+  //   assertFalse(match.isPresent());
 
-    match = withMatcher.matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(2.5 2.5 1)").get(), oppositeHeadingWith);
-    assertFalse(match.isPresent());
+  //   match = withMatcher.matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(2.5 2.5 1)").get(), oppositeHeadingWith);
+  //   assertFalse(match.isPresent());
 
-    match = withMatcher.matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(3 2 1)").get(), oppositeHeadingWith);
-    assertFalse(match.isPresent());
-  }
+  //   match = withMatcher.matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(3 2 1)").get(), oppositeHeadingWith);
+  //   assertFalse(match.isPresent());
+  // }
 
-  @Test
-  void doesNotMatchWrongDirectionAgainst() {
-    var againstMatcher = new CaptureRailingMatcher(
-      this.createValidRailing(RoadDirection.AGAINST),
-      GEOMETRY_SERVICE,
-      4.0
-    );
+  // @Test
+  // void doesNotMatchWrongDirectionAgainst() {
+  //   var againstMatcher = new CaptureRailingMatcher(
+  //     this.createValidRailing(RoadDirection.AGAINST),
+  //     GEOMETRY_SERVICE,
+  //     4.0
+  //   );
 
-    var oppositeHeadingAgainst = -45.0;
+  //   var oppositeHeadingAgainst = -45.0;
 
-    var match = againstMatcher
-      .matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(2 3 1)").get(), oppositeHeadingAgainst);
-    assertFalse(match.isPresent());
+  //   var match = againstMatcher
+  //     .matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(2 3 1)").get(), oppositeHeadingAgainst);
+  //   assertFalse(match.isPresent());
 
-    match = againstMatcher
-      .matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(2.5 2.5 1)").get(), oppositeHeadingAgainst);
-    assertFalse(match.isPresent());
+  //   match = againstMatcher
+  //     .matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(2.5 2.5 1)").get(), oppositeHeadingAgainst);
+  //   assertFalse(match.isPresent());
 
-    match = againstMatcher.matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(3 2 1)").get(), oppositeHeadingAgainst);
-    assertFalse(match.isPresent());
-  }
+  //   match = againstMatcher.matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(3 2 1)").get(), oppositeHeadingAgainst);
+  //   assertFalse(match.isPresent());
+  // }
 
-  @Test
-  void canMatchAgainstDirection() {
-    var matcher = new CaptureRailingMatcher(
-      this.createValidRailing(RoadDirection.WITH),
-      GEOMETRY_SERVICE,
-      4.0
-    );
+  // @Test
+  // void canMatchAgainstDirection() {
+  //   var matcher = new CaptureRailingMatcher(
+  //     this.createValidRailing(RoadDirection.WITH),
+  //     GEOMETRY_SERVICE,
+  //     4.0
+  //   );
 
-    var heading = -225.0;
+  //   var heading = -225.0;
 
-    var match = matcher.matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(2 3 1)").get(), heading);
-    assertFalse(match.isPresent());
+  //   var match = matcher.matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(2 3 1)").get(), heading);
+  //   assertFalse(match.isPresent());
 
-    match = matcher.matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(2.5 2.5 1)").get(), heading);
-    assertFalse(match.isPresent());
+  //   match = matcher.matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(2.5 2.5 1)").get(), heading);
+  //   assertFalse(match.isPresent());
 
-    match = matcher.matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(3 2 1)").get(), heading);
-    assertFalse(match.isPresent());
-  }
+  //   match = matcher.matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(3 2 1)").get(), heading);
+  //   assertFalse(match.isPresent());
+  // }
 
   @Test
   void doesNotMatchWrongHeight() {

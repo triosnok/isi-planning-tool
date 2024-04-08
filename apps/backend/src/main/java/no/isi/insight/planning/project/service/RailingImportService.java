@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Optional;
 
+import org.locationtech.jts.geom.LineString;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 import no.isi.insight.planning.geometry.GeometryService;
 import no.isi.insight.planning.integration.nvdb.NvdbImportService;
 import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObject;
+import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObject.Direction;
+import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObject.Placement;
+import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObject.RoadSegment;
 import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObject.Side;
 import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObjectType;
 import no.isi.insight.planning.model.RoadDirection;
@@ -80,12 +84,44 @@ public class RailingImportService {
     var roadSegmentsParams = new ArrayList<MapSqlParameterSource>();
     var railingIds = new ArrayList<Long>();
 
+    var flipped = 0;
+
     for (var railing : railings) {
+      var segments = railing.roadSegments().stream().map(segment -> {
+        var placement = railing.location().placements().stream().filter(p -> segment.isWithin(p)).findFirst();
+
+        if (placement.isEmpty()) {
+          return null;
+        }
+
+        return RoadSegmentReverser.<RoadSegment>builder()
+          .placementDirection(
+            placement.map(Placement::direction).map(Direction::toRoadDirection).orElse(RoadDirection.WITH)
+          )
+          .roadSystemDirection(segment.direction().toRoadDirection())
+          .stretchDirection(segment.roadSystemReference().stretch().direction().toRoadDirection())
+          .placementSide(placement.map(Placement::side).map(Side::toRoadSide).orElse(null))
+          .stretch(this.geometryService.parseLineString(segment.geometry().wkt()).get())
+          .data(segment)
+          .build();
+      }).filter(Objects::nonNull).toList();
+
+      var geometryChecker = new RailingGeometryOrderChecker<>(
+        this.geometryService.parseLineString(railing.geometry().wkt()).get(),
+        segments
+      );
+
+      if (geometryChecker.isFlipped()) {
+        flipped++;
+      }
+
       railingIds.add(railing.id());
-      railingParams.add(this.mapRailingParams(railing));
+      railingParams.add(this.mapRailingParams(railing, geometryChecker.getGeometry()));
       roadSystemParams.addAll(this.mapRoadSystemParams(railing));
-      roadSegmentsParams.addAll(this.mapRoadSegmentParams(railing));
+      roadSegmentsParams.addAll(this.mapRoadSegmentParams(railing.id(), segments));
     }
+
+    log.info("{} of the imported railings were flipped", flipped);
 
     this.jdbcTemplate.batchUpdate(UPSERT_ROAD_RAILING_QUERY, railingParams.toArray(MapSqlParameterSource[]::new));
     this.jdbcTemplate.batchUpdate(UPSERT_ROAD_SYSTEM_QUERY, roadSystemParams.toArray(MapSqlParameterSource[]::new));
@@ -95,14 +131,13 @@ public class RailingImportService {
   }
 
   private MapSqlParameterSource mapRailingParams(
-      NvdbRoadObject roadObject
+      NvdbRoadObject roadObject,
+      LineString geometry
   ) {
     var params = new MapSqlParameterSource();
 
-    var ls = this.geometryService.parseLineString(roadObject.geometry().wkt()).get();
-
     params.addValue("externalId", roadObject.id());
-    params.addValue("geometry", ls.toText());
+    params.addValue("geometry", geometry.toText());
     params.addValue("ownGeometry", roadObject.geometry().isOwnGeomtry());
     params.addValue("length", roadObject.location().length());
 
@@ -127,58 +162,23 @@ public class RailingImportService {
   }
 
   private List<MapSqlParameterSource> mapRoadSegmentParams(
-      NvdbRoadObject roadObject
+      Long railingId,
+      List<RoadSegmentReverser<RoadSegment>> segments
   ) {
-    var flipCount = new AtomicInteger(0);
-    var sqlParams = roadObject.roadSegments().stream().map(segment -> {
-      var placement = roadObject.location().placements().stream().filter(p -> segment.isWithin(p)).findFirst();
-
-      if (placement.isEmpty()) {
-        return null;
-      }
-
-      var flipped = !segment.roadSystemReference().stretch().direction().equals(segment.direction());
-      if (flipped)
-        flipCount.addAndGet(1);
-      var ls = this.geometryService.parseLineString(segment.geometry().wkt()).get();
-      var segmentDirection = segment.direction().toRoadDirection();
-
-      // we don't want to flip the linestring if it's already WITH the road network
-      // we want all road segment linestrings to be WITH the road network to simplify
-      // matching capture logs to railings, since it unifies the directionality of segments
-      if (flipped && !segmentDirection.equals(RoadDirection.AGAINST)) {
-        ls = ls.reverse();
-      }
-
-      var side = placement.map(p -> p.side()).map(Side::toRoadSide).map(rs -> {
-        if (flipped) {
-          return rs.opposite();
-        }
-
-        return rs;
-      }).map(RoadSide::name).orElse(null);
+    var sqlParams = segments.stream().map(segment -> {
+      var data = segment.getData();
 
       var params = new MapSqlParameterSource();
-      params.addValue("railingId", roadObject.id());
-      params.addValue("roadSegmentId", segment.getShortform());
-      params.addValue("externalId", segment.getShortform());
-      params.addValue("geometry", ls.toText());
-      params.addValue("length", segment.length());
-      params.addValue("direction", segmentDirection.name());
-      params.addValue("roadSystemReference", segment.roadSystemReference().shortform());
-      params.addValue("roadSystemId", segment.roadSystemReference().system().id());
-      params.addValue("side", side);
+      params.addValue("railingId", railingId);
+      params.addValue("externalId", data.getShortform());
+      params.addValue("geometry", segment.getGeometry().toText());
+      params.addValue("length", data.length());
+      params.addValue("direction", segment.getDirection().name());
+      params.addValue("roadSystemReference", data.roadSystemReference().shortform());
+      params.addValue("roadSystemId", data.roadSystemReference().system().id());
+      params.addValue("side", Optional.ofNullable(segment.getSide()).map(RoadSide::name).orElse(null));
       return params;
     }).filter(Objects::nonNull).toList();
-
-    if (flipCount.get() != 0 && flipCount.get() != roadObject.roadSegments().size()) {
-      log.warn(
-        "Inequal amount of flipped segments for road object {}. Flipped: {}, Total: {}",
-        roadObject.id(),
-        flipCount.get(),
-        roadObject.roadSegments().size()
-      );
-    }
 
     return sqlParams;
   }
