@@ -42,6 +42,15 @@ const Trip: Component = () => {
     return captureValue + projectValue;
   };
 
+  const progressPercent = () => {
+    const value = progressValue();
+    const goal = project.data?.totalLength;
+
+    if (goal === undefined) return 0;
+
+    return value / goal;
+  };
+
   const storageIndicator = createMemo(() => {
     const storage = captureDetails()?.storageRemaining;
 
@@ -134,7 +143,7 @@ const Trip: Component = () => {
                 </Form> */}
 
             <div class='order-2 w-full text-center md:order-none'>
-              <Progress class='rounded-lg' value={progressValue()} />
+              <Progress class='rounded-lg' value={progressPercent()} />
               <p>
                 {n(progressValue(), NumberFormat.INTEGER)}
                 {' / '}
