@@ -1,5 +1,6 @@
 import { useTranslations } from '@/features/i18n';
 import { Pagination as KobaltePagination } from '@kobalte/core';
+import clsx from 'clsx';
 import { Component, createSignal } from 'solid-js';
 
 export interface PaginationProps {
@@ -27,11 +28,11 @@ const Pagination: Component<PaginationProps> = (props) => {
       itemComponent={(props) => (
         <KobaltePagination.Item
           page={props.page}
-          class={`inline-flex items-center rounded border px-3 py-1 ${
-            props.page === currentPage()
-              ? 'bg-brand-blue-800 text-gray-50'
-              : 'bg-white text-gray-950 transition hover:bg-gray-100 dark:bg-gray-950 dark:text-white dark:hover:bg-gray-900'
-          }`}
+          class={clsx('inline-flex items-center rounded border px-3 py-1', {
+            'bg-brand-blue-800 text-gray-50': props.page === currentPage(),
+            'bg-white text-gray-950 transition hover:bg-gray-100 dark:bg-gray-950 dark:text-white dark:hover:bg-gray-900':
+              props.page !== currentPage(),
+          })}
           onClick={() => handlePageChange(props.page)}
         >
           {props.page}
