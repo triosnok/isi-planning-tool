@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import Pagination from '@/components/navigation/Pagination';
 import { Input } from '@/components/ui/input';
 import {
   Table,
@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/table';
 import { DateFormat, useTranslations } from '@/features/i18n';
 import { A } from '@solidjs/router';
-import { IconChevronLeft, IconChevronRight } from '@tabler/icons-solidjs';
 import dayjs from 'dayjs';
 import { Component, For, Show, createSignal } from 'solid-js';
 
@@ -36,7 +35,7 @@ const TripTable: Component<TripTableProps> = (props) => {
   const { t, d } = useTranslations();
 
   const [currentPage, setCurrentPage] = createSignal(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
   const totalPages = () => Math.ceil(props.trips.length / itemsPerPage);
 
   const currentTrips = () =>
@@ -44,12 +43,6 @@ const TripTable: Component<TripTableProps> = (props) => {
       (currentPage() - 1) * itemsPerPage,
       currentPage() * itemsPerPage
     );
-
-  const itemRange = () => {
-    const start = (currentPage() - 1) * itemsPerPage + 1;
-    const end = Math.min(start + itemsPerPage - 1, props.trips.length);
-    return `${start} - ${end} of ${props.trips.length}`;
-  };
 
   const duration = (startedAt: string, endedAt: string) => {
     const start = dayjs(startedAt);
@@ -72,20 +65,14 @@ const TripTable: Component<TripTableProps> = (props) => {
     <div>
       <div class='flex flex-row items-center justify-between'>
         <Input placeholder={t('NAVIGATION.SEARCH')} class='mt-4 w-fit' />
-        <div class='flex flex-row justify-end gap-2 pr-4 pt-4'>
-          <div class='my-4 flex flex-row items-center justify-center gap-2'>
-            <p class='rounded-full bg-gray-100 px-2 py-0.5 text-sm font-semibold text-gray-800 dark:bg-gray-900 dark:text-gray-200'>
-              {itemRange()}
-            </p>
-            <Pagination
-              currentPage={currentPage()}
-              totalPages={totalPages()}
-              setCurrentPage={setCurrentPage}
-            />
-          </div>
-        </div>
+        <Pagination
+          itemsPerPage={itemsPerPage}
+          totalItems={totalPages()}
+          onPageChange={setCurrentPage}
+        />
       </div>
-      <Table>
+
+      <Table class='mt-2'>
         <TableHeader>
           <TableRow>
             <TableHead>{t('TRIPS.TRIP_TABLE.START')}</TableHead>
@@ -119,7 +106,7 @@ const TripTable: Component<TripTableProps> = (props) => {
                   </TableCell>
                 </Show>
                 <TableCell>
-                  {trip.project} - Trip {trip.sequenceNumber}
+                  {trip.project} - {t('TRIPS.TRIP')} {trip.sequenceNumber}
                 </TableCell>
                 <Show when={props.driver}>
                   <TableCell>{trip.driver}</TableCell>
@@ -146,36 +133,6 @@ const TripTable: Component<TripTableProps> = (props) => {
           </For>
         </TableBody>
       </Table>
-    </div>
-  );
-};
-
-interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
-  setCurrentPage: (page: number) => void;
-}
-
-export const Pagination: Component<PaginationProps> = (props) => {
-  return (
-    <div class='my-4 flex flex-row items-center justify-between gap-2'>
-      <Button
-        onClick={() => props.setCurrentPage(props.currentPage - 1)}
-        disabled={props.currentPage === 1}
-        class='h-6 rounded-full px-1'
-      >
-        <IconChevronLeft class='mr-1 size-5' />
-      </Button>
-
-      <Button
-        onClick={() => props.setCurrentPage(props.currentPage + 1)}
-        disabled={
-          props.currentPage === props.totalPages || props.totalPages === 0
-        }
-        class='h-6 rounded-full px-1'
-      >
-        <IconChevronRight class='ml-1 size-5' />
-      </Button>
     </div>
   );
 };

@@ -74,6 +74,10 @@
     "RAILING": "Road",
     "NO_ROADS_AVAILABLE": "No roads available"
   },
+  "PAGINATION": {
+    "PREVIOUS": "Previous",
+    "NEXT": "Next"
+  },
   "TRIPS": {
     "TITLE": "Trips",
     "TRIP": "Trip",
