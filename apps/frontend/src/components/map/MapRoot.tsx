@@ -60,7 +60,6 @@ export const parse = (geometry: Geometry) => {
 };
 
 export const parsePoint = (geometry: Geometry) => {
-  console.log(geometry);
   const points = parse(geometry);
 
   if (points.length < 1) {

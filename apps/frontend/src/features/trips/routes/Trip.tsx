@@ -48,7 +48,7 @@ const Trip: Component = () => {
 
     if (goal === undefined) return 0;
 
-    return value / goal;
+    return value / goal * 100;
   };
 
   const storageIndicator = createMemo(() => {
