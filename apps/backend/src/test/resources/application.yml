@@ -6,6 +6,17 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
 
+  mail:
+    host: localhost
+    username: insight
+    password: insight
+    properties:
+      mail.transport.protocol: smtp
+      mail.smtp.port: 25
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+
 no.isi.insight.planning:
   auth:
     token-issuer: isi-insight
@@ -21,3 +32,6 @@ no.isi.insight.planning:
   integration.minio:
     access-key: minioadmin
     secret-key: minioadmin
+  integration.mail:
+    enabled: false
+    sender-address: noreply@email.invalid

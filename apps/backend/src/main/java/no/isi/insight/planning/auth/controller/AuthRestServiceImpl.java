@@ -18,6 +18,7 @@ import no.isi.insight.planning.client.auth.view.SignInRequest;
 import no.isi.insight.planning.client.auth.view.SignInResponse;
 import no.isi.insight.planning.client.auth.view.UserProfile;
 import no.isi.insight.planning.client.auth.view.UserRole;
+import no.isi.insight.planning.integration.mail.MailService;
 import no.isi.insight.planning.auth.TokenClaim;
 import no.isi.insight.planning.auth.TokenType;
 import no.isi.insight.planning.auth.UserAccountDetailsAdapter;
@@ -37,6 +38,7 @@ public class AuthRestServiceImpl implements AuthRestService {
   private final JwtService jwtService;
   private final UserAccountService userAccountService;
   private final PasswordResetCodeService passwordResetCodeService;
+  private final MailService mailService;
 
   @Override
   @Authenticated
@@ -136,8 +138,7 @@ public class AuthRestServiceImpl implements AuthRestService {
   ) {
     this.userAccountJpaRepository.findByEmail(request.email()).ifPresent(user -> {
       var code = this.passwordResetCodeService.createCode(user);
-      // TODO: remove logging & send the code by email
-      log.info("Created reset code for user[email={}]: {}", user.getEmail(), code);
+      this.mailService.send(user, "Password reset confirmation", "Your password reset code is: %s".formatted(code));
     });
 
     return ResponseEntity.ok().build();

@@ -15,6 +15,18 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
 
+  mail:
+    host: ${MAIL_HOST}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail.transport.protocol: smtp
+      mail.smtp.port: 465
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+
 no.isi.insight.planning:
   auth:
     token-issuer: ${AUTH_TOKEN_ISSUER:isi-insight}
@@ -31,3 +43,6 @@ no.isi.insight.planning:
     url: ${MINIO_URL}
     access-key: ${MINIO_ACCESS_KEY}
     secret-key: ${MINIO_SECRET_KEY}
+  integration.mail:
+    enabled: ${MAIL_ENABLED}
+    sender-address: ${MAIL_SENDER_ADDRESS}

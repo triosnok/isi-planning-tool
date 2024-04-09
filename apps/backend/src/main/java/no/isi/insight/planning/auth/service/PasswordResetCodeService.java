@@ -29,9 +29,9 @@ public class PasswordResetCodeService {
       UserAccount userAccount
   ) {
     var random = new SecureRandom();
-    var value = random.ints(48, 123)
+    var value = random.ints(48, 58)
       .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-      .limit(32)
+      .limit(8)
       .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
       .toString();
 
