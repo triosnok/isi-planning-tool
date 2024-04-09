@@ -23,6 +23,7 @@ import {
 import TripNoteModule from '../components/TripNoteModule';
 import TripSummaryDialog from '../components/TripSummaryDialog';
 import { ImageStatus, getImageAnalysis } from '../utils';
+import { cn } from '@/lib/utils';
 
 const Trip: Component = () => {
   const params = useParams();
@@ -116,7 +117,11 @@ const Trip: Component = () => {
               </div>
               <Button
                 onClick={() => setShowTripNoteModule(!showTripNoteModule())}
-                class='order-last md:order-none'
+                class={cn(
+                  'order-last md:order-none',
+                  showTripNoteModule() &&
+                    'bg-success-600 hover:bg-success-600/90'
+                )}
               >
                 <div class='flex items-center gap-2'>
                   <IconMessage />
