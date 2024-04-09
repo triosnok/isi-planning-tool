@@ -71,7 +71,7 @@ const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
   const { t, d } = useTranslations();
 
   return (
-    <section class='flex h-full flex-col overflow-hidden rounded-md bg-gray-50 p-2 dark:bg-gray-900'>
+    <section class='flex h-full flex-col overflow-hidden rounded-md bg-gray-50 p-2 dark:bg-gray-900 pointer-events-auto'>
       <div class='space-y-2'>
         <p class='text-2xl font-semibold'>{t('NOTES.TITLE')}</p>
 

@@ -1,10 +1,15 @@
 import MapCarLayer from '@/components/map/MapCarLayer';
+import MapRailingLayer from '@/components/map/MapRailingLayer';
 import BackLink from '@/components/navigation/BackLink';
 import { Button } from '@/components/ui/button';
 import { Indicator, IndicatorVariant } from '@/components/ui/indicator';
 import { Progress } from '@/components/ui/progress';
 import { DateFormat, NumberFormat, useTranslations } from '@/features/i18n';
-import { useProjectDetailsQuery } from '@/features/projects/api';
+import {
+  useProjectDetailsQuery,
+  useProjectRailings,
+} from '@/features/projects/api';
+import { cn } from '@/lib/utils';
 import { CaptureAction } from '@isi-insight/client';
 import { useParams } from '@solidjs/router';
 import {
@@ -23,7 +28,6 @@ import {
 import TripNoteModule from '../components/TripNoteModule';
 import TripSummaryDialog from '../components/TripSummaryDialog';
 import { ImageStatus, getImageAnalysis } from '../utils';
-import { cn } from '@/lib/utils';
 
 const Trip: Component = () => {
   const params = useParams();
@@ -32,6 +36,16 @@ const Trip: Component = () => {
   const project = useProjectDetailsQuery(params.projectId);
   const captureDetails = useTripCaptureDetails(params.tripId);
   const captureAction = useTripCaptureAction(params.tripId);
+
+  const railings = useProjectRailings(
+    () => params.projectId,
+    () => {
+      const ids: string[] = [];
+      if (tripDetails.data?.projectPlanId)
+        ids.push(tripDetails.data.projectPlanId);
+      return ids;
+    }
+  );
 
   const [showSummaryDialog, setShowSummaryDialog] = createSignal(false);
   const [showTripNoteModule, setShowTripNoteModule] = createSignal(false);
@@ -95,8 +109,8 @@ const Trip: Component = () => {
 
   return (
     <>
-      <div class='absolute left-0 top-0 flex h-full w-full flex-col gap-2 overflow-hidden max-md:flex-col-reverse md:w-1/2 md:p-4 lg:w-2/5 xl:w-1/3'>
-        <section class='bg-gray-50 p-2 max-md:rounded-t-lg md:rounded-md dark:bg-gray-900'>
+      <div class='pointer-events-none absolute left-0 top-0 flex h-full w-full flex-col gap-2 overflow-hidden max-md:flex-col-reverse md:w-1/2 md:p-4 lg:w-2/5 xl:w-1/3'>
+        <section class='pointer-events-auto bg-gray-50 p-2 max-md:rounded-t-lg md:rounded-md dark:bg-gray-900'>
           <div class='flex flex-col'>
             <div class='hidden md:flex'>
               <BackLink href='../..' />
@@ -206,7 +220,7 @@ const Trip: Component = () => {
         </div>
 
         <Show when={!tripDetails.data?.endedAt}>
-          <div class='w-full space-y-2 rounded-md bg-gray-50 p-2 max-md:hidden dark:bg-gray-950'>
+          <div class='pointer-events-auto w-full space-y-2 rounded-md bg-gray-50 p-2 max-md:hidden dark:bg-gray-950'>
             <Button onClick={handleCaptureAction} class='w-full'>
               <Show
                 when={!captureDetails()?.activeCapture}
@@ -232,6 +246,8 @@ const Trip: Component = () => {
           <MapCarLayer heading={dt().heading} position={dt().position} />
         )}
       </Show>
+
+      <MapRailingLayer railings={railings.data} />
     </>
   );
 };
