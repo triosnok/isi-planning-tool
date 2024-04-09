@@ -1,0 +1,3 @@
+ALTER TABLE trip_note 
+ALTER COLUMN position TYPE GEOMETRY(POINTZ)
+USING ST_Force3D(position);
