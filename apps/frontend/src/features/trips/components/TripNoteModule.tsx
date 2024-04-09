@@ -1,7 +1,13 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DateFormat, useTranslations } from '@/features/i18n';
-import { SubmitHandler, createForm, zodForm } from '@modular-forms/solid';
+import {
+  SubmitHandler,
+  createForm,
+  reset,
+  setValue,
+  zodForm,
+} from '@modular-forms/solid';
 import { IconPencil, IconSend2, IconTrash } from '@tabler/icons-solidjs';
 import { Component, For, createMemo, createSignal } from 'solid-js';
 import { z } from 'zod';
@@ -50,11 +56,13 @@ const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
 
   const [form, { Form, Field }] = createForm({
     validate: zodForm(TripNoteSchema),
+    initialValues: { note: '' },
   });
 
   const handleSubmit: SubmitHandler<TripNoteForm> = async (values) => {
     try {
       await create.mutateAsync({ ...values, tripId: props.tripId });
+      reset(form);
     } catch (error) {
       // ignored
     }
@@ -65,7 +73,7 @@ const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
   return (
     <section class='flex h-full flex-col overflow-hidden rounded-md bg-gray-50 p-2 dark:bg-gray-900'>
       <div class='space-y-2'>
-        <p class='text-2xl font-semibold'>Notes</p>
+        <p class='text-2xl font-semibold'>{t('NOTES.TITLE')}</p>
 
         <Form onSubmit={handleSubmit} class='flex'>
           <Field name='note' type='string'>
@@ -88,14 +96,14 @@ const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
 
         <div class='flex justify-between space-x-2'>
           <Button disabled={tripNoteId() === undefined} class='w-full '>
-            <IconPencil class='' />
+            <IconPencil />
           </Button>
           <Button
             disabled={tripNoteId() === undefined}
             variant='destructive'
             class='w-full'
           >
-            <IconTrash class='' />
+            <IconTrash />
           </Button>
         </div>
       </div>
