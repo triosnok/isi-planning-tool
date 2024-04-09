@@ -21,12 +21,12 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { Switch } from '../ui/switch';
-import { useTranslations } from '@/features/i18n';
+import { DateFormat, useTranslations } from '@/features/i18n';
 
 const Header: Component = () => {
   const theme = useTheme();
   const signOut = useSignOutMutation();
-  const { t } = useTranslations();
+  const { t, d } = useTranslations();
 
   const handleSignOut = async () => {
     try {
@@ -128,7 +128,6 @@ const Header: Component = () => {
                 <span>Dark theme</span>
                 <Switch checked={theme.theme() === Theme.DARK} class='ml-1' />
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={handleSignOut}
                 class='flex items-center gap-1'
@@ -136,6 +135,11 @@ const Header: Component = () => {
                 <IconLogout class='h-5 w-5' />
                 <span>{t('AUTHENTICATION.SIGN_OUT')}</span>
               </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <div class='flex w-full flex-col items-center text-xs text-gray-500'>
+                <p>v{__APP_BUILD_VERSION__}</p>
+                <p>updated {d(__APP_BUILD_TIMESTAMP__, DateFormat.DATETIME)}</p>
+              </div>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>

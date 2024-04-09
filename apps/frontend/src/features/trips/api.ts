@@ -32,6 +32,13 @@ export type TripSchemaValues = z.infer<typeof TripSchema>;
 export const useTripMutation = () => {
   const qc = useQueryClient();
 
+  const onSuccess = (id: string) => {
+    qc.invalidateQueries({ queryKey: [CacheKey.TRIP_LIST] });
+    qc.invalidateQueries({
+      queryKey: [CacheKey.TRIP_DETAILS, id],
+    });
+  };
+
   const create = createMutation(() => ({
     mutationFn: async (trip: CreateTripRequest) => {
       const response = await axios.post<TripDetails>('/api/v1/trips', trip);
@@ -88,6 +95,15 @@ export const useTripsDetailsQuery = (
 };
 
 export const useTripNoteMutation = (tripId: string) => {
+  const qc = useQueryClient();
+
+  const onSuccess = (id: string) => {
+    qc.invalidateQueries({ queryKey: [CacheKey.TRIP_NOTE_LIST] });
+    qc.invalidateQueries({
+      queryKey: [CacheKey.TRIP_NOTE_DETAILS, id],
+    });
+  };
+
   const create = createMutation(() => ({
     mutationFn: async (note: CreateTripNoteRequest) => {
       const response = await axios.post(`/api/v1/trip-notes`, {
@@ -97,6 +113,8 @@ export const useTripNoteMutation = (tripId: string) => {
 
       return response.data;
     },
+
+    onSuccess: () => onSuccess(tripId),
   }));
 
   return { create };
@@ -104,7 +122,7 @@ export const useTripNoteMutation = (tripId: string) => {
 
 export const useTripNoteDetailsQuery = (tripId: string) => {
   return createQuery(() => ({
-    queryKey: [CacheKey.TRIP_NOTE_DETAILS, CacheKey.TRIP_NOTE_LIST],
+    queryKey: [CacheKey.TRIP_NOTE_LIST],
     queryFn: async () => {
       const response = await axios.get<TripNoteDetails[]>(
         `/api/v1/trip-notes?tripId=${tripId}`
@@ -173,3 +191,5 @@ export const useCaptureLogsQuery = () => {
     },
   }));
 };
+
+//TODO: fix the rest of the caching issues here, its not ideal atm i think
