@@ -18,6 +18,7 @@ import no.isi.insight.planning.auth.TokenClaim;
 import no.isi.insight.planning.auth.TokenType;
 import no.isi.insight.planning.auth.UserAccountDetailsAdapter;
 import no.isi.insight.planning.auth.config.JwtProperties;
+import no.isi.insight.planning.error.model.UnauthorizedException;
 
 @Service
 @RequiredArgsConstructor
@@ -85,8 +86,7 @@ public class JwtService {
     var valid = parsedToken.verify(verifier);
 
     if (!valid) {
-      // TODO: Replace with a proper exception
-      throw new RuntimeException("");
+      throw new UnauthorizedException("No valid token was provided.");
     }
 
     return parsedToken;
