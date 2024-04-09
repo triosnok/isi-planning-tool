@@ -4,7 +4,7 @@ import { lazy } from 'solid-js';
 
 export const routes: RouteDefinition[] = [
   {
-    path: '/',
+    path: '/dashboard',
     component: lazy(() => import('./Dashboard')),
     meta: {
       authentication: {

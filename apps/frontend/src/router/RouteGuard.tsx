@@ -38,7 +38,7 @@ const RouteGuard: Component<RouteGuardProps> = (props) => {
       <Match
         when={guard.status === AuthStatus.SIGNED_OUT && auth().isAuthenticated}
       >
-        <Navigate href='/' />
+        <Navigate href='/projects' />
       </Match>
 
       <Match
@@ -48,7 +48,7 @@ const RouteGuard: Component<RouteGuardProps> = (props) => {
       </Match>
 
       <Match when={!auth().isAuthorized}>
-        <Navigate href='/' />
+        <Navigate href='/projects' />
       </Match>
 
       <Match when={auth().isAuthorized}>{props.children}</Match>
