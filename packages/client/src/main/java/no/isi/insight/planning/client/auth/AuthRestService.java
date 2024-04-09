@@ -1,6 +1,7 @@
 package no.isi.insight.planning.client.auth;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
@@ -22,7 +23,7 @@ public interface AuthRestService {
 
   @PostExchange("/sign-in")
   ResponseEntity<SignInResponse> signIn(
-      @RequestBody SignInRequest request
+      @Validated @RequestBody SignInRequest request
   );
 
   @PostExchange("/sign-out")
@@ -33,12 +34,12 @@ public interface AuthRestService {
 
   @PostExchange("/forgot-password")
   ResponseEntity<Void> forgotPassword(
-      @RequestBody ForgotPasswordRequest request
+      @Validated @RequestBody ForgotPasswordRequest request
   );
 
   @PostExchange("/reset-password")
   ResponseEntity<Void> resetPassword(
-      @RequestBody ResetPasswordRequest request
+      @Validated @RequestBody ResetPasswordRequest request
   );
 
 }

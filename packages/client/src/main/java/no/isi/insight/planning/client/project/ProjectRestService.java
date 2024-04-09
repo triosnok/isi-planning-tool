@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,7 +49,7 @@ public interface ProjectRestService {
    */
   @PostExchange
   ResponseEntity<ProjectDetails> createProject(
-      @RequestBody CreateProjectRequest request
+      @Validated @RequestBody CreateProjectRequest request
   );
 
   /**
@@ -72,7 +73,7 @@ public interface ProjectRestService {
   @PutExchange("/{projectId}")
   ResponseEntity<ProjectDetails> updateProject(
       @PathVariable UUID projectId,
-      @RequestBody UpdateProjectRequest request
+      @Validated @RequestBody UpdateProjectRequest request
   );
 
 }

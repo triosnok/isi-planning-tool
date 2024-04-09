@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,7 +41,7 @@ public interface CaptureRestService {
 
   @PostExchange("/actions")
   ResponseEntity<Void> captureAction(
-      @RequestBody CaptureActionRequest request
+      @Validated @RequestBody CaptureActionRequest request
   );
 
 }

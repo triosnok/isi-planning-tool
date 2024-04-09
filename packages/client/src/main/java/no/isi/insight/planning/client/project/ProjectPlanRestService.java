@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,13 +38,13 @@ public interface ProjectPlanRestService {
   @PostExchange
   @Operation(summary = "Creates a new project plan")
   ResponseEntity<ProjectPlanDetails> createPlan(
-      @RequestBody CreateProjectPlanRequest request
+      @Validated @RequestBody CreateProjectPlanRequest request
   );
 
   @PutExchange("/{planId}")
   @Operation(summary = "Updates a project plan")
   ResponseEntity<ProjectPlanDetails> updatePlan(
       @PathVariable UUID planId,
-      @RequestBody UpdateProjectPlanRequest request
+      @Validated @RequestBody UpdateProjectPlanRequest request
   );
 }

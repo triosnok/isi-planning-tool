@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,13 +25,13 @@ public interface TripNoteRestService {
 
   @PostExchange
   ResponseEntity<TripNoteDetails> addNote(
-      @RequestBody CreateTripNoteRequest request
+      @Validated @RequestBody CreateTripNoteRequest request
   );
 
   @PutExchange("/{noteId}")
   ResponseEntity<TripNoteDetails> updateNote(
       @PathVariable UUID noteId,
-      @RequestBody UpdateTripNoteRequest request
+      @Validated @RequestBody UpdateTripNoteRequest request
   );
 
   @GetExchange

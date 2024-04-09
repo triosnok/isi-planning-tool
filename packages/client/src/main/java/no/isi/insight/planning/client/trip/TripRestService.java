@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,7 +25,7 @@ public interface TripRestService {
 
   @PostExchange
   ResponseEntity<TripDetails> createTrip(
-      @RequestBody CreateTripRequest request
+      @Validated @RequestBody CreateTripRequest request
   );
 
   @GetExchange("/{tripId}")
