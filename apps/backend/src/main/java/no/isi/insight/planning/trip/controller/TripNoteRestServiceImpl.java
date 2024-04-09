@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import no.isi.insight.planning.auth.annotation.DriverAuthorization;
+import no.isi.insight.planning.capture.service.CaptureReplayService;
 import no.isi.insight.planning.client.trip.TripNoteRestService;
 import no.isi.insight.planning.client.trip.view.CreateTripNoteRequest;
 import no.isi.insight.planning.client.trip.view.TripNoteDetails;
@@ -25,6 +26,7 @@ import no.isi.insight.planning.utility.GeometryUtils;
 public class TripNoteRestServiceImpl implements TripNoteRestService {
   private final TripJpaRepository tripJpaRepository;
   private final TripNoteJpaRepository tripNoteJpaRepository;
+  private final CaptureReplayService captureReplayService;
 
   @Override
   @DriverAuthorization
@@ -34,10 +36,12 @@ public class TripNoteRestServiceImpl implements TripNoteRestService {
     var tripId = request.tripId();
     Trip trip = tripJpaRepository.findById(tripId).orElseThrow(() -> new NotFoundException("Trip not found"));
 
+    var currentPosition = captureReplayService.getCurrentPosition(tripId).orElse(null);
+
     TripNote tripNote = new TripNote(
       trip,
       request.note(),
-      null
+      currentPosition
     );
 
     TripNote savedTripNote = tripNoteJpaRepository.save(tripNote);
