@@ -10,6 +10,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.locationtech.jts.geom.Point;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.isi.insight.planning.capture.model.ProcessedLogEntry;
+import no.isi.insight.planning.client.capture.view.CaptureDetails;
 import no.isi.insight.planning.client.trip.view.CameraPosition;
 import no.isi.insight.planning.geometry.GeometryService;
 import no.isi.insight.planning.model.Trip;
@@ -168,6 +170,19 @@ public class CaptureReplayService {
         }
       }
     });
+  }
+
+  public Optional<Point> getCurrentPosition(
+      UUID tripId
+  ) {
+    if (!this.hasTrip(tripId)) {
+      return Optional.empty();
+    }
+
+    return this.replays.get(tripId)
+      .getCaptureDetails()
+      .map(CaptureDetails::position)
+      .map(geom -> this.geometryService.parsePoint(geom.wkt()).get());
   }
 
   /**

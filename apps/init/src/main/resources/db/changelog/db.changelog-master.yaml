@@ -88,3 +88,10 @@ databaseChangeLog:
         - sqlFile:
             path: 010-password-resets/000-add-reset-code-table.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: 011-trip-note-pointz
+      author: gisle
+      changes:
+        - sqlFile:
+            path: 011-trip-note-pointz/000-alter-trip-note-position-to-pointz.sql
+            relativeToChangelogFile: true
