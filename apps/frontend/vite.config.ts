@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import solidPlugin from 'vite-plugin-solid';
 import { fileURLToPath, URL } from 'node:url';
 // import devtools from 'solid-devtools/vite';
+import { version } from './package.json';
 
 export default defineConfig({
   plugins: [
@@ -29,5 +30,9 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
+  },
+  define: {
+    __APP_BUILD_VERSION__: JSON.stringify(version),
+    __APP_BUILD_TIMESTAMP__: JSON.stringify(new Date().toISOString()),
   },
 });
