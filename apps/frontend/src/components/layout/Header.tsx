@@ -50,13 +50,13 @@ const Header: Component = () => {
 
           <ul class='hidden flex-row gap-4 md:flex'>
             <li>
-              <A href='/' class='hover:underline'>
-                {t('HOME.TITLE')}
+              <A href='/projects' class='hover:underline'>
+                {t('PROJECTS.TITLE')}
               </A>
             </li>
             <li>
-              <A href='/projects' class='hover:underline'>
-                {t('PROJECTS.TITLE')}
+              <A href='/dashboard' class='hover:underline'>
+                {t('DASHBOARD.TITLE')}
               </A>
             </li>
             <li>
@@ -101,10 +101,10 @@ const Header: Component = () => {
           <DropdownMenuContent>
             <DropdownMenuGroup class='md:hidden'>
               <DropdownMenuItem>
-                <A href='/'>{t('HOME.TITLE')}</A>
+                <A href='/projects'>{t('PROJECTS.TITLE')}</A>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <A href='/projects'>{t('PROJECTS.TITLE')}</A>
+                <A href='/dashboard'>{t('DASHBOARD.TITLE')}</A>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <A href='/'>{t('USERS.TITLE')}</A>

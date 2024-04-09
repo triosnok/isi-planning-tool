@@ -3,9 +3,6 @@
     "SIGN_IN": "Sign in",
     "SIGN_OUT": "Sign out"
   },
-  "DASHBOARD": {
-    "TITLE": "Dashboard"
-  },
   "DEVIATIONS": {
     "TITLE": "Deviations",
     "DEVIATION": "Deviation"
@@ -28,8 +25,8 @@
     "URL": "URL",
     "NO_IMAGE": "No image"
   },
-  "HOME": {
-    "TITLE": "Home"
+  "DASHBOARD": {
+    "TITLE": "Dashboard"
   },
   "NAVIGATION": {
     "BACK": "Back",

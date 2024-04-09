@@ -1,6 +1,6 @@
 import { LayoutProps } from '@/lib/utils';
 import { UserRole } from '@isi-insight/client';
-import type { RouteDefinition as SolidRouteDef } from '@solidjs/router';
+import { Navigate, type RouteDefinition as SolidRouteDef } from '@solidjs/router';
 import { JSX } from 'solid-js';
 import { AuthStatus } from '../lib/constants';
 import RouteGuard from './RouteGuard';
@@ -37,6 +37,13 @@ const featureRoutes = import.meta.glob<RouteDefinition[]>(
     import: 'routes',
   }
 );
+
+const rootRedirectRoute = {
+  path: '/',
+  component: () => <Navigate href="/projects" />,
+}
+
+routes.unshift(rootRedirectRoute);
 
 const mapRoute = (route: RouteDefinition) => {
   if (route.meta?.authentication === undefined) {
