@@ -78,6 +78,13 @@ Inspired by [Bulletproof React](https://github.com/alan2207/bulletproof-react).
 | `AUTH_ACCESS_TOKEN_EXPIRATION_MS`  | expiration time of access tokens, defaults to 5 minutes | no       |
 | `AUTH_REFRESH_TOKEN_SECRET`        | secret for refresh tokens                               | yes      |
 | `AUTH_REFRESH_TOKEN_EXPIRATION_MS` | expiration time of refresh tokens, defaults to 30 days  | no       |
+| `MINIO_URL`                        | URL to the MinIO/S3-compatible API                      | yes      |
+| `MINIO_ACCESS_KEY`                 | access key to authenticate with MinIO/S3                | yes      |
+| `MINIO_SECRET_KEY`                 | secret key to authenticate with MinIO/S3                | yes      |
+| `MAIL_ENABLED`                     | whether or not to send or attempt to connect over SMTP  | yes      |
+| `MAIL_HOST`                        | address of the SMTP server for sending mails            | no       |
+| `MAIL_USERNAME`                    | username for authenticating against the SMTP server     | no       |
+| `MAIL_PASSWORD`                    | password for authenticating against the SMTP server     | no       |
 
 ### Development
 
@@ -97,6 +104,8 @@ With the above installed, you can start developing by:
 
    b) Starting `PlanningApplication`, with environment variables defined in a `.env` file in the backend folder, using [this reference](#environment-variables). This will also require you to start docker containers manually (`docker compose up -d`)
 
+   c) Running in CLI using Gradle (`./gradlew :apps:backend:bootRun`)
+
 4. Install PNPM dependencies (`pnpm install`)
 5. Start the frontend (`pnpm dev`)
 
@@ -105,4 +114,16 @@ Make sure to configure your IDE to use these prior to contributing.
 
 ### Deployment
 
-tbd.
+In order to deploy the application, you can run the following commands from the root of the repository:
+
+```bash
+./gradlew updateVersion -DnewVersion="0.2.0"
+git push
+git push --tags
+```
+
+This will start the deployment pipeline, releasing artifacts to GitHub and deploying new versions to the demo environment.
+
+Details on how environments are configured can be found in the [infrastructure](infrastructure) folder.
+
+The application can be deployed to other environments using Docker, just make sure to set the required environment variables for the backend service.
