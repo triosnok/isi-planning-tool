@@ -26,6 +26,7 @@ import no.isi.insight.planning.model.RoadDirection;
 import no.isi.insight.planning.model.RoadRailing;
 import no.isi.insight.planning.model.RoadSide;
 import no.isi.insight.planning.repository.RoadRailingJpaRepository;
+import no.isi.insight.planning.utility.GeometryUtils;
 
 @Slf4j
 @Service
@@ -137,7 +138,7 @@ public class RailingImportService {
     var params = new MapSqlParameterSource();
 
     params.addValue("externalId", roadObject.id());
-    params.addValue("geometry", geometry.toText());
+    params.addValue("geometry", GeometryUtils.toWkt(geometry));
     params.addValue("ownGeometry", roadObject.geometry().isOwnGeomtry());
     params.addValue("length", roadObject.location().length());
 
@@ -171,7 +172,7 @@ public class RailingImportService {
       var params = new MapSqlParameterSource();
       params.addValue("railingId", railingId);
       params.addValue("externalId", data.getShortform());
-      params.addValue("geometry", segment.getGeometry().toText());
+      params.addValue("geometry", GeometryUtils.toWkt(segment.getGeometry()));
       params.addValue("length", data.length());
       params.addValue("direction", segment.getDirection().name());
       params.addValue("roadSystemReference", data.roadSystemReference().shortform());
