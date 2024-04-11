@@ -13,7 +13,7 @@ public record ResetPasswordRequest(
 
   @AssertTrue
   boolean isValidConfirmation() {
-    return this.password == this.passwordConfirmation;
+    return this.password.equals(this.passwordConfirmation);
   }
 
 }

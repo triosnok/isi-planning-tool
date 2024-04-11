@@ -13,11 +13,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.isi.insight.planning.client.auth.AuthRestService;
 import no.isi.insight.planning.client.auth.view.ForgotPasswordRequest;
+import no.isi.insight.planning.client.auth.view.GetConfirmationCodeRequest;
 import no.isi.insight.planning.client.auth.view.ResetPasswordRequest;
 import no.isi.insight.planning.client.auth.view.SignInRequest;
 import no.isi.insight.planning.client.auth.view.SignInResponse;
 import no.isi.insight.planning.client.auth.view.UserProfile;
 import no.isi.insight.planning.client.auth.view.UserRole;
+import no.isi.insight.planning.error.model.UnauthorizedException;
 import no.isi.insight.planning.integration.mail.MailService;
 import no.isi.insight.planning.auth.TokenClaim;
 import no.isi.insight.planning.auth.TokenType;
@@ -145,10 +147,20 @@ public class AuthRestServiceImpl implements AuthRestService {
   }
 
   @Override
+  public ResponseEntity<String> getConfirmationCode(
+      GetConfirmationCodeRequest request
+  ) {
+    var code = this.passwordResetCodeService.findConfirmationCode(request.email(), request.code())
+      .orElseThrow(() -> new UnauthorizedException("Invalid code"));
+
+    return ResponseEntity.ok(code);
+  }
+
+  @Override
   public ResponseEntity<Void> resetPassword(
       ResetPasswordRequest request
   ) {
-    var foundUser = this.passwordResetCodeService.findUserByValidCode(request.code());
+    var foundUser = this.passwordResetCodeService.findUserByValidConfirmationCode(request.code());
 
     if (foundUser.isPresent()) {
       var user = foundUser.get();

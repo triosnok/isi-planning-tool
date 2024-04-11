@@ -95,3 +95,10 @@ databaseChangeLog:
         - sqlFile:
             path: 011-trip-note-pointz/000-alter-trip-note-position-to-pointz.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: 012-password-reset-confirmation
+      author: halvard
+      changes:
+        - sqlFile:
+            path: 012-password-reset-confirmation/000-add-confirmation-code.sql
+            relativeToChangelogFile: true

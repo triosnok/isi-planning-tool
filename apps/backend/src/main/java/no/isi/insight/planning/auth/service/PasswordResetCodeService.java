@@ -1,13 +1,12 @@
 package no.isi.insight.planning.auth.service;
 
-import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.Optional;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import no.isi.insight.planning.auth.service.CodeGenerator.CodeType;
 import no.isi.insight.planning.model.PasswordResetCode;
 import no.isi.insight.planning.model.UserAccount;
 import no.isi.insight.planning.repository.PasswordResetCodeJpaRepository;
@@ -15,8 +14,10 @@ import no.isi.insight.planning.repository.PasswordResetCodeJpaRepository;
 @Service
 @RequiredArgsConstructor
 public class PasswordResetCodeService {
-  private final PasswordEncoder passwordEncoder;
   private final PasswordResetCodeJpaRepository jpaRepository;
+
+  private static final CodeGenerator ALPHANUM_CODE_GENERATOR = new CodeGenerator(CodeType.ALPHANUMERIC);
+  private static final CodeGenerator NUM_CODE_GENERATOR = new CodeGenerator(CodeType.NUMERIC);
 
   /**
    * Creates a new password reset code for the given user account.
@@ -28,35 +29,55 @@ public class PasswordResetCodeService {
   public String createCode(
       UserAccount userAccount
   ) {
-    var random = new SecureRandom();
-    var value = random.ints(48, 58)
-      .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-      .limit(8)
-      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-      .toString();
+    var resetCode = NUM_CODE_GENERATOR.generateCode(8);
+    var confirmationCode = ALPHANUM_CODE_GENERATOR.generateCode(64);
 
     var code = new PasswordResetCode(
       userAccount,
-      this.passwordEncoder.encode(value),
+      resetCode,
+      confirmationCode,
       Duration.ofDays(1)
     );
 
     this.jpaRepository.save(code);
 
-    return value;
+    return resetCode;
+  }
+
+  /**
+   * Finds the confirmation code for a given email and reset code.
+   * 
+   * @param email     the email to find the confirmation code for
+   * @param resetCode the reset code to find the confirmation code for
+   * 
+   * @return the confirmation code if found
+   */
+  public Optional<String> findConfirmationCode(
+      String email,
+      String resetCode
+  ) {
+    var foundCode = this.jpaRepository.findByResetCodeAndEmail(resetCode, email);
+
+    if (foundCode.isPresent()) {
+      var code = foundCode.get();
+      code.confirmationClaimed();
+      this.jpaRepository.save(code);
+    }
+
+    return foundCode.map(PasswordResetCode::getConfirmationCode);
   }
 
   /**
    * Finds a user account for the given code if the code is valid.
    * 
-   * @param code the code to find a user account from
+   * @param confirmationCode the code to find a user account from
    * 
    * @return the user account if the code is valid
    */
-  public Optional<UserAccount> findUserByValidCode(
-      String code
+  public Optional<UserAccount> findUserByValidConfirmationCode(
+      String confirmationCode
   ) {
-    var foundCode = this.jpaRepository.findByCode(this.passwordEncoder.encode(code));
+    var foundCode = this.jpaRepository.findByConfirmationCode(confirmationCode);
 
     if (foundCode.isEmpty() || foundCode.get().isExpired()) {
       return Optional.empty();
@@ -73,7 +94,7 @@ public class PasswordResetCodeService {
   public void markUsed(
       String code
   ) {
-    var resetCode = this.jpaRepository.findByCode(code);
+    var resetCode = this.jpaRepository.findByConfirmationCode(code);
     resetCode.ifPresent(rc -> {
       rc.markUsed();
       this.jpaRepository.save(rc);
