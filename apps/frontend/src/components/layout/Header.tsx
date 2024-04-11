@@ -20,7 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import { Switch } from '../ui/switch';
+import { SwitchButton } from '../ui/switch-button';
 import { DateFormat, useTranslations } from '@/features/i18n';
 
 const Header: Component = () => {
@@ -126,7 +126,7 @@ const Header: Component = () => {
               >
                 <IconMoon class='h-5 w-5' />
                 <span>Dark theme</span>
-                <Switch checked={theme.theme() === Theme.DARK} class='ml-1' />
+                <SwitchButton checked={theme.theme() === Theme.DARK} class='ml-1' />
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={handleSignOut}
