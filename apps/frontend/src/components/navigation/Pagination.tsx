@@ -1,5 +1,5 @@
 import { useTranslations } from '@/features/i18n';
-import { Pagination as KobaltePagination } from '@kobalte/core';
+import { Pagination as PaginationPrimitive } from '@kobalte/core';
 import clsx from 'clsx';
 import { Component, createSignal } from 'solid-js';
 
@@ -20,13 +20,13 @@ const Pagination: Component<PaginationProps> = (props) => {
   };
 
   return (
-    <KobaltePagination.Root
+    <PaginationPrimitive.Root
       class='[&>ul]:flex [&>ul]:items-center [&>ul]:justify-center [&>ul]:gap-1'
       count={totalPages()}
       page={currentPage()}
       onPageChange={handlePageChange}
       itemComponent={(props) => (
-        <KobaltePagination.Item
+        <PaginationPrimitive.Item
           page={props.page}
           class={clsx('inline-flex items-center rounded border px-3 py-1', {
             'bg-brand-blue-800 text-gray-50': props.page === currentPage(),
@@ -36,20 +36,20 @@ const Pagination: Component<PaginationProps> = (props) => {
           onClick={() => handlePageChange(props.page)}
         >
           {props.page}
-        </KobaltePagination.Item>
+        </PaginationPrimitive.Item>
       )}
       ellipsisComponent={() => (
         <span class='px-3 py-1 text-gray-950 dark:text-gray-50'>...</span>
       )}
     >
-      <KobaltePagination.Previous class='rounded border px-4 py-1 transition hover:bg-gray-100 dark:hover:bg-gray-900'>
+      <PaginationPrimitive.Previous class='rounded border px-4 py-1 transition hover:bg-gray-100 dark:hover:bg-gray-900'>
         {t('PAGINATION.PREVIOUS')}
-      </KobaltePagination.Previous>
-      <KobaltePagination.Items />
-      <KobaltePagination.Next class='rounded border px-4 py-1 transition hover:bg-gray-100 dark:hover:bg-gray-900'>
+      </PaginationPrimitive.Previous>
+      <PaginationPrimitive.Items />
+      <PaginationPrimitive.Next class='rounded border px-4 py-1 transition hover:bg-gray-100 dark:hover:bg-gray-900'>
         {t('PAGINATION.NEXT')}
-      </KobaltePagination.Next>
-    </KobaltePagination.Root>
+      </PaginationPrimitive.Next>
+    </PaginationPrimitive.Root>
   );
 };
 
