@@ -1,5 +1,9 @@
 import { Geometry } from '@isi-insight/client';
-import Leaflet from 'leaflet';
+import { Feature } from 'ol';
+import WKT from 'ol/format/WKT';
+import { Point } from 'ol/geom';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
 import {
   Component,
   createEffect,
@@ -7,31 +11,36 @@ import {
   onCleanup,
   onMount,
 } from 'solid-js';
-import { parsePoint, useMap } from './MapRoot';
+import { useMap } from './MapRoot';
 
 export interface MapCarLayerProps {
   position: Geometry;
   heading: number;
 }
 
+const fmt = new WKT();
+
 const MapCarLayer: Component<MapCarLayerProps> = (props) => {
   const { map } = useMap();
-  const [carCircle, setCarCircle] = createSignal<Leaflet.Circle>();
+  const [carCircle, setCarCircle] = createSignal<Feature<Point>>();
 
   onMount(() => {
-    const latlng = parsePoint(props.position);
-    const carCircle = Leaflet.circle(latlng, { radius: 10 });
+    const pos = fmt.readFeature(props.position.wkt);
 
-    carCircle.addTo(map);
-    setCarCircle(carCircle);
+    const l = new VectorLayer({
+      source: new VectorSource({ features: [pos] }),
+    });
 
-    onCleanup(() => carCircle.removeFrom(map));
+    map.addLayer(l);
+    setCarCircle(pos as any);
+
+    onCleanup(() => map.removeLayer(l));
   });
 
   createEffect(() => {
-    const latlng = parsePoint(props.position);
+    const wkt = fmt.readGeometry(props.position.wkt) as Point;
     const circle = carCircle();
-    if (circle) circle.setLatLng(latlng);
+    if (circle) circle.setGeometry(wkt);
   });
 
   return null;

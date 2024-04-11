@@ -10,20 +10,20 @@ export interface MapZoomControlsProps {
 const MapZoomControls: Component<MapZoomControlsProps> = (props) => {
   const ctx = useMap();
   const [canZoomIn, setCanZoomIn] = createSignal(
-    ctx.map.getZoom() < ctx.map.getMaxZoom()
+    false
   );
 
   const [canZoomOut, setCanZoomOut] = createSignal(
-    ctx.map.getZoom() > ctx.map.getMinZoom()
+    false
   );
 
-  const zoomIn = () => ctx.map.zoomIn(1);
-  const zoomOut = () => ctx.map.zoomOut(1);
+  const zoomIn = () => {};
+  const zoomOut = () => {};
 
   onMount(() => {
     const onZoom = () => {
-      setCanZoomIn(ctx.map.getZoom() < ctx.map.getMaxZoom());
-      setCanZoomOut(ctx.map.getZoom() > ctx.map.getMinZoom());
+      // setCanZoomIn(ctx.map.getZoom() < ctx.map.getMaxZoom());
+      // setCanZoomOut(ctx.map.getZoom() > ctx.map.getMinZoom());
     };
 
     ctx.map.addEventListener('zoom', onZoom);

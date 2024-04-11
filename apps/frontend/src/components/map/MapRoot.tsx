@@ -1,6 +1,9 @@
-import Leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import './style.css';
+import { Map, View } from 'ol';
+import TileLayer from 'ol/layer/Tile';
+import { Projection } from 'ol/proj';
+import { XYZ } from 'ol/source';
+import { TileGrid } from 'ol/tilegrid';
 import 'proj4leaflet';
 import {
   Component,
@@ -11,63 +14,25 @@ import {
   onMount,
   useContext,
 } from 'solid-js';
-import { Geometry } from '@isi-insight/client';
+import './style.css';
 
 export interface MapContextValue {
-  map: Leaflet.Map;
+  map: Map;
 }
 
-const PROJECTIONS: Record<number, Leaflet.Proj.CRS> = {
-  5973: new Leaflet.Proj.CRS(
-    'EPSG:25833',
-    '+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +vunits=m +no_defs +type=crs',
-    {
-      resolutions: [
-        21674.7100160867, 10837.3550080434, 5418.67750402168, 2709.33875201084,
-        1354.66937600542, 677.334688002709, 338.667344001355, 169.333672000677,
-        84.6668360003387, 42.3334180001693, 21.1667090000847, 10.5833545000423,
-        5.29167725002117, 2.64583862501058, 1.32291931250529, 0.661459656252646,
-        0.330729828126323, 0.165364914063161,
-      ],
-      origin: [-2500000, 9045984],
-    }
-  ),
-};
+export const EPSG25833 = new Projection({
+  code: 'EPSG:25833',
+  extent: [-25e5, 35e5, 3045984, 9045984],
+  units: 'm',
+});
 
-export const parse = (geometry: Geometry) => {
-  const stripped = geometry.wkt
-    .replace('LINESTRING(', '')
-    .replace('LINESTRING Z(', '')
-    .replace('POINT(', '')
-    .replace('POINT (', '')
-    .replace(')', '');
-
-  const rawCoords = stripped.split(',');
-  const projection = PROJECTIONS[geometry.srid];
-
-  return rawCoords.map((pair) => {
-    const [x, y] = pair
-      .trim()
-      .split(' ')
-      .map((n) => parseFloat(n));
-
-    if (projection !== undefined) {
-      return projection.unproject(new Leaflet.Point(x, y));
-    }
-
-    return new Leaflet.LatLng(y, x);
-  });
-};
-
-export const parsePoint = (geometry: Geometry) => {
-  const points = parse(geometry);
-
-  if (points.length < 1) {
-    throw new Error('No points in geometry');
-  }
-
-  return points[0];
-};
+export const geodataResolutions = [
+  21674.7100160867, 10837.35500804335, 5418.677504021675, 2709.3387520108377,
+  1354.6693760054188, 677.3346880027094, 338.6673440013547, 169.33367200067735,
+  84.66683600033868, 42.33341800016934, 21.16670900008467, 10.583354500042335,
+  5.291677250021167, 2.6458386250105836, 1.3229193125052918, 0.6614596562526459,
+  0.33072982812632296, 0.16536491406316148, 0.08268245703158074,
+];
 
 const MapContext = createContext<MapContextValue>();
 
@@ -76,36 +41,41 @@ export const MapRoot: Component<{
   class?: string;
   customZoom?: boolean;
 }> = (props) => {
-  const [map, setMap] = createSignal<Leaflet.Map>();
-
-  let container: HTMLDivElement | undefined;
+  const [map, setMap] = createSignal<Map>();
+  let container: HTMLDivElement;
 
   onMount(() => {
-    if (!container) return;
-
-    const map = Leaflet.map(container, {
-      center: [62.46, 6.4],
-      zoom: 9,
-      crs: PROJECTIONS[5973],
-      zoomControl: !props.customZoom,
+    const mountedMap = new Map({
+      target: container,
+      layers: [
+        new TileLayer({
+          preload: 8,
+          className: 'insight-map-tile-layer',
+          source: new XYZ({
+            crossOrigin: 'Anonymous',
+            projection: EPSG25833,
+            tileGrid: new TileGrid({
+              extent: EPSG25833.getExtent(),
+              origin: [-2500000, 9045984],
+              resolutions: geodataResolutions,
+            }),
+            url: 'https://services.geodataonline.no/arcgis/rest/services/Trafikkportalen/GeocacheTrafikkJPG/MapServer/tile/{z}/{y}/{x}',
+          }),
+        }),
+      ],
+      view: new View({
+        center: [203174.5, 6876298.5],
+        zoom: 15,
+        projection: EPSG25833,
+      }),
     });
 
-    const layer = new Leaflet.TileLayer(
-      'https://services.geodataonline.no/arcgis/rest/services/Trafikkportalen/GeocacheTrafikkJPG/MapServer/tile/{z}/{y}/{x}',
-      {
-        maxZoom: 16,
-        minZoom: 3,
-        className: 'insight-map-tile-layer',
-      }
-    );
-  
-    map.addLayer(layer);
-    setMap(map);
+    setMap(mountedMap);
   });
 
   return (
     <div class={props.class}>
-      <div class='h-full w-full' ref={container} />
+      <div class='h-full w-full' ref={container!} />
       <Show when={map() !== undefined}>
         <MapContext.Provider value={{ map: map()! }}>
           {props.children}
