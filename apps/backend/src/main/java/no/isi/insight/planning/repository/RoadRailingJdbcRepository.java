@@ -67,7 +67,7 @@ public class RoadRailingJdbcRepository {
           AND (p.project_id = :projectId)
           AND (COALESCE(:planIds, NULL) IS NULL OR pp.project_plan_id::text IN (:planIds))
           AND (:tripId IS NULL OR trc.fk_trip_id = :tripId::uuid)
-          AND (:hideCompleted = FALSE OR trc.captured_length < CEIL(rr.length))
+          AND (:hideCompleted = FALSE OR COALESCE(trc.captured_length, 0) < CEIL(rr.length))
       """;
 
     var params = new MapSqlParameterSource();

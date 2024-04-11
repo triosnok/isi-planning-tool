@@ -64,7 +64,8 @@
   "RAILINGS": {
     "TITLE": "Railings",
     "RAILING": "Railing",
-    "RAILING_IMPORT_URL": "Railing import URL"
+    "RAILING_IMPORT_URL": "Railing import URL",
+    "HIDE_COMPLETED_RAILINGS": "Hide completed railings"
   },
   "ROADS": {
     "TITLE": "Roads",
@@ -82,6 +83,8 @@
     "START_TRIP": "Start trip",
     "END_TRIP": "End trip",
     "ONGOING_TRIPS": "Ongoing trips",
+    "SHOW_MORE": "Show more",
+    "SHOW_LESS": "Show less",
     "TRIP_SUMMARY": {
       "TITLE": "Trip summary",
       "TOTAL_RAILING_METERS_CAPTURED": "A total of {{ meters }} meters of railing has been captured",

@@ -66,6 +66,14 @@ module.exports = {
           from: { height: 'var(--kb-accordion-content-height)' },
           to: { height: 0 },
         },
+        'collapsible-down': {
+          from: { height: 0 },
+          to: { height: 'var(--kb-collapsible-content-height)' },
+        },
+        'collapsible-up': {
+          from: { height: 'var(--kb-collapsible-content-height)' },
+          to: { height: 0 },
+        },
         'content-show': {
           from: { opacity: 0, transform: 'scale(0.96)' },
           to: { opacity: 1, transform: 'scale(1)' },
@@ -80,6 +88,8 @@ module.exports = {
         'accordion-up': 'accordion-up 0.2s ease-out',
         'content-show': 'content-show 0.2s ease-out',
         'content-hide': 'content-hide 0.2s ease-out',
+        'collapsible-down': 'collapsible-down 0.2s ease-out',
+        'collapsible-up': 'collapsible-up 0.2s ease-out',
       },
     },
   },

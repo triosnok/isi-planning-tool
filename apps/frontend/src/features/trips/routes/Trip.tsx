@@ -4,6 +4,7 @@ import BackLink from '@/components/navigation/BackLink';
 import { Button } from '@/components/ui/button';
 import { Indicator, IndicatorVariant } from '@/components/ui/indicator';
 import { Progress } from '@/components/ui/progress';
+import { SwitchButton } from '@/components/ui/switch-button';
 import { DateFormat, NumberFormat, useTranslations } from '@/features/i18n';
 import {
   useProjectDetailsQuery,
@@ -11,8 +12,10 @@ import {
 } from '@/features/projects/api';
 import { cn } from '@/lib/utils';
 import { CaptureAction } from '@isi-insight/client';
+import { Collapsible } from '@kobalte/core';
 import { useParams } from '@solidjs/router';
 import {
+  IconChevronUp,
   IconCurrentLocation,
   IconDatabase,
   IconMessage,
@@ -36,6 +39,7 @@ const Trip: Component = () => {
   const project = useProjectDetailsQuery(params.projectId);
   const captureDetails = useTripCaptureDetails(params.tripId);
   const captureAction = useTripCaptureAction(params.tripId);
+  const [hideCompletedRailings, setHideCompletedRailings] = createSignal(false);
 
   const railings = useProjectRailings(
     () => params.projectId,
@@ -44,11 +48,13 @@ const Trip: Component = () => {
       if (tripDetails.data?.projectPlanId)
         ids.push(tripDetails.data.projectPlanId);
       return ids;
-    }
+    },
+    () => hideCompletedRailings()
   );
 
   const [showSummaryDialog, setShowSummaryDialog] = createSignal(false);
   const [showTripNoteModule, setShowTripNoteModule] = createSignal(false);
+  const [showMore, setShowMore] = createSignal(false);
 
   const progressValue = () => {
     const captureValue = captureDetails()?.metersCaptured ?? 0;
@@ -189,6 +195,29 @@ const Trip: Component = () => {
                 status=''
               />
             </section>
+
+            <Collapsible.Root class='flex flex-col gap-2'>
+              <Collapsible.Content class='animate-collapsible-up ui-expanded:animate-collapsible-down overflow-hidden'>
+                <div class='flex flex-row items-center gap-2 px-2'>
+                  <SwitchButton
+                    checked={hideCompletedRailings()}
+                    onChange={setHideCompletedRailings}
+                  />
+                  <p>{t('RAILINGS.HIDE_COMPLETED_RAILINGS')}</p>
+                </div>
+              </Collapsible.Content>
+
+              <Collapsible.Trigger
+                onClick={() => setShowMore((v) => !v)}
+                class='group flex flex-row items-center justify-center gap-1 rounded-md bg-gray-100 p-1 dark:bg-gray-800'
+              >
+                <IconChevronUp class='size-6 transform transition-transform group-data-[closed]:rotate-180' />
+
+                <Show when={showMore()} fallback={t('TRIPS.SHOW_MORE')}>
+                  {t('TRIPS.SHOW_LESS')}
+                </Show>
+              </Collapsible.Trigger>
+            </Collapsible.Root>
 
             <TripSummaryDialog
               tripId={params.tripId}
