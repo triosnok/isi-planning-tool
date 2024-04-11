@@ -141,4 +141,9 @@ jobs:
             --namespace ${{ vars.K8S_NAMESPACE }} \
             --set version=${{ github.ref_name }} \
             --set hostname=${{ vars.HOSTNAME }} \
+            --set mail.enabled${{ vars.MAIL_ENABLED }} \
+            --set mail.host=${{ vars.MAIL_HOST }} \
+            --set mail.senderAddress=${{ vars.MAIL_SENDER_ADDRESS }} \
+            --set mail.username=${{ secrets.MAIL_USERNAME }} \
+            --set mail.password=${{ secrets.MAIL_PASSWORD }} \
             --set clusterIssuer=letsencrypt

@@ -12,6 +12,8 @@ data:
   {{- $secretData := (get $secretObj "data") | default dict }}
   {{- $refreshTokenSecret := (get $secretData "AUTH_REFRESH_TOKEN_SECRET") | default (randAlphaNum 48 | b64enc) }}
   AUTH_REFRESH_TOKEN_SECRET: {{ $refreshTokenSecret | b64enc }}
+  MAIL_USERNAME: {{ .Values.mail.username | b64enc }}
+  MAIL_PASSWORD: {{ .Values.mail.password | b64enc }}
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -75,6 +77,12 @@ spec:
             value: {{ include "postgres.port" . | quote }}
           - name: MINIO_URL
             value: "http://{{ include "minio.name" . }}:{{ include "minio.port.api" . }}"
+          - name: MAIL_ENABLED
+            value: {{ .Values.mail.enabled | quote }}
+          - name: MAIL_HOST
+            value: {{ .Values.mail.host | quote }}
+          - name: MAIL_SENDER_ADDRESS
+            value: {{ .Values.mail.senderAddress | quote }}
 ---
 apiVersion: v1
 kind: Service
