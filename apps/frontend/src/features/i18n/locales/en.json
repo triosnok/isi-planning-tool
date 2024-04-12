@@ -147,6 +147,7 @@
     "NO_VEHICLE_SELECTED": "No vehicle selected.",
     "VIEW_DETAILS": "View details",
     "NO_VEHICLES_REGISTERED": "No vehicles registered.",
+    "PREFERED_VEHICLE": "Prefered vehicle",
     "FORM": {
       "REGISTRATION_NUMBER": "Registration number",
       "MODEL": "Model",

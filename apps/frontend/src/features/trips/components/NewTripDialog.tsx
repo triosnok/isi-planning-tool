@@ -5,15 +5,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useTranslations } from '@/features/i18n';
-import { useVehiclesQuery } from '@/features/vehicles/api';
-import VehicleSelect from '@/features/vehicles/components/VehicleSelect';
-import { VehicleDetails } from '@isi-insight/client';
-import { useNavigate } from '@solidjs/router';
-import { IconMovie } from '@tabler/icons-solidjs';
-import { Component, For, createSignal } from 'solid-js';
-import { z } from 'zod';
-import { useCaptureLogsQuery, useTripMutation } from '../api';
 import { Label } from '@/components/ui/label';
 import {
   Slider,
@@ -21,6 +12,15 @@ import {
   SliderThumb,
   SliderTrack,
 } from '@/components/ui/slider';
+import { useTranslations } from '@/features/i18n';
+import { useVehiclesQuery } from '@/features/vehicles/api';
+import VehicleSelect from '@/features/vehicles/components/VehicleSelect';
+import { vehiclePreference } from '@/features/vehicles/context';
+import { VehicleDetails } from '@isi-insight/client';
+import { useNavigate } from '@solidjs/router';
+import { Component, createEffect, createSignal } from 'solid-js';
+import { z } from 'zod';
+import { useCaptureLogsQuery, useTripMutation } from '../api';
 import CaptureLogSelect from './CaptureLogSelect';
 
 export interface NewTripDialogProps {
@@ -41,6 +41,7 @@ export type CreateTripSchemaValues = z.infer<typeof CreateTripSchema>;
 
 const NewTripDialog: Component<NewTripDialogProps> = (props) => {
   const vehicles = useVehiclesQuery();
+  const preferedVehicle = vehiclePreference();
   const [selectedVehicle, setSelectedVehicle] = createSignal<VehicleDetails>();
   const [captureLogId, setCaptureLogId] = createSignal<string>();
   const [replaySpeed, setReplaySpeed] = createSignal<number>();
@@ -48,6 +49,13 @@ const NewTripDialog: Component<NewTripDialogProps> = (props) => {
   const logs = useCaptureLogsQuery();
   const { create } = useTripMutation();
   const { t } = useTranslations();
+
+  createEffect(() => {
+    if (props.open) {
+      const preferred = preferedVehicle.selectedVehicle();
+      setSelectedVehicle(preferred);
+    }
+  });
 
   const handleSubmit = async (values: CreateTripSchemaValues) => {
     try {
@@ -71,9 +79,11 @@ const NewTripDialog: Component<NewTripDialogProps> = (props) => {
         <Label required>Vehicle</Label>
 
         <VehicleSelect
-          vehicles={vehicles.data ?? []}
+          value={preferedVehicle.selectedVehicle() ?? selectedVehicle()}
           onChange={setSelectedVehicle}
+          vehicles={vehicles.data ?? []}
           emptyText={t('VEHICLES.NO_VEHICLE_SELECTED')}
+          preferedVehicle={true}
         />
 
         <Label>Capture log</Label>
