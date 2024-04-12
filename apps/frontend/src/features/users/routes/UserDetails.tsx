@@ -39,21 +39,23 @@ const UserDetails: Component = () => {
     <div class='flex h-svh w-svw flex-col'>
       <Header />
 
-      <div class='flex flex-1'>
-        <main class='flex-1 px-6 pb-4 pt-2'>
+      <div class='flex flex-1 overflow-hidden'>
+        <main class='flex-1 overflow-y-auto p-2 py-2'>
           <BackLink />
 
-          <h1 class='flex items-center gap-1 text-4xl font-bold'>
-            {user.data?.fullName}
-          </h1>
+          <Show when={user?.data}>
+            <h1 class='flex items-center gap-1 pb-2 text-4xl font-bold'>
+              {user.data?.fullName}
+            </h1>
 
-          <UserForm
-            onSubmit={handleUpdateUser}
-            userId={user.data?.id}
-            name={user.data?.fullName}
-            email={user.data?.email}
-            phoneNumber={user.data?.phoneNumber}
-          />
+            <UserForm
+              onSubmit={handleUpdateUser}
+              userId={user.data?.id}
+              name={user.data?.fullName}
+              email={user.data?.email}
+              phoneNumber={user.data?.phoneNumber}
+            />
+          </Show>
 
           <Show when={trips?.data}>
             <TripTable trips={trips.data ?? []} driver={true} />
