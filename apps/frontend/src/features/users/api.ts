@@ -2,8 +2,7 @@ import { CacheKey } from '@/api';
 import {
   CreateUserAccountRequest,
   TripDetails,
-  UserAccountDetails,
-  UserRole,
+  UserAccountDetails
 } from '@isi-insight/client';
 import {
   createMutation,
@@ -40,6 +39,7 @@ export const useTripsByUserQuery = (userId: string) => {
   }));
 };
 
+
 export const useUserDetailsQuery = (id: string) => {
   return createQuery(() => ({
     queryKey: [CacheKey.USER_DETAILS, id],
@@ -57,11 +57,11 @@ export const UserSchema = z
   .object({
     userId: z.string().optional(),
     imageUrl: z.string().optional(),
-    fullName: z.string(),
-    email: z.string(),
-    phoneNumber: z.string(),
+    fullName: z.string().min(1, "Name is required"),
+    email: z.string().email("Invalid email address"),
+    phoneNumber: z.string().nullish(),
     role: z.enum(['DRIVER', 'PLANNER']),
-    password: z.string().min(1),
+    password: z.string(),
     passwordConfirmation: z.string(),
   })
   .refine((data) => data.password === data.passwordConfirmation, {
