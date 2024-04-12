@@ -47,6 +47,7 @@ export const MapRoot: Component<{
   onMount(() => {
     const mountedMap = new Map({
       target: container,
+      controls: [],
       layers: [
         new TileLayer({
           preload: 8,
@@ -64,8 +65,10 @@ export const MapRoot: Component<{
         }),
       ],
       view: new View({
-        center: [203174.5, 6876298.5],
-        zoom: 15,
+        center: [124382.31086361589, 6957716.86008026],
+        zoom: 8,
+        maxZoom: 16,
+        minZoom: 4,
         projection: EPSG25833,
       }),
     });
