@@ -1,10 +1,8 @@
-import 'leaflet/dist/leaflet.css';
 import { Map, View } from 'ol';
 import TileLayer from 'ol/layer/Tile';
 import { Projection } from 'ol/proj';
 import { XYZ } from 'ol/source';
 import { TileGrid } from 'ol/tilegrid';
-import 'proj4leaflet';
 import {
   Component,
   JSX,
@@ -15,6 +13,15 @@ import {
   useContext,
 } from 'solid-js';
 import './style.css';
+import { register } from 'ol/proj/proj4';
+import proj4 from 'proj4';
+
+proj4.defs(
+  'EPSG:25833',
+  '+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs'
+);
+
+register(proj4);
 
 export interface MapContextValue {
   map: Map;
