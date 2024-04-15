@@ -200,9 +200,8 @@ class TripNoteRestServiceIntegrationTests {
 
     this.mockMvc
       .perform(
-        MockMvcRequestBuilders.delete("/api/v1/trip-notes")
+        MockMvcRequestBuilders.delete("/api/v1/trip-notes/".concat(noteId))
           .header(HttpHeaders.AUTHORIZATION, authorization)
-          .param("noteId", noteId)
       )
       .andExpect(MockMvcResultMatchers.status().isOk());
   }
