@@ -74,8 +74,10 @@ public class UserAccountService {
     userAccount.setEmail(email);
     userAccount.setPhoneNumber(phone);
 
-    var encodedPassword = this.passwordEncoder.encode(password);
-    userAccount.setPassword(encodedPassword);
+    if (password != null && !password.isBlank()) {
+      var encodedPassword = this.passwordEncoder.encode(password);
+      userAccount.setPassword(encodedPassword);
+    }
 
     userAccount.setRole(role);
 

@@ -13,8 +13,8 @@ public record UpdateUserAccountRequest(
   @NotBlank String fullName,
   @NotBlank String email,
   String phoneNumber,
-  @NotBlank String password,
-  @NotBlank String passwordConfirmation,
+  String password,
+  String passwordConfirmation,
   @NotNull UserRole role
 ) {
 

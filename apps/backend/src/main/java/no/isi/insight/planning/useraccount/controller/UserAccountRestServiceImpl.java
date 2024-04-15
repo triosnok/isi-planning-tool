@@ -56,6 +56,30 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
   }
 
   @Override
+  @DriverAuthorization
+  public ResponseEntity<UserAccountDetails> findUserAccountById(
+      UUID id
+  ) {
+    var userAccount = this.userAccountJpaRepository.findById(id)
+      .orElseThrow(() -> new NotFoundException("Could not find user with id: %s".formatted(id.toString())));
+
+    UserRole role = switch (userAccount.getRole()) {
+      case PLANNER -> UserRole.PLANNER;
+      case DRIVER -> UserRole.DRIVER;
+    };
+
+    return ResponseEntity.ok(
+      new UserAccountDetails(
+        userAccount.getUserAccountId(),
+        userAccount.getFullName(),
+        userAccount.getEmail(),
+        userAccount.getPhoneNumber(),
+        role
+      )
+    );
+  }
+
+  @Override
   @PlannerAuthorization
   public ResponseEntity<UserAccountDetails> createUserAccount(
       CreateUserAccountRequest request

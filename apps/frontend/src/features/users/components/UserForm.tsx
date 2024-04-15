@@ -4,7 +4,7 @@ import { Label } from '@/components/ui/label';
 import { useTranslations } from '@/features/i18n';
 import { cn } from '@/lib/utils';
 import { UserRole } from '@isi-insight/client';
-import { createForm, zodForm, setValue } from '@modular-forms/solid';
+import { createForm, setValue, zodForm } from '@modular-forms/solid';
 import { Component, Show } from 'solid-js';
 import { UserSchema, UserSchemaValues } from '../api';
 import UserRoleRadio from './UserRoleRadio';
@@ -80,7 +80,7 @@ const UserForm: Component<UserFormProps> = (props) => {
             <Input
               {...props}
               type='text'
-              value={field.value}
+              value={field.value ?? ''}
               placeholder='Phone number'
             />
           </>

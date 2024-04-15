@@ -25,6 +25,11 @@ public interface UserAccountRestService {
   @GetExchange
   ResponseEntity<List<UserAccountDetails>> findAllUserAccounts();
 
+  @GetExchange("/{id}")
+  ResponseEntity<UserAccountDetails> findUserAccountById(
+      @PathVariable UUID id
+  );
+
   @PostExchange
   ResponseEntity<UserAccountDetails> createUserAccount(
       @Validated @RequestBody CreateUserAccountRequest request

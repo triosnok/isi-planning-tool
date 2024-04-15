@@ -37,22 +37,24 @@ const VehicleDetails: Component = () => {
       <Header />
 
       <div class='flex flex-1 overflow-hidden'>
-        <main class='flex-1 overflow-y-auto p-2 py-4'>
+        <main class='flex-1 overflow-y-auto p-2 py-2'>
           <BackLink />
 
-          <h1 class='flex items-center gap-1 pb-4 text-4xl font-bold'>
-            {vehicle.data?.model}
-          </h1>
+          <Show when={vehicle?.data}>
+            <h1 class='flex items-center gap-1 pb-2 text-4xl font-bold'>
+              {vehicle.data?.model}
+            </h1>
 
-          <VehicleForm
-            onSubmit={handleUpdateVehicle}
-            vehicleId={vehicle.data?.id}
-            camera={vehicle.data?.camera}
-            description={vehicle.data?.description}
-            gnssId={vehicle.data?.gnssId}
-            model={vehicle.data?.model}
-            registrationNumber={vehicle.data?.registrationNumber}
-          />
+            <VehicleForm
+              onSubmit={handleUpdateVehicle}
+              vehicleId={vehicle.data?.id}
+              camera={vehicle.data?.camera}
+              description={vehicle.data?.description}
+              gnssId={vehicle.data?.gnssId}
+              model={vehicle.data?.model}
+              registrationNumber={vehicle.data?.registrationNumber}
+            />
+          </Show>
 
           <Show when={trips?.data}>
             <TripTable trips={trips.data ?? []} driver={true} />
