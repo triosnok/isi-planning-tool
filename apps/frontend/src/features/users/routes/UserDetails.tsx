@@ -29,7 +29,6 @@ const UserDetails: Component = () => {
         userId: params.id,
         ...user,
       });
-      navigate('/users');
     } catch (error) {
       console.error('Failed to update user');
     }
