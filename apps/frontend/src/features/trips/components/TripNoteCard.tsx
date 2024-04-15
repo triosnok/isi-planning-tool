@@ -66,8 +66,8 @@ const TripNoteCard: Component<TripNoteCardProps> = (props) => {
             class={cn(
               'border-0 text-base',
               props.editing
-                ? 'border'
-                : 'placeholder:text-gray-950 hover:cursor-pointer focus-visible:ring-0 dark:placeholder:text-gray-50'
+                ? 'border border-gray-400'
+                : 'placeholder:text-gray-950 cursor-pointer focus-visible:ring-0 dark:placeholder:text-gray-50'
             )}
             value={note()}
             onChange={(e) => setNote(e.target.value)}

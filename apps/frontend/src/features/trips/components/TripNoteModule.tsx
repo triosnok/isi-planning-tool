@@ -9,7 +9,14 @@ import {
   zodForm,
 } from '@modular-forms/solid';
 import { IconPencil, IconSend2, IconTrash } from '@tabler/icons-solidjs';
-import { Component, For, Show, createMemo, createSignal } from 'solid-js';
+import {
+  Component,
+  For,
+  Show,
+  createEffect,
+  createMemo,
+  createSignal,
+} from 'solid-js';
 import { z } from 'zod';
 import { useTripNoteDetailsQuery, useTripNoteMutation } from '../api';
 import TripNoteCard from './TripNoteCard';
@@ -79,6 +86,14 @@ const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
     }
   };
 
+  let noteInputElement: HTMLInputElement | undefined;
+
+  createEffect(() => {
+    if (noteInputElement) {
+      noteInputElement.focus();
+    }
+  });
+
   const { t, d } = useTranslations();
 
   return (
@@ -96,6 +111,7 @@ const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
                 placeholder={t('NOTES.NOTE') + '...'}
                 value={field.value}
                 class='rounded-r-none border-r-0'
+                ref={noteInputElement}
               />
             )}
           </Field>
