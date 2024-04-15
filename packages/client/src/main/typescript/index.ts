@@ -107,8 +107,8 @@ export interface ProjectDetails {
     totalLength: number;
     deviations: number;
     notes: number;
-    status: ProjectStatus;
     progress: number;
+    status: ProjectStatus;
 }
 
 export interface ProjectPlanDetails {
@@ -125,8 +125,11 @@ export interface ProjectPlanDetails {
 }
 
 export interface RoadRailing {
+    id: number;
     geometry: Geometry;
+    length: number;
     captureGrade: number;
+    capturedAt: DateAsString;
 }
 
 export interface RoadSegmentDetails {
@@ -177,6 +180,10 @@ export interface TripNoteDetails {
     note: string;
     geometry: Geometry;
     createdAt: DateAsString;
+}
+
+export interface UpdateTripNoteRequest {
+    note: string;
 }
 
 export interface UpdateTripRequest {

@@ -32,7 +32,8 @@
       "AVAILABLE": "Available"
     },
     "URL": "URL",
-    "NO_IMAGE": "No image"
+    "NO_IMAGE": "No image",
+    "CANCEL": "Cancel"
   },
   "DASHBOARD": {
     "TITLE": "Dashboard"
@@ -44,7 +45,8 @@
   "NOTES": {
     "TITLE": "Notes",
     "NOTE": "Note",
-    "ADD_NOTE": "Add note"
+    "ADD_NOTE": "Add note",
+    "CLICK_TO_EXPAND": "Click to expand"
   },
   "PLANS": {
     "TITLE": "Plans",

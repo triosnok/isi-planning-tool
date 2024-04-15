@@ -8,6 +8,7 @@ import {
   CreateTripRequest,
   TripDetails,
   TripNoteDetails,
+  UpdateTripNoteRequest,
 } from '@isi-insight/client';
 import {
   createMutation,
@@ -117,7 +118,32 @@ export const useTripNoteMutation = (tripId: string) => {
     onSuccess: () => onSuccess(tripId),
   }));
 
-  return { create };
+  const update = createMutation(() => ({
+    mutationFn: async (request: { id: string; note: UpdateTripNoteRequest }) => {
+      const response = await axios.put<TripNoteDetails>(
+        `/api/v1/trip-notes/${request.id}`,
+        request.note
+      );
+
+      return response.data;
+    },
+
+    onSuccess: () => onSuccess(tripId),
+  }));
+
+  const deleteNote = createMutation(() => ({
+    mutationFn: async (tripNoteId: string) => {
+      const response = await axios.delete<TripNoteDetails>(
+        `/api/v1/trip-notes/${tripNoteId}`
+      );
+
+      return response.status;
+    },
+
+    onSuccess: () => onSuccess(tripId),
+  }))
+
+  return { create, update, deleteNote };
 };
 
 export const useTripNoteDetailsQuery = (tripId: string) => {
