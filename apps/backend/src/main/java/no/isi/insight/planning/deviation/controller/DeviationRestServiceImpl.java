@@ -62,16 +62,6 @@ public class DeviationRestServiceImpl implements DeviationRestService {
 
     var saved = this.deviationJpaRepository.save(deviation);
 
-    System.out.println("saved " + saved.getId());
-    System.out.println("saved " + saved.getId());
-    System.out.println("saved " + saved.getId());
-    System.out.println("saved " + saved.getId());
-    System.out.println("saved " + saved.getId());
-    System.out.println("saved " + saved.getId());
-    System.out.println("saved " + saved.getId());
-    System.out.println("saved " + saved.getId());
-    System.out.println("saved " + saved.getId());
-
     return ResponseEntity.ok(this.deviationJdbcRepository.findById(saved.getId()).get());
   }
 
