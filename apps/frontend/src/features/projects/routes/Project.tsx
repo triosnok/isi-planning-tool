@@ -155,7 +155,7 @@ const Project: Component<LayoutProps> = (props) => {
                 <For each={plans.data}>
                   {(plan) => (
                     <PlanCard
-                      car={plan.vehicleModel}
+                      car={`${plan.vehicleModel} (${plan.registrationNumber})`}
                       startsAt={d(plan.startsAt, DateFormat.MONTH_DAY)}
                       endsAt={d(plan.endsAt, DateFormat.MONTH_DAY)}
                       length={Number(plan.meters.toFixed(0))}
