@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { SeparatorWithText } from '@/components/ui/seperator';
+import { SeparatorWithText } from '@/components/ui/separator';
 import { SwitchButton } from '@/components/ui/switch-button';
 import { DateFormat, useTranslations } from '@/features/i18n';
 import TripCard from '@/features/trips/components/TripCard';

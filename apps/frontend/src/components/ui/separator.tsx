@@ -36,14 +36,14 @@ const SeparatorWithText: Component<SeparatorWithTextProps> = (props) => {
       })}
     >
       <div
-        class={clsx('w-full border-b border-gray-200', {
+        class={clsx('w-full border-b border-gray-200 dark:border-gray-600', {
           'w-12': props.position === 'LEFT',
           'w-full': props.position === 'RIGHT',
         })}
       />
-      <span class='px-1 text-sm text-gray-500'>{props.text}</span>
+      <span class='px-1 text-sm text-gray-500 '>{props.text}</span>
       <div
-        class={clsx('w-full border-b border-gray-200', {
+        class={clsx('w-full border-b border-gray-200 dark:border-gray-600', {
           'w-12': props.position === 'RIGHT',
           'w-full': props.position === 'LEFT',
         })}
@@ -53,4 +53,3 @@ const SeparatorWithText: Component<SeparatorWithTextProps> = (props) => {
 };
 
 export { Separator, SeparatorWithText };
-
