@@ -1,5 +1,8 @@
 import { ACCESS_TOKEN_LOCALSTORAGE_KEY, CacheKey } from '@/api';
 import type {
+  ForgotPasswordRequest,
+  GetConfirmationCodeRequest,
+  ResetPasswordRequest,
   SignInRequest,
   SignInResponse,
   UserProfile,
@@ -84,4 +87,29 @@ export const useSignOutMutation = () => {
       qc.invalidateQueries({ queryKey: [CacheKey.USER_PROFILE] });
     },
   }));
+};
+
+export const useForgotPasswordMutation = () => {
+  const sendCode = createMutation(() => ({
+    mutationFn: async (request: ForgotPasswordRequest) =>
+      axios.post('/api/v1/auth/forgot-password', request),
+  }));
+
+  const confirmCode = createMutation(() => ({
+    mutationFn: async (request: GetConfirmationCodeRequest) => {
+      const response = await axios.post<string>(
+        '/api/v1/auth/reset-password/code',
+        request
+      );
+
+      return response.data;
+    },
+  }));
+
+  const resetPassword = createMutation(() => ({
+    mutationFn: async (request: ResetPasswordRequest) =>
+      axios.post('/api/v1/auth/reset-password', request),
+  }));
+
+  return { sendCode, confirmCode, resetPassword };
 };
