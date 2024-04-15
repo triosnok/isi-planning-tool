@@ -1,7 +1,16 @@
 {
   "AUTHENTICATION": {
     "SIGN_IN": "Sign in",
-    "SIGN_OUT": "Sign out"
+    "SIGN_OUT": "Sign out",
+    "EMAIL": "E-mail",
+    "PASSWORD": "Password",
+    "CONFIRM_PASSWORD": "Confirm password",
+    "FORGOT_PASSWORD": "Forgot password?",
+    "RESET_PASSWORD": {
+      "CONFIRMATION_CODE": "Confirmation code",
+      "SEND_CODE": "Send confirmation code",
+      "TITLE": "Reset password"
+    }
   },
   "DEVIATIONS": {
     "TITLE": "Deviations",
