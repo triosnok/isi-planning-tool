@@ -7,11 +7,12 @@ import {
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { useProfile } from '@/features/auth/api';
+import { SeparatorWithText } from '@/components/ui/seperator';
+import { SwitchButton } from '@/components/ui/switch-button';
 import { DateFormat, useTranslations } from '@/features/i18n';
 import TripCard from '@/features/trips/components/TripCard';
 import { LayoutProps, cn } from '@/lib/utils';
-import { A, useParams, useSearchParams } from '@solidjs/router';
+import { A, useParams } from '@solidjs/router';
 import {
   IconCircleCheckFilled,
   IconEdit,
@@ -29,28 +30,31 @@ import { useTripsDetailsQuery } from '../../trips/api';
 import NewTripDialog from '../../trips/components/NewTripDialog';
 import { useProjectDetailsQuery, useProjectPlansQuery } from '../api';
 import PlanCard from '../components/PlanCard';
-import { useSelectedPlans } from '../utils';
+import { useProjectSearchParams } from '../utils';
 
 const Project: Component<LayoutProps> = (props) => {
   const params = useParams();
   const project = useProjectDetailsQuery(params.id);
   const plans = useProjectPlansQuery(params.id);
   const { t, d, n } = useTranslations();
-  const [selectedPlans, setSelectedPlans] = useSelectedPlans();
+  const searchParams = useProjectSearchParams();
   const [showNewTripDialog, setShowNewTripDialog] = createSignal(false);
-  const trips = useTripsDetailsQuery(params.id, selectedPlans);
+  const trips = useTripsDetailsQuery(params.id, searchParams.selectedPlans);
+  const [hideCompletedRailings, setHideCompletedRailings] = createSignal(false);
 
   const planId = createMemo(() => {
-    return selectedPlans().length === 1 ? selectedPlans()[0] : undefined;
+    return searchParams.selectedPlans().length === 1
+      ? searchParams.selectedPlans()[0]
+      : undefined;
   });
 
   const handlePlanToggled = (planId: string) => {
-    const plans = selectedPlans();
+    const plans = searchParams.selectedPlans();
 
     if (plans.includes(planId)) {
-      setSelectedPlans(plans.filter((id) => id !== planId));
+      searchParams.setSelectedPlans(plans.filter((id) => id !== planId));
     } else {
-      setSelectedPlans([...plans, planId]);
+      searchParams.setSelectedPlans([...plans, planId]);
     }
   };
 
@@ -66,6 +70,7 @@ const Project: Component<LayoutProps> = (props) => {
             <div class='flex justify-between'>
               <div>
                 <h1 class='text-4xl font-bold'>{project.data?.name}</h1>
+
                 <h2>
                   <Show when={project.data} fallback='...'>
                     {(data) => (
@@ -76,6 +81,7 @@ const Project: Component<LayoutProps> = (props) => {
                     )}
                   </Show>
                 </h2>
+
                 <div class='text-success-500 flex items-center gap-1'>
                   <IconCircleCheckFilled size={16} />
                   <p class='text-sm'>{project.data?.status}</p>
@@ -93,6 +99,18 @@ const Project: Component<LayoutProps> = (props) => {
                 {n(project.data?.capturedLength ?? 0)} /{' '}
                 {n(project.data?.totalLength ?? 0)} m
               </p>
+            </div>
+
+            <SeparatorWithText position='LEFT' text='FILTERS' />
+
+            <div class='flex items-center gap-2 py-1'>
+              <SwitchButton
+                checked={searchParams.hideCompleted()}
+                onChange={searchParams.setHideCompleted}
+              />
+              <span class='text-md font-medium'>
+                {t('RAILINGS.HIDE_COMPLETED_RAILINGS')}
+              </span>
             </div>
           </div>
         </div>
@@ -145,7 +163,7 @@ const Project: Component<LayoutProps> = (props) => {
                       ongoingTripAmount={0}
                       railingAmount={plan.railings}
                       onToggle={() => handlePlanToggled(plan.id)}
-                      selected={selectedPlans().includes(plan.id)}
+                      selected={searchParams.selectedPlans().includes(plan.id)}
                     />
                   )}
                 </For>

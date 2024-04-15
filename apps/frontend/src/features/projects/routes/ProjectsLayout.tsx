@@ -4,9 +4,9 @@ import MapRoot from '@/components/map/MapRoot';
 import MapZoomControls from '@/components/map/MapZoomControls';
 import { LayoutProps } from '@/lib/utils';
 import { useParams } from '@solidjs/router';
-import { Component, createMemo, createSignal } from 'solid-js';
+import { Component, createMemo } from 'solid-js';
 import { useProjectRailings } from '../api';
-import { useSelectedPlans } from '../utils';
+import { useProjectSearchParams } from '../utils';
 
 const ProjectsLayout: Component<LayoutProps> = (props) => {
   const params = useParams();
@@ -14,13 +14,11 @@ const ProjectsLayout: Component<LayoutProps> = (props) => {
     return params.id;
   }, params.id);
 
-  const [hideCompletedRailings, setHideCompletedRailings] = createSignal(false);
-
-  const [selectedPlans] = useSelectedPlans();
+  const searchParams = useProjectSearchParams();
   const railings = useProjectRailings(
     projectId,
-    selectedPlans,
-    hideCompletedRailings
+    searchParams.selectedPlans,
+    searchParams.hideCompleted
   );
 
   return (
