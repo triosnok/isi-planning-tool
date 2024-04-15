@@ -4,7 +4,6 @@ import { splitProps } from 'solid-js';
 import { Separator as SeparatorPrimitive } from '@kobalte/core';
 
 import { cn } from '@/lib/utils';
-import clsx from 'clsx';
 
 const Separator: Component<SeparatorPrimitive.SeparatorRootProps> = (props) => {
   const [, rest] = splitProps(props, ['class', 'orientation']);
@@ -29,24 +28,27 @@ interface SeparatorWithTextProps extends SeparatorPrimitive.SeparatorRootProps {
 const SeparatorWithText: Component<SeparatorWithTextProps> = (props) => {
   return (
     <div
-      class={clsx('flex items-center', {
-        'justify-start': props.position === 'LEFT',
-        'justify-center': props.position === 'MIDDLE',
-        'justify-end': props.position === 'RIGHT',
-      })}
+      class={cn(
+        'flex items-center',
+        props.position === 'LEFT' && 'justify-start',
+        props.position === 'MIDDLE' && 'justify-center',
+        props.position === 'RIGHT' && 'justify-end'
+      )}
     >
       <div
-        class={clsx('w-full border-b border-gray-200 dark:border-gray-600', {
-          'w-12': props.position === 'LEFT',
-          'w-full': props.position === 'RIGHT',
-        })}
+        class={cn(
+          'w-full border-b border-gray-200 dark:border-gray-600',
+          props.position === 'LEFT' && 'w-12',
+          props.position === 'RIGHT' && 'w-full'
+        )}
       />
       <span class='px-1 text-sm text-gray-500 '>{props.text}</span>
       <div
-        class={clsx('w-full border-b border-gray-200 dark:border-gray-600', {
-          'w-12': props.position === 'RIGHT',
-          'w-full': props.position === 'LEFT',
-        })}
+        class={cn(
+          'w-full border-b border-gray-200 dark:border-gray-600',
+          props.position === 'RIGHT' && 'w-12',
+          props.position === 'LEFT' && 'w-full'
+        )}
       />
     </div>
   );
