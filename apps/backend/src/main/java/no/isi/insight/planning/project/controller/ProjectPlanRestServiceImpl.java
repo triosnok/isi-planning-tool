@@ -100,8 +100,10 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
     Optional<Vehicle> vehicle = Optional.empty();
 
     if (request.vehicleId() != null) {
-      vehicle = Optional
-        .of(this.vehicleJpaRepository.findById(request.vehicleId()).orElseThrow(() -> new RuntimeException("")));
+      vehicle = Optional.of(
+        this.vehicleJpaRepository.findById(request.vehicleId())
+          .orElseThrow(() -> new NotFoundException("Could not find vehicle with id: " + request.vehicleId()))
+      );
     }
 
     vehicle.ifPresent(plan::setVehicle);
