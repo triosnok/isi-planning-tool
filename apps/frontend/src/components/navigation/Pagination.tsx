@@ -28,8 +28,8 @@ const Pagination: Component<PaginationProps> = (props) => {
       itemComponent={(props) => (
         <PaginationPrimitive.Item
           page={props.page}
-          class={clsx('inline-flex items-center rounded border px-3 py-1', {
-            'bg-brand-blue-800 text-gray-50': props.page === currentPage(),
+          class={clsx('inline-flex items-center rounded border px-3 py-1 dark:border-gray-700', {
+            'bg-brand-blue-800  text-gray-50': props.page === currentPage(),
             'bg-white text-gray-950 transition hover:bg-gray-100 dark:bg-gray-950 dark:text-white dark:hover:bg-gray-900':
               props.page !== currentPage(),
           })}
@@ -42,11 +42,11 @@ const Pagination: Component<PaginationProps> = (props) => {
         <span class='px-3 py-1 text-gray-950 dark:text-gray-50'>...</span>
       )}
     >
-      <PaginationPrimitive.Previous class='rounded border px-4 py-1 transition hover:bg-gray-100 dark:hover:bg-gray-900'>
+      <PaginationPrimitive.Previous class='rounded border px-4 py-1 transition hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-900'>
         {t('PAGINATION.PREVIOUS')}
       </PaginationPrimitive.Previous>
       <PaginationPrimitive.Items />
-      <PaginationPrimitive.Next class='rounded border px-4 py-1 transition hover:bg-gray-100 dark:hover:bg-gray-900'>
+      <PaginationPrimitive.Next class='rounded border px-4 py-1 transition hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-900'>
         {t('PAGINATION.NEXT')}
       </PaginationPrimitive.Next>
     </PaginationPrimitive.Root>

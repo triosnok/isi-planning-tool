@@ -40,7 +40,6 @@ const Project: Component<LayoutProps> = (props) => {
   const searchParams = useProjectSearchParams();
   const [showNewTripDialog, setShowNewTripDialog] = createSignal(false);
   const trips = useTripsDetailsQuery(params.id, searchParams.selectedPlans);
-  const [hideCompletedRailings, setHideCompletedRailings] = createSignal(false);
 
   const planId = createMemo(() => {
     return searchParams.selectedPlans().length === 1
