@@ -29,7 +29,7 @@ public class PasswordResetCodeService {
   public String createCode(
       UserAccount userAccount
   ) {
-    var resetCode = NUM_CODE_GENERATOR.generateCode(8);
+    var resetCode = NUM_CODE_GENERATOR.generateCode(6);
     var confirmationCode = ALPHANUM_CODE_GENERATOR.generateCode(64);
 
     var code = new PasswordResetCode(

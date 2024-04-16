@@ -39,9 +39,9 @@ public interface TripNoteRestService {
       @RequestParam UUID tripId
   );
 
-  @DeleteExchange
+  @DeleteExchange("/{noteId}")
   ResponseEntity<TripNoteDetails> deleteNote(
-      @RequestParam UUID noteId
+      @PathVariable UUID noteId
   );
 
 }

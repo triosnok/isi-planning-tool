@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import no.isi.insight.planning.client.annotation.GenerateTypeScript;
+import no.isi.insight.planning.client.annotation.Optional;
 import no.isi.insight.planning.client.auth.view.UserRole;
 
 @Builder
@@ -12,14 +13,20 @@ import no.isi.insight.planning.client.auth.view.UserRole;
 public record UpdateUserAccountRequest(
   @NotBlank String fullName,
   @NotBlank String email,
-  String phoneNumber,
-  @NotBlank String password,
-  @NotBlank String passwordConfirmation,
+  @Optional String phoneNumber,
+  boolean changePassword,
+  @Optional String password,
+  @Optional String passwordConfirmation,
   @NotNull UserRole role
 ) {
 
   @AssertTrue
   boolean isPasswordConfirmationValid() {
-    return this.password.equals(this.passwordConfirmation);
+    return !this.changePassword || this.password.equals(this.passwordConfirmation);
+  }
+
+  @AssertTrue
+  boolean isPasswordBlank() {
+    return !this.changePassword || this.password.length() > 0;
   }
 }

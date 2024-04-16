@@ -3,7 +3,6 @@ import {
   CreateUserAccountRequest,
   TripDetails,
   UserAccountDetails,
-  UserRole,
 } from '@isi-insight/client';
 import {
   createMutation,
@@ -57,12 +56,13 @@ export const UserSchema = z
   .object({
     userId: z.string().optional(),
     imageUrl: z.string().optional(),
-    fullName: z.string(),
-    email: z.string(),
-    phoneNumber: z.string(),
+    fullName: z.string().min(1, 'Name is required'),
+    email: z.string().email('Invalid email address'),
+    phoneNumber: z.string().optional(),
     role: z.enum(['DRIVER', 'PLANNER']),
-    password: z.string().min(1),
-    passwordConfirmation: z.string(),
+    changePassword: z.boolean(),
+    password: z.string().min(1, 'Password is required').optional(),
+    passwordConfirmation: z.string().optional(),
   })
   .refine((data) => data.password === data.passwordConfirmation, {
     message: "Passwords don't match",

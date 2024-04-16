@@ -73,7 +73,7 @@ const SignIn: Component = () => {
           </Field>
 
           <div class='flex justify-end'>
-            <A class='text-sm hover:underline' href=''>
+            <A class='text-sm hover:underline' href='/forgot-password'>
               Forgot password?
             </A>
           </div>

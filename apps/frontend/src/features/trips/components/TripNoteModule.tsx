@@ -9,7 +9,14 @@ import {
   zodForm,
 } from '@modular-forms/solid';
 import { IconPencil, IconSend2, IconTrash } from '@tabler/icons-solidjs';
-import { Component, For, createMemo, createSignal } from 'solid-js';
+import {
+  Component,
+  For,
+  Show,
+  createEffect,
+  createMemo,
+  createSignal,
+} from 'solid-js';
 import { z } from 'zod';
 import { useTripNoteDetailsQuery, useTripNoteMutation } from '../api';
 import TripNoteCard from './TripNoteCard';
@@ -28,9 +35,10 @@ export type TripNoteForm = z.infer<typeof TripNoteSchema>;
 
 const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
   const notes = useTripNoteDetailsQuery(props.tripId);
-  const { create } = useTripNoteMutation(props.tripId);
+  const { create, deleteNote } = useTripNoteMutation(props.tripId);
 
   const [selectedTripNotes, setSelectedTripNotes] = createSignal<string[]>([]);
+  const [editTripNote, setEditTripNote] = createSignal<string>();
 
   const handleTripNoteToggled = (tripNoteId: string) => {
     const notes = selectedTripNotes();
@@ -68,10 +76,28 @@ const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
     }
   };
 
+  const deleteTripNote = async (id: string) => {
+    try {
+      await deleteNote.mutateAsync(id);
+      setSelectedTripNotes([]);
+      setEditTripNote(undefined);
+    } catch (error) {
+      // ignored
+    }
+  };
+
+  let noteInputElement: HTMLInputElement | undefined;
+
+  createEffect(() => {
+    if (noteInputElement) {
+      noteInputElement.focus();
+    }
+  });
+
   const { t, d } = useTranslations();
 
   return (
-    <section class='flex h-full flex-col overflow-hidden rounded-md bg-gray-50 p-2 dark:bg-gray-900 pointer-events-auto'>
+    <section class='pointer-events-auto flex h-full flex-col overflow-hidden rounded-md bg-gray-50 p-2 dark:bg-gray-900'>
       <div class='space-y-2'>
         <p class='text-2xl font-semibold'>{t('NOTES.TITLE')}</p>
 
@@ -85,6 +111,7 @@ const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
                 placeholder={t('NOTES.NOTE') + '...'}
                 value={field.value}
                 class='rounded-r-none border-r-0'
+                ref={noteInputElement}
               />
             )}
           </Field>
@@ -95,11 +122,31 @@ const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
         </Form>
 
         <div class='flex justify-between space-x-2'>
-          <Button disabled={tripNoteId() === undefined} class='w-full '>
-            <IconPencil />
-          </Button>
+          {/* Cancel button */}
+          <Show when={editTripNote() !== undefined}>
+            <Button
+              onclick={(e) => setEditTripNote(undefined)}
+              disabled={tripNoteId() === undefined}
+              class='w-full'
+            >
+              {t('GENERAL.CANCEL')}
+            </Button>
+          </Show>
+
+          {/* Edit button */}
+          <Show when={editTripNote() === undefined}>
+            <Button
+              onclick={(e) => setEditTripNote(tripNoteId())}
+              disabled={tripNoteId() === undefined}
+              class='w-full'
+            >
+              <IconPencil />
+            </Button>
+          </Show>
+
           <Button
             disabled={tripNoteId() === undefined}
+            onclick={(e) => deleteTripNote(tripNoteId()!)}
             variant='destructive'
             class='w-full'
           >
@@ -112,10 +159,18 @@ const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
         <For each={notes.data}>
           {(note) => (
             <TripNoteCard
+              tripId={props.tripId}
+              tripNoteId={note.id}
               createdAt={d(note.createdAt, DateFormat.DATETIME)}
               note={note.note}
-              onToggle={() => handleTripNoteToggled(note.id)}
+              onToggle={() => {
+                handleTripNoteToggled(note.id);
+              }}
               selected={selectedTripNotes().includes(note.id)}
+              editing={editTripNote() === note.id}
+              onEdited={() => {
+                setEditTripNote(undefined);
+              }}
             />
           )}
         </For>

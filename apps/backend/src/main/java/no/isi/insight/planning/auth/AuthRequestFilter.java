@@ -1,12 +1,15 @@
 package no.isi.insight.planning.auth;
 
 import java.io.IOException;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.WebUtils;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,6 +27,8 @@ public class AuthRequestFilter extends OncePerRequestFilter {
   private final JwtService jwtService;
   private final UserAccountJpaRepository userAccountJpaRepository;
 
+  private static final String HEADER_PREFIX = "Bearer ";
+
   @Override
   protected void doFilterInternal(
       @NonNull HttpServletRequest request,
@@ -31,18 +36,22 @@ public class AuthRequestFilter extends OncePerRequestFilter {
       @NonNull FilterChain filterChain
   ) throws ServletException, IOException {
     var header = request.getHeader("Authorization");
-    var prefix = "Bearer ";
+    var bearerToken = Optional.ofNullable(header)
+      .filter(t -> t.startsWith(HEADER_PREFIX))
+      .map(t -> t.substring(HEADER_PREFIX.length()).trim());
 
-    if (header == null || !header.startsWith(prefix)) {
+    var cookie = Optional.ofNullable(WebUtils.getCookie(request, JwtService.ACCESS_COOKIE_NAME)).map(c -> c.getValue());
+
+    if (bearerToken.isEmpty() && cookie.isEmpty()) {
       filterChain.doFilter(request, response);
       return;
     }
 
     try {
-      var token = header.substring(prefix.length());
+      var token = cookie.orElseGet(bearerToken::get);
       var parsedToken = this.jwtService.parseToken(token, TokenType.ACCESS_TOKEN);
-      var email = (String) parsedToken.getJWTClaimsSet().getClaim(TokenClaim.EMAIL.name);
-      var foundUser = this.userAccountJpaRepository.findByEmail(email);
+      var userId = UUID.fromString(parsedToken.getJWTClaimsSet().getSubject());
+      var foundUser = this.userAccountJpaRepository.findById(userId);
 
       foundUser.ifPresent(user -> {
         var userDetails = new UserAccountDetailsAdapter(user);
@@ -56,7 +65,7 @@ public class AuthRequestFilter extends OncePerRequestFilter {
       });
 
     } catch (Exception e) {
-      log.debug("Failed to parse token to identify user: {}", e.getMessage());
+      log.error("Failed to parse token to identify user: {}", e.getMessage());
     }
 
     filterChain.doFilter(request, response);

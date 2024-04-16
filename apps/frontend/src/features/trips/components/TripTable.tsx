@@ -63,7 +63,7 @@ const TripTable: Component<TripTableProps> = (props) => {
 
   return (
     <>
-      <div class='mt-4 flex flex-row items-center justify-between'>
+      <div class='mt-4 flex flex-wrap items-center justify-between gap-2'>
         <Input placeholder={t('NAVIGATION.SEARCH')} class='w-fit' />
         <Pagination
           itemsPerPage={itemsPerPage}

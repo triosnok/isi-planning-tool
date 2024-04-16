@@ -9,7 +9,8 @@ import { useTranslations } from '@/features/i18n';
 import { VehicleDetails } from '@isi-insight/client';
 import { A } from '@solidjs/router';
 import { Icon123, IconCamera } from '@tabler/icons-solidjs';
-import { Component, Show, createSignal } from 'solid-js';
+import { Component, Show, createEffect, createSignal } from 'solid-js';
+import { vehiclePreference } from '../context';
 import VehicleStatus from './VehicleStatus';
 
 export interface VehicleSelectProps {
@@ -17,15 +18,27 @@ export interface VehicleSelectProps {
   vehicles: VehicleDetails[];
   emptyText?: string;
   onChange?: (vehicle?: VehicleDetails) => void;
+  preferedVehicle?: boolean;
+  store?: boolean;
 }
-
 const VehicleSelect: Component<VehicleSelectProps> = (props) => {
+  const { selectedVehicle, setSelectedVehicle } = vehiclePreference();
   const [value, setValue] = createSignal(props.value);
 
   const handleChange = (value?: VehicleDetails) => {
-    setValue(value);
+    if (props.store) {
+      setSelectedVehicle(value);
+    } else {
+      setValue(value);
+    }
     props.onChange?.(value);
   };
+
+  createEffect(() => {
+    if (props.store || props.preferedVehicle) {
+      setValue(selectedVehicle());
+    }
+  });
 
   const hasVehicles = () => props.vehicles.length > 0;
 
@@ -44,7 +57,7 @@ const VehicleSelect: Component<VehicleSelectProps> = (props) => {
       >
         <SelectTrigger class='h-20'>
           <Show
-            when={value()}
+            when={props.store ? selectedVehicle() : value()}
             fallback={<NoVehiclesSelected emptyText={props.emptyText} />}
           >
             {(selectedVehicle) => (
@@ -54,7 +67,6 @@ const VehicleSelect: Component<VehicleSelectProps> = (props) => {
             )}
           </Show>
         </SelectTrigger>
-
         <SelectContent class='max-h-48 overflow-y-auto' />
       </Select>
     </Show>

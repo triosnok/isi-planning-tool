@@ -1,4 +1,3 @@
-import ProjectCard from '@/features/projects/components/ProjectCard';
 import {
   Accordion,
   AccordionContent,
@@ -7,29 +6,47 @@ import {
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useProfile } from '@/features/auth/api';
+import { DateFormat, useTranslations } from '@/features/i18n';
+import ProjectCard from '@/features/projects/components/ProjectCard';
+import { useVehiclesQuery } from '@/features/vehicles/api';
+import VehicleSelect from '@/features/vehicles/components/VehicleSelect';
+import { vehiclePreference } from '@/features/vehicles/context';
 import { A } from '@solidjs/router';
 import { IconPlus } from '@tabler/icons-solidjs';
-import { Component, For } from 'solid-js';
+import { Component, For, Show } from 'solid-js';
 import { useProjectsQuery } from '../api';
-import dayjs from 'dayjs';
-import { DateFormat, useTranslations } from '@/features/i18n';
 
 const Projects: Component = () => {
   const ongoingProjects = useProjectsQuery('ONGOING');
   const upcomingProjects = useProjectsQuery('UPCOMING');
   const previousProjects = useProjectsQuery('PREVIOUS');
   const { t, d } = useTranslations();
+  const profile = useProfile();
+  const vehicles = useVehiclesQuery();
+  const { setSelectedVehicle } = vehiclePreference();
 
   return (
-    <div>
+    <>
       <div class='space-y-2 p-2'>
         <div class='flex items-center justify-between'>
           <h1 class='text-4xl font-bold'>{t('PROJECTS.TITLE')}</h1>
-          <A href='/projects/new'>
-            <Button>
-              <IconPlus />
-            </Button>
-          </A>
+          <Show when={profile.data?.role == 'PLANNER'}>
+            <A href='/projects/new'>
+              <Button>
+                <IconPlus />
+              </Button>
+            </A>
+          </Show>
+        </div>
+        <div>
+          <p class='ml-1 font-semibold'>{t('VEHICLES.PREFERED_VEHICLE')}</p>
+          <VehicleSelect
+            vehicles={vehicles.data ?? []}
+            onChange={setSelectedVehicle}
+            emptyText={t('VEHICLES.NO_VEHICLE_SELECTED')}
+            store={true}
+          />
         </div>
         <Input placeholder={t('NAVIGATION.SEARCH')} />
       </div>
@@ -110,7 +127,7 @@ const Projects: Component = () => {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-    </div>
+    </>
   );
 };
 

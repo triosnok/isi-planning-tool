@@ -1,8 +1,15 @@
-import { useProfile } from '@/features/auth/api';
+import { useProfile, useRefreshTokenQuery } from '@/features/auth/api';
 import { useTranslations } from '@/features/i18n';
 import { AuthStatus } from '@/lib/constants';
 import { Navigate } from '@solidjs/router';
-import { Component, JSX, Match, Switch, createMemo } from 'solid-js';
+import {
+  Component,
+  JSX,
+  Match,
+  Switch,
+  createEffect,
+  createMemo,
+} from 'solid-js';
 import { RouteAuthentication } from '.';
 
 interface RouteGuardProps {
@@ -14,6 +21,7 @@ const RouteGuard: Component<RouteGuardProps> = (props) => {
   const profileQuery = useProfile();
   const guard = props.authentication;
   const { t } = useTranslations();
+  useRefreshTokenQuery(); // causes token refreshes to happen in the background
 
   const auth = createMemo(() => {
     const data = profileQuery.data;
@@ -21,8 +29,7 @@ const RouteGuard: Component<RouteGuardProps> = (props) => {
     const isAuthenticated = data !== undefined && data !== null;
     const isAuthorized =
       guard.status === AuthStatus.SIGNED_OUT ||
-      (data !== undefined &&
-        data !== null &&
+      (isAuthenticated &&
         (guard.roles === undefined || guard.roles.includes(data.role)));
 
     return {

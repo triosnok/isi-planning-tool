@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
 import no.isi.insight.planning.client.geometry.Geometry;
 import no.isi.insight.planning.client.project.view.RoadRailing;
+import no.isi.insight.planning.utility.JdbcUtils;
 
 @Repository
 @RequiredArgsConstructor
@@ -49,8 +50,18 @@ public class RoadRailingJdbcRepository {
             ON t.fk_project_plan_id = pp.project_plan_id
           WHERE pp.fk_project_id = :projectId
           GROUP BY trc.fk_road_railing_id, trc.fk_trip_id, t.fk_project_plan_id, pp.fk_project_id
+        ),
+        last_capture AS (
+          SELECT
+            trc.fk_road_railing_id,
+            MAX(trc.captured_at) AS captured_at
+          FROM trip_railing_capture trc
+          GROUP BY trc.fk_road_railing_id
         )
         SELECT
+          rr.road_railing_id,
+          rr.length,
+          lc.captured_at,
           ST_AsText(ST_Force2D(rr.geometry)) AS wkt,
           ST_SRID(rr.geometry) AS srid,
           (trc.captured_length / CEIL(rr.length)) * 100 AS capture_grade
@@ -63,6 +74,8 @@ public class RoadRailingJdbcRepository {
           ON pp.fk_project_id = p.project_id
         LEFT JOIN trip_railings trc
           ON rr.road_railing_id = trc.fk_road_railing_id
+        LEFT JOIN last_capture lc
+          ON rr.road_railing_id = lc.fk_road_railing_id
         WHERE 1=1
           AND (p.project_id = :projectId)
           AND (COALESCE(:planIds, NULL) IS NULL OR pp.project_plan_id::text IN (:planIds))
@@ -81,11 +94,14 @@ public class RoadRailingJdbcRepository {
       sql,
       params,
       (rs, i) -> new RoadRailing(
+        rs.getLong("road_railing_id"),
         new Geometry(
           rs.getString("wkt"),
           rs.getInt("srid")
         ),
-        rs.getDouble("capture_grade")
+        rs.getDouble("length"),
+        rs.getDouble("capture_grade"),
+        JdbcUtils.getNullableDate(rs, "captured_at")
       )
     );
   }

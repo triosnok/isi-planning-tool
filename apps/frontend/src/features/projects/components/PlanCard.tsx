@@ -1,4 +1,4 @@
-import { useTranslations } from '@/features/i18n';
+import { NumberFormat, useTranslations } from '@/features/i18n';
 import { cn } from '@/lib/utils';
 import { IconCar, IconPencil, IconPoint } from '@tabler/icons-solidjs';
 import { Component } from 'solid-js';
@@ -44,7 +44,8 @@ const PlanCard: Component<PlanCardProps> = (props) => {
                 'text-success-700 text-xs'
               )}
             >
-              {props.ongoingTripAmount} {t('TRIPS.ONGOING_TRIPS')}
+              {props.ongoingTripAmount}{' '}
+              {t('TRIPS.ONGOING_TRIPS')?.toLowerCase()}
             </p>
             <h3 class='text-xl font-semibold'>
               {props.startsAt} - {props.endsAt}
@@ -62,7 +63,7 @@ const PlanCard: Component<PlanCardProps> = (props) => {
           <p>
             {props.railingAmount} {t('RAILINGS.TITLE')}
           </p>
-          <p>{n(props.length)} m</p>
+          <p>{n(props.length, NumberFormat.INTEGER)} m</p>
         </div>
       </div>
     </div>

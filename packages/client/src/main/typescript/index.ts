@@ -125,8 +125,11 @@ export interface ProjectPlanDetails {
 }
 
 export interface RoadRailing {
+    id: number;
     geometry: Geometry;
+    length: number;
     captureGrade: number;
+    capturedAt: DateAsString;
 }
 
 export interface RoadSegmentDetails {
@@ -179,6 +182,10 @@ export interface TripNoteDetails {
     createdAt: DateAsString;
 }
 
+export interface UpdateTripNoteRequest {
+    note: string;
+}
+
 export interface UpdateTripRequest {
     endedAt: DateAsString;
     gnssLog: string;
@@ -198,6 +205,7 @@ export interface UpdateUserAccountRequest {
     fullName: string;
     email: string;
     phoneNumber: string;
+    changePassword: boolean;
     password: string;
     passwordConfirmation: string;
     role: UserRole;
