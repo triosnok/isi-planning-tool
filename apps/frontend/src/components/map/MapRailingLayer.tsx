@@ -1,11 +1,8 @@
 import { RoadRailing } from '@isi-insight/client';
-import { Feature } from 'ol';
 import WKT from 'ol/format/WKT';
 import Layer from 'ol/layer/Layer';
 import WebGLVectorLayerRenderer from 'ol/renderer/webgl/VectorLayer';
 import VectorSource from 'ol/source/Vector';
-import Stroke from 'ol/style/Stroke';
-import Style from 'ol/style/Style';
 import { WebGLStyle } from 'ol/style/webgl';
 import { Component, createEffect, onCleanup } from 'solid-js';
 import { useMap } from './MapRoot';
@@ -45,23 +42,13 @@ const MapRailingLayer: Component<MapRailingLayerProps> = (props) => {
   };
 
   createEffect(() => {
-    const polylines = props.railings?.map((railing) => {
-      const geom = fmt.readGeometry(railing.geometry.wkt);
-      const feature = new Feature(geom);
-
-      feature.set('COLOR', getRailingColor(railing.captureGrade));
-
-      feature.setStyle(
-        new Style({
-          stroke: new Stroke({
-            color: getRailingColor(railing.captureGrade),
-            width: 5,
-          }),
-        })
-      );
-
-      return feature;
-    });
+    const polylines = props.railings
+      ?.map((railing) => {
+        const feature = fmt.readFeature(railing.geometry.wkt);
+        feature.set('COLOR', getRailingColor(railing.captureGrade));
+        return feature;
+      })
+      .filter(Boolean) as any;
 
     const lg = new WebGLLayer({
       source: new VectorSource({ features: polylines }),
