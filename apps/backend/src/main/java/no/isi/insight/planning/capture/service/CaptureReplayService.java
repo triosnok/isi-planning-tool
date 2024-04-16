@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.locationtech.jts.geom.Point;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import no.isi.insight.planning.capture.event.CaptureDetailsEvent;
 import no.isi.insight.planning.capture.model.ProcessedLogEntry;
 import no.isi.insight.planning.client.capture.view.CaptureDetails;
 import no.isi.insight.planning.client.trip.view.CameraPosition;
@@ -40,6 +42,7 @@ public class CaptureReplayService {
   private final TripRailingCaptureJpaRepository railingCaptureJpaRepository;
   private final RoadRailingJpaRepository roadRailingJpaRepository;
   private final GeometryService geometryService;
+  private final ApplicationEventPublisher eventPublisher;
   private final Map<UUID, List<SseEmitter>> emitters = new HashMap<>();
   private final Map<UUID, CaptureLogReplay> replays = new HashMap<>();
   private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
@@ -100,6 +103,13 @@ public class CaptureReplayService {
         point.setSRID(25833);
 
         var match = matcher.matchRailing(point, logEntry.heading());
+
+        this.eventPublisher.publishEvent(
+          new CaptureDetailsEvent(
+            trip,
+            logReplay.getCaptureDetails()
+          )
+        );
 
         if (match.isEmpty()) {
           return;
