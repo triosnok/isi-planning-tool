@@ -20,7 +20,7 @@ const Separator: Component<SeparatorPrimitive.SeparatorRootProps> = (props) => {
   );
 };
 
-interface SeparatorWithTextProps extends SeparatorPrimitive.SeparatorRootProps {
+interface SeparatorWithTextProps {
   position: 'LEFT' | 'MIDDLE' | 'RIGHT';
   text: string;
 }
