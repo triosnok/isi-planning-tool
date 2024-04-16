@@ -23,14 +23,11 @@ import {
   IconVideo,
 } from '@tabler/icons-solidjs';
 import { Component, Show, createMemo, createSignal } from 'solid-js';
-import {
-  useTripCaptureAction,
-  useTripCaptureDetails,
-  useTripDetailsQuery,
-} from '../api';
+import { useTripDetailsQuery } from '../api';
 import TripNoteModule from '../components/TripNoteModule';
 import TripSummaryDialog from '../components/TripSummaryDialog';
 import { ImageStatus, getImageAnalysis } from '../utils';
+import { useTripCaptureAction, useTripCaptureDetails } from '../api/capture';
 
 const Trip: Component = () => {
   const params = useParams();

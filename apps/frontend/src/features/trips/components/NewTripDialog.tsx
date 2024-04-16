@@ -20,8 +20,9 @@ import { VehicleDetails } from '@isi-insight/client';
 import { useNavigate } from '@solidjs/router';
 import { Component, createEffect, createSignal } from 'solid-js';
 import { z } from 'zod';
-import { useCaptureLogsQuery, useTripMutation } from '../api';
+import { useTripMutation } from '../api';
 import CaptureLogSelect from './CaptureLogSelect';
+import { useCaptureLogsQuery } from '../api/capture';
 
 export interface NewTripDialogProps {
   open: boolean;

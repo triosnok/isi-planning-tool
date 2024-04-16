@@ -109,7 +109,7 @@ public class CaptureRestServiceImpl implements CaptureRestService {
   }
 
   @Override
-  // @DriverAuthorization
+  @DriverAuthorization
   public SseEmitter streamCapture(
       UUID tripId
   ) {

@@ -65,7 +65,7 @@ public class ProjectJdbcRepository {
       WHERE 1=1
         AND (:projectId IS NULL OR p.project_id = :projectId::uuid)
         AND (:projectStatus IS NULL OR CASE
-            WHEN :projectStatus = 'ONGOING' THEN NOW() BETWEEN p.starts_at AND p.ends_at
+            WHEN :projectStatus = 'ONGOING' THEN (NOW() >= p.starts_at AND NOW() <= COALESCE(p.ends_at, NOW()))
             WHEN :projectStatus = 'UPCOMING' THEN NOW() < p.starts_at
             WHEN :projectStatus = 'PREVIOUS' THEN NOW() > p.ends_at
           END)

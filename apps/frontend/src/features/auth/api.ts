@@ -1,4 +1,4 @@
-import { ACCESS_TOKEN_LOCALSTORAGE_KEY, CacheKey } from '@/api';
+import { CacheKey } from '@/api';
 import type {
   ForgotPasswordRequest,
   GetConfirmationCodeRequest,
@@ -22,12 +22,12 @@ export const useProfile = () => {
     queryKey: [CacheKey.USER_PROFILE],
     staleTime: Infinity,
     queryFn: async () => {
-      if (localStorage.getItem(ACCESS_TOKEN_LOCALSTORAGE_KEY) === null) {
+      try {
+        const response = await axios.get<UserProfile>('api/v1/auth/profile');
+        return response.data;
+      } catch (error) {
         return null;
       }
-
-      const response = await axios.get<UserProfile>('api/v1/auth/profile');
-      return response.data;
     },
   }));
 };
@@ -47,8 +47,7 @@ export const useSignInMutation = () => {
 
       return response.data;
     },
-    onSuccess: (response) => {
-      localStorage.setItem(ACCESS_TOKEN_LOCALSTORAGE_KEY, response.accessToken);
+    onSuccess: () => {
       qc.refetchQueries({ queryKey: [CacheKey.USER_PROFILE] });
     },
   }));
@@ -57,7 +56,7 @@ export const useSignInMutation = () => {
 /**
  * Hook for refreshing the access token.
  */
-export const useRefreshTokenMutation = () => {
+export const useRefreshTokenQuery = () => {
   const qc = useQueryClient();
 
   return createQuery(() => ({
@@ -67,8 +66,7 @@ export const useRefreshTokenMutation = () => {
       const response = await axios.get<SignInResponse>('/api/v1/auth/refresh');
       return response.data;
     },
-    onSuccess: (response) => {
-      localStorage.setItem(ACCESS_TOKEN_LOCALSTORAGE_KEY, response.accessToken);
+    onSuccess: () => {
       qc.invalidateQueries({ queryKey: [CacheKey.USER_PROFILE] });
     },
   }));
@@ -81,9 +79,8 @@ export const useSignOutMutation = () => {
   const qc = useQueryClient();
 
   return createMutation(() => ({
-    mutationFn: async () => axios.post('/api/v1/auth/sign-out'),
+    mutationFn: async () => await axios.post('/api/v1/auth/sign-out'),
     onSuccess: () => {
-      localStorage.removeItem(ACCESS_TOKEN_LOCALSTORAGE_KEY);
       qc.invalidateQueries({ queryKey: [CacheKey.USER_PROFILE] });
     },
   }));

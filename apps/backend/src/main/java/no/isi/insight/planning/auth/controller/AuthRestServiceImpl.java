@@ -1,6 +1,7 @@
 package no.isi.insight.planning.auth.controller;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,12 @@ import org.springframework.web.util.WebUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import no.isi.insight.planning.auth.TokenType;
+import no.isi.insight.planning.auth.UserAccountDetailsAdapter;
+import no.isi.insight.planning.auth.annotation.Authenticated;
+import no.isi.insight.planning.auth.service.JwtService;
+import no.isi.insight.planning.auth.service.PasswordResetCodeService;
+import no.isi.insight.planning.auth.service.UserAccountService;
 import no.isi.insight.planning.client.auth.AuthRestService;
 import no.isi.insight.planning.client.auth.view.ForgotPasswordRequest;
 import no.isi.insight.planning.client.auth.view.GetConfirmationCodeRequest;
@@ -21,13 +28,6 @@ import no.isi.insight.planning.client.auth.view.UserProfile;
 import no.isi.insight.planning.client.auth.view.UserRole;
 import no.isi.insight.planning.error.model.UnauthorizedException;
 import no.isi.insight.planning.integration.mail.MailService;
-import no.isi.insight.planning.auth.TokenClaim;
-import no.isi.insight.planning.auth.TokenType;
-import no.isi.insight.planning.auth.UserAccountDetailsAdapter;
-import no.isi.insight.planning.auth.annotation.Authenticated;
-import no.isi.insight.planning.auth.service.JwtService;
-import no.isi.insight.planning.auth.service.PasswordResetCodeService;
-import no.isi.insight.planning.auth.service.UserAccountService;
 import no.isi.insight.planning.repository.UserAccountJpaRepository;
 import no.isi.insight.planning.utility.RequestUtils;
 
@@ -76,7 +76,8 @@ public class AuthRestServiceImpl implements AuthRestService {
       var response = RequestUtils.getServletResponse();
       var accessToken = this.jwtService.generateToken(authentication, TokenType.ACCESS_TOKEN);
       var refreshToken = this.jwtService.generateToken(authentication, TokenType.REFRESH_TOKEN);
-      response.addCookie(this.jwtService.createRefreshTokenCookie(refreshToken));
+      response.addCookie(this.jwtService.createTokenCookie(TokenType.ACCESS_TOKEN, accessToken));
+      response.addCookie(this.jwtService.createTokenCookie(TokenType.REFRESH_TOKEN, refreshToken));
       return ResponseEntity.ok(new SignInResponse(accessToken));
     } catch (Exception e) {
       log.error("Failed to generate token for user [email={}]: {}", request.email(), e.getMessage());
@@ -95,8 +96,8 @@ public class AuthRestServiceImpl implements AuthRestService {
 
     try {
       var parsed = this.jwtService.parseToken(refreshToken.get().getValue(), TokenType.REFRESH_TOKEN);
-      var email = (String) parsed.getJWTClaimsSet().getClaim(TokenClaim.EMAIL.name);
-      var foundUser = this.userAccountJpaRepository.findByEmail(email);
+      var id = UUID.fromString(parsed.getJWTClaimsSet().getSubject());
+      var foundUser = this.userAccountJpaRepository.findById(id);
 
       if (foundUser.isEmpty()) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -110,6 +111,8 @@ public class AuthRestServiceImpl implements AuthRestService {
       );
 
       var accessToken = this.jwtService.generateToken(authentication, TokenType.ACCESS_TOKEN);
+      var response = RequestUtils.getServletResponse();
+      response.addCookie(this.jwtService.createTokenCookie(TokenType.ACCESS_TOKEN, accessToken));
       return ResponseEntity.ok(new SignInResponse(accessToken));
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -125,11 +128,16 @@ public class AuthRestServiceImpl implements AuthRestService {
       return ResponseEntity.ok().build();
     }
 
-    var cookie = this.jwtService.createRefreshTokenCookie(refreshToken.get().getValue());
-    cookie.setMaxAge(0);
+    var refreshCookie = this.jwtService.createTokenCookie(TokenType.REFRESH_TOKEN, "");
+    refreshCookie.setMaxAge(0);
+
+    var accessCookie = this.jwtService.createTokenCookie(TokenType.ACCESS_TOKEN, "");
+    accessCookie.setMaxAge(0);
 
     var response = RequestUtils.getServletResponse();
-    response.addCookie(cookie);
+
+    response.addCookie(refreshCookie);
+    response.addCookie(accessCookie);
 
     return ResponseEntity.ok().build();
   }
