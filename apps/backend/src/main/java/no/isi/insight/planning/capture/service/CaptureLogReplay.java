@@ -135,7 +135,7 @@ public class CaptureLogReplay {
         this.previousEntry.position(),
         this.previousEntry.heading(),
         0.99f,
-        this.playing,
+        this.playing && !this.finished(),
         this.metersCaptured,
         this.images
       )

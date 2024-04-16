@@ -139,13 +139,10 @@ public class CaptureReplayService {
     this.executorService.submit(() -> {
       while (this.replays.containsKey(tripId)) {
         try {
-          if (replay.finished()) {
-            this.stopReplay(tripId);
-            log.info("Finished replay for trip: {}", tripId);
-            break;
+          if (!replay.finished()) {
+            replay.replaySecond();
           }
 
-          replay.replaySecond();
           var cd = replay.getCaptureDetails();
 
           if (cd.isPresent() && this.emitters.containsKey(tripId)) {
@@ -158,6 +155,12 @@ public class CaptureReplayService {
             for (var emitter : this.emitters.get(tripId)) {
               emitter.send(event);
             }
+          }
+
+          if (replay.finished()) {
+            this.stopReplay(tripId);
+            log.info("Finished replay for trip: {}", tripId);
+            break;
           }
 
           Thread.sleep(1000L);
