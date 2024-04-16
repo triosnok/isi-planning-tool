@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.locationtech.jts.geom.LineString;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -23,10 +24,10 @@ import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObject.RoadSegment
 import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObject.Side;
 import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObjectType;
 import no.isi.insight.planning.model.RoadDirection;
-import no.isi.insight.planning.model.RoadRailing;
 import no.isi.insight.planning.model.RoadSide;
-import no.isi.insight.planning.repository.RoadRailingJpaRepository;
+import no.isi.insight.planning.model.UserAccount;
 import no.isi.insight.planning.utility.GeometryUtils;
+import no.isi.insight.planning.utility.RequestUtils;
 
 @Slf4j
 @Service
@@ -34,7 +35,6 @@ import no.isi.insight.planning.utility.GeometryUtils;
 public class RailingImportService {
   private final NvdbImportService importService;
   private final NamedParameterJdbcTemplate jdbcTemplate;
-  private final RoadRailingJpaRepository railingJpaRepository;
   private final GeometryService geometryService;
 
   // language=sql
@@ -73,14 +73,24 @@ public class RailingImportService {
         last_imported_at = NOW()
     """;
 
+  // language=sql
+  private static final String INSERT_PROJECT_PLAN_RAILING_QUERY = """
+      INSERT INTO project_plan_road_railing (fk_project_plan_id, fk_road_railing_id, fk_created_by_user_id)
+      VALUES (:planId, :railingId, :userId)
+    """;
+
   @Transactional(readOnly = false)
-  public List<RoadRailing> importRailings(
-      String url
+  public void importRailings(
+      String url,
+      UUID planId
   ) {
     log.info("Importing railings from NVDB...");
     var railings = this.importService.importRoadObjects(url, NvdbRoadObjectType.RAILING, Map.of("inkluder", "alle"));
 
+    var importedByUserId = RequestUtils.getRequestingUserAccount().map(UserAccount::getUserAccountId);
+
     var railingParams = new ArrayList<MapSqlParameterSource>(railings.size());
+    var planJoinParams = new ArrayList<MapSqlParameterSource>(railings.size());
     var roadSystemParams = new ArrayList<MapSqlParameterSource>();
     var roadSegmentsParams = new ArrayList<MapSqlParameterSource>();
     var railingIds = new ArrayList<Long>();
@@ -120,6 +130,11 @@ public class RailingImportService {
       railingParams.add(this.mapRailingParams(railing, geometryChecker.getGeometry()));
       roadSystemParams.addAll(this.mapRoadSystemParams(railing));
       roadSegmentsParams.addAll(this.mapRoadSegmentParams(railing.id(), segments));
+      planJoinParams.add(
+        new MapSqlParameterSource(
+          Map.of("planId", planId, "railingId", railing.id(), "userId", importedByUserId.orElse(null))
+        )
+      );
     }
 
     log.info("{} of the imported railings were flipped", flipped);
@@ -127,8 +142,8 @@ public class RailingImportService {
     this.jdbcTemplate.batchUpdate(UPSERT_ROAD_RAILING_QUERY, railingParams.toArray(MapSqlParameterSource[]::new));
     this.jdbcTemplate.batchUpdate(UPSERT_ROAD_SYSTEM_QUERY, roadSystemParams.toArray(MapSqlParameterSource[]::new));
     this.jdbcTemplate.batchUpdate(UPSERT_ROAD_SEGMENT_QUERY, roadSegmentsParams.toArray(MapSqlParameterSource[]::new));
-
-    return this.railingJpaRepository.findAllByIds(railingIds);
+    this.jdbcTemplate
+      .batchUpdate(INSERT_PROJECT_PLAN_RAILING_QUERY, planJoinParams.toArray(MapSqlParameterSource[]::new));
   }
 
   private MapSqlParameterSource mapRailingParams(
