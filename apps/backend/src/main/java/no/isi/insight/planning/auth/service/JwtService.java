@@ -25,6 +25,7 @@ import no.isi.insight.planning.error.model.UnauthorizedException;
 public class JwtService {
   private final JwtProperties properties;
 
+  public static final String ACCESS_COOKIE_NAME = "access-token";
   public static final String REFRESH_COOKIE_NAME = "refresh-token";
 
   /**
@@ -93,22 +94,29 @@ public class JwtService {
   }
 
   /**
-   * Creates a cookie for the given refresh token.
+   * Creates a cookie for the given token.
    * 
+   * @param type the token type to create a cookie for
    * @param token the refresh token to create a cookie for
    * 
    * @return the created cookie
    */
-  public Cookie createRefreshTokenCookie(
+  public Cookie createTokenCookie(
+      TokenType type,
       String token
   ) {
+    var name = switch (type) {
+      case ACCESS_TOKEN -> ACCESS_COOKIE_NAME;
+      case REFRESH_TOKEN -> REFRESH_COOKIE_NAME;
+    };
+
     var cookie = new Cookie(
-      REFRESH_COOKIE_NAME,
+      name,
       token
     );
 
     cookie.setHttpOnly(true);
-    Long durationSeconds = this.properties.getTokenDuration(TokenType.REFRESH_TOKEN).getSeconds();
+    Long durationSeconds = this.properties.getTokenDuration(type).getSeconds();
     cookie.setMaxAge(durationSeconds.intValue());
     cookie.setPath("/");
 
