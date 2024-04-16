@@ -7,9 +7,19 @@
     "CONFIRM_PASSWORD": "Confirm password",
     "FORGOT_PASSWORD": "Forgot password?",
     "RESET_PASSWORD": {
+      "TITLE": "Reset password",
+      "RESET_YOUR_PASSWORD": "Reset your password",
+      "PLEASE_ENTER_EMAIL": "Please enter the e-mail address you'd like your password reset code sent to",
+      "SEND_CODE": "Send code",
+      "ENTER_CONFIRMATION_CODE": "Enter confirmation code",
+      "PLEASE_ENTER_CONFIRMATION_CODE": "Please enter the confirmation code that was sent to your e-mail at",
+      "NOT_YOU": "(Not you?)",
       "CONFIRMATION_CODE": "Confirmation code",
-      "SEND_CODE": "Send confirmation code",
-      "TITLE": "Reset password"
+      "CONFIRM_CODE": "Confirm code",
+      "ENTER_NEW_PASSWORD": "Enter new password",
+      "PLEASE_ENTER_NEW_PASSWORD": "Please enter a new password",
+      "NEW_PASSWORD": "New password",
+      "CONFIRM_NEW_PASSWORD": "Confirm new password"
     }
   },
   "DEVIATIONS": {
