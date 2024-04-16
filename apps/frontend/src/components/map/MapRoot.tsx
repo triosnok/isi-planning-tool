@@ -1,5 +1,5 @@
 import { Map, View } from 'ol';
-import TileLayer from 'ol/layer/Tile';
+import TileLayer from 'ol/layer/WebGLTile';
 import { Projection } from 'ol/proj';
 import { XYZ } from 'ol/source';
 import { TileGrid } from 'ol/tilegrid';
@@ -75,7 +75,7 @@ export const MapRoot: Component<{
         center: [124382.31086361589, 6957716.86008026],
         zoom: 8,
         maxZoom: 16,
-        minZoom: 4,
+        minZoom: 3,
         projection: EPSG25833,
       }),
     });
