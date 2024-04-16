@@ -57,7 +57,7 @@ public class RoadRailingJdbcRepository {
             MAX(trc.captured_at) AS captured_at
           FROM trip_railing_capture trc
           GROUP BY trc.fk_road_railing_id
-        ),
+        )
         SELECT
           rr.road_railing_id,
           rr.length,
