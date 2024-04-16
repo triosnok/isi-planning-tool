@@ -62,6 +62,7 @@ public class ProjectPlanJdbcRepository {
         AND (:id IS NULL OR pp.project_plan_id = :id::uuid)
         AND (:projectId IS NULL OR pp.fk_project_id = :projectId::uuid)
         AND (:vehicleId IS NULL OR pp.fk_vehicle_id = :vehicleId::uuid)
+      ORDER BY pp.starts_at ASC
     """;
 
   private static final RowMapper<ProjectPlanDetails> PLAN_DETAILS_MAPPER = (rs, i) -> {
