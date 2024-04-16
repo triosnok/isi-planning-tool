@@ -64,6 +64,7 @@ public class UserAccountService {
       String email,
       String phone,
       String password,
+      Boolean changePassword,
       UserAccountRole role
   ) {
 
@@ -74,8 +75,10 @@ public class UserAccountService {
     userAccount.setEmail(email);
     userAccount.setPhoneNumber(phone);
 
-    var encodedPassword = this.passwordEncoder.encode(password);
-    userAccount.setPassword(encodedPassword);
+    if (changePassword) {
+      var encodedPassword = this.passwordEncoder.encode(password);
+      userAccount.setPassword(encodedPassword);
+    }
 
     userAccount.setRole(role);
 

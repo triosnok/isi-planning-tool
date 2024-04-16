@@ -82,9 +82,8 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
 
     vehicle.ifPresent(plan::setVehicle);
 
-    var railings = this.railingImportService.importRailings(request.importUrl());
-    railings.forEach(plan::addRailing);
     var savedPlan = this.projectPlanJpaRepository.save(plan);
+    this.railingImportService.importRailings(request.importUrl(), savedPlan.getId());
     var planDetails = this.projectPlanJdbcRepository.findById(savedPlan.getId());
 
     return ResponseEntity.ok(planDetails.get());
@@ -100,8 +99,10 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
     Optional<Vehicle> vehicle = Optional.empty();
 
     if (request.vehicleId() != null) {
-      vehicle = Optional
-        .of(this.vehicleJpaRepository.findById(request.vehicleId()).orElseThrow(() -> new RuntimeException("")));
+      vehicle = Optional.of(
+        this.vehicleJpaRepository.findById(request.vehicleId())
+          .orElseThrow(() -> new NotFoundException("Could not find vehicle with id: " + request.vehicleId()))
+      );
     }
 
     vehicle.ifPresent(plan::setVehicle);

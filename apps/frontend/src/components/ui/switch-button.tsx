@@ -5,21 +5,21 @@ import { Switch as SwitchPrimitive } from '@kobalte/core';
 
 import { cn } from '@/lib/utils';
 
-interface SwitchProps extends SwitchPrimitive.SwitchRootProps {
+interface SwitchButtonProps extends SwitchPrimitive.SwitchRootProps {
   label?: string;
   errorMessage?: string;
 }
 
-const Switch: Component<SwitchProps> = (props) => {
+const SwitchButton: Component<SwitchButtonProps> = (props) => {
   const [, rest] = splitProps(props, ['label']);
   return (
     <SwitchPrimitive.Root {...rest}>
       <SwitchPrimitive.Input />
       <div class='items-top flex space-x-2'>
-        <SwitchPrimitive.Control class='bg-gray-200 focus-visible:ring-gray-900 focus-visible:ring-offset-gray-50 data-[checked]:bg-brand-blue-800 peer inline-flex h-[24px] w-[44px] shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'>
+        <SwitchPrimitive.Control class='data-[checked]:bg-brand-blue-800 dark:data-[checked]:bg-brand-blue-800 peer inline-flex h-[24px] w-[44px] shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent bg-gray-200 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-800'>
           <SwitchPrimitive.Thumb
             class={cn(
-              'bg-gray-50 pointer-events-none block size-5 translate-x-0 rounded-full shadow-lg ring-0 transition-transform data-[checked]:translate-x-5'
+              'pointer-events-none block size-5 translate-x-0 rounded-full bg-gray-50 shadow-lg ring-0 transition-transform data-[checked]:translate-x-5'
             )}
           />
         </SwitchPrimitive.Control>
@@ -40,4 +40,5 @@ const Switch: Component<SwitchProps> = (props) => {
   );
 };
 
-export { Switch };
+export { SwitchButton };
+

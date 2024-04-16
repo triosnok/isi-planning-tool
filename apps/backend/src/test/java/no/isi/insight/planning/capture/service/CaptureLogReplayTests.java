@@ -63,6 +63,28 @@ class CaptureLogReplayTests {
   }
 
   @Test
+  void isNotActiveWhenFinished() {
+    var log = this.generateLog();
+    var replay = new CaptureLogReplay(
+      log,
+      1,
+      (logEntry, logReplay) -> {}
+    );
+
+    replay.resume();
+
+    var details = replay.getCaptureDetails();
+    assertEquals(true, details.get().activeCapture());
+
+    while (!replay.finished()) {
+      replay.replaySecond();
+    }
+
+    details = replay.getCaptureDetails();
+    assertEquals(false, details.get().activeCapture());
+  }
+
+  @Test
   void canPause() {
     var log = this.generateLog();
     var replay = new CaptureLogReplay(

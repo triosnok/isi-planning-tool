@@ -1,12 +1,12 @@
 import Header from '@/components/layout/Header';
 import MapRailingLayer from '@/components/map/MapRailingLayer';
 import MapRoot from '@/components/map/MapRoot';
+import MapZoomControls from '@/components/map/MapZoomControls';
 import { LayoutProps } from '@/lib/utils';
 import { useParams } from '@solidjs/router';
 import { Component, createMemo } from 'solid-js';
 import { useProjectRailings } from '../api';
-import MapZoomControls from '@/components/map/MapZoomControls';
-import { useSelectedPlans } from '../utils';
+import { useProjectSearchParams } from '../utils';
 
 const ProjectsLayout: Component<LayoutProps> = (props) => {
   const params = useParams();
@@ -14,8 +14,12 @@ const ProjectsLayout: Component<LayoutProps> = (props) => {
     return params.id;
   }, params.id);
 
-  const [selectedPlans] = useSelectedPlans();
-  const railings = useProjectRailings(projectId, selectedPlans);
+  const searchParams = useProjectSearchParams();
+  const railings = useProjectRailings(
+    projectId,
+    searchParams.selectedPlans,
+    searchParams.hideCompleted
+  );
 
   return (
     <div class='flex h-svh w-svw flex-col overflow-hidden'>

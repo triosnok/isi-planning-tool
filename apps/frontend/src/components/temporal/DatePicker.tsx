@@ -156,9 +156,8 @@ const DatePicker: Component<DatePickerProps> = (props) => {
                             'ring-brand-blue m-0.5 flex aspect-square w-8 items-center justify-center rounded-md ring-offset-2 focus:outline-none focus:ring-2',
                             'ring-offset-gray-50 hover:bg-gray-200',
                             'dark:focus dark:ring-offset-gray-950 dark:hover:bg-gray-900',
-                            day.isSame(reference(), 'month')
-                              ? ''
-                              : 'text-gray-500',
+                            !day.isSame(reference(), 'month') &&
+                              'text-gray-500',
                             selectedDate()?.isSame(day, 'day') &&
                               'bg-brand-blue focus:bg-brand-blue hover:bg-brand-blue dark:hover:bg-brand-blue text-gray-50'
                           )}

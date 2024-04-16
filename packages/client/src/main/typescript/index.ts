@@ -1,6 +1,21 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export interface ForgotPasswordRequest {
+    email: string;
+}
+
+export interface GetConfirmationCodeRequest {
+    email: string;
+    code: string;
+}
+
+export interface ResetPasswordRequest {
+    code: string;
+    password: string;
+    passwordConfirmation: string;
+}
+
 export interface SignInRequest {
     email: string;
     password: string;
@@ -38,6 +53,20 @@ export interface CaptureLogDetails {
     name: string;
     updatedAt: DateAsString;
     size: number;
+}
+
+export interface CreateDeviationRequest {
+    captureId: string;
+    deviationType: string;
+    details: { [index: string]: string };
+}
+
+export interface DeviationDetails {
+    roadSegment: string;
+    railingId: number;
+    position: Geometry;
+    deviationType: string;
+    details: { [index: string]: string };
 }
 
 export interface Geometry {
@@ -96,8 +125,11 @@ export interface ProjectPlanDetails {
 }
 
 export interface RoadRailing {
+    id: number;
     geometry: Geometry;
+    length: number;
     captureGrade: number;
+    capturedAt: DateAsString;
 }
 
 export interface RoadSegmentDetails {
@@ -150,6 +182,10 @@ export interface TripNoteDetails {
     createdAt: DateAsString;
 }
 
+export interface UpdateTripNoteRequest {
+    note: string;
+}
+
 export interface UpdateTripRequest {
     endedAt: DateAsString;
     gnssLog: string;
@@ -169,6 +205,7 @@ export interface UpdateUserAccountRequest {
     fullName: string;
     email: string;
     phoneNumber: string;
+    changePassword: boolean;
     password: string;
     passwordConfirmation: string;
     role: UserRole;

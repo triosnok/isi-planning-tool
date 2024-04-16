@@ -1,5 +1,8 @@
-import { ACCESS_TOKEN_LOCALSTORAGE_KEY, CacheKey } from '@/api';
+import { CacheKey } from '@/api';
 import type {
+  ForgotPasswordRequest,
+  GetConfirmationCodeRequest,
+  ResetPasswordRequest,
   SignInRequest,
   SignInResponse,
   UserProfile,
@@ -19,12 +22,12 @@ export const useProfile = () => {
     queryKey: [CacheKey.USER_PROFILE],
     staleTime: Infinity,
     queryFn: async () => {
-      if (localStorage.getItem(ACCESS_TOKEN_LOCALSTORAGE_KEY) === null) {
+      try {
+        const response = await axios.get<UserProfile>('api/v1/auth/profile');
+        return response.data;
+      } catch (error) {
         return null;
       }
-
-      const response = await axios.get<UserProfile>('api/v1/auth/profile');
-      return response.data;
     },
   }));
 };
@@ -44,8 +47,7 @@ export const useSignInMutation = () => {
 
       return response.data;
     },
-    onSuccess: (response) => {
-      localStorage.setItem(ACCESS_TOKEN_LOCALSTORAGE_KEY, response.accessToken);
+    onSuccess: () => {
       qc.refetchQueries({ queryKey: [CacheKey.USER_PROFILE] });
     },
   }));
@@ -54,18 +56,19 @@ export const useSignInMutation = () => {
 /**
  * Hook for refreshing the access token.
  */
-export const useRefreshTokenMutation = () => {
+export const useRefreshTokenQuery = () => {
   const qc = useQueryClient();
 
   return createQuery(() => ({
     queryKey: [],
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 4.25, // invalidate prior to refetch interval
+    refetchInterval: 1000 * 60 * 4.5, // refetch every 4.5 minutes, half a minute before access token expires
+    refetchOnWindowFocus: false,
     queryFn: async () => {
       const response = await axios.get<SignInResponse>('/api/v1/auth/refresh');
       return response.data;
     },
-    onSuccess: (response) => {
-      localStorage.setItem(ACCESS_TOKEN_LOCALSTORAGE_KEY, response.accessToken);
+    onSuccess: () => {
       qc.invalidateQueries({ queryKey: [CacheKey.USER_PROFILE] });
     },
   }));
@@ -78,10 +81,34 @@ export const useSignOutMutation = () => {
   const qc = useQueryClient();
 
   return createMutation(() => ({
-    mutationFn: async () => axios.post('/api/v1/auth/sign-out'),
+    mutationFn: async () => await axios.post('/api/v1/auth/sign-out'),
     onSuccess: () => {
-      localStorage.removeItem(ACCESS_TOKEN_LOCALSTORAGE_KEY);
       qc.invalidateQueries({ queryKey: [CacheKey.USER_PROFILE] });
     },
   }));
+};
+
+export const useForgotPasswordMutation = () => {
+  const sendCode = createMutation(() => ({
+    mutationFn: async (request: ForgotPasswordRequest) =>
+      axios.post('/api/v1/auth/forgot-password', request),
+  }));
+
+  const confirmCode = createMutation(() => ({
+    mutationFn: async (request: GetConfirmationCodeRequest) => {
+      const response = await axios.post<string>(
+        '/api/v1/auth/reset-password/code',
+        request
+      );
+
+      return response.data;
+    },
+  }));
+
+  const resetPassword = createMutation(() => ({
+    mutationFn: async (request: ResetPasswordRequest) =>
+      axios.post('/api/v1/auth/reset-password', request),
+  }));
+
+  return { sendCode, confirmCode, resetPassword };
 };

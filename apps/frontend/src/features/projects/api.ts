@@ -146,12 +146,19 @@ export const useProjectPlansQuery = (projectId: string) => {
 
 export const useProjectRailings = (
   projectId: Accessor<string | undefined>,
-  planIds: Accessor<string[]>
+  planIds: Accessor<string[]>,
+  hideCompleted: Accessor<boolean | undefined>
 ) => {
   return createQuery(() => ({
-    queryKey: [CacheKey.PROJECT_RAILINGS, projectId(), planIds()] as const,
+    staleTime: 1000 * 60 * 5,
+    queryKey: [
+      CacheKey.PROJECT_RAILINGS,
+      projectId(),
+      planIds(),
+      hideCompleted(),
+    ] as const,
     queryFn: async ({ queryKey }) => {
-      const [_, projectId, planIds] = queryKey;
+      const [_, projectId, planIds, hideCompleted] = queryKey;
 
       if (projectId === undefined) return [];
 
@@ -160,6 +167,10 @@ export const useProjectRailings = (
       planIds.forEach((planId) => {
         params.append('planId', planId);
       });
+
+      if (hideCompleted) {
+        params.set('hideCompleted', 'true');
+      }
 
       const response = await axios.get<RoadRailing[]>(
         `/api/v1/projects/${projectId}/railings?${params.toString()}`

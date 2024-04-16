@@ -29,6 +29,14 @@ public class ProjectPlanJdbcRepository {
         LEFT JOIN road_railing rr
           ON pprr.fk_road_railing_id = rr.road_railing_id
         GROUP BY pprr.fk_project_plan_id
+      ),
+      trip_aggregate AS (
+        SELECT
+          t.fk_project_plan_id,
+          COUNT(*) AS active_trips
+        FROM trip t
+        WHERE t.ended_at IS NULL
+        GROUP BY t.fk_project_plan_id
       )
       SELECT
         pp.project_plan_id,
@@ -38,7 +46,7 @@ public class ProjectPlanJdbcRepository {
         pp.ends_at,
         v.model,
         v.registration_number,
-        0 AS active_trips,
+        ta.active_trips,
         ra.railing_count,
         ra.sum_meters
       FROM project_plan pp
@@ -46,12 +54,15 @@ public class ProjectPlanJdbcRepository {
         ON pp.fk_vehicle_id = v.vehicle_id
       LEFT JOIN railing_aggregate ra
         ON pp.project_plan_id = ra.fk_project_plan_id
+      LEFT JOIN trip_aggregate ta
+        ON pp.project_plan_id = ta.fk_project_plan_id
       LEFT JOIN project p
         ON pp.fk_project_id = p.project_id
       WHERE 1=1
         AND (:id IS NULL OR pp.project_plan_id = :id::uuid)
         AND (:projectId IS NULL OR pp.fk_project_id = :projectId::uuid)
         AND (:vehicleId IS NULL OR pp.fk_vehicle_id = :vehicleId::uuid)
+      ORDER BY pp.starts_at ASC
     """;
 
   private static final RowMapper<ProjectPlanDetails> PLAN_DETAILS_MAPPER = (rs, i) -> {

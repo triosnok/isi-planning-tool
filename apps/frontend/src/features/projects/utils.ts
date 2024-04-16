@@ -1,7 +1,10 @@
 import { useSearchParams } from '@solidjs/router';
 
-export const useSelectedPlans = () => {
-  const [searchParams, setSearchParams] = useSearchParams<{ plans: string }>();
+export const useProjectSearchParams = () => {
+  const [searchParams, setSearchParams] = useSearchParams<{
+    plans: string;
+    hideCompleted: string;
+  }>();
 
   const selectedPlans = () => {
     const plans = searchParams.plans;
@@ -12,5 +15,11 @@ export const useSelectedPlans = () => {
     setSearchParams({ plans: plans.join(',') });
   };
 
-  return [selectedPlans, setSelectedPlans] as const;
+  const hideCompleted = () => searchParams.hideCompleted === 'true';
+
+  const setHideCompleted = (hideCompleted: boolean) => {
+    setSearchParams({ hideCompleted: hideCompleted.toString() });
+  };
+
+  return { selectedPlans, setSelectedPlans, hideCompleted, setHideCompleted };
 };
