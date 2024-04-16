@@ -155,11 +155,11 @@ const Project: Component<LayoutProps> = (props) => {
                 <For each={plans.data}>
                   {(plan) => (
                     <PlanCard
-                      car={`${plan.vehicleModel} (${plan.registrationNumber})`}
+                      car={`${plan.vehicleModel ?? ''} ${plan.registrationNumber ? '(' + plan.registrationNumber + ')' : ''}`}
                       startsAt={d(plan.startsAt, DateFormat.MONTH_DAY)}
                       endsAt={d(plan.endsAt, DateFormat.MONTH_DAY)}
-                      length={Number(plan.meters.toFixed(0))}
-                      ongoingTripAmount={0}
+                      length={plan.meters}
+                      ongoingTripAmount={plan.activeTrips}
                       railingAmount={plan.railings}
                       onToggle={() => handlePlanToggled(plan.id)}
                       selected={searchParams.selectedPlans().includes(plan.id)}
