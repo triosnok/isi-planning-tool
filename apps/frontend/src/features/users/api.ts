@@ -2,7 +2,7 @@ import { CacheKey } from '@/api';
 import {
   CreateUserAccountRequest,
   TripDetails,
-  UserAccountDetails
+  UserAccountDetails,
 } from '@isi-insight/client';
 import {
   createMutation,
@@ -39,7 +39,6 @@ export const useTripsByUserQuery = (userId: string) => {
   }));
 };
 
-
 export const useUserDetailsQuery = (id: string) => {
   return createQuery(() => ({
     queryKey: [CacheKey.USER_DETAILS, id],
@@ -57,12 +56,13 @@ export const UserSchema = z
   .object({
     userId: z.string().optional(),
     imageUrl: z.string().optional(),
-    fullName: z.string().min(1, "Name is required"),
-    email: z.string().email("Invalid email address"),
-    phoneNumber: z.string().nullish(),
+    fullName: z.string().min(1, 'Name is required'),
+    email: z.string().email('Invalid email address'),
+    phoneNumber: z.string().optional(),
     role: z.enum(['DRIVER', 'PLANNER']),
-    password: z.string(),
-    passwordConfirmation: z.string(),
+    changePassword: z.boolean(),
+    password: z.string().min(1, 'Password is required').optional(),
+    passwordConfirmation: z.string().optional(),
   })
   .refine((data) => data.password === data.passwordConfirmation, {
     message: "Passwords don't match",

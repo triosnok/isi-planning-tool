@@ -149,6 +149,7 @@
       "EMAIL": "E-mail",
       "PHONE_NUMBER": "Phone number",
       "ROLE": "Role",
+      "CHANGE_PASSWORD": "Change password",
       "PASSWORD": "Password",
       "CONFIRM_PASSWORD": "Confirm password",
       "UPDATE_USER": "Update user",

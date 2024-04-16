@@ -179,6 +179,7 @@ public class AuthRestServiceImpl implements AuthRestService {
         user.getEmail(),
         user.getPhoneNumber(),
         request.password(),
+        true,
         user.getRole()
       );
 

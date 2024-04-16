@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import no.isi.insight.planning.client.annotation.GenerateTypeScript;
+import no.isi.insight.planning.client.annotation.Optional;
 import no.isi.insight.planning.client.auth.view.UserRole;
 
 @Builder
@@ -12,7 +13,7 @@ import no.isi.insight.planning.client.auth.view.UserRole;
 public record CreateUserAccountRequest(
   @NotBlank String fullName,
   @NotBlank String email,
-  String phoneNumber,
+  @Optional String phoneNumber,
   @NotBlank String password,
   @NotBlank String passwordConfirmation,
   @NotNull UserRole role

@@ -1,11 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { SwitchButton } from '@/components/ui/switch-button';
 import { useTranslations } from '@/features/i18n';
 import { cn } from '@/lib/utils';
 import { UserRole } from '@isi-insight/client';
 import { createForm, setValue, zodForm } from '@modular-forms/solid';
-import { Component, Show } from 'solid-js';
+import { Component, Show, createSignal } from 'solid-js';
 import { UserSchema, UserSchemaValues } from '../api';
 import UserRoleRadio from './UserRoleRadio';
 
@@ -27,15 +28,27 @@ const UserForm: Component<UserFormProps> = (props) => {
       userId: props.userId,
       fullName: props.name,
       email: props.email,
-      phoneNumber: props.phoneNumber,
+      phoneNumber: props.phoneNumber ?? undefined,
+      changePassword: false,
       role: props.role,
     },
   });
 
+  const [changePassword, setChangePassword] = createSignal(false);
+
+  const handleSubmit = (values: UserSchemaValues) => {
+    props.onSubmit(values);
+
+    if (changePassword()) {
+      setValue(form, 'password', '', { shouldFocus: false });
+      setValue(form, 'passwordConfirmation', '', { shouldFocus: false });
+    }
+  };
+
   return (
     <Form
       class={cn('flex flex-col gap-1', props.class)}
-      onSubmit={props.onSubmit}
+      onSubmit={handleSubmit}
     >
       <Field name='fullName'>
         {(field, props) => (
@@ -80,46 +93,64 @@ const UserForm: Component<UserFormProps> = (props) => {
             <Input
               {...props}
               type='text'
-              value={field.value ?? ''}
+              value={field.value}
               placeholder='Phone number'
             />
           </>
         )}
       </Field>
 
-      <Field name='password'>
-        {(field, props) => (
-          <>
-            <Label for={field.name} class='mt-2'>
-              {t('USERS.FORM.PASSWORD')}
-            </Label>
-
-            <Input
-              {...props}
-              type='password'
-              value={field.value}
-              placeholder='Password'
+      <Field name='changePassword' type='boolean'>
+        {(field) => (
+          <div class='mt-2 flex items-center'>
+            <SwitchButton
+              checked={field.value ?? false}
+              onChange={(v) => {
+                setChangePassword(v);
+                setValue(form, 'changePassword', v);
+              }}
             />
-          </>
+
+            <Label for={field.name}>{t('USERS.FORM.CHANGE_PASSWORD')}</Label>
+          </div>
         )}
       </Field>
 
-      <Field name='passwordConfirmation'>
-        {(field, props) => (
-          <>
-            <Label for={field.name} class='mt-2'>
-              {t('USERS.FORM.CONFIRM_PASSWORD')}
-            </Label>
+      <Show when={changePassword()}>
+        <Field name='password'>
+          {(field, props) => (
+            <>
+              <Label for={field.name} class='mt-2'>
+                {t('USERS.FORM.PASSWORD')}
+              </Label>
 
-            <Input
-              {...props}
-              type='password'
-              value={field.value}
-              placeholder='Confirm password'
-            />
-          </>
-        )}
-      </Field>
+              <Input
+                {...props}
+                type='password'
+                value={field.value}
+                placeholder='Password'
+              />
+            </>
+          )}
+        </Field>
+
+        <Field name='passwordConfirmation'>
+          {(field, props) => (
+            <>
+              <Label for={field.name} class='mt-2'>
+                {t('USERS.FORM.CONFIRM_PASSWORD')}
+              </Label>
+
+              <Input
+                {...props}
+                type='password'
+                value={field.value}
+                placeholder='Confirm password'
+              />
+            </>
+          )}
+        </Field>
+      </Show>
 
       <Field name='role'>
         {(field, props) => (

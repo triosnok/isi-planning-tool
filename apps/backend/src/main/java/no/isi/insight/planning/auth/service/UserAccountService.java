@@ -64,6 +64,7 @@ public class UserAccountService {
       String email,
       String phone,
       String password,
+      Boolean changePassword,
       UserAccountRole role
   ) {
 
@@ -74,7 +75,7 @@ public class UserAccountService {
     userAccount.setEmail(email);
     userAccount.setPhoneNumber(phone);
 
-    if (password != null && !password.isBlank()) {
+    if (changePassword) {
       var encodedPassword = this.passwordEncoder.encode(password);
       userAccount.setPassword(encodedPassword);
     }

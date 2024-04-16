@@ -121,8 +121,15 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
       case DRIVER -> UserAccountRole.DRIVER;
     };
 
-    var updatedUserAccount = this.userService
-      .updateAccount(id, request.fullName(), request.email(), request.phoneNumber(), request.password(), role);
+    var updatedUserAccount = this.userService.updateAccount(
+      id,
+      request.fullName(),
+      request.email(),
+      request.phoneNumber(),
+      request.password(),
+      request.changePassword(),
+      role
+    );
 
     UserRole userRole = switch (updatedUserAccount.getRole()) {
       case PLANNER -> UserRole.PLANNER;

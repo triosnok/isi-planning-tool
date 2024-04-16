@@ -107,8 +107,8 @@ export interface ProjectDetails {
     totalLength: number;
     deviations: number;
     notes: number;
-    progress: number;
     status: ProjectStatus;
+    progress: number;
 }
 
 export interface ProjectPlanDetails {
@@ -205,6 +205,7 @@ export interface UpdateUserAccountRequest {
     fullName: string;
     email: string;
     phoneNumber: string;
+    changePassword: boolean;
     password: string;
     passwordConfirmation: string;
     role: UserRole;
