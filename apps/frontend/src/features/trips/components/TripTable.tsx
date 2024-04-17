@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -72,7 +73,7 @@ const TripTable: Component<TripTableProps> = (props) => {
         />
       </div>
 
-      <Table class='mt-2'>
+      <Table class='mb-2 mt-2'>
         <TableHeader>
           <TableRow>
             <TableHead>{t('TRIPS.TRIP_TABLE.START')}</TableHead>
@@ -92,6 +93,9 @@ const TripTable: Component<TripTableProps> = (props) => {
             <TableHead>{t('TRIPS.TRIP_TABLE.LINKS')}</TableHead>
           </TableRow>
         </TableHeader>
+        <Show when={currentTrips().length === 0}>
+          <TableCaption class='pt-4'>{t('TRIPS.TRIP_TABLE.NO_TRIPS_AVAILABLE')}</TableCaption>
+        </Show>
         <TableBody>
           <For each={currentTrips()}>
             {(trip) => (
