@@ -52,7 +52,25 @@ export const useUserDetailsQuery = (id: string) => {
   }));
 };
 
-export const UserSchema = z
+export const CreateUserSchema = z
+  .object({
+    userId: z.string().optional(),
+    imageUrl: z.string().optional(),
+    fullName: z.string().min(1, 'Name is required'),
+    email: z.string().email('Invalid email address'),
+    phoneNumber: z.string().optional(),
+    role: z.enum(['DRIVER', 'PLANNER']),
+    password: z.string().min(1, 'Password is required'),
+    passwordConfirmation: z.string(),
+  })
+  .refine((data) => data.password === data.passwordConfirmation, {
+    message: "Passwords don't match",
+    path: ['passwordConfirmation'],
+  });
+
+export type CreateUserSchemaValues = z.infer<typeof CreateUserSchema>;
+
+export const UpdateUserSchema = z
   .object({
     userId: z.string().optional(),
     imageUrl: z.string().optional(),
@@ -69,7 +87,7 @@ export const UserSchema = z
     path: ['passwordConfirmation'],
   });
 
-export type UserSchemaValues = z.infer<typeof UserSchema>;
+export type UpdateUserSchemaValues = z.infer<typeof UpdateUserSchema>;
 
 export const useUserMutation = () => {
   const qc = useQueryClient();
@@ -89,7 +107,7 @@ export const useUserMutation = () => {
   }));
 
   const update = createMutation(() => ({
-    mutationFn: async (user: UserSchemaValues) => {
+    mutationFn: async (user: UpdateUserSchemaValues) => {
       const response = await axios.put<UserAccountDetails>(
         `/api/v1/user-accounts/${user.userId}`,
         user

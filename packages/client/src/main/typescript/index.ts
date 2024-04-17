@@ -195,7 +195,7 @@ export interface UpdateTripRequest {
 export interface CreateUserAccountRequest {
     fullName: string;
     email: string;
-    phoneNumber: string;
+    phoneNumber?: string | null;
     password: string;
     passwordConfirmation: string;
     role: UserRole;
@@ -204,10 +204,10 @@ export interface CreateUserAccountRequest {
 export interface UpdateUserAccountRequest {
     fullName: string;
     email: string;
-    phoneNumber: string;
+    phoneNumber?: string | null;
     changePassword: boolean;
-    password: string;
-    passwordConfirmation: string;
+    password?: string | null;
+    passwordConfirmation?: string | null;
     role: UserRole;
 }
 

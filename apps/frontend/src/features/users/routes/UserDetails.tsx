@@ -1,29 +1,25 @@
 import Header from '@/components/layout/Header';
-import { A, useNavigate, useParams } from '@solidjs/router';
-import { IconChevronLeft } from '@tabler/icons-solidjs';
-import { Component, Show } from 'solid-js';
-import {
-  UserSchemaValues,
-  useUserDetailsQuery,
-  useUserMutation,
-  useTripsByUserQuery,
-} from '../api';
-import UserForm from '../components/UserForm';
+import MapRoot from '@/components/map/MapRoot';
 import BackLink from '@/components/navigation/BackLink';
 import TripTable from '@/features/trips/components/TripTable';
-import { useTranslations } from '@/features/i18n';
-import MapRoot from '@/components/map/MapRoot';
+import { useParams } from '@solidjs/router';
+import { Component, Show } from 'solid-js';
+import {
+  UpdateUserSchemaValues,
+  useTripsByUserQuery,
+  useUserDetailsQuery,
+  useUserMutation,
+} from '../api';
+import UpdateUserForm from '../components/UpdateUserForm';
 
 const UserDetails: Component = () => {
   const params = useParams();
   const user = useUserDetailsQuery(params.id);
   const { update } = useUserMutation();
-  const { t } = useTranslations();
-  const navigate = useNavigate();
 
   const trips = useTripsByUserQuery(params.id);
 
-  const handleUpdateUser = async (user: UserSchemaValues) => {
+  const handleUpdateUser = async (user: UpdateUserSchemaValues) => {
     try {
       await update.mutateAsync({
         userId: params.id,
@@ -47,7 +43,7 @@ const UserDetails: Component = () => {
               {user.data?.fullName}
             </h1>
 
-            <UserForm
+            <UpdateUserForm
               onSubmit={handleUpdateUser}
               userId={user.data?.id}
               name={user.data?.fullName}
