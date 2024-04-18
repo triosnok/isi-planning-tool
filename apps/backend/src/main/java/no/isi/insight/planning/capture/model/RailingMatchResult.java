@@ -11,5 +11,7 @@ public record RailingMatchResult(
   Double heading,
   RoadRailing railing,
   RoadSegment roadSegment,
-  RoadSide side
+  RoadSide side,
+  double startLength,
+  double endLength
 ) {}

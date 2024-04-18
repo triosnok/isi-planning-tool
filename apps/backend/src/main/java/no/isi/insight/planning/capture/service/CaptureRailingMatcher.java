@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.linearref.LengthIndexedLine;
 
 import lombok.RequiredArgsConstructor;
@@ -22,17 +23,37 @@ public class CaptureRailingMatcher {
 
   private RoadRailing lastMatchedRailing;
 
+  private static final double CAMERA_FOV = 60.0;
+
+  private Polygon createPolygon(
+      Point point,
+      double heading,
+      double height
+  ) {
+    var factory = point.getFactory();
+    var a = point.getCoordinate();
+
+    var sideLength = height / Math.cos(Math.toRadians(CAMERA_FOV / 2));
+
+    var b = this.geometryService.project(a, heading - (CAMERA_FOV / 2), sideLength);
+    var c = this.geometryService.project(a, heading + (CAMERA_FOV / 2), sideLength);
+
+    return factory.createPolygon(new Coordinate[] {
+        a, b, c, a
+    });
+  }
+
   public Optional<RailingMatchResult> matchRailing(
       Point point,
       Double heading
   ) {
-    var left = this.geometryService.project(point, heading - 90, this.length);
-    var right = this.geometryService.project(point, heading + 90, this.length);
+    var left = this.createPolygon(point, heading - 90, this.length);
+    var right = this.createPolygon(point, heading + 90, this.length);
 
     RoadRailing matchedRailing = null;
 
-    if (this.lastMatchedRailing != null && (left.intersects(this.lastMatchedRailing.getGeometry())
-        ^ right.intersects(this.lastMatchedRailing.getGeometry()))) {
+    if (this.lastMatchedRailing != null && (this.lastMatchedRailing.getGeometry().intersects(left)
+        ^ this.lastMatchedRailing.getGeometry().intersects(right))) {
       matchedRailing = this.lastMatchedRailing;
     }
 
@@ -40,7 +61,7 @@ public class CaptureRailingMatcher {
       for (var railing : this.railings) {
         var geometry = railing.getGeometry();
 
-        if (geometry.intersects(left) ^ geometry.intersects(right)) {
+        if (right.intersects(geometry) ^ left.intersects(geometry)) {
           matchedRailing = railing;
           break;
         }
@@ -52,9 +73,11 @@ public class CaptureRailingMatcher {
     }
 
     var matchedSide = RoadSide.LEFT;
+    var usedPoly = left;
 
     if (right.intersects(matchedRailing.getGeometry())) {
       matchedSide = RoadSide.RIGHT;
+      usedPoly = right;
     }
 
     this.lastMatchedRailing = matchedRailing;
@@ -94,12 +117,27 @@ public class CaptureRailingMatcher {
       }
     }
 
+    var indexedRailing = new LengthIndexedLine(this.lastMatchedRailing.getGeometry());
+    var intersect = usedPoly.intersection(this.lastMatchedRailing.getGeometry());
+    var intersectCoords = intersect.getCoordinates();
+    var matchStartIdx = 0.0;
+    var matchEndIdx = 0.0;
+
+    if (intersectCoords.length > 2) {
+      var first = intersectCoords[0];
+      var last = intersectCoords[intersectCoords.length - 1];
+      matchStartIdx = indexedRailing.project(first);
+      matchEndIdx = indexedRailing.project(last);
+    }
+
     var result = new RailingMatchResult(
       point,
       heading,
       matchedRailing,
       roadSegment,
-      matchedSide
+      matchedSide,
+      matchStartIdx,
+      matchEndIdx
     );
 
     return Optional.of(result);
