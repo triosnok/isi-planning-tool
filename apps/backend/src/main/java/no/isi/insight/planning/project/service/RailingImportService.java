@@ -21,6 +21,7 @@ import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObject;
 import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObject.Direction;
 import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObject.Placement;
 import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObject.RoadSegment;
+import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObject.RoadStretch;
 import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObject.Side;
 import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObjectType;
 import no.isi.insight.planning.model.RoadDirection;
@@ -100,8 +101,9 @@ public class RailingImportService {
     for (var railing : railings) {
       var segments = railing.roadSegments().stream().map(segment -> {
         var placement = railing.location().placements().stream().filter(p -> segment.isWithin(p)).findFirst();
+        var stretch = this.geometryService.parseLineString(segment.geometry().wkt());
 
-        if (placement.isEmpty()) {
+        if (placement.isEmpty() || stretch.isEmpty()) {
           return null;
         }
 
@@ -110,9 +112,14 @@ public class RailingImportService {
             placement.map(Placement::direction).map(Direction::toRoadDirection).orElse(RoadDirection.WITH)
           )
           .roadSystemDirection(segment.direction().toRoadDirection())
-          .stretchDirection(segment.roadSystemReference().stretch().direction().toRoadDirection())
+          .stretchDirection(
+            Optional.ofNullable(segment.roadSystemReference().stretch())
+              .map(RoadStretch::direction)
+              .map(Direction::toRoadDirection)
+              .orElse(null)
+          )
           .placementSide(placement.map(Placement::side).map(Side::toRoadSide).orElse(null))
-          .stretch(this.geometryService.parseLineString(segment.geometry().wkt()).get())
+          .stretch(stretch.get())
           .data(segment)
           .build();
       }).filter(Objects::nonNull).toList();
@@ -126,15 +133,19 @@ public class RailingImportService {
         flipped++;
       }
 
-      railingIds.add(railing.id());
-      railingParams.add(this.mapRailingParams(railing, geometryChecker.getGeometry()));
-      roadSystemParams.addAll(this.mapRoadSystemParams(railing));
-      roadSegmentsParams.addAll(this.mapRoadSegmentParams(railing.id(), segments));
-      planJoinParams.add(
-        new MapSqlParameterSource(
-          Map.of("planId", planId, "railingId", railing.id(), "userId", importedByUserId.orElse(null))
-        )
-      );
+      try {
+        railingIds.add(railing.id());
+        railingParams.add(this.mapRailingParams(railing, geometryChecker.getGeometry()));
+        roadSystemParams.addAll(this.mapRoadSystemParams(railing));
+        roadSegmentsParams.addAll(this.mapRoadSegmentParams(railing.id(), segments));
+        planJoinParams.add(
+          new MapSqlParameterSource(
+            Map.of("planId", planId, "railingId", railing.id(), "userId", importedByUserId.orElse(null))
+          )
+        );
+      } catch (Exception e) {
+        log.warn("Failed to map params for railing[id={}]: {}", railing.id(), e.getMessage());
+      }
     }
 
     log.info("{} of the imported railings were flipped", flipped);
