@@ -1,6 +1,5 @@
 package no.isi.insight.planning.project.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -70,12 +69,8 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
       );
     }
 
-    var importUrls = new ArrayList<String>();
-    importUrls.add(request.importUrl());
-
     var plan = new ProjectPlan(
       project,
-      importUrls,
       request.startsAt(),
       request.endsAt()
     );
@@ -83,7 +78,9 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
     vehicle.ifPresent(plan::setVehicle);
 
     var savedPlan = this.projectPlanJpaRepository.save(plan);
-    this.railingImportService.importRailings(request.importUrl(), savedPlan.getId());
+    var importDetails = this.railingImportService.importRailings(request.importUrl(), savedPlan.getId());
+    savedPlan.addRailingImport(importDetails);
+    this.projectPlanJpaRepository.save(savedPlan);
     var planDetails = this.projectPlanJdbcRepository.findById(savedPlan.getId());
 
     return ResponseEntity.ok(planDetails.get());
@@ -112,8 +109,8 @@ public class ProjectPlanRestServiceImpl implements ProjectPlanRestService {
 
     if (request.importUrl() != null) {
       log.info("Re-importing railings for plan with id: {}", planId);
-      plan.addRailingImportUrl(request.importUrl());
-      // TODO: re-import railings
+      var importDetails = this.railingImportService.importRailings(request.importUrl(), planId, true);
+      plan.addRailingImport(importDetails);
     }
 
     this.projectPlanJpaRepository.save(plan);

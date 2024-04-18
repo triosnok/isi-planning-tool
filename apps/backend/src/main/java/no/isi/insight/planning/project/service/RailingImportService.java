@@ -1,5 +1,6 @@
 package no.isi.insight.planning.project.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import no.isi.insight.planning.client.project.view.RailingImportDetails;
 import no.isi.insight.planning.geometry.GeometryService;
 import no.isi.insight.planning.integration.nvdb.NvdbImportService;
 import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObject;
@@ -80,11 +82,46 @@ public class RailingImportService {
       VALUES (:planId, :railingId, :userId)
     """;
 
-  @Transactional(readOnly = false)
-  public void importRailings(
+  /**
+   * Imports a new set of railings without clearing the existing ones.
+   * 
+   * @param url    the URL to import railings from
+   * @param planId the ID of the plan to import railings to
+   * 
+   * @return details of the import
+   */
+  public RailingImportDetails importRailings(
       String url,
       UUID planId
   ) {
+    return this.importRailings(url, planId, false);
+  }
+
+  /**
+   * Imports a new set of railings.
+   * 
+   * @param url    the URL to import railings from
+   * @param planId the ID of the plan to import railings to
+   * @param clear  whether to clear the existing railings before importing
+   * 
+   * @return details of the import
+   */
+  @Transactional(readOnly = false)
+  public RailingImportDetails importRailings(
+      String url,
+      UUID planId,
+      boolean clear
+  ) {
+    if (clear) {
+      var cleared = this.jdbcTemplate.update(
+        // language=sql
+        "DELETE FROM project_plan_road_railing pprr WHERE pprr.fk_project_plan_id = :planId",
+        Map.of("planId", planId)
+      );
+
+      log.info("Cleared {} existing railings from plan with id: {}", cleared, planId);
+    }
+
     log.info("Importing railings from NVDB...");
     var railings = this.importService.importRoadObjects(url, NvdbRoadObjectType.RAILING, Map.of("inkluder", "alle"));
 
@@ -153,8 +190,22 @@ public class RailingImportService {
     this.jdbcTemplate.batchUpdate(UPSERT_ROAD_RAILING_QUERY, railingParams.toArray(MapSqlParameterSource[]::new));
     this.jdbcTemplate.batchUpdate(UPSERT_ROAD_SYSTEM_QUERY, roadSystemParams.toArray(MapSqlParameterSource[]::new));
     this.jdbcTemplate.batchUpdate(UPSERT_ROAD_SEGMENT_QUERY, roadSegmentsParams.toArray(MapSqlParameterSource[]::new));
-    this.jdbcTemplate
+    var importedRailings = this.jdbcTemplate
       .batchUpdate(INSERT_PROJECT_PLAN_RAILING_QUERY, planJoinParams.toArray(MapSqlParameterSource[]::new));
+
+    var importCount = 0L;
+
+    for (var count : importedRailings) {
+      if (count > 0) {
+        importCount++;
+      }
+    }
+
+    return new RailingImportDetails(
+      importCount,
+      url,
+      LocalDateTime.now()
+    );
   }
 
   private MapSqlParameterSource mapRailingParams(
