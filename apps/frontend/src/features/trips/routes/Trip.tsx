@@ -22,6 +22,7 @@ import {
   IconPhoto,
   IconVideo,
 } from '@tabler/icons-solidjs';
+import dayjs from 'dayjs';
 import { Component, Show, createMemo, createSignal } from 'solid-js';
 import { useTripDetailsQuery } from '../api';
 import { useTripCaptureAction, useTripCaptureDetails } from '../api/capture';
@@ -128,8 +129,9 @@ const Trip: Component = () => {
                 </h1>
                 <span class='text-sm'>
                   {d(project.data?.startsAt, DateFormat.MONTH_DAY)}
-                  {' - '}
-                  {d(project.data?.endsAt, DateFormat.MONTH_DAY)}
+                  <Show when={dayjs(project.data?.endsAt).isValid()}>
+                    {` - ${d(project.data?.endsAt, DateFormat.MONTH_DAY)}`}
+                  </Show>
                 </span>
               </div>
               <Button

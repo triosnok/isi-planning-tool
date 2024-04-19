@@ -11,6 +11,7 @@ import { SeparatorWithText } from '@/components/ui/separator';
 import { SwitchButton } from '@/components/ui/switch-button';
 import { useProfile } from '@/features/auth/api';
 import { DateFormat, useTranslations } from '@/features/i18n';
+import UpdateProjectPlanDialog from '@/features/projects/components/UpdateProjectPlanDialog';
 import TripCard from '@/features/trips/components/TripCard';
 import { useTripsByUserQuery } from '@/features/users/api';
 import { LayoutProps, cn } from '@/lib/utils';
@@ -20,21 +21,20 @@ import {
   IconEdit,
   IconPlus,
 } from '@tabler/icons-solidjs';
+import dayjs from 'dayjs';
 import {
   Component,
   For,
   Show,
   Suspense,
-  createEffect,
   createMemo,
-  createSignal,
+  createSignal
 } from 'solid-js';
 import { useTripsDetailsQuery } from '../../trips/api';
 import NewTripDialog from '../../trips/components/NewTripDialog';
 import { useProjectDetailsQuery, useProjectPlansQuery } from '../api';
 import PlanCard from '../components/PlanCard';
 import { useProjectSearchParams } from '../utils';
-import UpdateProjectPlanDialog from '@/features/projects/components/UpdateProjectPlanDialog';
 
 const Project: Component<LayoutProps> = (props) => {
   const params = useParams();
@@ -65,10 +65,6 @@ const Project: Component<LayoutProps> = (props) => {
     }
   };
 
-  createEffect(() => {
-    console.log(editPlanId());
-  });
-
   return (
     <div class='flex h-full flex-col justify-between overflow-hidden'>
       <div class='flex flex-1 flex-col overflow-hidden'>
@@ -86,8 +82,10 @@ const Project: Component<LayoutProps> = (props) => {
                   <Show when={project.data} fallback='...'>
                     {(data) => (
                       <>
-                        {d(data().startsAt, DateFormat.MONTH_DAY)} -{' '}
-                        {d(data().endsAt, DateFormat.MONTH_DAY)}
+                        {d(data().startsAt, DateFormat.MONTH_DAY)}
+                        <Show when={dayjs(data().endsAt).isValid()}>
+                          {` - ${d(data().endsAt, DateFormat.MONTH_DAY)}`}
+                        </Show>
                       </>
                     )}
                   </Show>
@@ -225,7 +223,7 @@ const Project: Component<LayoutProps> = (props) => {
 
         <Show when={editPlanId()}>
           {(id) => (
-            <UpdateProjectPlanDialog  
+            <UpdateProjectPlanDialog
               onOpenChange={() => setEditPlanId(undefined)}
               planId={id()}
             />

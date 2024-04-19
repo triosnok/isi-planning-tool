@@ -9,6 +9,7 @@ import {
 } from '@tabler/icons-solidjs';
 import { Component, Show } from 'solid-js';
 import { Progress } from '@/components/ui/progress';
+import dayjs from 'dayjs';
 
 export interface ProjectCardProps {
   name: string;
@@ -24,7 +25,7 @@ export interface ProjectCardProps {
 }
 
 const ProjectCard: Component<ProjectCardProps> = (props) => {
-  const { t, n } = useTranslations();
+  const { t, n, d } = useTranslations();
 
   return (
     <div class='overflow-hidden truncate rounded-lg border hover:cursor-pointer hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-gray-900'>
@@ -41,9 +42,14 @@ const ProjectCard: Component<ProjectCardProps> = (props) => {
           </div>
           <div class='flex items-center gap-1'>
             <IconCalendarClock class='size-5' />
-            <p>
-              {props.startsAt} - {props.endsAt}
-            </p>
+            <Show
+              when={dayjs(props.endsAt).isValid()}
+              fallback={<p>{props.startsAt}</p>}
+            >
+              <p>
+                {props.startsAt} - {props.endsAt}
+              </p>
+            </Show>
           </div>
         </div>
 
