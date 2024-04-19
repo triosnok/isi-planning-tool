@@ -34,7 +34,7 @@ import NewTripDialog from '../../trips/components/NewTripDialog';
 import { useProjectDetailsQuery, useProjectPlansQuery } from '../api';
 import PlanCard from '../components/PlanCard';
 import { useProjectSearchParams } from '../utils';
-import UpdateProjectPlanDialog from '@/features/trips/components/UpdateProjectPlanDialog';
+import UpdateProjectPlanDialog from '@/features/projects/components/UpdateProjectPlanDialog';
 
 const Project: Component<LayoutProps> = (props) => {
   const params = useParams();

@@ -4,8 +4,8 @@ import {
   ProjectPlanSchemaValues,
   usePlanDetailsQuery,
   useProjectPlansMutation,
-} from '../../projects/api';
-import PlanForm from '../../projects/components/PlanForm';
+} from '../api';
+import PlanForm from './PlanForm';
 
 export interface UpdateProjectPlanDialogProps {
   planId: string;
