@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import lombok.RequiredArgsConstructor;
@@ -79,6 +80,8 @@ public class PositionService {
         }
 
         Thread.sleep(1000L);
+      } catch (AsyncRequestNotUsableException e) {
+        // ignored, happens rather frequent - probably related to the client reconnecting
       } catch (Exception e) {
         log.error("Error in position subscription", e);
       }
