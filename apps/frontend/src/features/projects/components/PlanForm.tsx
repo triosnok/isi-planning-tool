@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useTranslations } from '@/features/i18n';
-import { useVehiclesQuery } from '@/features/vehicles/api';
+import { useVehicleDetailsQuery, useVehiclesQuery } from '@/features/vehicles/api';
 import VehicleSelect from '@/features/vehicles/components/VehicleSelect';
 import {
   SubmitHandler,
@@ -15,31 +15,37 @@ import {
 import dayjs from 'dayjs';
 import { Component, createSignal } from 'solid-js';
 import { z } from 'zod';
+import { ProjectPlanSchema, ProjectPlanSchemaValues } from '../api';
 
-const ProjectPlanSchema = z.object({
-  importUrl: z.string(),
-  startsAt: z.string().datetime(),
-  endsAt: z.string().datetime(),
-  vehicleId: z.string().optional(),
-});
+export interface PlanFormProps {
+  planId?: string;
+  importUrl?: string;
+  startsAt?: string;
+  endsAt?: string;
+  vehicleId?: string;
+  onSubmit?: (values: ProjectPlanSchemaValues) => void;
+}
 
-export type ProjectPlanForm = z.infer<typeof ProjectPlanSchema>;
-
-const PlanForm: Component<{
-  onSubmit?: (values: ProjectPlanForm) => void;
-}> = (props) => {
+const PlanForm: Component<PlanFormProps> = (props) => {
   const [availableFrom, setAvailableFrom] = createSignal<string>();
   const [availableTo, setAvailableTo] = createSignal<string>();
 
   const [form, { Form, Field }] = createForm({
     validate: zodForm(ProjectPlanSchema),
+    initialValues: {
+      startsAt: props.startsAt,
+      endsAt: props.endsAt,
+      vehicleId: props.vehicleId,
+    },
   });
 
   const { t } = useTranslations();
   const vehicles = useVehiclesQuery(availableFrom, availableTo);
 
-  const handleSubmit: SubmitHandler<ProjectPlanForm> = async (values) => {
-    props.onSubmit?.(values);
+  const handleSubmit: SubmitHandler<ProjectPlanSchemaValues> = async (
+    values
+  ) => {
+    props.onSubmit?.({ ...values, planId: props.planId });
   };
 
   return (

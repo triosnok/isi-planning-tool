@@ -57,7 +57,16 @@ export const ProjectSchema = z.object({
   endsAt: z.string().datetime().optional(),
 });
 
+export const ProjectPlanSchema = z.object({
+  planId: z.string().optional(),
+  importUrl: z.string(),
+  startsAt: z.string().datetime(),
+  endsAt: z.string().datetime(),
+  vehicleId: z.string().optional(),
+});
+
 export type ProjectSchemaValues = z.infer<typeof ProjectSchema>;
+export type ProjectPlanSchemaValues = z.infer<typeof ProjectPlanSchema>;
 
 export const useProjectsMutation = () => {
   const qc = useQueryClient();
@@ -128,7 +137,25 @@ export const useProjectPlansMutation = (projectId: string) => {
     },
   }));
 
-  return { create };
+  const update = createMutation(() => ({
+    mutationFn: async (plan: ProjectPlanSchemaValues) => {
+      const response = await axios.put<ProjectPlanDetails>(
+        `/api/v1/project-plans/${plan.planId}`,
+        plan
+      );
+
+      return response.data;
+    },
+
+    onSuccess: (response) => {
+      qc.invalidateQueries({ queryKey: [CacheKey.PROJECT_PLAN_LIST] });
+      qc.invalidateQueries({
+        queryKey: [CacheKey.PROJECT_PLAN_DETAILS, response.id],
+      });
+    },
+  }));
+
+  return { create, update };
 };
 
 export const useProjectPlansQuery = (projectId: string) => {
@@ -137,6 +164,19 @@ export const useProjectPlansQuery = (projectId: string) => {
     queryFn: async () => {
       const response = await axios.get<ProjectPlanDetails[]>(
         `/api/v1/project-plans?projectId=${projectId}`
+      );
+
+      return response.data;
+    },
+  }));
+};
+
+export const usePlanDetailsQuery = (id: string) => {
+  return createQuery(() => ({
+    queryKey: [CacheKey.PROJECT_PLAN_DETAILS, id],
+    queryFn: async () => {
+      const response = await axios.get<ProjectPlanDetails>(
+        `/api/v1/project-plans/${id}`
       );
 
       return response.data;

@@ -58,7 +58,14 @@ const PlanCard: Component<PlanCardProps> = (props) => {
         </div>
 
         <div class='flex flex-col items-end'>
-          <IconPencil class='h-5 w-5' />
+          <IconPencil
+            class={cn(
+              'size-6 rounded-full bg-gray-200 p-0.5 hover:bg-gray-300/80 dark:bg-gray-800 dark:hover:bg-gray-700/60',
+              props.selected &&
+                'bg-brand-blue-50/80 hover:bg-brand-blue-100/80 dark:bg-brand-blue-900 dark:hover:bg-brand-blue-800/60'
+            )}
+            onClick={() => props.onEdit?.()}
+          />
 
           <p>
             {props.railingAmount} {t('RAILINGS.TITLE')}

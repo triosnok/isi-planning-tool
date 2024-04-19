@@ -23,6 +23,7 @@ import {
   For,
   Show,
   Suspense,
+  createEffect,
   createMemo,
   createSignal,
 } from 'solid-js';
@@ -31,6 +32,7 @@ import NewTripDialog from '../../trips/components/NewTripDialog';
 import { useProjectDetailsQuery, useProjectPlansQuery } from '../api';
 import PlanCard from '../components/PlanCard';
 import { useProjectSearchParams } from '../utils';
+import UpdateProjectPlanDialog from '@/features/trips/components/UpdateProjectPlanDialog';
 
 const Project: Component<LayoutProps> = (props) => {
   const params = useParams();
@@ -39,6 +41,7 @@ const Project: Component<LayoutProps> = (props) => {
   const { t, d, n } = useTranslations();
   const searchParams = useProjectSearchParams();
   const [showNewTripDialog, setShowNewTripDialog] = createSignal(false);
+  const [editPlanId, setEditPlanId] = createSignal<string>();
   const trips = useTripsDetailsQuery(params.id, searchParams.selectedPlans);
 
   const planId = createMemo(() => {
@@ -56,6 +59,10 @@ const Project: Component<LayoutProps> = (props) => {
       searchParams.setSelectedPlans([...plans, planId]);
     }
   };
+
+  createEffect(() => {
+    console.log(editPlanId());
+  });
 
   return (
     <div class='flex h-full flex-col justify-between overflow-hidden'>
@@ -163,6 +170,7 @@ const Project: Component<LayoutProps> = (props) => {
                       railingAmount={plan.railings}
                       onToggle={() => handlePlanToggled(plan.id)}
                       selected={searchParams.selectedPlans().includes(plan.id)}
+                      onEdit={() => setEditPlanId(plan.id)}
                     />
                   )}
                 </For>
@@ -209,6 +217,15 @@ const Project: Component<LayoutProps> = (props) => {
           projectId={params.id}
           planId={planId()}
         />
+
+        <Show when={editPlanId()}>
+          {(id) => (
+            <UpdateProjectPlanDialog  
+              onOpenChange={() => setEditPlanId(undefined)}
+              planId={id()}
+            />
+          )}
+        </Show>
 
         {props.children}
       </div>
