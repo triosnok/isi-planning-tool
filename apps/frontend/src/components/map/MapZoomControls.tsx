@@ -7,29 +7,46 @@ export interface MapZoomControlsProps {
   class?: string;
 }
 
+const ZOOM_DELTA = 1;
+const ZOOM_DURATION = 300;
+
 const MapZoomControls: Component<MapZoomControlsProps> = (props) => {
   const ctx = useMap();
   const [canZoomIn, setCanZoomIn] = createSignal(
-    ctx.map.getZoom() < ctx.map.getMaxZoom()
+    ctx.map.getView().getZoom() ?? 0 < ctx.map.getView().getMaxZoom()
   );
 
   const [canZoomOut, setCanZoomOut] = createSignal(
-    ctx.map.getZoom() > ctx.map.getMinZoom()
+    ctx.map.getView().getZoom() ?? 0 > ctx.map.getView().getMinZoom()
   );
 
-  const zoomIn = () => ctx.map.zoomIn(1);
-  const zoomOut = () => ctx.map.zoomOut(1);
+  const zoomIn = () => {
+    const currentZoom = ctx.map.getView().getZoom() ?? 0;
+
+    ctx.map
+      .getView()
+      .animate({ zoom: currentZoom + ZOOM_DELTA, duration: ZOOM_DURATION });
+  };
+
+  const zoomOut = () => {
+    const currentZoom = ctx.map.getView().getZoom() ?? 0;
+
+    ctx.map
+      .getView()
+      .animate({ zoom: currentZoom - ZOOM_DELTA, duration: ZOOM_DURATION });
+  };
 
   onMount(() => {
     const onZoom = () => {
-      setCanZoomIn(ctx.map.getZoom() < ctx.map.getMaxZoom());
-      setCanZoomOut(ctx.map.getZoom() > ctx.map.getMinZoom());
+      const currentZoom = ctx.map.getView().getZoom() ?? 0;
+      setCanZoomIn(currentZoom < ctx.map.getView().getMaxZoom());
+      setCanZoomOut(currentZoom > ctx.map.getView().getMinZoom());
     };
 
-    ctx.map.addEventListener('zoom', onZoom);
+    ctx.map.getView().addEventListener('change:resolution', onZoom);
 
     onCleanup(() => {
-      ctx.map.removeEventListener('zoom', onZoom);
+      ctx.map.getView().removeEventListener('change:resolution', onZoom);
     });
   });
 
