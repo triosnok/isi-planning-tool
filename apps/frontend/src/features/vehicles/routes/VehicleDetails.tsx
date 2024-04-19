@@ -1,6 +1,8 @@
 import Header from '@/components/layout/Header';
+import MapCarLayer from '@/components/map/MapCarLayer';
 import MapRoot from '@/components/map/MapRoot';
 import BackLink from '@/components/navigation/BackLink';
+import { useSubjectPosition } from '@/features/positions';
 import TripTable from '@/features/trips/components/TripTable';
 import { useParams } from '@solidjs/router';
 import { Component, Show } from 'solid-js';
@@ -17,6 +19,10 @@ const VehicleDetails: Component = () => {
   const vehicle = useVehicleDetailsQuery(params.id);
   const { update } = useVehicleMutation();
   const trips = useTripsByVehicleQuery(params.id);
+  const { position } = useSubjectPosition(() => ({
+    id: params.id,
+    type: 'VEHICLE',
+  }));
 
   const handleUpdateVehicle = async (vehicle: VehicleSchemaValues) => {
     try {
@@ -59,7 +65,16 @@ const VehicleDetails: Component = () => {
         </main>
 
         <aside class='w-0 md:w-1/3'>
-          <MapRoot class='h-full w-full' />
+          <MapRoot class='h-full w-full'>
+            <Show when={position()}>
+              {(pos) => (
+                <MapCarLayer
+                  position={pos().geometry}
+                  heading={pos().heading}
+                />
+              )}
+            </Show>
+          </MapRoot>
         </aside>
       </div>
     </div>
