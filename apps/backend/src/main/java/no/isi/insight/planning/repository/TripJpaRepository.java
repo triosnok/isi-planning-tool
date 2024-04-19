@@ -50,6 +50,7 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
       AND (:vehicleId IS NULL OR v.id = :vehicleId)
       AND (COALESCE(:planIds, NULL) IS NULL OR pp.id IN (:planIds))
       AND (:active IS NULL OR ((:active = false AND t.endedAt IS NOT NULL) OR (:active = true AND t.endedAt IS NULL)))
+    ORDER BY t.startedAt DESC
     """)
   List<TripDetails> findAll(
       @Param("projectId") Optional<UUID> projectId,
@@ -102,5 +103,6 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
   ) {
     return this.findAll(Optional.empty(), Optional.of(driverId), Optional.empty(), null, active);
   }
+
 
 }
