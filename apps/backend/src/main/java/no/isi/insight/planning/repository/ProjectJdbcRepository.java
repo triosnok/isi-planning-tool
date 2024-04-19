@@ -69,12 +69,12 @@ public class ProjectJdbcRepository {
             WHEN :projectStatus = 'UPCOMING' THEN NOW() < p.starts_at
             WHEN :projectStatus = 'PREVIOUS' THEN NOW() > p.ends_at
           END)
-          ORDER BY
-      CASE
-        WHEN :projectStatus = 'ONGOING' THEN p.starts_at
-        WHEN :projectStatus = 'UPCOMING' THEN p.starts_at
-      END ASC,
-      CASE WHEN :projectStatus = 'PREVIOUS' THEN p.ends_at END DESC
+      ORDER BY
+        CASE
+          WHEN :projectStatus = 'ONGOING' THEN p.starts_at
+          WHEN :projectStatus = 'UPCOMING' THEN p.starts_at
+        END ASC,
+        CASE WHEN :projectStatus = 'PREVIOUS' THEN p.ends_at END DESC
     """;
 
   private static final RowMapper<ProjectDetails> PROJECT_DETAILS_ROW_MAPPER = (rs, i) -> {
