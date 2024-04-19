@@ -12,6 +12,7 @@ import ProjectCard from '@/features/projects/components/ProjectCard';
 import { useVehiclesQuery } from '@/features/vehicles/api';
 import VehicleSelect from '@/features/vehicles/components/VehicleSelect';
 import { vehiclePreference } from '@/features/vehicles/context';
+import { VehicleDetails } from '@isi-insight/client';
 import { A } from '@solidjs/router';
 import { IconPlus } from '@tabler/icons-solidjs';
 import { Component, For, Show } from 'solid-js';
@@ -24,7 +25,11 @@ const Projects: Component = () => {
   const { t, d } = useTranslations();
   const profile = useProfile();
   const vehicles = useVehiclesQuery();
-  const { setSelectedVehicle } = vehiclePreference();
+  const { selectedVehicle, setSelectedVehicle } = vehiclePreference();
+
+  const handleChange = (value?: VehicleDetails) => {
+    setSelectedVehicle(value);
+  };
 
   return (
     <>
@@ -43,9 +48,9 @@ const Projects: Component = () => {
           <p class='ml-1 font-semibold'>{t('VEHICLES.PREFERED_VEHICLE')}</p>
           <VehicleSelect
             vehicles={vehicles.data ?? []}
-            onChange={setSelectedVehicle}
+            value={selectedVehicle()}
+            onChange={handleChange}
             emptyText={t('VEHICLES.NO_VEHICLE_SELECTED')}
-            store={true}
           />
         </div>
         <Input placeholder={t('NAVIGATION.SEARCH')} />
