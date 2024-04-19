@@ -35,6 +35,9 @@ importers:
       '@solid-primitives/media':
         specifier: ^2.2.8
         version: 2.2.8(solid-js@1.8.12)
+      '@solid-primitives/refs':
+        specifier: ^1.0.8
+        version: 1.0.8(solid-js@1.8.12)
       '@solidjs/router':
         specifier: ^0.11.5
         version: 0.11.5(solid-js@1.8.12)
@@ -53,6 +56,9 @@ importers:
       axios:
         specifier: ^1.6.7
         version: 1.6.7
+      chart.js:
+        specifier: ^4.4.2
+        version: 4.4.2
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -660,9 +666,13 @@ packages:
       '@solid-primitives/map': 0.4.9(solid-js@1.8.12)
       '@solid-primitives/media': 2.2.8(solid-js@1.8.12)
       '@solid-primitives/props': 3.1.9(solid-js@1.8.12)
-      '@solid-primitives/refs': 1.0.6(solid-js@1.8.12)
+      '@solid-primitives/refs': 1.0.8(solid-js@1.8.12)
       '@solid-primitives/utils': 6.2.2(solid-js@1.8.12)
       solid-js: 1.8.12
+    dev: false
+
+  /@kurkle/color@0.3.2:
+    resolution: {integrity: sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw==}
     dev: false
 
   /@modular-forms/solid@0.20.0(solid-js@1.8.12):
@@ -837,7 +847,7 @@ packages:
       '@solid-primitives/event-bus': 1.0.9(solid-js@1.8.12)
       '@solid-primitives/event-listener': 2.3.1(solid-js@1.8.12)
       '@solid-primitives/media': 2.2.8(solid-js@1.8.12)
-      '@solid-primitives/refs': 1.0.6(solid-js@1.8.12)
+      '@solid-primitives/refs': 1.0.8(solid-js@1.8.12)
       '@solid-primitives/rootless': 1.4.3(solid-js@1.8.12)
       '@solid-primitives/scheduled': 1.4.2(solid-js@1.8.12)
       '@solid-primitives/static-store': 0.0.5(solid-js@1.8.12)
@@ -956,12 +966,12 @@ packages:
       solid-js: 1.8.12
     dev: false
 
-  /@solid-primitives/refs@1.0.6(solid-js@1.8.12):
-    resolution: {integrity: sha512-ruh4YdVMxThEVnvqbpeLXKojW442vpFU8q7dSKtElGOTa31aKOAkRb9BTbdaTwVjN4BEq79fiiYIXozJNl4dSw==}
+  /@solid-primitives/refs@1.0.8(solid-js@1.8.12):
+    resolution: {integrity: sha512-+jIsWG8/nYvhaCoG2Vg6CJOLgTmPKFbaCrNQKWfChalgUf9WrVxWw0CdJb3yX15n5lUcQ0jBo6qYtuVVmBLpBw==}
     peerDependencies:
       solid-js: ^1.6.12
     dependencies:
-      '@solid-primitives/utils': 6.2.2(solid-js@1.8.12)
+      '@solid-primitives/utils': 6.2.3(solid-js@1.8.12)
       solid-js: 1.8.12
 
   /@solid-primitives/resize-observer@2.0.23(solid-js@1.8.12):
@@ -1302,6 +1312,13 @@ packages:
       escape-string-regexp: 1.0.5
       supports-color: 5.5.0
     dev: true
+
+  /chart.js@4.4.2:
+    resolution: {integrity: sha512-6GD7iKwFpP5kbSD4MeRRRlTnQvxfQREy36uEtm1hzHzcOqwWx0YEHuspuoNlslu+nciLIB7fjjsHkUv/FzFcOg==}
+    engines: {pnpm: '>=8'}
+    dependencies:
+      '@kurkle/color': 0.3.2
+    dev: false
 
   /chokidar@3.5.3:
     resolution: {integrity: sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==}
