@@ -59,11 +59,12 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
       @Param("active") Optional<Boolean> active
   );
 
-  default List<TripDetails> findAllByProjectId(
-      UUID projectId,
-      List<UUID> planIds
+  default List<TripDetails> findAll(
+      Optional<UUID> projectId,
+      List<UUID> planIds,
+      Optional<Boolean> active
   ) {
-    return this.findAll(Optional.of(projectId), Optional.empty(), Optional.empty(), planIds, Optional.empty());
+    return this.findAll(projectId, Optional.empty(), Optional.empty(), planIds, active);
   }
 
   // language=sql
@@ -100,10 +101,6 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
       Optional<Boolean> active
   ) {
     return this.findAll(Optional.empty(), Optional.of(driverId), Optional.empty(), null, active);
-  }
-
-  default List<TripDetails> findAllActiveTrips() {
-    return this.findAll(Optional.empty(), Optional.empty(), Optional.empty(), null, Optional.of(true));
   }
 
 }
