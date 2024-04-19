@@ -9,8 +9,10 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { SeparatorWithText } from '@/components/ui/separator';
 import { SwitchButton } from '@/components/ui/switch-button';
+import { useProfile } from '@/features/auth/api';
 import { DateFormat, useTranslations } from '@/features/i18n';
 import TripCard from '@/features/trips/components/TripCard';
+import { useTripsByUserQuery } from '@/features/users/api';
 import { LayoutProps, cn } from '@/lib/utils';
 import { A, useParams } from '@solidjs/router';
 import {
@@ -43,6 +45,9 @@ const Project: Component<LayoutProps> = (props) => {
   const [showNewTripDialog, setShowNewTripDialog] = createSignal(false);
   const [editPlanId, setEditPlanId] = createSignal<string>();
   const trips = useTripsDetailsQuery(params.id, searchParams.selectedPlans);
+  const profile = useProfile();
+
+  const activeTrips = useTripsByUserQuery(profile.data?.id ?? '', true);
 
   const planId = createMemo(() => {
     return searchParams.selectedPlans().length === 1
@@ -231,7 +236,6 @@ const Project: Component<LayoutProps> = (props) => {
       </div>
 
       <div class='p-2'>
-        {/* {profile.data?.role === 'DRIVER' && ( */}
         <Button
           class='w-full'
           disabled={planId() === undefined}
@@ -239,7 +243,6 @@ const Project: Component<LayoutProps> = (props) => {
         >
           {t('TRIPS.NEW_TRIP')}
         </Button>
-        {/* )} */}
       </div>
     </div>
   );

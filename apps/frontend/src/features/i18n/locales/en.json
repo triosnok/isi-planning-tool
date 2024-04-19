@@ -106,6 +106,7 @@
     "ONGOING_TRIPS": "Ongoing trips",
     "SHOW_MORE": "Show more",
     "SHOW_LESS": "Show less",
+    "GO_TO_ACTIVE_TRIP": "Go to active trip",
     "TRIP_SUMMARY": {
       "TITLE": "Trip summary",
       "TOTAL_RAILING_METERS_CAPTURED": "A total of {{ meters }} meters of railing has been captured",

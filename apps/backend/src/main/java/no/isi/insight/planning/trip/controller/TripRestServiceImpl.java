@@ -118,10 +118,11 @@ public class TripRestServiceImpl implements TripRestService {
   @Override
   @DriverAuthorization
   public ResponseEntity<List<TripDetails>> getTrips(
-      UUID projectId,
-      Optional<List<UUID>> planId
+      Optional<UUID> projectId,
+      Optional<List<UUID>> planId,
+      Optional<Boolean> active
   ) {
-    var trips = tripJpaRepository.findAllByProjectId(projectId, planId.orElse(null));
+    var trips = tripJpaRepository.findAll(projectId, planId.orElse(null), active);
 
     return ResponseEntity.ok(trips);
   }
@@ -161,4 +162,5 @@ public class TripRestServiceImpl implements TripRestService {
       )
     );
   }
+
 }

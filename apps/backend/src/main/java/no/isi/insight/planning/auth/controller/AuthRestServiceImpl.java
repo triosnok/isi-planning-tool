@@ -52,6 +52,7 @@ public class AuthRestServiceImpl implements AuthRestService {
     };
 
     var profile = UserProfile.builder()
+      .id(account.getUserAccountId())
       .fullName(account.getFullName())
       .email(account.getEmail())
       .phoneNumber(account.getPhoneNumber())

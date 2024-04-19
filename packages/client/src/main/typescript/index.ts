@@ -26,6 +26,7 @@ export interface SignInResponse {
 }
 
 export interface UserProfile {
+    id: string;
     fullName: string;
     email: string;
     phoneNumber: string;
@@ -74,6 +75,14 @@ export interface Geometry {
     srid: number;
 }
 
+export interface PositionEvent {
+    driverId: string;
+    vehicleId: string;
+    tripId: string;
+    geometry: Geometry;
+    heading: number;
+}
+
 export interface CreateProjectPlanRequest {
     projectId: string;
     importUrl: string;
@@ -107,8 +116,8 @@ export interface ProjectDetails {
     totalLength: number;
     deviations: number;
     notes: number;
-    progress: number;
     status: ProjectStatus;
+    progress: number;
 }
 
 export interface ProjectPlanDetails {
@@ -264,6 +273,8 @@ export type DateAsString = string;
 export type UserRole = "DRIVER" | "PLANNER";
 
 export type CaptureAction = "RESUME" | "PAUSE";
+
+export type PositionSubject = "VEHICLE" | "DRIVER";
 
 export type ProjectStatus = "UPCOMING" | "ONGOING" | "PREVIOUS";
 

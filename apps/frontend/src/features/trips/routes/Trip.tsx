@@ -24,14 +24,14 @@ import {
 } from '@tabler/icons-solidjs';
 import { Component, Show, createMemo, createSignal } from 'solid-js';
 import { useTripDetailsQuery } from '../api';
+import { useTripCaptureAction, useTripCaptureDetails } from '../api/capture';
 import TripNoteModule from '../components/TripNoteModule';
 import TripSummaryDialog from '../components/TripSummaryDialog';
 import { ImageStatus, getImageAnalysis } from '../utils';
-import { useTripCaptureAction, useTripCaptureDetails } from '../api/capture';
 
 const Trip: Component = () => {
   const params = useParams();
-  const tripDetails = useTripDetailsQuery(params.tripId);
+  const tripDetails = useTripDetailsQuery(() => params.tripId);
   const { t, d, n } = useTranslations();
   const project = useProjectDetailsQuery(params.projectId);
   const captureDetails = useTripCaptureDetails(params.tripId);
