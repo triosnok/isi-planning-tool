@@ -1,7 +1,6 @@
 import Header from '@/components/layout/Header';
 import MapRoot from '@/components/map/MapRoot';
 import BackLink from '@/components/navigation/BackLink';
-import { useTranslations } from '@/features/i18n';
 import TripTable from '@/features/trips/components/TripTable';
 import { useParams } from '@solidjs/router';
 import { Component, Show } from 'solid-js';
@@ -17,8 +16,6 @@ const VehicleDetails: Component = () => {
   const params = useParams();
   const vehicle = useVehicleDetailsQuery(params.id);
   const { update } = useVehicleMutation();
-  const { t } = useTranslations();
-
   const trips = useTripsByVehicleQuery(params.id);
 
   const handleUpdateVehicle = async (vehicle: VehicleSchemaValues) => {

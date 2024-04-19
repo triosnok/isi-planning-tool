@@ -57,6 +57,12 @@ module.exports = {
       fontFamily: {
         sans: ['Inter', ...fontFamily.sans],
       },
+      backgroundSize: {
+        'size-200': '200% 200%',
+      },
+      backgroundPosition: {
+        'pos-100': '100% 100%',
+      },
       keyframes: {
         'accordion-down': {
           from: { height: 0 },
