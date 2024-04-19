@@ -5,17 +5,18 @@ import { Input } from '@/components/ui/input';
 import { useTranslations } from '@/features/i18n';
 import { LayoutProps } from '@/lib/utils';
 import { useNavigate } from '@solidjs/router';
-import { Component, For } from 'solid-js';
+import { Component, For, Index } from 'solid-js';
 import { useVehiclesQuery } from '../api';
 import VehicleCard from '../components/VehicleCard';
-import VehicleSelect from '../components/VehicleSelect';
-import DatePicker from '@/components/temporal/DatePicker';
+import { usePositions } from '@/features/positions';
+import MapCarLayer from '@/components/map/MapCarLayer';
 
 const VehicleOverview: Component<LayoutProps> = (props) => {
   const vehicles = useVehiclesQuery();
   const navigate = useNavigate();
   const { t } = useTranslations();
   const handleAddVehicle = () => navigate('/vehicles/new');
+  const { positions } = usePositions();
 
   return (
     <div class='flex h-svh w-svw flex-col'>
@@ -51,7 +52,16 @@ const VehicleOverview: Component<LayoutProps> = (props) => {
         </main>
 
         <aside class='w-0 md:w-1/3'>
-          <MapRoot class='h-full w-full' />
+          <MapRoot class='h-full w-full'>
+            <Index each={positions()}>
+              {(pos) => (
+                <MapCarLayer
+                  position={pos().geometry}
+                  heading={pos().heading}
+                />
+              )}
+            </Index>
+          </MapRoot>
         </aside>
 
         {props.children}
