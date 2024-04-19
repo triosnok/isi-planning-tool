@@ -102,4 +102,8 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
     return this.findAll(Optional.empty(), Optional.of(driverId), Optional.empty(), null, active);
   }
 
+  default List<TripDetails> findAllActiveTrips() {
+    return this.findAll(Optional.empty(), Optional.empty(), Optional.empty(), null, Optional.of(true));
+  }
+
 }

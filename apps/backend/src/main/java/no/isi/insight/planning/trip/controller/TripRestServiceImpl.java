@@ -161,4 +161,12 @@ public class TripRestServiceImpl implements TripRestService {
       )
     );
   }
+
+  @Override
+  @DriverAuthorization
+  public ResponseEntity<List<TripDetails>> getActiveTrips() {
+    var trips = tripJpaRepository.findAllActiveTrips();
+
+    return ResponseEntity.ok(trips);
+  }
 }
