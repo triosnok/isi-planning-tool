@@ -99,4 +99,33 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
     return this.findAll(Optional.empty(), Optional.of(driverId), Optional.empty(), null);
   }
 
+  // language=sql
+  @Query("""
+    SELECT new no.isi.insight.planning.client.trip.view.TripDetails(
+      t.id,
+      pp.id,
+      p.id,
+      p.name,
+      d.fullName,
+      t.startedAt,
+      t.endedAt,
+      t.gnssLog,
+      t.cameraLogs,
+      t.sequenceNumber,
+      COALESCE(
+        (SELECT COUNT(tn) FROM TripNote tn WHERE tn.trip.id = t.id),
+        0
+      ),
+      0
+    ) FROM Trip t
+    INNER JOIN t.projectPlan pp
+    INNER JOIN pp.project p
+    INNER JOIN t.driver d
+    WHERE t.endedAt IS NULL
+      AND d.userAccountId = :userId
+    """)
+  List<TripDetails> findAllActiveTripsByUserId(
+      @Param("userId") UUID userId
+  );
+
 }

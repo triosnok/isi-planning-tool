@@ -7,23 +7,23 @@ import { cn } from '@/lib/utils';
 import { UserRole } from '@isi-insight/client';
 import { createForm, setValue, zodForm } from '@modular-forms/solid';
 import { Component, Show, createSignal } from 'solid-js';
-import { UserSchema, UserSchemaValues } from '../api';
+import { UpdateUserSchema, UpdateUserSchemaValues } from '../api';
 import UserRoleRadio from './UserRoleRadio';
 
-export interface UserFormProps {
+export interface UpdateUserFormProps {
   class?: string;
   userId?: string;
   name?: string;
   email?: string;
   phoneNumber?: string;
   role?: UserRole;
-  onSubmit: (values: UserSchemaValues) => void;
+  onSubmit: (values: UpdateUserSchemaValues) => void;
 }
-
-const UserForm: Component<UserFormProps> = (props) => {
+const UpdateUserForm: Component<UpdateUserFormProps> = (props) => {
   const { t } = useTranslations();
+
   const [form, { Form, Field }] = createForm({
-    validate: zodForm(UserSchema),
+    validate: zodForm(UpdateUserSchema),
     initialValues: {
       userId: props.userId,
       fullName: props.name,
@@ -33,10 +33,9 @@ const UserForm: Component<UserFormProps> = (props) => {
       role: props.role,
     },
   });
-
   const [changePassword, setChangePassword] = createSignal(false);
 
-  const handleSubmit = (values: UserSchemaValues) => {
+  const handleSubmit = (values: UpdateUserSchemaValues) => {
     props.onSubmit(values);
 
     if (changePassword()) {
@@ -137,10 +136,9 @@ const UserForm: Component<UserFormProps> = (props) => {
         <Field name='passwordConfirmation'>
           {(field, props) => (
             <>
-              <Label for={field.name} class='mt-2'>
+              <Label class='mt-1' for={field.name}>
                 {t('USERS.FORM.CONFIRM_PASSWORD')}
               </Label>
-
               <Input
                 {...props}
                 type='password'
@@ -167,13 +165,11 @@ const UserForm: Component<UserFormProps> = (props) => {
         )}
       </Field>
 
-      <Button type='submit' class='mt-auto'>
-        <Show when={props.userId} fallback={t('USERS.FORM.CREATE_USER')}>
-          {t('USERS.FORM.UPDATE_USER')}
-        </Show>
+      <Button type='submit' class='mt-2'>
+        {t('USERS.FORM.UPDATE_USER')}
       </Button>
     </Form>
   );
 };
 
-export default UserForm;
+export default UpdateUserForm;

@@ -6,15 +6,15 @@ import {
 import { useTranslations } from '@/features/i18n';
 import { useNavigate } from '@solidjs/router';
 import { Component } from 'solid-js';
-import { UserSchemaValues, useUserMutation } from '../api';
-import UserForm from '../components/UserForm';
+import { CreateUserSchemaValues, useUserMutation } from '../api';
+import CreateUserForm from '../components/CreateUserForm';
 
 const AddUser: Component = () => {
   const { t } = useTranslations();
   const { create } = useUserMutation();
   const navigate = useNavigate();
 
-  const handleSubmit = async (values: UserSchemaValues) => {
+  const handleSubmit = async (values: CreateUserSchemaValues) => {
     try {
       await create.mutateAsync(values);
       navigate('/users');
@@ -36,7 +36,7 @@ const AddUser: Component = () => {
           <h2 class='text-2xl font-bold'>{t('USERS.ADD_USER')}</h2>
         </SideDrawerHeader>
 
-        <UserForm onSubmit={handleSubmit} class='flex-1' />
+        <CreateUserForm onSubmit={handleSubmit} class='flex-1' />
       </SideDrawerContent>
     </SideDrawer>
   );

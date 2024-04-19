@@ -107,8 +107,8 @@ export interface ProjectDetails {
     totalLength: number;
     deviations: number;
     notes: number;
-    status: ProjectStatus;
     progress: number;
+    status: ProjectStatus;
 }
 
 export interface ProjectPlanDetails {
@@ -117,11 +117,19 @@ export interface ProjectPlanDetails {
     projectName: string;
     startsAt: DateAsString;
     endsAt: DateAsString;
-    vehicleModel: string;
-    registrationNumber: string;
+    vehicleId?: string | null;
+    vehicleModel?: string | null;
+    registrationNumber?: string | null;
+    imports: RailingImportDetails[];
     activeTrips: number;
     railings: number;
     meters: number;
+}
+
+export interface RailingImportDetails {
+    count: number;
+    url: string;
+    importedAt: DateAsString;
 }
 
 export interface RoadRailing {
@@ -195,7 +203,7 @@ export interface UpdateTripRequest {
 export interface CreateUserAccountRequest {
     fullName: string;
     email: string;
-    phoneNumber: string;
+    phoneNumber?: string | null;
     password: string;
     passwordConfirmation: string;
     role: UserRole;
@@ -204,10 +212,10 @@ export interface CreateUserAccountRequest {
 export interface UpdateUserAccountRequest {
     fullName: string;
     email: string;
-    phoneNumber: string;
+    phoneNumber?: string | null;
     changePassword: boolean;
-    password: string;
-    passwordConfirmation: string;
+    password?: string | null;
+    passwordConfirmation?: string | null;
     role: UserRole;
 }
 

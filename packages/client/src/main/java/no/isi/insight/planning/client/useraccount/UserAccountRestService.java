@@ -46,4 +46,9 @@ public interface UserAccountRestService {
       @PathVariable UUID id
   );
 
+  @GetExchange("/{id}/active-trips")
+  ResponseEntity<List<TripDetails>> findActiveTripsByUserId(
+      @PathVariable UUID id
+  );
+
 }

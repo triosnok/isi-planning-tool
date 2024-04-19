@@ -11,7 +11,14 @@ export interface PaginationProps {
 
 const Pagination: Component<PaginationProps> = (props) => {
   const [currentPage, setCurrentPage] = createSignal(1);
-  const totalPages = () => Math.ceil(props.totalItems / props.itemsPerPage);
+  
+  const totalPages = () => {
+    if (props.totalItems === 0) {
+      return 1;
+    }
+    return Math.ceil(props.totalItems / props.itemsPerPage);
+  };
+
   const { t } = useTranslations();
 
   const handlePageChange = (page: number) => {

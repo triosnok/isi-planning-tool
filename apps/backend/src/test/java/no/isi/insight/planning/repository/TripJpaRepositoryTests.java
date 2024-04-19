@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,9 +42,6 @@ class TripJpaRepositoryTests {
 
     projectPlan = new ProjectPlan(
       project,
-      List.of(
-        "https://nvdbapiles-v3.atlas.vegvesen.no/vegobjekter/5?kartutsnitt=202904.867,6875662.022,205444.872,6876933.348&segmentering=true&inkluder=metadata,lokasjon,geometri"
-      ),
       LocalDate.now(),
       LocalDate.now().plusDays(20)
     );
