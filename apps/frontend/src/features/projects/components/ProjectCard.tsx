@@ -25,7 +25,7 @@ export interface ProjectCardProps {
 }
 
 const ProjectCard: Component<ProjectCardProps> = (props) => {
-  const { t, n, d } = useTranslations();
+  const { t, n } = useTranslations();
 
   return (
     <div class='overflow-hidden truncate rounded-lg border hover:cursor-pointer hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-gray-900'>
