@@ -1,47 +1,61 @@
 import { RoadRailing } from '@isi-insight/client';
-import Leaflet from 'leaflet';
-import 'leaflet-textpath';
+import WKT from 'ol/format/WKT';
+import Layer from 'ol/layer/Layer';
+import WebGLVectorLayerRenderer from 'ol/renderer/webgl/VectorLayer';
+import VectorSource from 'ol/source/Vector';
+import { WebGLStyle } from 'ol/style/webgl';
 import { Component, createEffect, onCleanup } from 'solid-js';
-import { parse, useMap } from './MapRoot';
+import { useMap } from './MapRoot';
 
 export interface MapRailingLayerProps {
   railings?: RoadRailing[];
 }
 
+const style: WebGLStyle = {
+  'stroke-color': ['*', ['get', 'COLOR'], [220, 220, 220]],
+  'stroke-width': 10,
+  'stroke-offset': 0,
+  'stroke-pattern-src': '/ar.png',
+  'stroke-pattern-offset': 10,
+  'fill-color': ['*', ['get', 'COLOR'], [255, 255, 255, 0.6]],
+};
+
+class WebGLLayer extends Layer {
+  createRenderer() {
+    return new WebGLVectorLayerRenderer(this, {
+      style,
+    });
+  }
+}
+
+const fmt = new WKT();
+
 const MapRailingLayer: Component<MapRailingLayerProps> = (props) => {
   const { map } = useMap();
 
   const getRailingColor = (completionGrade: number) => {
-    if (completionGrade === 0) return 'blue';
-    else if (completionGrade > 0 && completionGrade < 95) return 'red';
-    else if (completionGrade >= 95 && completionGrade <= 100) return 'green';
-    else return 'gray';
+    if (completionGrade === 0) return [0, 0, 255, 1];
+    else if (completionGrade > 0 && completionGrade < 95) return [255, 0, 0, 1];
+    else if (completionGrade >= 95 && completionGrade <= 120)
+      return [0, 255, 0, 1];
+    else return undefined;
   };
 
   createEffect(() => {
-    const polylines = props.railings?.map((railing) => {
-      const ls = parse(railing.geometry);
-      const line = Leaflet.polyline(ls, {
-        color: getRailingColor(railing.captureGrade),
-        weight: 4,
-        opacity: 1,
-        smoothFactor: 1,
-      });
+    const polylines = props.railings
+      ?.map((railing) => {
+        const feature = fmt.readFeature(railing.geometry.wkt);
+        feature.set('COLOR', getRailingColor(railing.captureGrade));
+        return feature;
+      })
+      .filter(Boolean) as any;
 
-      // line.setText('  ►  ', {
-      //   repeat: true,
-      //   center: true,
-      //   offset: 10,
-      //   attributes: { fill: getRailingColor(railing.captureGrade)! },
-      // });
-
-      return line;
+    const lg = new WebGLLayer({
+      source: new VectorSource({ features: polylines }),
     });
 
-    const lg = Leaflet.layerGroup(polylines);
-
-    lg.addTo(map);
-    onCleanup(() => lg.removeFrom(map));
+    map.addLayer(lg);
+    onCleanup(() => map.removeLayer(lg));
   });
 
   return null;
