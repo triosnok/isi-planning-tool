@@ -44,4 +44,7 @@ public interface TripRestService {
       @PathVariable UUID tripId,
       @RequestBody UpdateTripRequest request
   );
+
+  @GetExchange("/active")
+  ResponseEntity<List<TripDetails>> getActiveTrips();
 }

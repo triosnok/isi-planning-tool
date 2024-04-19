@@ -22,6 +22,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import no.isi.insight.planning.client.project.view.RailingImportDetails;
 
 @Getter
 @Entity
@@ -41,8 +42,8 @@ public class ProjectPlan {
   private Project project;
 
   @JdbcTypeCode(SqlTypes.JSON)
-  @Column(name = "railing_import_urls")
-  private List<String> railingImportUrls;
+  @Column(name = "railing_imports")
+  private List<RailingImportDetails> imports;
 
   @Setter
   @Column(name = "starts_at")
@@ -70,20 +71,19 @@ public class ProjectPlan {
 
   public ProjectPlan(
       Project project,
-      List<String> railingImportUrls,
       LocalDate startsAt,
       LocalDate endsAt
   ) {
     this.project = project;
-    this.railingImportUrls = railingImportUrls;
     this.startsAt = startsAt;
     this.endsAt = endsAt;
+    this.imports = new ArrayList<>();
   }
 
-  public void addRailingImportUrl(
-      String url
+  public void addRailingImport(
+      RailingImportDetails importDetails
   ) {
-    this.railingImportUrls.add(url);
+    this.imports.add(importDetails);
   }
 
   public void addRailing(

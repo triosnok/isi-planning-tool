@@ -1,22 +1,30 @@
 package no.isi.insight.planning.repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import lombok.RequiredArgsConstructor;
-import no.isi.insight.planning.client.project.view.ProjectPlanDetails;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import no.isi.insight.planning.client.project.view.ProjectPlanDetails;
+import no.isi.insight.planning.client.project.view.RailingImportDetails;
+
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class ProjectPlanJdbcRepository {
   private final NamedParameterJdbcTemplate jdbcTemplate;
+  private final ObjectMapper objectMapper;
 
   // language=sql
   private static final String PLAN_DETAILS_QUERY = """
@@ -44,6 +52,8 @@ public class ProjectPlanJdbcRepository {
         p.name AS project_name,
         pp.starts_at,
         pp.ends_at,
+        pp.railing_imports,
+        pp.fk_vehicle_id,
         v.model,
         v.registration_number,
         ta.active_trips,
@@ -65,17 +75,28 @@ public class ProjectPlanJdbcRepository {
       ORDER BY pp.starts_at ASC
     """;
 
-  private static final RowMapper<ProjectPlanDetails> PLAN_DETAILS_MAPPER = (rs, i) -> {
-    var id = rs.getString("project_plan_id");
-    var project_id = rs.getString("fk_project_id");
+  private ProjectPlanDetails mapPlanDetailsRow(
+      ResultSet rs,
+      int index
+  ) throws SQLException {
+    var id = rs.getObject("project_plan_id", UUID.class);
 
     if (rs.wasNull()) {
       return null;
     }
 
+    List<RailingImportDetails> imports = List.of();
+
+    try {
+      imports = Arrays
+        .asList(this.objectMapper.readValue(rs.getBytes("railing_imports"), RailingImportDetails[].class));
+    } catch (Exception e) {
+      log.warn("Failed to parse railing imports JSON column: {}", e.getMessage());
+    }
+
     return ProjectPlanDetails.builder()
-      .id(UUID.fromString(id))
-      .projectId(UUID.fromString(project_id))
+      .id(id)
+      .projectId(rs.getObject("fk_project_id", UUID.class))
       .projectName(rs.getString("project_name"))
       .startsAt(rs.getDate("starts_at").toLocalDate())
       .endsAt(rs.getDate("ends_at").toLocalDate())
@@ -83,6 +104,8 @@ public class ProjectPlanJdbcRepository {
       .registrationNumber(rs.getString("registration_number"))
       .activeTrips(rs.getInt("active_trips"))
       .railings(rs.getInt("railing_count"))
+      .vehicleId(rs.getObject("fk_vehicle_id", UUID.class))
+      .imports(imports)
       .meters(rs.getDouble("sum_meters"))
       .build();
   };
@@ -96,7 +119,7 @@ public class ProjectPlanJdbcRepository {
     params.addValue("projectId", null, Types.VARCHAR);
     params.addValue("vehicleId", null, Types.VARCHAR);
 
-    return Optional.ofNullable(this.jdbcTemplate.queryForObject(PLAN_DETAILS_QUERY, params, PLAN_DETAILS_MAPPER));
+    return Optional.ofNullable(this.jdbcTemplate.queryForObject(PLAN_DETAILS_QUERY, params, this::mapPlanDetailsRow));
   }
 
   public List<ProjectPlanDetails> findByProjectId(
@@ -108,7 +131,7 @@ public class ProjectPlanJdbcRepository {
     params.addValue("projectId", projectId, Types.VARCHAR);
     params.addValue("vehicleId", null, Types.VARCHAR);
 
-    return this.jdbcTemplate.query(PLAN_DETAILS_QUERY, params, PLAN_DETAILS_MAPPER);
+    return this.jdbcTemplate.query(PLAN_DETAILS_QUERY, params, this::mapPlanDetailsRow);
   }
 
   public List<ProjectPlanDetails> findByVehicleId(
@@ -120,6 +143,6 @@ public class ProjectPlanJdbcRepository {
     params.addValue("projectId", null, Types.VARCHAR);
     params.addValue("vehicleId", vehicleId, Types.VARCHAR);
 
-    return this.jdbcTemplate.query(PLAN_DETAILS_QUERY, params, PLAN_DETAILS_MAPPER);
+    return this.jdbcTemplate.query(PLAN_DETAILS_QUERY, params, this::mapPlanDetailsRow);
   }
 }

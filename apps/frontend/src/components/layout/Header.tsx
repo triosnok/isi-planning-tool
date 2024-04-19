@@ -1,7 +1,10 @@
-import { useSignOutMutation } from '@/features/auth/api';
+import { useProfile, useSignOutMutation } from '@/features/auth/api';
+import { DateFormat, useTranslations } from '@/features/i18n';
 import { Theme, useTheme } from '@/features/theme';
+import ActiveTripButton from '@/features/trips/components/ActiveTripButton';
+import { useTripsByUserQuery } from '@/features/users/api';
 import { cn } from '@/lib/utils';
-import { A } from '@solidjs/router';
+import { A, useParams } from '@solidjs/router';
 import {
   IconLogout,
   IconMenu2,
@@ -9,7 +12,7 @@ import {
   IconSearch,
   IconSettings,
 } from '@tabler/icons-solidjs';
-import { Component } from 'solid-js';
+import { Component, Show } from 'solid-js';
 import Logo from '../logo/Logo';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import {
@@ -21,12 +24,14 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { SwitchButton } from '../ui/switch-button';
-import { DateFormat, useTranslations } from '@/features/i18n';
 
 const Header: Component = () => {
   const theme = useTheme();
   const signOut = useSignOutMutation();
   const { t, d } = useTranslations();
+  const profile = useProfile();
+  const activeTrips = useTripsByUserQuery(profile.data?.id ?? '', true);
+  const params = useParams();
 
   const handleSignOut = async () => {
     try {
@@ -75,7 +80,7 @@ const Header: Component = () => {
 
       <label
         class={cn(
-          'hidden flex-1 items-center justify-center rounded-md border pl-2 focus-within:ring-2 md:flex',
+          'hidden flex-1 items-center justify-center rounded-md border pl-2 focus-within:ring-2 lg:flex',
           'border-gray-300 bg-gray-50 ring-gray-300',
           'dark:border-gray-800 dark:bg-gray-900 dark:ring-gray-400'
         )}
@@ -90,14 +95,27 @@ const Header: Component = () => {
 
       <section class='flex flex-1 flex-row-reverse'>
         <DropdownMenu>
-          <DropdownMenuTrigger as={Avatar} class='h-8 w-8'>
-            <IconMenu2 class='h-8 w-8 text-gray-50 md:hidden' />
-            <AvatarImage
-              class='hidden md:block'
-              src='https://avatars.githubusercontent.com/u/47036430'
-            />
-            <AvatarFallback>thedatasnok</AvatarFallback>
-          </DropdownMenuTrigger>
+          <div class='flex items-center gap-8'>
+            <Show
+              when={
+                (activeTrips.data?.length ?? 0) > 0 &&
+                params.tripId !== activeTrips.data?.[0].id
+              }
+            >
+              <ActiveTripButton
+                projectId={activeTrips.data?.[0].projectId!}
+                tripId={activeTrips.data?.[0].id!}
+              />
+            </Show>
+            <DropdownMenuTrigger as={Avatar} class='h-8 w-8'>
+              <IconMenu2 class='h-8 w-8 text-gray-50 md:hidden' />
+              <AvatarImage
+                class='hidden md:block'
+                src='https://avatars.githubusercontent.com/u/47036430'
+              />
+              <AvatarFallback>thedatasnok</AvatarFallback>
+            </DropdownMenuTrigger>
+          </div>
           <DropdownMenuContent>
             <DropdownMenuGroup class='md:hidden'>
               <DropdownMenuItem>
@@ -126,7 +144,10 @@ const Header: Component = () => {
               >
                 <IconMoon class='h-5 w-5' />
                 <span>Dark theme</span>
-                <SwitchButton checked={theme.theme() === Theme.DARK} class='ml-1' />
+                <SwitchButton
+                  checked={theme.theme() === Theme.DARK}
+                  class='ml-1'
+                />
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={handleSignOut}

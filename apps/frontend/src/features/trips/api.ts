@@ -4,7 +4,7 @@ import {
   CreateTripRequest,
   TripDetails,
   TripNoteDetails,
-  UpdateTripNoteRequest
+  UpdateTripNoteRequest,
 } from '@isi-insight/client';
 import {
   createMutation,
@@ -63,11 +63,12 @@ export const useTripMutation = () => {
   return { create, update };
 };
 
-export const useTripDetailsQuery = (id: string) => {
+export const useTripDetailsQuery = (id: Accessor<string>) => {
   return createQuery(() => ({
-    queryKey: [CacheKey.TRIP_DETAILS, id],
-    queryFn: async () => {
-      const response = await axios.get<TripDetails>(`/api/v1/trips/${id}`);
+    queryKey: [CacheKey.TRIP_DETAILS, id()] as const,
+    queryFn: async ({ queryKey }) => {
+      const [_, tripId] = queryKey;
+      const response = await axios.get<TripDetails>(`/api/v1/trips/${tripId}`);
 
       return response.data;
     },
@@ -115,7 +116,10 @@ export const useTripNoteMutation = (tripId: string) => {
   }));
 
   const update = createMutation(() => ({
-    mutationFn: async (request: { id: string; note: UpdateTripNoteRequest }) => {
+    mutationFn: async (request: {
+      id: string;
+      note: UpdateTripNoteRequest;
+    }) => {
       const response = await axios.put<TripNoteDetails>(
         `/api/v1/trip-notes/${request.id}`,
         request.note
@@ -154,6 +158,5 @@ export const useTripNoteDetailsQuery = (tripId: string) => {
     },
   }));
 };
-
 
 //TODO: fix the rest of the caching issues here, its not ideal atm i think

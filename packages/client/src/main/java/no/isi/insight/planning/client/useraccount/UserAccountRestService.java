@@ -1,12 +1,14 @@
 package no.isi.insight.planning.client.useraccount;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
@@ -43,12 +45,7 @@ public interface UserAccountRestService {
 
   @GetExchange("/{id}/trips")
   ResponseEntity<List<TripDetails>> findTripsByUserId(
-      @PathVariable UUID id
+      @PathVariable UUID id,
+      @RequestParam Optional<Boolean> active
   );
-
-  @GetExchange("/{id}/active-trips")
-  ResponseEntity<List<TripDetails>> findActiveTripsByUserId(
-      @PathVariable UUID id
-  );
-
 }

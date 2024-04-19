@@ -1,6 +1,7 @@
 package no.isi.insight.planning.useraccount.controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -150,23 +151,12 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
   @Override
   @DriverAuthorization
   public ResponseEntity<List<TripDetails>> findTripsByUserId(
-      UUID id
+      UUID id,
+      Optional<Boolean> active
   ) {
     this.userAccountJpaRepository.findById(id)
       .orElseThrow(() -> new NotFoundException("Could not find user with id: %s".formatted(id.toString())));
 
-    return ResponseEntity.ok(this.tripJpaRepository.findAllByDriverId(id));
-  }
-
-  @Override
-  @DriverAuthorization
-  public ResponseEntity<List<TripDetails>> findActiveTripsByUserId(
-      UUID id
-  ) {
-    this.userAccountJpaRepository.findById(id)
-      .orElseThrow(() -> new NotFoundException("Could not find user with id: " + id));
-
-    List<TripDetails> activeTrips = this.tripJpaRepository.findAllActiveTripsByUserId(id);
-    return ResponseEntity.ok(activeTrips);
+    return ResponseEntity.ok(this.tripJpaRepository.findAllByDriverId(id, active));
   }
 }

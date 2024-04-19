@@ -26,6 +26,7 @@ export interface SignInResponse {
 }
 
 export interface UserProfile {
+    id: string;
     fullName: string;
     email: string;
     phoneNumber: string;
@@ -74,6 +75,14 @@ export interface Geometry {
     srid: number;
 }
 
+export interface PositionEvent {
+    driverId: string;
+    vehicleId: string;
+    tripId: string;
+    geometry: Geometry;
+    heading: number;
+}
+
 export interface CreateProjectPlanRequest {
     projectId: string;
     importUrl: string;
@@ -117,11 +126,19 @@ export interface ProjectPlanDetails {
     projectName: string;
     startsAt: DateAsString;
     endsAt: DateAsString;
-    vehicleModel: string;
-    registrationNumber: string;
+    vehicleId?: string | null;
+    vehicleModel?: string | null;
+    registrationNumber?: string | null;
+    imports: RailingImportDetails[];
     activeTrips: number;
     railings: number;
     meters: number;
+}
+
+export interface RailingImportDetails {
+    count: number;
+    url: string;
+    importedAt: DateAsString;
 }
 
 export interface RoadRailing {
@@ -256,6 +273,8 @@ export type DateAsString = string;
 export type UserRole = "DRIVER" | "PLANNER";
 
 export type CaptureAction = "RESUME" | "PAUSE";
+
+export type PositionSubject = "VEHICLE" | "DRIVER";
 
 export type ProjectStatus = "UPCOMING" | "ONGOING" | "PREVIOUS";
 
