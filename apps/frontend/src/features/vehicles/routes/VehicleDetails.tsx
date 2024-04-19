@@ -2,7 +2,6 @@ import Header from '@/components/layout/Header';
 import MapCarLayer from '@/components/map/MapCarLayer';
 import MapRoot from '@/components/map/MapRoot';
 import BackLink from '@/components/navigation/BackLink';
-import { useTranslations } from '@/features/i18n';
 import { useSubjectPosition } from '@/features/positions';
 import TripTable from '@/features/trips/components/TripTable';
 import { useParams } from '@solidjs/router';
@@ -19,8 +18,6 @@ const VehicleDetails: Component = () => {
   const params = useParams();
   const vehicle = useVehicleDetailsQuery(params.id);
   const { update } = useVehicleMutation();
-  const { t } = useTranslations();
-
   const trips = useTripsByVehicleQuery(params.id);
   const { position } = useSubjectPosition(() => ({
     id: params.id,

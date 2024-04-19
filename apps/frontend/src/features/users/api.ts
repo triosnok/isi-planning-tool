@@ -26,12 +26,19 @@ export const useUsersQuery = () => {
   }));
 };
 
-export const useTripsByUserQuery = (userId: string) => {
+export const useTripsByUserQuery = (userId: string, active?: boolean) => {
   return createQuery(() => ({
-    queryKey: [CacheKey.TRIP_LIST, userId],
-    queryFn: async () => {
+    queryKey: [CacheKey.TRIP_LIST, userId, active] as const,
+    queryFn: async ({ queryKey }) => {
+      const [_, userId, active] = queryKey;
+      const params = new URLSearchParams();
+
+      if (active !== undefined) {
+        params.set('active', active.toString());
+      }
+
       const response = await axios.get<TripDetails[]>(
-        `/api/v1/user-accounts/${userId}/trips`
+        `/api/v1/user-accounts/${userId}/trips?${params.toString()}`
       );
 
       return response.data;

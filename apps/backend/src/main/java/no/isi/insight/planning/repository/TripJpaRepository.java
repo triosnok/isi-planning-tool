@@ -48,20 +48,22 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
       AND (:projectId IS NULL OR p.id = :projectId)
       AND (:driverId IS NULL OR d.userAccountId = :driverId)
       AND (:vehicleId IS NULL OR v.id = :vehicleId)
-      AND COALESCE(:planIds, NULL) IS NULL OR pp.id IN (:planIds)
+      AND (COALESCE(:planIds, NULL) IS NULL OR pp.id IN (:planIds))
+      AND (:active IS NULL OR ((:active = false AND t.endedAt IS NOT NULL) OR (:active = true AND t.endedAt IS NULL)))
     """)
   List<TripDetails> findAll(
       @Param("projectId") Optional<UUID> projectId,
       @Param("driverId") Optional<UUID> driverId,
       @Param("vehicleId") Optional<UUID> vehicleId,
-      @Param("planIds") List<UUID> planIds
+      @Param("planIds") List<UUID> planIds,
+      @Param("active") Optional<Boolean> active
   );
 
   default List<TripDetails> findAllByProjectId(
       UUID projectId,
       List<UUID> planIds
   ) {
-    return this.findAll(Optional.of(projectId), Optional.empty(), Optional.empty(), planIds);
+    return this.findAll(Optional.of(projectId), Optional.empty(), Optional.empty(), planIds, Optional.empty());
   }
 
   // language=sql
@@ -90,42 +92,14 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
   default List<TripDetails> findAllByVehicleId(
       UUID vehicleId
   ) {
-    return this.findAll(Optional.empty(), Optional.empty(), Optional.of(vehicleId), null);
+    return this.findAll(Optional.empty(), Optional.empty(), Optional.of(vehicleId), null, Optional.empty());
   }
 
   default List<TripDetails> findAllByDriverId(
-      UUID driverId
+      UUID driverId,
+      Optional<Boolean> active
   ) {
-    return this.findAll(Optional.empty(), Optional.of(driverId), Optional.empty(), null);
+    return this.findAll(Optional.empty(), Optional.of(driverId), Optional.empty(), null, active);
   }
-
-  // language=sql
-  @Query("""
-    SELECT new no.isi.insight.planning.client.trip.view.TripDetails(
-      t.id,
-      pp.id,
-      p.id,
-      p.name,
-      d.fullName,
-      t.startedAt,
-      t.endedAt,
-      t.gnssLog,
-      t.cameraLogs,
-      t.sequenceNumber,
-      COALESCE(
-        (SELECT COUNT(tn) FROM TripNote tn WHERE tn.trip.id = t.id),
-        0
-      ),
-      0
-    ) FROM Trip t
-    INNER JOIN t.projectPlan pp
-    INNER JOIN pp.project p
-    INNER JOIN t.driver d
-    WHERE t.endedAt IS NULL
-      AND d.userAccountId = :userId
-    """)
-  List<TripDetails> findAllActiveTripsByUserId(
-      @Param("userId") UUID userId
-  );
 
 }
