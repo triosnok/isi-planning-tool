@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.linearref.LengthIndexedLine;
 
+import io.hypersistence.utils.hibernate.type.range.Range;
 import lombok.RequiredArgsConstructor;
 import no.isi.insight.planning.capture.model.RailingMatchResult;
 import no.isi.insight.planning.geometry.GeometryService;
@@ -23,32 +25,59 @@ public class CaptureRailingMatcher {
 
   private RoadRailing lastMatchedRailing;
 
+  // these could probably be configurable
   private static final double CAMERA_FOV = 60.0;
+  private static final double TOP_CAMERA_FOV = 80.0;
+  private static final double SEGMENT_LENGTH = 1.0 / 2;
 
   private Polygon createPolygon(
       Point point,
       double heading,
-      double height
+      double height,
+      double fov
   ) {
     var factory = point.getFactory();
     var a = point.getCoordinate();
 
-    var sideLength = height / Math.cos(Math.toRadians(CAMERA_FOV / 2));
+    var sideLength = height / Math.cos(Math.toRadians(fov / 2));
 
-    var b = this.geometryService.project(a, heading - (CAMERA_FOV / 2), sideLength);
-    var c = this.geometryService.project(a, heading + (CAMERA_FOV / 2), sideLength);
+    var b = this.geometryService.project(a, heading - (fov / 2), sideLength);
+    var c = this.geometryService.project(a, heading + (fov / 2), sideLength);
 
     return factory.createPolygon(new Coordinate[] {
         a, b, c, a
     });
   }
 
+  private Range<Double> computeCoverage(
+      Polygon polygon,
+      LineString geometry,
+      LengthIndexedLine indexedLine
+  ) {
+    var intersect = polygon.intersection(geometry);
+    var intersectCoords = intersect.getCoordinates();
+    var startIdx = 0.0;
+    var endIdx = 0.0;
+
+    if (intersectCoords.length > 2) {
+      var first = intersectCoords[0];
+      var last = intersectCoords[intersectCoords.length - 1];
+      startIdx = indexedLine.project(first);
+      endIdx = indexedLine.project(last);
+    }
+
+    return Range.closed(startIdx, endIdx);
+  }
+
   public Optional<RailingMatchResult> matchRailing(
       Point point,
       Double heading
   ) {
-    var left = this.createPolygon(point, heading - 90, this.length);
-    var right = this.createPolygon(point, heading + 90, this.length);
+    var leftAngle = heading - 90;
+    var rightAngle = heading + 90;
+
+    var left = this.createPolygon(point, leftAngle, this.length, TOP_CAMERA_FOV);
+    var right = this.createPolygon(point, rightAngle, this.length, TOP_CAMERA_FOV);
 
     RoadRailing matchedRailing = null;
 
@@ -73,11 +102,11 @@ public class CaptureRailingMatcher {
     }
 
     var matchedSide = RoadSide.LEFT;
-    var usedPoly = left;
+    var topPoly = left;
 
     if (right.intersects(matchedRailing.getGeometry())) {
       matchedSide = RoadSide.RIGHT;
-      usedPoly = right;
+      topPoly = right;
     }
 
     this.lastMatchedRailing = matchedRailing;
@@ -92,18 +121,18 @@ public class CaptureRailingMatcher {
     var roadSegment = nearestSegment.get();
     var indexedSegment = new LengthIndexedLine(roadSegment.getGeometry());
 
-    var nearestPoint = indexedSegment.project(point.getCoordinate());
-    var startIdx = Math.max(nearestPoint - 0.5, indexedSegment.getStartIndex());
-    var endIdx = Math.min(nearestPoint + 0.5, indexedSegment.getEndIndex());
+    var segmentIdx = indexedSegment.project(point.getCoordinate());
+    var segmentStartIdx = Math.max(segmentIdx - SEGMENT_LENGTH, indexedSegment.getStartIndex());
+    var segmentEndIdx = Math.min(segmentIdx + SEGMENT_LENGTH, indexedSegment.getEndIndex());
 
-    var nearest = indexedSegment.extractPoint(nearestPoint);
+    var nearest = indexedSegment.extractPoint(segmentIdx);
 
     if (!this.isWithinHeight(point.getCoordinate(), nearest)) {
       return Optional.empty();
     }
 
-    var segmentStart = indexedSegment.extractPoint(startIdx);
-    var segmentEnd = indexedSegment.extractPoint(endIdx);
+    var segmentStart = indexedSegment.extractPoint(segmentStartIdx);
+    var segmentEnd = indexedSegment.extractPoint(segmentEndIdx);
 
     var segmentAngle = Math
       .toDegrees(Math.atan2(segmentEnd.getY() - segmentStart.getY(), segmentEnd.getX() - segmentStart.getX()));
@@ -117,18 +146,14 @@ public class CaptureRailingMatcher {
       }
     }
 
-    var indexedRailing = new LengthIndexedLine(this.lastMatchedRailing.getGeometry());
-    var intersect = usedPoly.intersection(this.lastMatchedRailing.getGeometry());
-    var intersectCoords = intersect.getCoordinates();
-    var matchStartIdx = 0.0;
-    var matchEndIdx = 0.0;
+    var sideAngle = matchedSide == RoadSide.LEFT ? leftAngle : rightAngle;
+    var sidePoly = this.createPolygon(point, sideAngle, this.length, CAMERA_FOV);
 
-    if (intersectCoords.length > 2) {
-      var first = intersectCoords[0];
-      var last = intersectCoords[intersectCoords.length - 1];
-      matchStartIdx = indexedRailing.project(first);
-      matchEndIdx = indexedRailing.project(last);
-    }
+    var indexedRailing = new LengthIndexedLine(this.lastMatchedRailing.getGeometry());
+
+    var railingTopCoverage = this.computeCoverage(topPoly, this.lastMatchedRailing.getGeometry(), indexedRailing);
+    var railingSideCoverage = this.computeCoverage(sidePoly, this.lastMatchedRailing.getGeometry(), indexedRailing);
+    var segmentCoverage = Range.closed(segmentStartIdx, segmentEndIdx);
 
     var result = new RailingMatchResult(
       point,
@@ -136,8 +161,10 @@ public class CaptureRailingMatcher {
       matchedRailing,
       roadSegment,
       matchedSide,
-      matchStartIdx,
-      matchEndIdx
+      railingTopCoverage,
+      railingSideCoverage,
+      segmentIdx,
+      segmentCoverage
     );
 
     return Optional.of(result);

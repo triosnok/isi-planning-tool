@@ -117,8 +117,10 @@ public class CaptureReplayService {
 
         var side = match.get().side();
         var isValidMatch = switch (side) {
-          case LEFT -> logEntry.images().containsKey(CameraPosition.LEFT);
-          case RIGHT -> logEntry.images().containsKey(CameraPosition.RIGHT);
+          case LEFT ->
+            logEntry.images().containsKey(CameraPosition.TOP) || logEntry.images().containsKey(CameraPosition.LEFT);
+          case RIGHT ->
+            logEntry.images().containsKey(CameraPosition.TOP) || logEntry.images().containsKey(CameraPosition.RIGHT);
           default -> true;
         };
 
@@ -128,12 +130,18 @@ public class CaptureReplayService {
 
         logReplay.incrementMetersCaptured();
 
+        var matchResult = match.get();
+
         var capture = new TripRailingCapture(
           trip,
-          match.get().roadSegment(),
+          matchResult.roadSegment(),
           logEntry.timestamp(),
           point,
-          logEntry.images()
+          logEntry.images(),
+          matchResult.segmentIndex(),
+          matchResult.railingTopCoverage(),
+          matchResult.railingSideCoverage(),
+          matchResult.segmentCoverage()
         );
 
         this.railingCaptureJpaRepository.save(capture);

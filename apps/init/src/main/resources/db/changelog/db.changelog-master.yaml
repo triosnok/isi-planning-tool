@@ -109,3 +109,10 @@ databaseChangeLog:
         - sqlFile:
             path: 013-railing-import-details/000-rename-and-update-column.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: 014-capture-coverage
+      author: halvard
+      changes:
+        - sqlFile:
+            path: 014-capture-coverage/000-add-capture-coverage.sql
+            relativeToChangelogFile: true

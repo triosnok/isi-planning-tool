@@ -38,6 +38,9 @@ public class RoadSegment {
   @Column(name = "geometry")
   private LineString geometry;
 
+  @Column(name = "length")
+  private double length;
+
   @Enumerated(EnumType.STRING)
   @Column(name = "direction_of_road")
   private RoadDirection direction;
@@ -57,11 +60,13 @@ public class RoadSegment {
       String id,
       RoadRailing railing,
       LineString lineString,
+      double length,
       RoadDirection direction,
       RoadSide side
   ) {
     this.id = id;
     this.railing = railing;
+    this.length = length;
     this.geometry = lineString;
     this.direction = direction;
     this.side = side;
