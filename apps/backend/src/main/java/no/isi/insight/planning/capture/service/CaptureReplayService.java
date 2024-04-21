@@ -102,7 +102,7 @@ public class CaptureReplayService {
         var point = this.geometryService.transformGpsToRail(gpsPoint.get());
         point.setSRID(25833);
 
-        var match = matcher.matchRailing(point, logEntry.heading());
+        var matches = matcher.matchRailings(point, logEntry.heading());
 
         this.eventPublisher.publishEvent(
           new CaptureDetailsEvent(
@@ -111,40 +111,44 @@ public class CaptureReplayService {
           )
         );
 
-        if (match.isEmpty()) {
+        if (matches.isEmpty()) {
           return;
         }
 
-        var side = match.get().side();
-        var isValidMatch = switch (side) {
-          case LEFT ->
-            logEntry.images().containsKey(CameraPosition.TOP) || logEntry.images().containsKey(CameraPosition.LEFT);
-          case RIGHT ->
-            logEntry.images().containsKey(CameraPosition.TOP) || logEntry.images().containsKey(CameraPosition.RIGHT);
-          default -> true;
-        };
+        var captures = new ArrayList<TripRailingCapture>();
 
-        if (!isValidMatch) {
-          return;
+        for (var match : matches) {
+          var side = match.side();
+          var isValidMatch = switch (side) {
+            case LEFT ->
+              logEntry.images().containsKey(CameraPosition.TOP) || logEntry.images().containsKey(CameraPosition.LEFT);
+            case RIGHT ->
+              logEntry.images().containsKey(CameraPosition.TOP) || logEntry.images().containsKey(CameraPosition.RIGHT);
+            default -> true;
+          };
+
+          if (!isValidMatch) {
+            return;
+          }
+
+          logReplay.incrementMetersCaptured();
+
+          var capture = new TripRailingCapture(
+            trip,
+            match.roadSegment(),
+            logEntry.timestamp(),
+            point,
+            logEntry.images(),
+            match.segmentIndex(),
+            match.railingTopCoverage(),
+            match.railingSideCoverage(),
+            match.segmentCoverage()
+          );
+
+          captures.add(capture);
         }
 
-        logReplay.incrementMetersCaptured();
-
-        var matchResult = match.get();
-
-        var capture = new TripRailingCapture(
-          trip,
-          matchResult.roadSegment(),
-          logEntry.timestamp(),
-          point,
-          logEntry.images(),
-          matchResult.segmentIndex(),
-          matchResult.railingTopCoverage(),
-          matchResult.railingSideCoverage(),
-          matchResult.segmentCoverage()
-        );
-
-        this.railingCaptureJpaRepository.save(capture);
+        this.railingCaptureJpaRepository.saveAll(captures);
       }
     );
 

@@ -61,17 +61,17 @@ class CaptureRailingMatcherTests {
 
     var heading = -45.0;
 
-    var match = matcher.matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(2 3 1)").get(), heading);
-    assertTrue(match.isPresent());
-    assertEquals(heading, match.get().heading(), 0.0);
+    var match = matcher.matchRailings(GEOMETRY_SERVICE.parsePoint("POINT Z(2 3 1)").get(), heading);
+    assertFalse(match.isEmpty());
+    assertEquals(heading, match.get(0).heading(), 0.0);
 
-    match = matcher.matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(2.5 2.5 1)").get(), heading);
-    assertTrue(match.isPresent());
-    assertEquals(heading, match.get().heading(), 0.0);
+    match = matcher.matchRailings(GEOMETRY_SERVICE.parsePoint("POINT Z(2.5 2.5 1)").get(), heading);
+    assertFalse(match.isEmpty());
+    assertEquals(heading, match.get(0).heading(), 0.0);
 
-    match = matcher.matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(3 2 1)").get(), heading);
-    assertTrue(match.isPresent());
-    assertEquals(heading, match.get().heading(), 0.0);
+    match = matcher.matchRailings(GEOMETRY_SERVICE.parsePoint("POINT Z(3 2 1)").get(), heading);
+    assertFalse(match.isEmpty());
+    assertEquals(heading, match.get(0).heading(), 0.0);
   }
 
   // @Test
@@ -146,8 +146,8 @@ class CaptureRailingMatcherTests {
 
     var heading = -45.0;
 
-    var match = matcher.matchRailing(GEOMETRY_SERVICE.parsePoint("POINT Z(2 3 5)").get(), heading);
-    assertFalse(match.isPresent());
+    var match = matcher.matchRailings(GEOMETRY_SERVICE.parsePoint("POINT Z(2 3 5)").get(), heading);
+    assertTrue(match.isEmpty());
   }
 
 }

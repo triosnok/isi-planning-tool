@@ -1,5 +1,6 @@
 package no.isi.insight.planning.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
@@ -64,15 +65,15 @@ public class TripRailingCapture {
 
   @Type(PostgreSQLRangeType.class)
   @Column(name = "railing_top_coverage")
-  private Range<Double> railingTopCoverage;
+  private Range<BigDecimal> railingTopCoverage;
 
   @Type(PostgreSQLRangeType.class)
   @Column(name = "railing_side_coverage")
-  private Range<Double> railingSideCoverage;
+  private Range<BigDecimal> railingSideCoverage;
 
   @Type(PostgreSQLRangeType.class)
   @Column(name = "segment_coverage")
-  private Range<Double> segmentCoverage;
+  private Range<BigDecimal> segmentCoverage;
 
   public TripRailingCapture(
       Trip trip,
@@ -81,9 +82,9 @@ public class TripRailingCapture {
       Point position,
       Map<CameraPosition, String> imageUrls,
       double segmentIndex,
-      Range<Double> railingTopCoverage,
-      Range<Double> railingSideCoverage,
-      Range<Double> segmentCoverage
+      Range<BigDecimal> railingTopCoverage,
+      Range<BigDecimal> railingSideCoverage,
+      Range<BigDecimal> segmentCoverage
   ) {
     this.trip = trip;
     this.roadSegment = segment;
