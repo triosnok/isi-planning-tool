@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useNavigate, useParams } from '@solidjs/router';
-import PlanForm, { ProjectPlanForm } from '../components/PlanForm';
-import { useProjectPlansMutation } from '../api';
+import PlanForm from '../components/PlanForm';
+import { ProjectPlanSchemaValues, useProjectPlansMutation } from '../api';
 import { useTranslations } from '@/features/i18n';
 
 const NewProjectPlan = () => {
@@ -16,7 +16,7 @@ const NewProjectPlan = () => {
     }
   };
 
-  const handleSubmit = async (values: ProjectPlanForm) => {
+  const handleSubmit = async (values: ProjectPlanSchemaValues) => {
     try {
       await create.mutateAsync(values);
       navigate('../..');

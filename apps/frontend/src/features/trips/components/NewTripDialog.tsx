@@ -21,8 +21,8 @@ import { useNavigate } from '@solidjs/router';
 import { Component, createEffect, createSignal } from 'solid-js';
 import { z } from 'zod';
 import { useTripMutation } from '../api';
-import CaptureLogSelect from './CaptureLogSelect';
 import { useCaptureLogsQuery } from '../api/capture';
+import CaptureLogSelect from './CaptureLogSelect';
 
 export interface NewTripDialogProps {
   open: boolean;
@@ -52,7 +52,7 @@ const NewTripDialog: Component<NewTripDialogProps> = (props) => {
   const { t } = useTranslations();
 
   createEffect(() => {
-    if (props.open) {
+    if (props.open && !selectedVehicle()) {
       const preferred = preferedVehicle.selectedVehicle();
       setSelectedVehicle(preferred);
     }
@@ -80,11 +80,10 @@ const NewTripDialog: Component<NewTripDialogProps> = (props) => {
         <Label required>Vehicle</Label>
 
         <VehicleSelect
-          value={preferedVehicle.selectedVehicle() ?? selectedVehicle()}
+          value={selectedVehicle()}
           onChange={setSelectedVehicle}
           vehicles={vehicles.data ?? []}
           emptyText={t('VEHICLES.NO_VEHICLE_SELECTED')}
-          preferedVehicle={true}
         />
 
         <Label>Capture log</Label>

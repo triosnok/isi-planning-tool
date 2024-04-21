@@ -21,10 +21,6 @@ export const routes: RouteDefinition[] = [
             path: '/plans/new',
             component: lazy(() => import('./NewProjectPlan')),
           },
-          {
-            path: '/plans/:planId',
-            component: lazy(() => import('./EditProjectPlan')),
-          },
         ],
       },
     ],

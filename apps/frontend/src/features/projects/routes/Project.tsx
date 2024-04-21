@@ -11,6 +11,7 @@ import { SeparatorWithText } from '@/components/ui/separator';
 import { SwitchButton } from '@/components/ui/switch-button';
 import { useProfile } from '@/features/auth/api';
 import { DateFormat, useTranslations } from '@/features/i18n';
+import UpdateProjectPlanDialog from '@/features/projects/components/UpdateProjectPlanDialog';
 import TripCard from '@/features/trips/components/TripCard';
 import { useTripsByUserQuery } from '@/features/users/api';
 import { LayoutProps, cn } from '@/lib/utils';
@@ -20,13 +21,14 @@ import {
   IconEdit,
   IconPlus,
 } from '@tabler/icons-solidjs';
+import dayjs from 'dayjs';
 import {
   Component,
   For,
   Show,
   Suspense,
   createMemo,
-  createSignal,
+  createSignal
 } from 'solid-js';
 import { useTripsDetailsQuery } from '../../trips/api';
 import NewTripDialog from '../../trips/components/NewTripDialog';
@@ -41,6 +43,7 @@ const Project: Component<LayoutProps> = (props) => {
   const { t, d, n } = useTranslations();
   const searchParams = useProjectSearchParams();
   const [showNewTripDialog, setShowNewTripDialog] = createSignal(false);
+  const [editPlanId, setEditPlanId] = createSignal<string>();
   const trips = useTripsDetailsQuery(params.id, searchParams.selectedPlans);
   const profile = useProfile();
 
@@ -79,8 +82,10 @@ const Project: Component<LayoutProps> = (props) => {
                   <Show when={project.data} fallback='...'>
                     {(data) => (
                       <>
-                        {d(data().startsAt, DateFormat.MONTH_DAY)} -{' '}
-                        {d(data().endsAt, DateFormat.MONTH_DAY)}
+                        {d(data().startsAt, DateFormat.MONTH_DAY)}
+                        <Show when={dayjs(data().endsAt).isValid()}>
+                          {` - ${d(data().endsAt, DateFormat.MONTH_DAY)}`}
+                        </Show>
                       </>
                     )}
                   </Show>
@@ -168,6 +173,7 @@ const Project: Component<LayoutProps> = (props) => {
                       railingAmount={plan.railings}
                       onToggle={() => handlePlanToggled(plan.id)}
                       selected={searchParams.selectedPlans().includes(plan.id)}
+                      onEdit={() => setEditPlanId(plan.id)}
                     />
                   )}
                 </For>
@@ -214,6 +220,15 @@ const Project: Component<LayoutProps> = (props) => {
           projectId={params.id}
           planId={planId()}
         />
+
+        <Show when={editPlanId()}>
+          {(id) => (
+            <UpdateProjectPlanDialog
+              onOpenChange={() => setEditPlanId(undefined)}
+              planId={id()}
+            />
+          )}
+        </Show>
 
         {props.children}
       </div>

@@ -37,8 +37,6 @@ const TripTable: Component<TripTableProps> = (props) => {
 
   const [currentPage, setCurrentPage] = createSignal(1);
   const itemsPerPage = 10;
-  const totalPages = () => Math.ceil(props.trips.length / itemsPerPage);
-
   const currentTrips = () =>
     props.trips.slice(
       (currentPage() - 1) * itemsPerPage,
@@ -68,7 +66,7 @@ const TripTable: Component<TripTableProps> = (props) => {
         <Input placeholder={t('NAVIGATION.SEARCH')} class='w-fit' />
         <Pagination
           itemsPerPage={itemsPerPage}
-          totalItems={totalPages()}
+          totalItems={props.trips.length}
           onPageChange={setCurrentPage}
         />
       </div>
@@ -94,7 +92,9 @@ const TripTable: Component<TripTableProps> = (props) => {
           </TableRow>
         </TableHeader>
         <Show when={currentTrips().length === 0}>
-          <TableCaption class='pt-4'>{t('TRIPS.TRIP_TABLE.NO_TRIPS_AVAILABLE')}</TableCaption>
+          <TableCaption class='pt-4'>
+            {t('TRIPS.TRIP_TABLE.NO_TRIPS_AVAILABLE')}
+          </TableCaption>
         </Show>
         <TableBody>
           <For each={currentTrips()}>

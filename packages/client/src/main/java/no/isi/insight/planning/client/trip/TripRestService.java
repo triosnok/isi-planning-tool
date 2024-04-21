@@ -35,8 +35,9 @@ public interface TripRestService {
 
   @GetExchange
   ResponseEntity<List<TripDetails>> getTrips(
-      @RequestParam UUID projectId,
-      @RequestParam Optional<List<UUID>> planId
+      @RequestParam Optional<UUID> projectId,
+      @RequestParam Optional<List<UUID>> planId,
+      @RequestParam Optional<Boolean> active
   );
 
   @PutExchange("/{tripId}")
@@ -44,7 +45,4 @@ public interface TripRestService {
       @PathVariable UUID tripId,
       @RequestBody UpdateTripRequest request
   );
-
-  @GetExchange("/active")
-  ResponseEntity<List<TripDetails>> getActiveTrips();
 }

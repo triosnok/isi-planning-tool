@@ -21,7 +21,7 @@ const DatePicker: Component<DatePickerProps> = (props) => {
   const { weeks, next, previous, reference, setReference } = useCalendar();
   const [isOpen, setIsOpen] = createSignal(false);
   const [selectedDate, setSelectedDate] = createSignal(
-    props.value !== undefined ? dayjs(props.value) : undefined
+    props.value && dayjs(props.value).isValid() ? dayjs(props.value) : undefined
   );
 
   let triggerRef!: HTMLButtonElement;
@@ -68,7 +68,9 @@ const DatePicker: Component<DatePickerProps> = (props) => {
   };
 
   onMount(() => {
-    if (props.value) emitChange(selectedDate());
+    if (props.value && dayjs(props.value).isValid()) {
+      emitChange(selectedDate());
+    }
   });
 
   return (
