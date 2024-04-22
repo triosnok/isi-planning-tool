@@ -62,7 +62,8 @@ public class PositionService {
   ) {
     while (true) {
       // ends the loop, happens if no more subscriptions are present
-      if (!this.emitters.containsKey(subscription)) {
+      var emitters = this.emitters.get(subscription);
+      if (emitters == null) {
         break;
       }
 
@@ -75,7 +76,7 @@ public class PositionService {
 
         var event = SseEmitter.event().name("message").data(positions, MediaType.APPLICATION_JSON);
 
-        for (var emitter : this.emitters.get(subscription)) {
+        for (var emitter : emitters) {
           emitter.send(event);
         }
 
