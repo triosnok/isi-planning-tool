@@ -10,6 +10,7 @@ import {
   useQueryClient,
 } from '@tanstack/solid-query';
 import axios from 'axios';
+import { Accessor } from 'solid-js';
 import { z } from 'zod';
 
 export const useUsersQuery = () => {
@@ -26,11 +27,13 @@ export const useUsersQuery = () => {
   }));
 };
 
-export const useTripsByUserQuery = (userId: string, active?: boolean) => {
+export const useTripsByUserQuery = (userId: Accessor<string | undefined>, active?: boolean) => {
   return createQuery(() => ({
-    queryKey: [CacheKey.TRIP_LIST, userId, active] as const,
+    queryKey: [CacheKey.TRIP_LIST, userId?.(), active] as const,
     queryFn: async ({ queryKey }) => {
       const [_, userId, active] = queryKey;
+      if (userId === undefined) return [];
+
       const params = new URLSearchParams();
 
       if (active !== undefined) {

@@ -30,7 +30,7 @@ const Header: Component = () => {
   const signOut = useSignOutMutation();
   const { t, d } = useTranslations();
   const profile = useProfile();
-  const activeTrips = useTripsByUserQuery(profile.data?.id ?? '', true);
+  const activeTrips = useTripsByUserQuery(() => profile.data?.id, true);
   const params = useParams();
 
   const handleSignOut = async () => {
