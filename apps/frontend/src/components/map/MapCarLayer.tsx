@@ -1,11 +1,8 @@
 import { Geometry as InternalGeometry } from '@isi-insight/client';
-import { Feature } from 'ol';
+import { IconCar } from '@tabler/icons-solidjs';
+import { Feature, Overlay } from 'ol';
 import WKT from 'ol/format/WKT';
-import { Geometry, Point } from 'ol/geom';
-import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
-import Icon from 'ol/style/Icon';
-import Style from 'ol/style/Style';
+import { Point } from 'ol/geom';
 import {
   Component,
   createEffect,
@@ -27,55 +24,66 @@ const READ_OPTIONS = {
 
 const fmt = new WKT();
 
-const toRadians = (degrees: number) => {
-  return degrees * (Math.PI / 180);
-};
-
 const MapCarLayer: Component<MapCarLayerProps> = (props) => {
   const { map } = useMap();
-  const [carCircle, setCarCircle] = createSignal<Feature<Geometry>>();
-  const [carIcon, setCarIcon] = createSignal<Icon>();
+  const [carOverlay, setCarOverlay] = createSignal<Overlay>();
+  let overlayElement: HTMLDivElement;
+
+  const transform = () => {
+    const angle = props.heading;
+    return `rotate(${angle}deg)`;
+  };
 
   onMount(() => {
-    const pos = fmt.readFeature(props.position.wkt, READ_OPTIONS);
+    const pos = fmt.readFeature(
+      props.position.wkt,
+      READ_OPTIONS
+    ) as Feature<Point>;
 
-    const icon = new Icon({
-      anchor: [0.5, 38.5],
-      anchorXUnits: 'fraction',
-      anchorYUnits: 'pixels',
-      src: '/car.png',
-      scale: 0.5,
-      rotation: toRadians(props.heading),
+    const over = new Overlay({
+      element: overlayElement,
+      positioning: 'center-center',
+      stopEvent: false,
+      position: pos.getGeometry()?.getCoordinates(),
     });
 
-    pos.setStyle(
-      new Style({
-        image: icon,
-      })
-    );
+    setCarOverlay(over);
 
-    setCarCircle(pos);
-    setCarIcon(icon);
+    map.addOverlay(over);
 
-    const l = new VectorLayer({
-      source: new VectorSource({ features: [pos] }),
+    onCleanup(() => {
+      map.removeOverlay(over);
     });
-
-    map.addLayer(l);
-
-    onCleanup(() => map.removeLayer(l));
   });
 
   createEffect(() => {
     const wkt = fmt.readGeometry(props.position.wkt, READ_OPTIONS) as Point;
-    const circle = carCircle();
-    const icon = carIcon();
+    const overlay = carOverlay();
 
-    if (circle) circle.setGeometry(wkt);
-    if (icon) icon.setRotation(toRadians(props.heading));
+    if (overlay) overlay.setPosition(wkt.getCoordinates());
   });
 
-  return null;
+  return (
+    <div class='hidden'>
+      <div
+        ref={overlayElement!}
+        class='bg-brand-blue border-brand-blue-300 relative rounded-full border p-1'
+      >
+        <IconCar class='size-4 text-gray-50' />
+
+        <div class='absolute left-1/2 top-1/2 flex h-[200%] w-[200%] -translate-x-1/2 -translate-y-1/2'>
+          <div
+            class='flex h-full w-full items-start justify-center'
+            style={{
+              transform: transform(),
+            }}
+          >
+            <div class='border-b-brand-blue-600 border border-x-[10px] border-b-[10px] border-t-0 border-x-transparent' />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default MapCarLayer;
