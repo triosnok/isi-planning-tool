@@ -17,7 +17,7 @@ const UserDetails: Component = () => {
   const user = useUserDetailsQuery(params.id);
   const { update } = useUserMutation();
 
-  const trips = useTripsByUserQuery(params.id);
+  const trips = useTripsByUserQuery(() => params.id);
 
   const handleUpdateUser = async (user: UpdateUserSchemaValues) => {
     try {

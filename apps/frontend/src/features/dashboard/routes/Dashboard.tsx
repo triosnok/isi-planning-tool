@@ -22,7 +22,7 @@ const Dashboard: Component = () => {
   };
 
   const profile = useProfile();
-  const activeTrips = useTripsByUserQuery(profile.data?.id ?? '', true);
+  const activeTrips = useTripsByUserQuery(() => profile.data?.id, true);
 
   return (
     <>

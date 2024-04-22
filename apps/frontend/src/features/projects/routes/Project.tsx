@@ -47,7 +47,7 @@ const Project: Component<LayoutProps> = (props) => {
   const trips = useTripsDetailsQuery(params.id, searchParams.selectedPlans);
   const profile = useProfile();
 
-  const activeTrips = useTripsByUserQuery(profile.data?.id ?? '', true);
+  const activeTrips = useTripsByUserQuery(() => profile.data?.id, true);
 
   const planId = createMemo(() => {
     return searchParams.selectedPlans().length === 1
