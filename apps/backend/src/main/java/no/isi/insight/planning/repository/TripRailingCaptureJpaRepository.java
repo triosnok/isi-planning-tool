@@ -26,4 +26,8 @@ public interface TripRailingCaptureJpaRepository extends Repository<TripRailingC
       TripRailingCapture capture
   );
 
+  List<TripRailingCapture> saveAll(
+      Iterable<TripRailingCapture> captures
+  );
+
 }

@@ -1,7 +1,10 @@
 package no.isi.insight.planning.capture.model;
 
+import java.math.BigDecimal;
+
 import org.locationtech.jts.geom.Point;
 
+import io.hypersistence.utils.hibernate.type.range.Range;
 import no.isi.insight.planning.model.RoadRailing;
 import no.isi.insight.planning.model.RoadSegment;
 import no.isi.insight.planning.model.RoadSide;
@@ -11,5 +14,9 @@ public record RailingMatchResult(
   Double heading,
   RoadRailing railing,
   RoadSegment roadSegment,
-  RoadSide side
+  RoadSide side,
+  Range<BigDecimal> railingTopCoverage,
+  Range<BigDecimal> railingSideCoverage,
+  double segmentIndex,
+  Range<BigDecimal> segmentCoverage
 ) {}

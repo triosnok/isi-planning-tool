@@ -109,6 +109,30 @@ public class GeometryService {
   }
 
   /**
+   * Projects a coordinate from the reference coordinate with the given heading.
+   * 
+   * @param reference the reference coordinate
+   * @param heading   the heading in degrees
+   * 
+   * @return the projected coordinate
+   */
+  public Coordinate project(
+      Coordinate reference,
+      double heading,
+      double length
+  ) {
+    var radians = Math.toRadians(heading);
+
+    var endX = reference.getX() + length * Math.cos(radians);
+    var endY = reference.getY() + length * Math.sin(radians);
+
+    return new Coordinate(
+      endX,
+      endY
+    );
+  }
+
+  /**
    * Projects a line from the reference point with the given heading and length.
    * 
    * @param reference the reference point
@@ -122,20 +146,10 @@ public class GeometryService {
       double heading,
       double length
   ) {
-    var radians = Math.toRadians(heading);
-
-    var endX = reference.getX() + length * Math.cos(radians);
-    var endY = reference.getY() + length * Math.sin(radians);
+    var end = this.project(reference.getCoordinate(), heading, length);
 
     var coordinates = new Coordinate[] {
-        new Coordinate(
-          reference.getX(),
-          reference.getY()
-        ),
-        new Coordinate(
-          endX,
-          endY
-        )
+        reference.getCoordinate(), end
     };
 
     return this.geometryFactory.createLineString(coordinates);

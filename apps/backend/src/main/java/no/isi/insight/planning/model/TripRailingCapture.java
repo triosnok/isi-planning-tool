@@ -1,13 +1,17 @@
 package no.isi.insight.planning.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
 import org.locationtech.jts.geom.Point;
 
+import io.hypersistence.utils.hibernate.type.range.PostgreSQLRangeType;
+import io.hypersistence.utils.hibernate.type.range.Range;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -56,18 +60,41 @@ public class TripRailingCapture {
   @Column(name = "image_urls")
   private Map<CameraPosition, String> imageUrls;
 
+  @Column(name = "segment_index")
+  private double segmentIndex;
+
+  @Type(PostgreSQLRangeType.class)
+  @Column(name = "railing_top_coverage")
+  private Range<BigDecimal> railingTopCoverage;
+
+  @Type(PostgreSQLRangeType.class)
+  @Column(name = "railing_side_coverage")
+  private Range<BigDecimal> railingSideCoverage;
+
+  @Type(PostgreSQLRangeType.class)
+  @Column(name = "segment_coverage")
+  private Range<BigDecimal> segmentCoverage;
+
   public TripRailingCapture(
       Trip trip,
       RoadSegment segment,
       LocalDateTime capturedAt,
       Point position,
-      Map<CameraPosition, String> imageUrls
+      Map<CameraPosition, String> imageUrls,
+      double segmentIndex,
+      Range<BigDecimal> railingTopCoverage,
+      Range<BigDecimal> railingSideCoverage,
+      Range<BigDecimal> segmentCoverage
   ) {
     this.trip = trip;
     this.roadSegment = segment;
     this.capturedAt = capturedAt;
     this.position = position;
     this.imageUrls = imageUrls;
+    this.segmentIndex = segmentIndex;
+    this.railingTopCoverage = railingTopCoverage;
+    this.railingSideCoverage = railingSideCoverage;
+    this.segmentCoverage = segmentCoverage;
   }
 
   public RoadRailing getRailing() {
