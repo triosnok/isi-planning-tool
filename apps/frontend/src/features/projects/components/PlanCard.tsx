@@ -64,7 +64,10 @@ const PlanCard: Component<PlanCardProps> = (props) => {
               props.selected &&
                 'bg-brand-blue-50/80 hover:bg-brand-blue-100/80 dark:bg-brand-blue-900 dark:hover:bg-brand-blue-800/60'
             )}
-            onClick={() => props.onEdit?.()}
+            onClick={(e) => {
+              e.stopPropagation();
+              props.onEdit?.();
+            }}
           />
 
           <p>
