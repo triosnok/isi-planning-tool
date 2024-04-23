@@ -61,8 +61,8 @@ export const useRefreshTokenQuery = () => {
 
   return createQuery(() => ({
     queryKey: [],
-    staleTime: 1000 * 60 * 4.25, // invalidate prior to refetch interval
-    refetchInterval: 1000 * 60 * 4.5, // refetch every 4.5 minutes, half a minute before access token expires
+    refetchIntervalInBackground: true,
+    refetchInterval: 1000 * 60 * 4,
     refetchOnWindowFocus: false,
     queryFn: async () => {
       const response = await axios.get<SignInResponse>('/api/v1/auth/refresh');
