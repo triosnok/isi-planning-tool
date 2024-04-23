@@ -116,3 +116,13 @@ databaseChangeLog:
         - sqlFile:
             path: 014-capture-coverage/000-add-capture-coverage.sql
             relativeToChangelogFile: true
+  - changeSet: 
+      id: 015-road-names-capture-pointz
+      author: halvard
+      changes:
+        - sqlFile:
+            path: 015-road-names-capture-pointz/000-add-segment-columns.sql
+            relativeToChangelogFile: true
+        - sqlFile:
+            path: 015-road-names-capture-pointz/001-alter-capture-pointz.sql
+            relativeToChangelogFile: true

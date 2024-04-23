@@ -28,7 +28,7 @@ public class RoadSegment {
   @EqualsAndHashCode.Include
   @Column(name = "road_segment_id")
   private String id;
-  
+
   @Id
   @ManyToOne
   @EqualsAndHashCode.Include
@@ -49,8 +49,14 @@ public class RoadSegment {
   @Column(name = "side_of_road")
   private RoadSide side;
 
+  @Column(name = "road_category")
+  private String roadCategory;
+
   @Column(name = "road_system_reference")
   private String roadSystemReference;
+
+  @Column(name = "road_reference")
+  private String roadReference;
 
   @UpdateTimestamp
   @Column(name = "last_imported_at")
