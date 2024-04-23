@@ -16,9 +16,9 @@ import no.isi.insight.planning.annotation.IntegrationTest;
 import no.isi.insight.planning.auth.service.UserAccountService;
 import no.isi.insight.planning.client.vehicle.view.CreateVehicleRequest;
 import no.isi.insight.planning.client.vehicle.view.UpdateVehicleRequest;
-import no.isi.insight.planning.model.UserAccount;
-import no.isi.insight.planning.model.UserAccountRole;
-import no.isi.insight.planning.model.Vehicle;
+import no.isi.insight.planning.db.model.UserAccount;
+import no.isi.insight.planning.db.model.UserAccountRole;
+import no.isi.insight.planning.db.model.Vehicle;
 import no.isi.insight.planning.utility.AuthTestUtils;
 
 @IntegrationTest

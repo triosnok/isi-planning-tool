@@ -17,10 +17,10 @@ import no.isi.insight.planning.client.project.view.ProjectStatus;
 import no.isi.insight.planning.client.project.view.RoadRailing;
 import no.isi.insight.planning.client.project.view.UpdateProjectRequest;
 import no.isi.insight.planning.error.model.NotFoundException;
-import no.isi.insight.planning.model.Project;
-import no.isi.insight.planning.repository.ProjectJdbcRepository;
-import no.isi.insight.planning.repository.ProjectJpaRepository;
-import no.isi.insight.planning.repository.RoadRailingJdbcRepository;
+import no.isi.insight.planning.db.model.Project;
+import no.isi.insight.planning.db.repository.ProjectJdbcRepository;
+import no.isi.insight.planning.db.repository.ProjectJpaRepository;
+import no.isi.insight.planning.db.repository.RoadRailingJdbcRepository;
 
 @RestController
 @RequiredArgsConstructor

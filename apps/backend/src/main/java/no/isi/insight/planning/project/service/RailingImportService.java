@@ -26,9 +26,9 @@ import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObject.RoadSegment
 import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObject.RoadStretch;
 import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObject.Side;
 import no.isi.insight.planning.integration.nvdb.model.NvdbRoadObjectType;
-import no.isi.insight.planning.model.RoadDirection;
-import no.isi.insight.planning.model.RoadSide;
-import no.isi.insight.planning.model.UserAccount;
+import no.isi.insight.planning.db.model.RoadDirection;
+import no.isi.insight.planning.db.model.RoadSide;
+import no.isi.insight.planning.db.model.UserAccount;
 import no.isi.insight.planning.utility.GeometryUtils;
 import no.isi.insight.planning.utility.RequestUtils;
 

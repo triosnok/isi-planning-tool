@@ -16,10 +16,10 @@ import no.isi.insight.planning.client.deviation.view.CreateDeviationRequest;
 import no.isi.insight.planning.client.deviation.view.DeviationDetails;
 import no.isi.insight.planning.error.model.BadRequestException;
 import no.isi.insight.planning.error.model.NotFoundException;
-import no.isi.insight.planning.model.TripRailingDeviation;
-import no.isi.insight.planning.repository.TripRailingCaptureJpaRepository;
-import no.isi.insight.planning.repository.TripRailingDeviationJdbcRepository;
-import no.isi.insight.planning.repository.TripRailingDeviationJpaRepository;
+import no.isi.insight.planning.db.model.TripRailingDeviation;
+import no.isi.insight.planning.db.repository.TripRailingCaptureJpaRepository;
+import no.isi.insight.planning.db.repository.TripRailingDeviationJdbcRepository;
+import no.isi.insight.planning.db.repository.TripRailingDeviationJpaRepository;
 
 @RestController
 @RequiredArgsConstructor

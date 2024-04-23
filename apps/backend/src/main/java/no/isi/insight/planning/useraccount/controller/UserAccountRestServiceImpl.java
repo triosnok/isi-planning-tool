@@ -19,10 +19,10 @@ import no.isi.insight.planning.client.useraccount.view.CreateUserAccountRequest;
 import no.isi.insight.planning.client.useraccount.view.UpdateUserAccountRequest;
 import no.isi.insight.planning.client.useraccount.view.UserAccountDetails;
 import no.isi.insight.planning.error.model.NotFoundException;
-import no.isi.insight.planning.model.UserAccount;
-import no.isi.insight.planning.model.UserAccountRole;
-import no.isi.insight.planning.repository.TripJpaRepository;
-import no.isi.insight.planning.repository.UserAccountJpaRepository;
+import no.isi.insight.planning.db.model.UserAccount;
+import no.isi.insight.planning.db.model.UserAccountRole;
+import no.isi.insight.planning.db.repository.TripJpaRepository;
+import no.isi.insight.planning.db.repository.UserAccountJpaRepository;
 
 @RestController
 @RequiredArgsConstructor

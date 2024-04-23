@@ -3,8 +3,8 @@ package no.isi.insight.planning.project.service;
 import org.locationtech.jts.geom.LineString;
 
 import lombok.Builder;
-import no.isi.insight.planning.model.RoadDirection;
-import no.isi.insight.planning.model.RoadSide;
+import no.isi.insight.planning.db.model.RoadDirection;
+import no.isi.insight.planning.db.model.RoadSide;
 
 @Builder
 public class RoadSegmentReverser<T> {

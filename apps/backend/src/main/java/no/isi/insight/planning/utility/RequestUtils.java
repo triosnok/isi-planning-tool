@@ -11,7 +11,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import no.isi.insight.planning.auth.UserAccountDetailsAdapter;
-import no.isi.insight.planning.model.UserAccount;
+import no.isi.insight.planning.db.model.UserAccount;
 
 public class RequestUtils {
 

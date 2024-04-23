@@ -24,10 +24,10 @@ import no.isi.insight.planning.capture.model.ProcessedLogEntry;
 import no.isi.insight.planning.client.capture.view.CaptureDetails;
 import no.isi.insight.planning.client.trip.view.CameraPosition;
 import no.isi.insight.planning.geometry.GeometryService;
-import no.isi.insight.planning.model.Trip;
-import no.isi.insight.planning.model.TripRailingCapture;
-import no.isi.insight.planning.repository.RoadRailingJpaRepository;
-import no.isi.insight.planning.repository.TripRailingCaptureJpaRepository;
+import no.isi.insight.planning.db.model.Trip;
+import no.isi.insight.planning.db.model.TripRailingCapture;
+import no.isi.insight.planning.db.repository.RoadRailingJpaRepository;
+import no.isi.insight.planning.db.repository.TripRailingCaptureJpaRepository;
 import no.isi.insight.planning.trip.event.TripEndedEvent;
 import no.isi.insight.planning.trip.event.TripStartedEvent;
 

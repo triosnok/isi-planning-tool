@@ -28,7 +28,7 @@ import no.isi.insight.planning.client.auth.view.UserProfile;
 import no.isi.insight.planning.client.auth.view.UserRole;
 import no.isi.insight.planning.error.model.UnauthorizedException;
 import no.isi.insight.planning.integration.mail.MailService;
-import no.isi.insight.planning.repository.UserAccountJpaRepository;
+import no.isi.insight.planning.db.repository.UserAccountJpaRepository;
 import no.isi.insight.planning.utility.RequestUtils;
 
 @Slf4j

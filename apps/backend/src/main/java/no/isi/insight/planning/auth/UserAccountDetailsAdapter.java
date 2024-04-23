@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import no.isi.insight.planning.model.UserAccount;
+import no.isi.insight.planning.db.model.UserAccount;
 
 public class UserAccountDetailsAdapter implements UserDetails {
   private final UserAccount userAccount;

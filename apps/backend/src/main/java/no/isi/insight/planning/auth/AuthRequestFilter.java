@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.isi.insight.planning.auth.service.JwtService;
-import no.isi.insight.planning.repository.UserAccountJpaRepository;
+import no.isi.insight.planning.db.repository.UserAccountJpaRepository;
 
 @Slf4j
 @Component

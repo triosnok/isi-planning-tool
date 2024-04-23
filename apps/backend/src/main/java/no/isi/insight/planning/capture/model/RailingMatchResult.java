@@ -5,9 +5,9 @@ import java.math.BigDecimal;
 import org.locationtech.jts.geom.Point;
 
 import io.hypersistence.utils.hibernate.type.range.Range;
-import no.isi.insight.planning.model.RoadRailing;
-import no.isi.insight.planning.model.RoadSegment;
-import no.isi.insight.planning.model.RoadSide;
+import no.isi.insight.planning.db.model.RoadRailing;
+import no.isi.insight.planning.db.model.RoadSegment;
+import no.isi.insight.planning.db.model.RoadSide;
 
 public record RailingMatchResult(
   Point point,

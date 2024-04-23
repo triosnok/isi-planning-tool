@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import no.isi.insight.planning.auth.service.CodeGenerator.CodeType;
-import no.isi.insight.planning.model.PasswordResetCode;
-import no.isi.insight.planning.model.UserAccount;
-import no.isi.insight.planning.repository.PasswordResetCodeJpaRepository;
+import no.isi.insight.planning.db.model.PasswordResetCode;
+import no.isi.insight.planning.db.model.UserAccount;
+import no.isi.insight.planning.db.repository.PasswordResetCodeJpaRepository;
 
 @Service
 @RequiredArgsConstructor

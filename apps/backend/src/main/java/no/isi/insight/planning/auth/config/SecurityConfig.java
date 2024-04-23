@@ -16,7 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import lombok.RequiredArgsConstructor;
 import no.isi.insight.planning.auth.UserAccountDetailsAdapter;
-import no.isi.insight.planning.repository.UserAccountJpaRepository;
+import no.isi.insight.planning.db.repository.UserAccountJpaRepository;
 
 @Configuration
 @EnableWebSecurity

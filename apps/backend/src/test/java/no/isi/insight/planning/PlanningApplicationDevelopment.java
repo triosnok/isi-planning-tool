@@ -11,8 +11,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 import io.minio.MinioClient;
 import no.isi.insight.planning.auth.service.UserAccountService;
-import no.isi.insight.planning.model.UserAccountRole;
-import no.isi.insight.planning.repository.UserAccountJpaRepository;
+import no.isi.insight.planning.db.model.UserAccountRole;
+import no.isi.insight.planning.db.repository.UserAccountJpaRepository;
 
 @TestConfiguration(proxyBeanMethods = false)
 public class PlanningApplicationDevelopment {

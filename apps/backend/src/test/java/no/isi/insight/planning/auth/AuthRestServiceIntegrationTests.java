@@ -15,8 +15,8 @@ import no.isi.insight.planning.client.auth.view.SignInRequest;
 import no.isi.insight.planning.annotation.IntegrationTest;
 import no.isi.insight.planning.auth.service.JwtService;
 import no.isi.insight.planning.auth.service.UserAccountService;
-import no.isi.insight.planning.model.UserAccount;
-import no.isi.insight.planning.model.UserAccountRole;
+import no.isi.insight.planning.db.model.UserAccount;
+import no.isi.insight.planning.db.model.UserAccountRole;
 
 @IntegrationTest
 @RequiredArgsConstructor

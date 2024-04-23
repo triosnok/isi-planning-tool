@@ -22,7 +22,7 @@ import no.isi.insight.planning.client.capture.view.CaptureActionRequest;
 import no.isi.insight.planning.client.capture.view.CaptureLogDetails;
 import no.isi.insight.planning.client.trip.view.CameraPosition;
 import no.isi.insight.planning.error.model.NotFoundException;
-import no.isi.insight.planning.repository.TripJpaRepository;
+import no.isi.insight.planning.db.repository.TripJpaRepository;
 
 @Slf4j
 @RestController

@@ -16,13 +16,13 @@ import no.isi.insight.planning.client.project.view.CreateProjectPlanRequest;
 import no.isi.insight.planning.client.project.view.ProjectPlanDetails;
 import no.isi.insight.planning.client.project.view.UpdateProjectPlanRequest;
 import no.isi.insight.planning.error.model.NotFoundException;
-import no.isi.insight.planning.model.ProjectPlan;
-import no.isi.insight.planning.model.Vehicle;
+import no.isi.insight.planning.db.model.ProjectPlan;
+import no.isi.insight.planning.db.model.Vehicle;
 import no.isi.insight.planning.project.service.RailingImportService;
-import no.isi.insight.planning.repository.ProjectJpaRepository;
-import no.isi.insight.planning.repository.ProjectPlanJdbcRepository;
-import no.isi.insight.planning.repository.ProjectPlanJpaRepository;
-import no.isi.insight.planning.repository.VehicleJpaRepository;
+import no.isi.insight.planning.db.repository.ProjectJpaRepository;
+import no.isi.insight.planning.db.repository.ProjectPlanJdbcRepository;
+import no.isi.insight.planning.db.repository.ProjectPlanJpaRepository;
+import no.isi.insight.planning.db.repository.VehicleJpaRepository;
 
 @Slf4j
 @RestController

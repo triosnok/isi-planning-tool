@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 
-import no.isi.insight.planning.model.RoadDirection;
-import no.isi.insight.planning.model.RoadSide;
+import no.isi.insight.planning.db.model.RoadDirection;
+import no.isi.insight.planning.db.model.RoadSide;
 
 public record NvdbRoadObject(
   long id,

@@ -20,16 +20,16 @@ import no.isi.insight.planning.annotation.IntegrationTest;
 import no.isi.insight.planning.auth.service.UserAccountService;
 import no.isi.insight.planning.client.trip.view.CreateTripNoteRequest;
 import no.isi.insight.planning.client.trip.view.UpdateTripNoteRequest;
-import no.isi.insight.planning.model.Project;
-import no.isi.insight.planning.model.ProjectPlan;
-import no.isi.insight.planning.model.Trip;
-import no.isi.insight.planning.model.UserAccount;
-import no.isi.insight.planning.model.UserAccountRole;
-import no.isi.insight.planning.model.Vehicle;
-import no.isi.insight.planning.repository.ProjectJpaRepository;
-import no.isi.insight.planning.repository.ProjectPlanJpaRepository;
-import no.isi.insight.planning.repository.TripJpaRepository;
-import no.isi.insight.planning.repository.VehicleJpaRepository;
+import no.isi.insight.planning.db.model.Project;
+import no.isi.insight.planning.db.model.ProjectPlan;
+import no.isi.insight.planning.db.model.Trip;
+import no.isi.insight.planning.db.model.UserAccount;
+import no.isi.insight.planning.db.model.UserAccountRole;
+import no.isi.insight.planning.db.model.Vehicle;
+import no.isi.insight.planning.db.repository.ProjectJpaRepository;
+import no.isi.insight.planning.db.repository.ProjectPlanJpaRepository;
+import no.isi.insight.planning.db.repository.TripJpaRepository;
+import no.isi.insight.planning.db.repository.VehicleJpaRepository;
 import no.isi.insight.planning.utility.AuthTestUtils;
 
 @IntegrationTest

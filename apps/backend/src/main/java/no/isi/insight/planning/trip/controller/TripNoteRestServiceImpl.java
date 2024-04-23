@@ -15,10 +15,10 @@ import no.isi.insight.planning.client.trip.view.CreateTripNoteRequest;
 import no.isi.insight.planning.client.trip.view.TripNoteDetails;
 import no.isi.insight.planning.client.trip.view.UpdateTripNoteRequest;
 import no.isi.insight.planning.error.model.NotFoundException;
-import no.isi.insight.planning.model.Trip;
-import no.isi.insight.planning.model.TripNote;
-import no.isi.insight.planning.repository.TripJpaRepository;
-import no.isi.insight.planning.repository.TripNoteJpaRepository;
+import no.isi.insight.planning.db.model.Trip;
+import no.isi.insight.planning.db.model.TripNote;
+import no.isi.insight.planning.db.repository.TripJpaRepository;
+import no.isi.insight.planning.db.repository.TripNoteJpaRepository;
 import no.isi.insight.planning.utility.GeometryUtils;
 
 @RestController

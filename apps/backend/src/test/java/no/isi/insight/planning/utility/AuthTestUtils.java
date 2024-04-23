@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.isi.insight.planning.auth.TokenType;
 import no.isi.insight.planning.auth.UserAccountDetailsAdapter;
 import no.isi.insight.planning.auth.service.JwtService;
-import no.isi.insight.planning.model.UserAccount;
+import no.isi.insight.planning.db.model.UserAccount;
 
 /**
  * Utility class containing helpers for working with authentication in integration tests.

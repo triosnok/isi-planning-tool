@@ -5,7 +5,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import no.isi.insight.planning.model.UserAccount;
+import no.isi.insight.planning.db.model.UserAccount;
 
 @Service
 @RequiredArgsConstructor

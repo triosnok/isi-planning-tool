@@ -5,7 +5,7 @@ import java.util.List;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.linearref.LengthIndexedLine;
 
-import no.isi.insight.planning.model.RoadDirection;
+import no.isi.insight.planning.db.model.RoadDirection;
 
 /**
  * Responsible for checking whether or not railings and their related segments have correctly

@@ -20,11 +20,11 @@ import no.isi.insight.planning.client.vehicle.view.UpdateVehicleRequest;
 import no.isi.insight.planning.client.vehicle.view.VehicleDetails;
 import no.isi.insight.planning.error.model.BadRequestException;
 import no.isi.insight.planning.error.model.NotFoundException;
-import no.isi.insight.planning.model.Vehicle;
-import no.isi.insight.planning.repository.ProjectPlanJdbcRepository;
-import no.isi.insight.planning.repository.TripJpaRepository;
-import no.isi.insight.planning.repository.VehicleJdbcRepository;
-import no.isi.insight.planning.repository.VehicleJpaRepository;
+import no.isi.insight.planning.db.model.Vehicle;
+import no.isi.insight.planning.db.repository.ProjectPlanJdbcRepository;
+import no.isi.insight.planning.db.repository.TripJpaRepository;
+import no.isi.insight.planning.db.repository.VehicleJdbcRepository;
+import no.isi.insight.planning.db.repository.VehicleJpaRepository;
 
 @RestController
 @RequiredArgsConstructor
