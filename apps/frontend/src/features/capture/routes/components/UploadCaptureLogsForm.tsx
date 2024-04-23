@@ -11,10 +11,7 @@ import {
   zodForm,
 } from '@modular-forms/solid';
 import { createDropzone } from '@solid-primitives/upload';
-import {
-  TbFile,
-  TbUpload
-} from 'solid-icons/tb';
+import { TbFile, TbUpload } from 'solid-icons/tb';
 import { Component, Show, createEffect, createSignal } from 'solid-js';
 import { CaptureLogSchema, CaptureLogSchemaValues } from '../../api';
 
@@ -53,7 +50,10 @@ const UploadCaptureLogsForm: Component<UploadCaptureLogsProps> = (props) => {
       <Field name='logIdentifier'>
         {(field, props) => (
           <div class='flex flex-col gap-1 pt-2'>
-            <Label for={field.name}>
+            <Label
+              for={field.name}
+              title='Using an existing identifier will overwrite the previous entry'
+            >
               <span class='mb-1 flex'>{t('CAPTURE.LOG_IDENTIFIER')}</span>
               <Input
                 {...props}
@@ -182,7 +182,7 @@ const Dropzone: Component<DropzoneProps> = (props) => {
       class={cn(
         'flex justify-center rounded-md border border-dashed border-gray-400 py-20 transition-all hover:bg-gray-400/20 dark:border-white',
         isDragOver() &&
-          'dark:bg-success-300/50 bg-success-100 border-success-300 transition-all'
+          'dark:bg-success-300/50 hover:bg-success-100 bg-success-100 border-success-300 hover:border-success-300 transition-all'
       )}
     >
       <Show
