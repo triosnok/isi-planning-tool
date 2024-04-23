@@ -7,11 +7,9 @@ data:
   {{- $secretObj := (lookup "v1" "Secret" .Release.Namespace (include "backend.name" .) ) | default dict }}
   {{- $secretData := (get $secretObj "data") | default dict }}
   {{- $accessTokenSecret := (get $secretData "AUTH_ACCESS_TOKEN_SECRET") | default (randAlphaNum 48 | b64enc) }}
-  AUTH_ACCESS_TOKEN_SECRET: {{ $accessTokenSecret | b64enc }}
-  {{- $secretObj := (lookup "v1" "Secret" .Release.Namespace (include "backend.name" .) ) | default dict }}
-  {{- $secretData := (get $secretObj "data") | default dict }}
   {{- $refreshTokenSecret := (get $secretData "AUTH_REFRESH_TOKEN_SECRET") | default (randAlphaNum 48 | b64enc) }}
-  AUTH_REFRESH_TOKEN_SECRET: {{ $refreshTokenSecret | b64enc }}
+  AUTH_ACCESS_TOKEN_SECRET: {{ $accessTokenSecret }}
+  AUTH_REFRESH_TOKEN_SECRET: {{ $refreshTokenSecret }}
   MAIL_USERNAME: {{ .Values.mail.username | b64enc }}
   MAIL_PASSWORD: {{ .Values.mail.password | b64enc }}
 ---
