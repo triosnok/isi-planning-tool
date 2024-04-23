@@ -61,7 +61,8 @@ public class RailingImportService {
         side_of_road = EXCLUDED.side_of_road,
         direction_of_road = EXCLUDED.direction_of_road,
         road_system_reference = EXCLUDED.road_system_reference,
-        fk_road_system_id = EXCLUDED.fk_road_system_id,
+        road_reference = EXCLUDED.road_reference,
+        road_category = EXCLUDED.road_category,
         last_imported_at = NOW()
     """;
 
@@ -239,7 +240,7 @@ public class RailingImportService {
         case "E" -> "E" + data.roadSystemReference().system().number();
         default -> data.roadSystemReference().system().number().toString();
       };
-      
+
       var params = new MapSqlParameterSource();
       params.addValue("railingId", railingId);
       params.addValue("externalId", data.getShortform());
