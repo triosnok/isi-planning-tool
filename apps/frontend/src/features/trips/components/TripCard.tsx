@@ -16,6 +16,7 @@ export interface TripCardProps {
   notes?: number;
   length?: number;
   car?: string;
+  status?: 'active' | 'inactive' | 'dashboard';
 }
 
 const tripCardVariants = cva(
@@ -27,6 +28,8 @@ const tripCardVariants = cva(
           'border-success-600 hover:bg-success-100 dark:hover:bg-success-900 bg-success-50 text-success-950 dark:bg-success-950 dark:text-success-50',
         inactive:
           'border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900 bg-gray-50 dark:bg-gray-950 dark:border-gray-800',
+        dashboard:
+          'border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900 bg-gray-50 dark:bg-gray-950 dark:border-gray-800',
       },
     },
     defaultVariants: {
@@ -37,11 +40,16 @@ const tripCardVariants = cva(
 
 const TripCard: Component<TripCardProps> = (props) => {
   const validEndDate = dayjs(props.endedAt).isValid();
-  const tripStatus = validEndDate ? 'inactive' : 'active';
+
+  const tripStatus = () => {
+    if (props.status) return props.status;
+    else return validEndDate ? 'inactive' : 'active';
+  };
+
   const { t } = useTranslations();
 
   return (
-    <div class={tripCardVariants({ status: tripStatus })}>
+    <div class={tripCardVariants({ status: tripStatus() })}>
       <div class='flex flex-row items-center gap-2'>
         <p class='text-base font-semibold'>
           {t('TRIPS.TRIP')} {props.sequenceNumber}

@@ -75,7 +75,7 @@ const Dashboard: Component = () => {
           <div class='grid grid-cols-2 grid-rows-2 gap-4'>
             <section class='flex flex-col gap-2'>
               <h2 class='text-2xl font-bold'>{t('MAP.TITLE')}</h2>
-              <MapRoot class='h-full' />
+              <MapRoot class='h-full rounded-lg overflow-hidden' />
             </section>
 
             <section class='flex flex-col gap-2'>
@@ -92,6 +92,7 @@ const Dashboard: Component = () => {
                         notes={trip.noteCount}
                         length={320}
                         car={trip.driver}
+                        status='dashboard'
                       />
                     </A>
                   )}
