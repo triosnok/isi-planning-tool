@@ -35,3 +35,7 @@ no.isi.insight.planning:
   integration.mail:
     enabled: false
     sender-address: noreply@email.invalid
+
+logging:
+  level:
+    org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: ERROR

@@ -46,3 +46,7 @@ no.isi.insight.planning:
   integration.mail:
     enabled: ${MAIL_ENABLED:false}
     sender-address: ${MAIL_SENDER_ADDRESS:#{null}}
+
+logging:
+  level:
+    org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: ERROR
