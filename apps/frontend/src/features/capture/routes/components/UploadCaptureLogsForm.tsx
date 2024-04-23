@@ -37,6 +37,7 @@ const UploadCaptureLogsForm: Component<UploadCaptureLogsProps> = (props) => {
       logIdentifier: '',
     },
   });
+  const emptyFile = new File([], '');
 
   const handleSubmit: SubmitHandler<CaptureLogSchemaValues> = async (
     values
@@ -44,6 +45,10 @@ const UploadCaptureLogsForm: Component<UploadCaptureLogsProps> = (props) => {
     console.log(values);
     await props.onSubmit(values);
 
+    setValue(form, 'gnssLog', emptyFile);
+    setValue(form, 'topCameraLog', emptyFile);
+    setValue(form, 'leftCameraLog', emptyFile);
+    setValue(form, 'rightCameraLog', emptyFile);
     reset(form);
   };
 
@@ -70,7 +75,7 @@ const UploadCaptureLogsForm: Component<UploadCaptureLogsProps> = (props) => {
       </Field>
 
       <Field name='gnssLog' type='File'>
-        {(field, props) => (
+        {(field) => (
           <div class='flex flex-col gap-1'>
             <Label for={field.name}>
               <span class='mb-1 flex'>GNSS Log</span>
@@ -86,7 +91,7 @@ const UploadCaptureLogsForm: Component<UploadCaptureLogsProps> = (props) => {
       </Field>
 
       <Field name='topCameraLog' type='File'>
-        {(field, props) => (
+        {(field) => (
           <div class='flex flex-col gap-1'>
             <Label for={field.name}>
               <span class='mb-1 flex'>{t('CAPTURE.TOP_CAMERA')}</span>
@@ -103,7 +108,7 @@ const UploadCaptureLogsForm: Component<UploadCaptureLogsProps> = (props) => {
 
       <div class='flex flex-row justify-between gap-4'>
         <Field name='leftCameraLog' type='File'>
-          {(field, props) => (
+          {(field) => (
             <div class='flex w-[50%] flex-col gap-1'>
               <Label for={field.name}>
                 <span class='mb-1 flex'>{t('CAPTURE.LEFT_CAMERA')}</span>
@@ -119,7 +124,7 @@ const UploadCaptureLogsForm: Component<UploadCaptureLogsProps> = (props) => {
         </Field>
 
         <Field name='rightCameraLog' type='File'>
-          {(field, props) => (
+          {(field) => (
             <div class='flex w-[50%] flex-col gap-1'>
               <Label for={field.name}>
                 <span class='mb-1 flex'>{t('CAPTURE.RIGHT_CAMERA')}</span>
