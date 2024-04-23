@@ -11,7 +11,10 @@ import {
   zodForm,
 } from '@modular-forms/solid';
 import { createDropzone } from '@solid-primitives/upload';
-import { TbFileUpload } from 'solid-icons/tb';
+import {
+  TbFile,
+  TbUpload
+} from 'solid-icons/tb';
 import { Component, Show, createEffect, createSignal } from 'solid-js';
 import { CaptureLogSchema, CaptureLogSchemaValues } from '../../api';
 
@@ -185,15 +188,15 @@ const Dropzone: Component<DropzoneProps> = (props) => {
       <Show
         when={file()}
         fallback={
-          <div class='flex flex-col items-center justify-center'>
-            <TbFileUpload class='size-12' />
+          <div class='flex flex-col items-center justify-center gap-2'>
+            <TbUpload class='size-12' />
             {props.title}
           </div>
         }
       >
         {(f) => (
-          <div class='flex flex-col items-center justify-center'>
-            <TbFileUpload class='size-12' />
+          <div class='flex flex-col items-center justify-center gap-2'>
+            <TbFile class='size-12' />
             {f().name}
           </div>
         )}
