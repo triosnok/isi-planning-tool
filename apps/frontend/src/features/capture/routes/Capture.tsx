@@ -1,6 +1,10 @@
 import Header from '@/components/layout/Header';
 import { Component, Show } from 'solid-js';
-import { useCaptureLogsQuery, useUploadCaptureLog } from '../api';
+import {
+  CaptureLogSchemaValues,
+  useCaptureLogsQuery,
+  useUploadCaptureLog,
+} from '../api';
 import CaptureLogsTable from './components/CaptureLogsTable';
 import UploadCaptureLogsForm from './components/UploadCaptureLogsForm';
 
@@ -8,8 +12,12 @@ const Capture: Component = () => {
   const capture = useUploadCaptureLog();
   const captureLogs = useCaptureLogsQuery();
 
-  const handleSubmit = async (values: any) => {
-    await capture.mutateAsync(values);
+  const handleSubmit = async (values: CaptureLogSchemaValues) => {
+    try {
+      await capture.mutateAsync(values);
+    } catch (error) {
+      console.error('Failed to upload capture log');
+    }
   };
 
   return (

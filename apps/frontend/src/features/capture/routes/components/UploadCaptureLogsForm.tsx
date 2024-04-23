@@ -13,17 +13,7 @@ import {
 import { createDropzone } from '@solid-primitives/upload';
 import { TbFileUpload } from 'solid-icons/tb';
 import { Component, Show, createEffect, createSignal } from 'solid-js';
-import { z } from 'zod';
-
-const CaptureLogSchema = z.object({
-  logIdentifier: z.string().min(1),
-  gnssLog: z.instanceof(File),
-  topCameraLog: z.instanceof(File),
-  leftCameraLog: z.instanceof(File),
-  rightCameraLog: z.instanceof(File),
-});
-
-type CaptureLogSchemaValues = z.infer<typeof CaptureLogSchema>;
+import { CaptureLogSchema, CaptureLogSchemaValues } from '../../api';
 
 export type UploadCaptureLogsProps = {
   onSubmit: (values: any) => Promise<void>;
@@ -42,7 +32,6 @@ const UploadCaptureLogsForm: Component<UploadCaptureLogsProps> = (props) => {
   const handleSubmit: SubmitHandler<CaptureLogSchemaValues> = async (
     values
   ) => {
-    console.log(values);
     await props.onSubmit(values);
 
     setValue(form, 'gnssLog', emptyFile);

@@ -73,6 +73,16 @@ export const useCaptureLogsQuery = () => {
   }));
 };
 
+export const CaptureLogSchema = z.object({
+  logIdentifier: z.string().min(1),
+  gnssLog: z.instanceof(File),
+  topCameraLog: z.instanceof(File),
+  leftCameraLog: z.instanceof(File),
+  rightCameraLog: z.instanceof(File),
+});
+
+export type CaptureLogSchemaValues = z.infer<typeof CaptureLogSchema>;
+
 /**
  * Hook for uploading a capture log.
  */
