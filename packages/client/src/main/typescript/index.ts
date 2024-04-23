@@ -116,8 +116,8 @@ export interface ProjectDetails {
     totalLength: number;
     deviations: number;
     notes: number;
-    status: ProjectStatus;
     progress: number;
+    status: ProjectStatus;
 }
 
 export interface ProjectPlanDetails {
@@ -163,6 +163,9 @@ export interface UpdateProjectRequest {
     referenceCode: string;
     startsAt: DateAsString;
     endsAt?: DateAsString | null;
+}
+
+export interface RoadSegment {
 }
 
 export interface CreateTripNoteRequest {
