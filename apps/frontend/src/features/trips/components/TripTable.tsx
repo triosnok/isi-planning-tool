@@ -10,22 +10,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { DateFormat, useTranslations } from '@/features/i18n';
+import { TripDetails } from '@isi-insight/client';
 import { A } from '@solidjs/router';
 import dayjs from 'dayjs';
 import { Component, For, Show, createSignal } from 'solid-js';
-
-type TripDetails = {
-  id: string;
-  projectId: string;
-  projectPlanId: string;
-  project: string;
-  driver?: string;
-  startedAt: string;
-  endedAt?: string;
-  sequenceNumber: number;
-  noteCount: number;
-  deviations: number;
-};
 
 export interface TripTableProps {
   trips: TripDetails[];
