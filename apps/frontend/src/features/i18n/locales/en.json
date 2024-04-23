@@ -1,6 +1,7 @@
 {
   "AUTHENTICATION": {
     "SIGN_IN": "Sign in",
+    "SIGN_IN_TO": "Sign in to", 
     "SIGN_OUT": "Sign out",
     "EMAIL": "E-mail",
     "PASSWORD": "Password",
@@ -22,6 +23,16 @@
       "CONFIRM_NEW_PASSWORD": "Confirm new password"
     }
   },
+  "CAPTURE_LOGS": {
+    "TITLE": "Capture logs",
+    "CAPTURE_LOG": "Capture log",
+    "REPLAY_SPEED": "Replay speed"
+  },
+  "DASHBOARD": {
+    "TITLE": "Dashboard",
+    "MAP": "Map",
+    "DAILY_METERS_CAPTURED": "Daily meters captured"
+  },
   "DEVIATIONS": {
     "TITLE": "Deviations",
     "DEVIATION": "Deviation"
@@ -35,18 +46,26 @@
   },
   "GENERAL": {
     "SAVE": "Save",
+    "CLOSE": "Close",
     "IMPORT_AND_SAVE": "Import and save",
     "START_DATE": "Start date",
     "END_DATE": "End date",
+    "CLEAR_DATE": "Clear date",
     "STATUSES": {
       "AVAILABLE": "Available"
     },
     "URL": "URL",
     "NO_IMAGE": "No image",
-    "CANCEL": "Cancel"
+    "CANCEL": "Cancel",
+    "SETTINGS": "Settings",
+    "DARK_THEME": "Dark theme",
+    "UPDATED": "Updated",
+    "YYYY_MM_DD": "YYYY-MM-DD"
   },
-  "DASHBOARD": {
-    "TITLE": "Dashboard"
+  "MAP": {
+    "TITLE": "Map",
+    "ZOOM_IN": "Zoom in",
+    "ZOOM_OUT": "Zoom out"
   },
   "NAVIGATION": {
     "BACK": "Back",
@@ -63,6 +82,7 @@
     "PLAN": "Plan",
     "ADD_PLAN": "Add plan",
     "NEW_PROJECT_PLAN": "New project plan",
+    "EDIT_PROJECT_PLAN": "Edit project plan",
     "FORM": {
       "IMPORT_RAILINGS": "Import railings"
     }
@@ -86,11 +106,12 @@
     "TITLE": "Railings",
     "RAILING": "Railing",
     "RAILING_IMPORT_URL": "Railing import URL",
-    "HIDE_COMPLETED_RAILINGS": "Hide completed railings"
+    "HIDE_COMPLETED_RAILINGS": "Hide completed railings",
+    "SIDE_CAMERA": "side camera"
   },
   "ROADS": {
     "TITLE": "Roads",
-    "RAILING": "Road",
+    "ROAD": "Road",
     "NO_ROADS_AVAILABLE": "No roads available"
   },
   "PAGINATION": {
@@ -103,9 +124,12 @@
     "NEW_TRIP": "New trip",
     "START_TRIP": "Start trip",
     "END_TRIP": "End trip",
+    "START_CAPTURE": "Start capture",
+    "STOP_CAPTURE": "Stop capture",
     "ONGOING_TRIPS": "Ongoing trips",
     "SHOW_MORE": "Show more",
     "SHOW_LESS": "Show less",
+    "ACTIVE_TRIPS": "Active trips",
     "GO_TO_ACTIVE_TRIP": "Go to active trip",
     "TRIP_SUMMARY": {
       "TITLE": "Trip summary",

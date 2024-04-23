@@ -135,7 +135,7 @@ const Header: Component = () => {
             <DropdownMenuGroup>
               <DropdownMenuItem class='flex items-center gap-1'>
                 <IconSettings class='h-5 w-5' />
-                <span>Settings</span>
+                <span>{t('GENERAL.SETTINGS')}</span>
               </DropdownMenuItem>
               <DropdownMenuItem
                 onSelect={() => theme.toggleTheme()}
@@ -143,7 +143,7 @@ const Header: Component = () => {
                 class='flex items-center gap-1'
               >
                 <IconMoon class='h-5 w-5' />
-                <span>Dark theme</span>
+                <span>{t('GENERAL.DARK_THEME')}</span>
                 <SwitchButton
                   checked={theme.theme() === Theme.DARK}
                   class='ml-1'
@@ -159,7 +159,10 @@ const Header: Component = () => {
               <DropdownMenuSeparator />
               <div class='flex w-full flex-col items-center text-xs text-gray-500'>
                 <p>v{__APP_BUILD_VERSION__}</p>
-                <p>updated {d(__APP_BUILD_TIMESTAMP__, DateFormat.DATETIME)}</p>
+                <p>
+                  {t('GENERAL.UPDATED')}{' '}
+                  {d(__APP_BUILD_TIMESTAMP__, DateFormat.DATETIME)}
+                </p>
               </div>
             </DropdownMenuGroup>
           </DropdownMenuContent>

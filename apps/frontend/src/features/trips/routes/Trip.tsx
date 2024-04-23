@@ -252,9 +252,9 @@ const Trip: Component = () => {
             <Button onClick={handleCaptureAction} class='w-full'>
               <Show
                 when={!captureDetails()?.activeCapture}
-                fallback={<span>Stop capture</span>}
+                fallback={<span>{t('TRIPS.STOP_CAPTURE')}</span>}
               >
-                <span>Start capture</span>
+                <span>{t('TRIPS.START_CAPTURE')}</span>
               </Show>
             </Button>
 

@@ -77,7 +77,7 @@ const NewTripDialog: Component<NewTripDialogProps> = (props) => {
           <DialogTitle>{t('TRIPS.NEW_TRIP')}</DialogTitle>
         </DialogHeader>
 
-        <Label required>Vehicle</Label>
+        <Label required>{t('VEHICLES.VEHICLE')}</Label>
 
         <VehicleSelect
           value={selectedVehicle()}
@@ -86,14 +86,14 @@ const NewTripDialog: Component<NewTripDialogProps> = (props) => {
           emptyText={t('VEHICLES.NO_VEHICLE_SELECTED')}
         />
 
-        <Label>Capture log</Label>
+        <Label>{t('CAPTURE_LOGS.CAPTURE_LOG')}</Label>
 
         <CaptureLogSelect
           logs={logs.data ?? []}
           onChange={(log) => setCaptureLogId(log?.name)}
         />
 
-        <Label>Replay speed</Label>
+        <Label>{t('CAPTURE_LOGS.REPLAY_SPEED')}</Label>
 
         <Slider
           onChange={([v]) => setReplaySpeed(v)}

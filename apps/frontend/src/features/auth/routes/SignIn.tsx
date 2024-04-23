@@ -7,6 +7,7 @@ import { createForm, SubmitHandler, zodForm } from '@modular-forms/solid';
 import { z } from 'zod';
 import { Input } from '@/components/ui/input';
 import { useSignInMutation } from '../api';
+import { useTranslations } from '@/features/i18n';
 
 const SignInSchema = z.object({
   email: z.string().email(),
@@ -16,6 +17,7 @@ const SignInSchema = z.object({
 type SignInForm = z.infer<typeof SignInSchema>;
 
 const SignIn: Component = () => {
+  const { t } = useTranslations();
   const [, { Form, Field }] = createForm({ validate: zodForm(SignInSchema) });
   const navigate = useNavigate();
   const { mutateAsync } = useSignInMutation();
@@ -39,11 +41,11 @@ const SignIn: Component = () => {
           onSubmit={handleSubmit}
         >
           <h1 class='font-title mt-2 text-center text-xl font-semibold'>
-            Sign in to inSight
+            {t('AUTHENTICATION.SIGN_IN_TO')} inSight
           </h1>
 
           <Label for='email' class='font-semibold'>
-            E-mail
+            {t('USERS.FORM.EMAIL')}
           </Label>
           <Field name='email'>
             {(field, props) => (
@@ -51,14 +53,14 @@ const SignIn: Component = () => {
                 {...props}
                 type='email'
                 id='email'
-                placeholder='E-mail'
+                placeholder={t('USERS.FORM.EMAIL')}
                 value={field.value}
               />
             )}
           </Field>
 
           <Label for='password' class='font-semibold'>
-            Password
+            {t('USERS.FORM.PASSWORD')}
           </Label>
           <Field name='password'>
             {(field, props) => (
@@ -66,7 +68,7 @@ const SignIn: Component = () => {
                 {...props}
                 type='password'
                 id='password'
-                placeholder='Password'
+                placeholder={t('USERS.FORM.PASSWORD')}
                 value={field.value}
               />
             )}
@@ -74,11 +76,11 @@ const SignIn: Component = () => {
 
           <div class='flex justify-end'>
             <A class='text-sm hover:underline' href='/forgot-password'>
-              Forgot password?
+              {t('AUTHENTICATION.FORGOT_PASSWORD')}
             </A>
           </div>
 
-          <Button class='mt-4'>Sign in</Button>
+          <Button class='mt-4'>{t('AUTHENTICATION.SIGN_IN')}</Button>
         </Form>
       </main>
     </div>

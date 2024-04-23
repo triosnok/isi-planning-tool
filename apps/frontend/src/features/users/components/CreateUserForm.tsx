@@ -44,7 +44,7 @@ const CreateUserForm: Component<CreateUserFormProps> = (props) => {
               id={field.name}
               type='text'
               value={field.value}
-              placeholder='Name'
+              placeholder={t('USERS.FORM.NAME')}
             />
           </>
         )}
@@ -61,7 +61,7 @@ const CreateUserForm: Component<CreateUserFormProps> = (props) => {
               {...props}
               type='email'
               value={field.value}
-              placeholder='E-mail'
+              placeholder={t('USERS.FORM.EMAIL')}
             />
           </>
         )}
@@ -78,7 +78,7 @@ const CreateUserForm: Component<CreateUserFormProps> = (props) => {
               {...props}
               type='text'
               value={field.value}
-              placeholder='Phone number'
+              placeholder={t('USERS.FORM.PHONE_NUMBER')}
             />
           </>
         )}
@@ -94,7 +94,7 @@ const CreateUserForm: Component<CreateUserFormProps> = (props) => {
               {...props}
               type='password'
               value={field.value}
-              placeholder='Password'
+              placeholder={t('USERS.FORM.PASSWORD')}
             />
           </>
         )}
@@ -109,7 +109,7 @@ const CreateUserForm: Component<CreateUserFormProps> = (props) => {
               {...props}
               type='password'
               value={field.value}
-              placeholder='Confirm password'
+              placeholder={t('USERS.FORM.CONFIRM_PASSWORD')}
             />
           </>
         )}

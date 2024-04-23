@@ -42,7 +42,7 @@ const ProjectForm: Component<ProjectFormProps> = (props) => {
             {...props}
             type='text'
             id='name'
-            placeholder='Name'
+            placeholder={t('PROJECTS.FORM.PROJECT_NAME')}
             value={field.value}
           />
         )}
@@ -55,7 +55,7 @@ const ProjectForm: Component<ProjectFormProps> = (props) => {
             {...props}
             type='text'
             id='referenceCode'
-            placeholder='Project reference'
+            placeholder={t('PROJECTS.FORM.PROJECT_REFERENCE')}
             value={field.value}
           />
         )}

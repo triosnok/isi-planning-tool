@@ -74,12 +74,12 @@ const Dashboard: Component = () => {
         <div>
           <div class='grid grid-cols-2 grid-rows-2 gap-4'>
             <section class='flex flex-col gap-2'>
-              <h2 class='text-2xl font-bold'>Map</h2>
-              <MapRoot class='h-full'></MapRoot>
+              <h2 class='text-2xl font-bold'>{t('MAP.TITLE')}</h2>
+              <MapRoot class='h-full' />
             </section>
 
             <section class='flex flex-col gap-2'>
-              <h2 class='text-2xl font-bold'>Active trips</h2>
+              <h2 class='text-2xl font-bold'>{t('TRIPS.ACTIVE_TRIPS')}</h2>
               <div class='flex flex-col gap-2 overflow-scroll'>
                 <For each={activeTrips.data}>
                   {(trip) => (
@@ -100,14 +100,16 @@ const Dashboard: Component = () => {
             </section>
 
             <section class='flex flex-col gap-2'>
-              <h2 class='text-2xl font-bold'>Deviations</h2>
+              <h2 class='text-2xl font-bold'>{t('DEVIATIONS.TITLE')}</h2>
               <div class='h-5/6 rounded-lg border border-gray-500 p-2'>
                 <PieChart data={deviationChartData} />
               </div>
             </section>
 
             <section class='flex flex-col gap-2'>
-              <h2 class='text-2xl font-bold'>Daily meters captured</h2>
+              <h2 class='text-2xl font-bold'>
+                {t('DASHBOARD.DAILY_METERS_CAPTURED')}
+              </h2>
               <div class='h-5/6 rounded-lg border border-gray-500 p-2'>
                 <BarChart data={metersCapturedData} />
               </div>

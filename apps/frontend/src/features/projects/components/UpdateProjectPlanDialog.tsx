@@ -6,6 +6,7 @@ import {
   useProjectPlansMutation,
 } from '../api';
 import PlanForm from './PlanForm';
+import { useTranslations } from '@/features/i18n';
 
 export interface UpdateProjectPlanDialogProps {
   planId: string;
@@ -15,6 +16,7 @@ export interface UpdateProjectPlanDialogProps {
 const UpdateProjectPlanDialog: Component<UpdateProjectPlanDialogProps> = (
   props
 ) => {
+  const { t } = useTranslations();
   const plan = usePlanDetailsQuery(props.planId);
   const { update } = useProjectPlansMutation(props.planId);
 
@@ -35,7 +37,7 @@ const UpdateProjectPlanDialog: Component<UpdateProjectPlanDialogProps> = (
     <Show when={plan.data}>
       <Dialog open={true} onOpenChange={props.onOpenChange}>
         <DialogContent>
-          <DialogTitle>Edit Project Plan</DialogTitle>
+          <DialogTitle>{t('PLANS.EDIT_PROJECT_PLAN')}</DialogTitle>
           <PlanForm
             planId={plan.data?.id}
             importUrl={plan.data?.imports[0].url}

@@ -27,7 +27,7 @@ const VehicleOverview: Component<LayoutProps> = (props) => {
           <h1 class='text-4xl font-bold'>Vehicles</h1>
 
           <section class='flex flex-col justify-between gap-2 sm:flex-row'>
-            <Input placeholder='Search...' class='w-fit' />
+            <Input placeholder={t('NAVIGATION.SEARCH')} class='w-fit' />
             <Button onClick={handleAddVehicle} class='ml-auto w-full sm:w-auto'>
               {t('VEHICLES.ADD_VEHICLE')}
             </Button>

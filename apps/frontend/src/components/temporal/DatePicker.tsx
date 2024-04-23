@@ -9,6 +9,7 @@ import dayjs, { type Dayjs } from 'dayjs';
 import { Component, For, JSX, Show, createSignal, onMount } from 'solid-js';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { useCalendar } from './hooks';
+import { useTranslations } from '@/features/i18n';
 
 export interface DatePickerProps {
   value?: Date | string;
@@ -18,6 +19,7 @@ export interface DatePickerProps {
 }
 
 const DatePicker: Component<DatePickerProps> = (props) => {
+  const { t } = useTranslations();
   const { weeks, next, previous, reference, setReference } = useCalendar();
   const [isOpen, setIsOpen] = createSignal(false);
   const [selectedDate, setSelectedDate] = createSignal(
@@ -91,7 +93,7 @@ const DatePicker: Component<DatePickerProps> = (props) => {
             type='text'
             readOnly
             value={selectedDate()?.format('YYYY-MM-DD') ?? ''}
-            placeholder='YYYY-MM-DD'
+            placeholder={t('GENERAL.YYYY_MM_DD')}
             class='h-fit w-32 cursor-pointer select-none bg-transparent text-sm focus:outline-none'
             onClick={(e) => e.preventDefault()}
             tabIndex={-1}
@@ -108,7 +110,7 @@ const DatePicker: Component<DatePickerProps> = (props) => {
             )}
           >
             <IconX class='h-4 w-4' />
-            <span class='sr-only'>Clear date</span>
+            <span class='sr-only'>{t('GENERAL.CLEAR_DATE')}</span>
           </button>
         </Show>
       </div>
