@@ -25,7 +25,11 @@ import {
 import dayjs from 'dayjs';
 import { Component, Show, createMemo, createSignal } from 'solid-js';
 import { useTripDetailsQuery } from '../api';
-import { useTripCaptureAction, useTripCaptureDetails } from '../api/capture';
+
+import {
+  useTripCaptureAction,
+  useTripCaptureDetails,
+} from '@/features/capture/api';
 import TripNoteModule from '../components/TripNoteModule';
 import TripSummaryDialog from '../components/TripSummaryDialog';
 import { ImageStatus, getImageAnalysis } from '../utils';

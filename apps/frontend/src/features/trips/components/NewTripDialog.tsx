@@ -12,6 +12,7 @@ import {
   SliderThumb,
   SliderTrack,
 } from '@/components/ui/slider';
+import { useCaptureLogsQuery } from '@/features/capture/api';
 import { useTranslations } from '@/features/i18n';
 import { useVehiclesQuery } from '@/features/vehicles/api';
 import VehicleSelect from '@/features/vehicles/components/VehicleSelect';
@@ -21,7 +22,6 @@ import { useNavigate } from '@solidjs/router';
 import { Component, createEffect, createSignal } from 'solid-js';
 import { z } from 'zod';
 import { useTripMutation } from '../api';
-import { useCaptureLogsQuery } from '../api/capture';
 import CaptureLogSelect from './CaptureLogSelect';
 
 export interface NewTripDialogProps {

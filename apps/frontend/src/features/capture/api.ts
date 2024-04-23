@@ -1,12 +1,18 @@
+import { CacheKey } from '@/api';
 import {
   CaptureAction,
   CaptureActionRequest,
   CaptureDetails,
   CaptureLogDetails,
 } from '@isi-insight/client';
-import { createMutation, createQuery } from '@tanstack/solid-query';
+import {
+  createMutation,
+  createQuery,
+  useQueryClient,
+} from '@tanstack/solid-query';
 import axios from 'axios';
 import { createEffect, createSignal, onCleanup } from 'solid-js';
+import { z } from 'zod';
 
 /**
  * Hook for performing action on a trips capture.
