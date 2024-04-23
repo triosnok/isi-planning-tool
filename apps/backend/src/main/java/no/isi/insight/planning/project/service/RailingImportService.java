@@ -52,20 +52,9 @@ public class RailingImportService {
     """;
 
   // language=sql
-  private static final String UPSERT_ROAD_SYSTEM_QUERY = """
-      INSERT INTO road_system (road_system_id, road_category, road_phase, road_number)
-      VALUES (:id, :category, :phase, :roadNumber)
-      ON CONFLICT (road_system_id) DO UPDATE SET
-        road_category = EXCLUDED.road_category,
-        road_phase = EXCLUDED.road_phase,
-        road_number = EXCLUDED.road_number,
-        last_imported_at = NOW()
-    """;
-
-  // language=sql
   private static final String UPSERT_ROAD_SEGMENT_QUERY = """
-      INSERT INTO road_segment (fk_road_railing_id, road_segment_id, geometry, length, side_of_road, direction_of_road, road_system_reference, fk_road_system_id)
-      VALUES (:railingId, :externalId, ST_GeomFromText(:geometry, 5973), :length, :side::road_side, :direction::road_direction, :roadSystemReference, :roadSystemId)
+      INSERT INTO road_segment (fk_road_railing_id, road_segment_id, geometry, length, side_of_road, direction_of_road, road_system_reference, road_reference, road_category)
+      VALUES (:railingId, :externalId, ST_GeomFromText(:geometry, 5973), :length, :side::road_side, :direction::road_direction, :roadSystemReference, :roadReference, :roadCategory)
       ON CONFLICT (fk_road_railing_id, road_segment_id) DO UPDATE SET
         geometry = EXCLUDED.geometry,
         length = EXCLUDED.length,
@@ -188,7 +177,6 @@ public class RailingImportService {
     log.info("{} of the imported railings were flipped", flipped);
 
     this.jdbcTemplate.batchUpdate(UPSERT_ROAD_RAILING_QUERY, railingParams.toArray(MapSqlParameterSource[]::new));
-    this.jdbcTemplate.batchUpdate(UPSERT_ROAD_SYSTEM_QUERY, roadSystemParams.toArray(MapSqlParameterSource[]::new));
     this.jdbcTemplate.batchUpdate(UPSERT_ROAD_SEGMENT_QUERY, roadSegmentsParams.toArray(MapSqlParameterSource[]::new));
     var importedRailings = this.jdbcTemplate
       .batchUpdate(INSERT_PROJECT_PLAN_RAILING_QUERY, planJoinParams.toArray(MapSqlParameterSource[]::new));
@@ -245,7 +233,13 @@ public class RailingImportService {
   ) {
     var sqlParams = segments.stream().map(segment -> {
       var data = segment.getData();
+      var roadCategory = data.roadSystemReference().system().category();
 
+      var roadReference = switch (roadCategory) {
+        case "E" -> "E" + data.roadSystemReference().system().number();
+        default -> data.roadSystemReference().system().number().toString();
+      };
+      
       var params = new MapSqlParameterSource();
       params.addValue("railingId", railingId);
       params.addValue("externalId", data.getShortform());
@@ -253,7 +247,8 @@ public class RailingImportService {
       params.addValue("length", data.length());
       params.addValue("direction", segment.getDirection().name());
       params.addValue("roadSystemReference", data.roadSystemReference().shortform());
-      params.addValue("roadSystemId", data.roadSystemReference().system().id());
+      params.addValue("roadReference", roadReference);
+      params.addValue("roadCategory", roadCategory);
       params.addValue("side", Optional.ofNullable(segment.getSide()).map(RoadSide::name).orElse(null));
       return params;
     }).filter(Objects::nonNull).toList();
