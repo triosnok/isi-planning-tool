@@ -20,10 +20,8 @@ export interface TripNoteCardProps {
 
 const TripNoteCard: Component<TripNoteCardProps> = (props) => {
   const { t } = useTranslations();
-
   const { update } = useTripNoteMutation(props.tripId);
-
-  let inputElement: HTMLInputElement | undefined;
+  let inputElement: HTMLInputElement;
 
   const [note, setNote] = createSignal(props.note);
 
@@ -42,8 +40,10 @@ const TripNoteCard: Component<TripNoteCardProps> = (props) => {
   };
 
   createEffect(() => {
-    if (props.editing && inputElement) {
+    if (props.editing) {
       inputElement.focus();
+    } else {
+      setNote(props.note);
     }
   });
 
@@ -67,12 +67,12 @@ const TripNoteCard: Component<TripNoteCardProps> = (props) => {
               'border-0 text-base',
               props.editing
                 ? 'border border-gray-400'
-                : 'placeholder:text-gray-950 cursor-pointer focus-visible:ring-0 dark:placeholder:text-gray-50'
+                : 'cursor-pointer placeholder:text-gray-950 focus-visible:ring-0 dark:placeholder:text-gray-50'
             )}
             value={note()}
             onChange={(e) => setNote(e.target.value)}
             readOnly={!props.editing}
-            ref={inputElement}
+            ref={inputElement!}
           />
 
           <Show when={props.editing}>
