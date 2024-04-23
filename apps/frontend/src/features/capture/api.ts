@@ -63,12 +63,41 @@ export const useTripCaptureDetails = (tripId: string) => {
  */
 export const useCaptureLogsQuery = () => {
   return createQuery(() => ({
-    queryKey: [],
+    queryKey: [CacheKey.CAPTURE_LOGS],
     queryFn: async () => {
       const response =
         await axios.get<CaptureLogDetails[]>(`/api/v1/capture/logs`);
 
       return response.data;
+    },
+  }));
+};
+
+/**
+ * Hook for uploading a capture log.
+ */
+export const useUploadCaptureLog = () => {
+  const qc = useQueryClient();
+
+  return createMutation(() => ({
+    mutationFn: async (values: {
+      logIdentifier: string;
+      gnssLog: File;
+      topCameraLog: File;
+      leftCameraLog: File;
+      rightCameraLog: File;
+    }) => {
+      const formData = new FormData();
+      formData.append('logIdentifier', values.logIdentifier);
+      formData.append('gnssLog', values.gnssLog);
+      formData.append('topCameraLog', values.topCameraLog);
+      formData.append('leftCameraLog', values.leftCameraLog);
+      formData.append('rightCameraLog', values.rightCameraLog);
+
+      await axios.post<void>(`/api/v1/capture`, formData);
+    },
+    onSuccess: (_data, _variables, _context) => {
+      qc.invalidateQueries({ queryKey: [CacheKey.CAPTURE_LOGS] });
     },
   }));
 };

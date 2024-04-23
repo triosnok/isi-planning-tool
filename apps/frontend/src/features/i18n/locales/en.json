@@ -208,5 +208,14 @@
       "AVAILABLE": "Available",
       "UNAVAILBLE": "Unavailable"
     }
+  },
+  "CAPTURE": {
+    "TITLE": "Capture",
+    "LOG_IDENTIFIER": "Log identifier",
+    "CAPTURE_LOGS": "Capture logs",
+    "UPLOAD_LOGS": "Upload logs",
+    "TOP_CAMERA": "Top camera",
+    "LEFT_CAMERA": "Left camera",
+    "RIGHT_CAMERA": "Right camera"
   }
 }

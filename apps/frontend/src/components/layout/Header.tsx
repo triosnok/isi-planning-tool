@@ -74,6 +74,11 @@ const Header: Component = () => {
                 {t('VEHICLES.TITLE')}
               </A>
             </li>
+            <li>
+              <A href='/capture' class='hover:underline'>
+                {t('CAPTURE.TITLE')}
+              </A>
+            </li>
           </ul>
         </div>
       </nav>
