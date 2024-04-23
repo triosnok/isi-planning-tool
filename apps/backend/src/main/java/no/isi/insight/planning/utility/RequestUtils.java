@@ -16,13 +16,16 @@ import no.isi.insight.planning.model.UserAccount;
 public class RequestUtils {
 
   public static Optional<UserAccount> getRequestingUserAccount() {
-    var principal = (UserAccountDetailsAdapter) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    var authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    if (principal == null) {
+    if (authentication == null) {
       return Optional.empty();
     }
 
-    return Optional.of(principal.getUserAccount());
+    return switch (authentication.getPrincipal()) {
+      case UserAccountDetailsAdapter uda -> Optional.of(uda.getUserAccount());
+      default -> Optional.empty();
+    };
   }
 
   @NonNull

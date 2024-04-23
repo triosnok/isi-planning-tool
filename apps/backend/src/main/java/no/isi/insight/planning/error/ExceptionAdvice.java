@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import lombok.extern.slf4j.Slf4j;
 import no.isi.insight.planning.client.error.view.ValidationErrorDescription;
 import no.isi.insight.planning.error.model.StatusCodeException;
+import no.isi.insight.planning.utility.RequestUtils;
 
 @Slf4j
 @RestControllerAdvice
@@ -56,6 +58,15 @@ public class ExceptionAdvice {
     log.error("Unhandled data integrity violation: {}", e.getMessage(), e);
     var pd = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error");
     return pd;
+  }
+
+  @ExceptionHandler(AccessDeniedException.class)
+  public ProblemDetail handle(
+      AccessDeniedException e
+  ) {
+    var authenticated = RequestUtils.getRequestingUserAccount().isPresent();
+    var status = authenticated ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED;
+    return ProblemDetail.forStatusAndDetail(status, "Access Denied");
   }
 
 }
