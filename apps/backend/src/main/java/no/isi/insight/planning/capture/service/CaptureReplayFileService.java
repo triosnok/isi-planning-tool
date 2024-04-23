@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Comparator;
 
 import io.minio.BucketExistsArgs;
 import io.minio.GetObjectArgs;
@@ -60,6 +61,9 @@ public class CaptureReplayFileService {
 
         results.add(log);
       }
+
+      results.sort(Comparator.comparing(CaptureLogDetails::updatedAt).reversed());
+
     } catch (Exception e) {
       // TODO: handle exception
     }
