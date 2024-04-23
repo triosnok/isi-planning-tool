@@ -27,7 +27,7 @@ export const CaptureLogSelect: Component<CaptureLogSelectProps> = (props) => {
   };
 
   return (
-    <div class='grid grid-cols-2 gap-2'>
+    <div class='grid max-h-64 grid-cols-2 gap-2 overflow-y-auto'>
       <For each={props.logs}>
         {(log) => (
           <button
