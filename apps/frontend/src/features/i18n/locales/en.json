@@ -60,6 +60,7 @@
     "SETTINGS": "Settings",
     "DARK_THEME": "Dark theme",
     "UPDATED": "Updated",
+    "UPDATED_AT": "Updated at",
     "YYYY_MM_DD": "YYYY-MM-DD"
   },
   "MAP": {
@@ -216,6 +217,9 @@
     "UPLOAD_LOGS": "Upload logs",
     "TOP_CAMERA": "Top camera",
     "LEFT_CAMERA": "Left camera",
-    "RIGHT_CAMERA": "Right camera"
+    "RIGHT_CAMERA": "Right camera",
+    "TABLE": {
+      "NO_CAPTURE_LOGS": "No capture logs available"
+    }
   }
 }
