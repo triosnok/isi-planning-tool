@@ -5,15 +5,18 @@ import { Input } from '@/components/ui/input';
 import { useTranslations } from '@/features/i18n';
 import { LayoutProps } from '@/lib/utils';
 import { useNavigate } from '@solidjs/router';
-import { Component, For } from 'solid-js';
+import { Component, For, Index } from 'solid-js';
 import { useUsersQuery } from '../api';
 import UserCard from '../components/UserCard';
+import { usePositions } from '@/features/positions';
+import MapDriverLayer from '@/components/map/MapDriverLayer';
 
 const UserOverview: Component<LayoutProps> = (props) => {
   const users = useUsersQuery();
   const navigate = useNavigate();
   const { t } = useTranslations();
   const handleAddUser = () => navigate('/users/new');
+  const { positions } = usePositions();
 
   return (
     <div class='flex h-svh w-svw flex-col'>
@@ -49,7 +52,17 @@ const UserOverview: Component<LayoutProps> = (props) => {
         </main>
 
         <aside class='w-0 md:w-1/3'>
-          <MapRoot class='h-full w-full' />
+          <MapRoot class='h-full w-full'>
+            <Index each={positions()}>
+              {(pos) => (
+                <MapDriverLayer
+                  position={pos().geometry}
+                  heading={pos().heading}
+                  fullName='Test User'
+                />
+              )}
+            </Index>
+          </MapRoot>
         </aside>
 
         {props.children}
