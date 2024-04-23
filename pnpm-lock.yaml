@@ -38,6 +38,9 @@ importers:
       '@solid-primitives/refs':
         specifier: ^1.0.8
         version: 1.0.8(solid-js@1.8.12)
+      '@solid-primitives/upload':
+        specifier: ^0.0.117
+        version: 0.0.117(solid-js@1.8.12)
       '@solidjs/router':
         specifier: ^0.11.5
         version: 0.11.5(solid-js@1.8.12)
@@ -1056,6 +1059,15 @@ packages:
       solid-js: ^1.6.12
     dependencies:
       '@solid-primitives/utils': 6.2.2(solid-js@1.8.12)
+      solid-js: 1.8.12
+    dev: false
+
+  /@solid-primitives/upload@0.0.117(solid-js@1.8.12):
+    resolution: {integrity: sha512-szDksm4u67JgiMtkpX8RPccxqfid4OCQ/zpJ1yB1PMFmenLjz8YKldGIIt+Yn3bEcfHBbdkPa2uu/y2FAdPeSw==}
+    peerDependencies:
+      solid-js: ^1.6.12
+    dependencies:
+      '@solid-primitives/utils': 6.2.3(solid-js@1.8.12)
       solid-js: 1.8.12
     dev: false
 
