@@ -84,7 +84,7 @@ const PlanForm: Component<PlanFormProps> = (props) => {
       </Field>
 
       <Show when={props.imports}>
-        <Label class='mt-2'>Previous imports</Label>
+        <Label class='mt-2'>{t('PLANS.FORM.PREVIOUS_IMPORTS')}</Label>
 
         <PreviousImports
           imports={props.imports ?? []}
@@ -160,7 +160,7 @@ export interface PreviousImportProps {
 }
 
 const PreviousImports: Component<PreviousImportProps> = (props) => {
-  const { d } = useTranslations();
+  const { d, t } = useTranslations();
 
   const handleChange = (url: string, importedAt: string) => {
     if (props.selected() === importedAt) {
@@ -183,25 +183,24 @@ const PreviousImports: Component<PreviousImportProps> = (props) => {
               handleChange(importDetails.url, importDetails.importedAt)
             }
             class={cn(
-              `flex flex-col rounded-md border p-2 text-sm transition-all
-               hover:border-gray-300 hover:bg-gray-200 dark:border-gray-800
-               dark:hover:bg-gray-800`,
+              `flex select-none flex-col overflow-hidden rounded-md border
+               p-2 text-sm transition-all hover:cursor-pointer hover:bg-gray-100
+                dark:border-gray-800 dark:hover:bg-gray-900`,
               props.selected() === importDetails.importedAt &&
-                `border-success-200 bg-success-100 hover:border-success-300
-                 hover:bg-success-200 dark:hover:bg-success-800 dark:bg-success-800
-                 dark:border-success-700`
+                `border-brand-blue-500 dark:border-brand-blue-600 bg-brand-blue-50/40
+                 dark:bg-brand-blue-950/60 hover:bg-brand-blue-50/80 dark:hover:bg-brand-blue-950/80 `
             )}
           >
             <p class='flex flex-row gap-1'>
-              <span class='font-semibold'>Railings:</span>
+              <span class='font-semibold'>{t('RAILINGS.TITLE')}:</span>
               <span>{importDetails.count}</span>
             </p>
             <p class='flex flex-row items-center gap-1'>
-              <span class='font-semibold'>Updated at:</span>
+              <span class='font-semibold'>{t('GENERAL.UPDATED_AT')}:</span>
               <span>{d(importDetails.importedAt)}</span>
             </p>
             <p class='flex flex-row items-center gap-1'>
-              <span class='font-semibold'>Import:</span>
+              <span class='font-semibold'>URL:</span>
               <span class='max-w-96 truncate'>{importDetails.url}</span>
             </p>
           </button>
