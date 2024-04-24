@@ -8,14 +8,16 @@ import {
   useVehiclesQuery,
 } from '@/features/vehicles/api';
 import VehicleSelect from '@/features/vehicles/components/VehicleSelect';
+import { cn } from '@/lib/utils';
+import { RailingImportDetails } from '@isi-insight/client';
 import {
   SubmitHandler,
   createForm,
   setValue,
-  zodForm
+  zodForm,
 } from '@modular-forms/solid';
 import dayjs from 'dayjs';
-import { Component, Show, createSignal } from 'solid-js';
+import { Component, For, Show, createSignal } from 'solid-js';
 import { ProjectPlanSchema, ProjectPlanSchemaValues } from '../api';
 
 export interface PlanFormProps {
@@ -24,16 +26,21 @@ export interface PlanFormProps {
   startsAt?: string;
   endsAt?: string;
   vehicleId?: string;
+  imports?: RailingImportDetails[];
   onSubmit?: (values: ProjectPlanSchemaValues) => void;
 }
 
 const PlanForm: Component<PlanFormProps> = (props) => {
   const [availableFrom, setAvailableFrom] = createSignal<string>();
   const [availableTo, setAvailableTo] = createSignal<string>();
+  const [selectedImport, setSelectedImport] = createSignal(
+    props?.imports?.[0]?.importedAt
+  );
 
   const [form, { Form, Field }] = createForm({
     validate: zodForm(ProjectPlanSchema),
     initialValues: {
+      importUrl: props.importUrl,
       startsAt: props.startsAt,
       endsAt: props.endsAt,
       vehicleId: props.vehicleId,
@@ -68,9 +75,24 @@ const PlanForm: Component<PlanFormProps> = (props) => {
             id='importUrl'
             placeholder={t('GENERAL.URL')}
             value={field.value}
+            onChange={(event) => {
+              setValue(form, 'importUrl', event.target.value);
+              setSelectedImport('');
+            }}
           />
         )}
       </Field>
+
+      <Show when={props.imports}>
+        <Label class='mt-2'>Previous imports</Label>
+
+        <PreviousImports
+          imports={props.imports ?? []}
+          selected={selectedImport}
+          setSelected={setSelectedImport}
+          onChange={(url) => setValue(form, 'importUrl', url)}
+        />
+      </Show>
 
       <div class='flex justify-between gap-2'>
         <div class='flex-1'>
@@ -130,4 +152,62 @@ const PlanForm: Component<PlanFormProps> = (props) => {
   );
 };
 
+export interface PreviousImportProps {
+  imports: RailingImportDetails[];
+  onChange?: (url: string) => void;
+  selected: () => string | undefined;
+  setSelected: (value: string) => void;
+}
+
+const PreviousImports: Component<PreviousImportProps> = (props) => {
+  const { d } = useTranslations();
+
+  const handleChange = (url: string, importedAt: string) => {
+    if (props.selected() === importedAt) {
+      props.setSelected('');
+      props.onChange?.('');
+    } else {
+      props.setSelected(importedAt);
+      props.onChange?.(url);
+    }
+  };
+
+  return (
+    <div class='grid max-h-32 grid-cols-1 gap-2 overflow-y-auto pb-1 pr-1'>
+      <For each={props.imports}>
+        {(importDetails) => (
+          <button
+            title={importDetails.url}
+            type='button'
+            onClick={() =>
+              handleChange(importDetails.url, importDetails.importedAt)
+            }
+            class={cn(
+              `flex flex-col rounded-md border p-2 text-sm transition-all
+               hover:border-gray-300 hover:bg-gray-200 dark:border-gray-800
+               dark:hover:bg-gray-800`,
+              props.selected() === importDetails.importedAt &&
+                `border-success-200 bg-success-100 hover:border-success-300
+                 hover:bg-success-200 dark:hover:bg-success-800 dark:bg-success-800
+                 dark:border-success-700`
+            )}
+          >
+            <p class='flex flex-row gap-1'>
+              <span class='font-semibold'>Railings:</span>
+              <span>{importDetails.count}</span>
+            </p>
+            <p class='flex flex-row items-center gap-1'>
+              <span class='font-semibold'>Updated at:</span>
+              <span>{d(importDetails.importedAt)}</span>
+            </p>
+            <p class='flex flex-row items-center gap-1'>
+              <span class='font-semibold'>Import:</span>
+              <span class='max-w-96 truncate'>{importDetails.url}</span>
+            </p>
+          </button>
+        )}
+      </For>
+    </div>
+  );
+};
 export default PlanForm;
