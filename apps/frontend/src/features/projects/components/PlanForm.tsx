@@ -3,18 +3,19 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useTranslations } from '@/features/i18n';
-import { useVehicleDetailsQuery, useVehiclesQuery } from '@/features/vehicles/api';
+import {
+  useVehicleDetailsQuery,
+  useVehiclesQuery,
+} from '@/features/vehicles/api';
 import VehicleSelect from '@/features/vehicles/components/VehicleSelect';
 import {
   SubmitHandler,
   createForm,
-  getValue,
   setValue,
-  zodForm,
+  zodForm
 } from '@modular-forms/solid';
 import dayjs from 'dayjs';
-import { Component, createSignal } from 'solid-js';
-import { z } from 'zod';
+import { Component, Show, createSignal } from 'solid-js';
 import { ProjectPlanSchema, ProjectPlanSchemaValues } from '../api';
 
 export interface PlanFormProps {
@@ -41,6 +42,7 @@ const PlanForm: Component<PlanFormProps> = (props) => {
 
   const { t } = useTranslations();
   const vehicles = useVehiclesQuery(availableFrom, availableTo);
+  const vehicle = useVehicleDetailsQuery(props?.vehicleId!);
 
   const handleSubmit: SubmitHandler<ProjectPlanSchemaValues> = async (
     values
@@ -110,11 +112,14 @@ const PlanForm: Component<PlanFormProps> = (props) => {
 
       <Field name='vehicleId'>
         {(_field) => (
-          <VehicleSelect
-            vehicles={vehicles.data ?? []}
-            onChange={(v) => setValue(form, 'vehicleId', v?.id)}
-            emptyText={t('VEHICLES.NO_VEHICLE_SELECTED')}
-          />
+          <Show when={vehicle.data || !props.vehicleId}>
+            <VehicleSelect
+              value={vehicle.data ?? undefined}
+              vehicles={vehicles.data ?? []}
+              onChange={(v) => setValue(form, 'vehicleId', v?.id)}
+              emptyText={t('VEHICLES.NO_VEHICLE_SELECTED')}
+            />
+          </Show>
         )}
       </Field>
 

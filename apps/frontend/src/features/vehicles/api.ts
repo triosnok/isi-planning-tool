@@ -2,7 +2,7 @@ import { CacheKey } from '@/api';
 import {
   CreateVehicleRequest,
   TripDetails,
-  VehicleDetails
+  VehicleDetails,
 } from '@isi-insight/client';
 import {
   createMutation,
@@ -54,6 +54,8 @@ export const useVehicleDetailsQuery = (id: string) => {
   return createQuery(() => ({
     queryKey: [CacheKey.VEHICLE_DETAILS, id],
     queryFn: async () => {
+      if (id === undefined) return null;
+
       const response = await axios.get<VehicleDetails>(
         `/api/v1/vehicles/${id}`
       );

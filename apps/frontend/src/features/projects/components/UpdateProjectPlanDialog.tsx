@@ -29,10 +29,6 @@ const UpdateProjectPlanDialog: Component<UpdateProjectPlanDialogProps> = (
     }
   };
 
-  createEffect(() => {
-    console.log(plan.data?.startsAt);
-  });
-
   return (
     <Show when={plan.data}>
       <Dialog open={true} onOpenChange={props.onOpenChange}>
