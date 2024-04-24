@@ -2,6 +2,9 @@ package no.isi.insight.planning.client.railing.view;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 
+import no.isi.insight.planning.client.annotation.GenerateTypeScript;
+
+@GenerateTypeScript
 public enum RoadCategory {
   @JsonAlias("P")
   PRIVATE("P"),

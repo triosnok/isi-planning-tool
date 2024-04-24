@@ -294,6 +294,6 @@ export type PositionSubject = "VEHICLE" | "DRIVER";
 
 export type ProjectStatus = "UPCOMING" | "ONGOING" | "PREVIOUS";
 
-export type CameraPosition = "LEFT" | "RIGHT" | "TOP";
-
 export type RoadCategory = "PRIVATE" | "FOREST" | "MUNICIPALITY" | "COUNTY" | "NATIONAL" | "EUROPE" | "UNKNOWN";
+
+export type CameraPosition = "LEFT" | "RIGHT" | "TOP";
