@@ -204,6 +204,8 @@ export const useProjectRailings = (
 
       const params = new URLSearchParams();
 
+      params.set('projectId', projectId);
+
       planIds.forEach((planId) => {
         params.append('planId', planId);
       });
@@ -213,7 +215,7 @@ export const useProjectRailings = (
       }
 
       const response = await axios.get<RoadRailing[]>(
-        `/api/v1/projects/${projectId}/railings?${params.toString()}`
+        `/api/v1/railings?${params.toString()}`
       );
 
       return response.data;

@@ -11,13 +11,22 @@ import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import no.isi.insight.planning.client.project.view.RoadRailing;
+import no.isi.insight.planning.client.railing.view.RoadRailing;
 import no.isi.insight.planning.client.railing.view.RoadSegment;
 
 @Tag(name = "Railings", description = "Operations on the collection of railings")
 @HttpExchange("/api/v1/railings")
 public interface RailingRestService {
 
+  /**
+   * Finds a list of railings registered railings based on the given criteria.
+   * 
+   * @param projectId the id of the project to find railings for
+   * @param planId    optionally, the id of the plan within a project to find railings for
+   * @param tripId    optionally, the id of the trip within a plan to find railings for
+   * 
+   * @return a list of railings
+   */
   @GetExchange
   ResponseEntity<List<RoadRailing>> getRailings(
       @RequestParam Optional<UUID> projectId,
