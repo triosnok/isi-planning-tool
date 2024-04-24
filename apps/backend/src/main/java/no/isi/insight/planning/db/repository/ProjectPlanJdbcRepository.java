@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -90,6 +91,7 @@ public class ProjectPlanJdbcRepository {
     try {
       imports = Arrays
         .asList(this.objectMapper.readValue(rs.getBytes("railing_imports"), RailingImportDetails[].class));
+      imports.sort(Comparator.comparing(RailingImportDetails::importedAt).reversed());
     } catch (Exception e) {
       log.warn("Failed to parse railing imports JSON column: {}", e.getMessage());
     }
