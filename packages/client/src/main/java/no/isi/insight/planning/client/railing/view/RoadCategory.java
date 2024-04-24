@@ -1,11 +1,19 @@
 package no.isi.insight.planning.client.railing.view;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 public enum RoadCategory {
+  @JsonAlias("P")
   PRIVATE("P"),
+  @JsonAlias("S")
   FOREST("S"),
+  @JsonAlias("K")
   MUNICIPALITY("K"),
+  @JsonAlias("F")
   COUNTY("F"),
+  @JsonAlias("R")
   NATIONAL("R"),
+  @JsonAlias("E")
   EUROPE("E"),
   UNKNOWN(null);
 
