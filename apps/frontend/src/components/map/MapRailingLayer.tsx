@@ -68,7 +68,7 @@ const MapRailingLayer: Component<MapRailingLayerProps> = (props) => {
           FeatureProperty.COLOR,
           getRailingColor(railing.captureGrade)
         );
-        feature.set('RAILING', railing);
+        feature.set(FeatureProperty.RAILING, railing);
         feature.set(FeatureProperty.WIDTH, 10);
         return feature;
       })
@@ -89,7 +89,7 @@ const MapRailingLayer: Component<MapRailingLayerProps> = (props) => {
 
     selectHover.on('select', (e) => {
       setHoveredRailing((prev) => {
-        const next = e.selected[0]?.get('RAILING');
+        const next = e.selected[0]?.get(FeatureProperty.RAILING);
         if (prev?.id === next?.id) return prev;
         return next;
       });
@@ -115,7 +115,8 @@ const MapRailingLayer: Component<MapRailingLayerProps> = (props) => {
 
     feature.set(FeatureProperty.WIDTH, 15);
     feature.set(
-      FeatureProperty.COLOR, [0, 255, 255, 1]
+      FeatureProperty.COLOR,
+      [0, 255, 255, 1]
       //getRailingColor(hovered?.captureGrade, 0.7)
     );
 
