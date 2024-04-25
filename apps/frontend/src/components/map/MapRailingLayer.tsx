@@ -1,29 +1,46 @@
 import { RoadRailing } from '@isi-insight/client';
+import { pointerMove } from 'ol/events/condition';
 import WKT from 'ol/format/WKT';
-import Layer from 'ol/layer/Layer';
+import Select from 'ol/interaction/Select';
+import Layer, { Options } from 'ol/layer/Layer';
 import WebGLVectorLayerRenderer from 'ol/renderer/webgl/VectorLayer';
+import { Source } from 'ol/source';
 import VectorSource from 'ol/source/Vector';
 import { WebGLStyle } from 'ol/style/webgl';
-import { Component, createEffect, onCleanup } from 'solid-js';
+import { Component, createEffect, createSignal, onCleanup } from 'solid-js';
 import { useMap } from './MapRoot';
+import { FeatureProperty, LayerProperty, LayerType } from './utils';
 
 export interface MapRailingLayerProps {
   railings?: RoadRailing[];
 }
 
-const style: WebGLStyle = {
-  'stroke-color': ['*', ['get', 'COLOR'], [220, 220, 220]],
-  'stroke-width': 10,
+const DEFAULT_STYLE: WebGLStyle = {
+  'stroke-color': ['*', ['get', FeatureProperty.COLOR], [220, 220, 220]],
+  'stroke-width': ['get', FeatureProperty.WIDTH],
   'stroke-offset': 0,
   'stroke-pattern-src': '/ar.png',
   'stroke-pattern-offset': 10,
-  'fill-color': ['*', ['get', 'COLOR'], [255, 255, 255, 0.6]],
+};
+
+const HOVER_STYLE: WebGLStyle = {
+  'stroke-color': ['*', ['get', FeatureProperty.COLOR], [220, 220, 220]],
+  'stroke-width': ['get', FeatureProperty.WIDTH],
+  'stroke-offset': 0,
+  'stroke-pattern-offset': 10,
 };
 
 class WebGLLayer extends Layer {
+  private style: WebGLStyle;
+
+  constructor(options: Options<Source>, style?: WebGLStyle) {
+    super(options);
+    this.style = style ?? DEFAULT_STYLE;
+  }
+
   createRenderer() {
     return new WebGLVectorLayerRenderer(this, {
-      style,
+      style: this.style,
     });
   }
 }
@@ -32,12 +49,14 @@ const fmt = new WKT();
 
 const MapRailingLayer: Component<MapRailingLayerProps> = (props) => {
   const { map } = useMap();
+  const [hoveredRailing, setHoveredRailing] = createSignal<RoadRailing>();
 
-  const getRailingColor = (completionGrade: number) => {
-    if (completionGrade === 0) return [0, 0, 255, 1];
-    else if (completionGrade > 0 && completionGrade < 95) return [255, 0, 0, 1];
+  const getRailingColor = (completionGrade: number, alpha = 1) => {
+    if (completionGrade === 0) return [0, 0, 255, alpha];
+    else if (completionGrade > 0 && completionGrade < 95)
+      return [255, 0, 0, alpha];
     else if (completionGrade >= 95 && completionGrade <= 120)
-      return [0, 255, 0, 1];
+      return [0, 255, 0, alpha];
     else return undefined;
   };
 
@@ -45,17 +64,77 @@ const MapRailingLayer: Component<MapRailingLayerProps> = (props) => {
     const polylines = props.railings
       ?.map((railing) => {
         const feature = fmt.readFeature(railing.geometry.wkt);
-        feature.set('COLOR', getRailingColor(railing.captureGrade));
+        feature.set(
+          FeatureProperty.COLOR,
+          getRailingColor(railing.captureGrade)
+        );
+        feature.set('RAILING', railing);
+        feature.set(FeatureProperty.WIDTH, 10);
         return feature;
       })
       .filter(Boolean) as any;
 
     const lg = new WebGLLayer({
       source: new VectorSource({ features: polylines }),
+      zIndex: 2,
     });
 
+    lg.set(LayerProperty.LAYER_TYPE, LayerType.RAILING);
+
+    const selectHover = new Select({
+      condition: pointerMove,
+      hitTolerance: 10,
+      layers: (l) => l.get(LayerProperty.LAYER_TYPE) === LayerType.RAILING,
+    });
+
+    selectHover.on('select', (e) => {
+      setHoveredRailing((prev) => {
+        const next = e.selected[0]?.get('RAILING');
+        if (prev?.id === next?.id) return prev;
+        return next;
+      });
+    });
+
+    map.addInteraction(selectHover);
     map.addLayer(lg);
-    onCleanup(() => map.removeLayer(lg));
+    onCleanup(() => {
+      map.removeLayer(lg);
+      map.removeInteraction(selectHover);
+    });
+  });
+
+  createEffect(() => {
+    const hovered = hoveredRailing();
+    if (hovered === undefined) {
+      map.getTargetElement().style.cursor = '';
+      return;
+    }
+
+    map.getTargetElement().style.cursor = 'pointer';
+    const feature = fmt.readFeature(hovered?.geometry.wkt);
+
+    feature.set(FeatureProperty.WIDTH, 15);
+    feature.set(
+      FeatureProperty.COLOR, [0, 255, 255, 1]
+      //getRailingColor(hovered?.captureGrade, 0.7)
+    );
+
+    const layer = new WebGLLayer(
+      {
+        source: new VectorSource({
+          features: [feature],
+        }),
+        zIndex: 1,
+      },
+      HOVER_STYLE
+    );
+
+    layer.set(LayerProperty.LAYER_TYPE, LayerType.RAILING_HOVER);
+    map.addLayer(layer);
+
+    onCleanup(() => {
+      map.removeLayer(layer);
+    });
   });
 
   return null;

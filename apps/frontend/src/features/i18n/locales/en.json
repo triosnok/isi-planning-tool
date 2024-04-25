@@ -108,7 +108,8 @@
     "RAILING": "Railing",
     "RAILING_IMPORT_URL": "Railing import URL",
     "HIDE_COMPLETED_RAILINGS": "Hide completed railings",
-    "SIDE_CAMERA": "side camera"
+    "SIDE_CAMERA": "side camera",
+    "NOT_YET_CAPTURED": "Not yet captured"
   },
   "ROADS": {
     "TITLE": "Roads",

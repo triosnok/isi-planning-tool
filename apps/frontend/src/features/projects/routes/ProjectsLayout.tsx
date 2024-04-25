@@ -7,6 +7,7 @@ import { useParams } from '@solidjs/router';
 import { Component, createMemo } from 'solid-js';
 import { useProjectRailings } from '../api';
 import { useProjectSearchParams } from '../utils';
+import MapPopupLayer from '@/components/map/MapPopupLayer';
 
 const ProjectsLayout: Component<LayoutProps> = (props) => {
   const params = useParams();
@@ -34,6 +35,7 @@ const ProjectsLayout: Component<LayoutProps> = (props) => {
           <MapRoot class='relative h-full w-full' customZoom>
             <MapZoomControls class='absolute right-2 top-2' />
             <MapRailingLayer railings={railings.data} />
+            <MapPopupLayer />
           </MapRoot>
         </div>
       </main>
