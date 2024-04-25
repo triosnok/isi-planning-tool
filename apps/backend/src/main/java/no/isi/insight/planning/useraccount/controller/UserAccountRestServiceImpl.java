@@ -18,11 +18,11 @@ import no.isi.insight.planning.client.useraccount.UserAccountRestService;
 import no.isi.insight.planning.client.useraccount.view.CreateUserAccountRequest;
 import no.isi.insight.planning.client.useraccount.view.UpdateUserAccountRequest;
 import no.isi.insight.planning.client.useraccount.view.UserAccountDetails;
-import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.db.model.UserAccount;
 import no.isi.insight.planning.db.model.UserAccountRole;
-import no.isi.insight.planning.db.repository.TripJpaRepository;
+import no.isi.insight.planning.db.repository.TripJdbcRepository;
 import no.isi.insight.planning.db.repository.UserAccountJpaRepository;
+import no.isi.insight.planning.error.model.NotFoundException;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,7 +30,7 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
 
   private final UserAccountJpaRepository userAccountJpaRepository;
   private final UserAccountService userService;
-  private final TripJpaRepository tripJpaRepository;
+  private final TripJdbcRepository tripJdbcRepository;
 
   @Override
   @PlannerAuthorization
@@ -157,6 +157,6 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
     this.userAccountJpaRepository.findById(id)
       .orElseThrow(() -> new NotFoundException("Could not find user with id: %s".formatted(id.toString())));
 
-    return ResponseEntity.ok(this.tripJpaRepository.findAllByDriverId(id, active));
+    return ResponseEntity.ok(this.tripJdbcRepository.findAllByDriverId(id, active));
   }
 }

@@ -18,13 +18,13 @@ import no.isi.insight.planning.client.vehicle.VehicleRestService;
 import no.isi.insight.planning.client.vehicle.view.CreateVehicleRequest;
 import no.isi.insight.planning.client.vehicle.view.UpdateVehicleRequest;
 import no.isi.insight.planning.client.vehicle.view.VehicleDetails;
-import no.isi.insight.planning.error.model.BadRequestException;
-import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.db.model.Vehicle;
 import no.isi.insight.planning.db.repository.ProjectPlanJdbcRepository;
-import no.isi.insight.planning.db.repository.TripJpaRepository;
+import no.isi.insight.planning.db.repository.TripJdbcRepository;
 import no.isi.insight.planning.db.repository.VehicleJdbcRepository;
 import no.isi.insight.planning.db.repository.VehicleJpaRepository;
+import no.isi.insight.planning.error.model.BadRequestException;
+import no.isi.insight.planning.error.model.NotFoundException;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,8 +32,8 @@ public class VehicleRestServiceImpl implements VehicleRestService {
 
   private final VehicleJpaRepository vehicleJpaRepository;
   private final VehicleJdbcRepository vehicleJdbcRespotiory;
+  private final TripJdbcRepository tripJdbcRepository;
   private final ProjectPlanJdbcRepository projectPlanJdbcRepository;
-  private final TripJpaRepository tripJpaRepository;
 
   @Override
   @PlannerAuthorization
@@ -131,7 +131,7 @@ public class VehicleRestServiceImpl implements VehicleRestService {
   public ResponseEntity<List<TripDetails>> findTripsByVehicleId(
       UUID id
   ) {
-    var trips = this.tripJpaRepository.findAllByVehicleId(id).reversed();
+    var trips = this.tripJdbcRepository.findAllByVehicleId(id).reversed();
 
     return ResponseEntity.ok(trips);
   }
