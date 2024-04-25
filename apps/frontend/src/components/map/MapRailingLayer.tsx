@@ -1,3 +1,5 @@
+import { RailingStatus } from '@/lib/constants';
+import { getRailingStatus } from '@/lib/utils';
 import { RoadRailing } from '@isi-insight/client';
 import { pointerMove } from 'ol/events/condition';
 import WKT from 'ol/format/WKT';
@@ -47,18 +49,16 @@ class WebGLLayer extends Layer {
 
 const fmt = new WKT();
 
+const getRailingColor = (completionGrade: number, alpha = 1) => {
+  const status = getRailingStatus(completionGrade);
+  if (status === RailingStatus.TODO) return [33, 125, 255, alpha];
+  else if (status === RailingStatus.ERROR) return [220, 38, 38, alpha];
+  return [16, 185, 129, alpha];
+};
+
 const MapRailingLayer: Component<MapRailingLayerProps> = (props) => {
   const { map } = useMap();
   const [hoveredRailing, setHoveredRailing] = createSignal<RoadRailing>();
-
-  const getRailingColor = (completionGrade: number, alpha = 1) => {
-    if (completionGrade === 0) return [0, 0, 255, alpha];
-    else if (completionGrade > 0 && completionGrade < 95)
-      return [255, 0, 0, alpha];
-    else if (completionGrade >= 95 && completionGrade <= 120)
-      return [0, 255, 0, alpha];
-    else return undefined;
-  };
 
   createEffect(() => {
     const polylines = props.railings

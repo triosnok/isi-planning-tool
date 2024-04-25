@@ -16,6 +16,6 @@ export type IconType = typeof import('@tabler/icons-solidjs').Icon123;
 
 export const getRailingStatus = (captureGrade: number) => {
   if (captureGrade === 0) return RailingStatus.TODO;
-  else if (captureGrade > 0 && captureGrade < 95) return RailingStatus.ERROR;
+  else if (captureGrade > 0 && captureGrade < 0.95) return RailingStatus.ERROR;
   return RailingStatus.OK;
 };

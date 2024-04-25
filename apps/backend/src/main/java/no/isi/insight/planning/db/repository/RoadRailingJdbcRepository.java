@@ -102,7 +102,7 @@ public class RoadRailingJdbcRepository {
           sa.captured_length,
           sa.total_length,
           sa.segments,
-          sa.capture_fraction * 100 AS capture_grade
+          sa.capture_fraction AS capture_grade
         FROM road_railing rr
         LEFT JOIN project_plan_road_railing pprr
           ON rr.road_railing_id = pprr.fk_road_railing_id
