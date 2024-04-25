@@ -141,14 +141,6 @@ export interface RailingImportDetails {
     importedAt: DateAsString;
 }
 
-export interface RoadRailing {
-    id: number;
-    geometry: Geometry;
-    length: number;
-    captureGrade: number;
-    capturedAt: DateAsString;
-}
-
 export interface RoadSegmentDetails {
     id: string;
     railing: string;
@@ -165,7 +157,28 @@ export interface UpdateProjectRequest {
     endsAt?: DateAsString | null;
 }
 
+export interface RailingRoadSegments {
+    reference: string;
+    category: RoadCategory;
+}
+
+export interface RoadRailing {
+    id: number;
+    geometry: Geometry;
+    length: number;
+    captureGrade: number;
+    capturedAt?: DateAsString | null;
+    segments: RailingRoadSegments[];
+}
+
 export interface RoadSegment {
+    id: string;
+    railingId: number;
+    roadReference: string;
+    roadSystemReference: string;
+    geometry: Geometry;
+    category: RoadCategory;
+    length: number;
 }
 
 export interface CreateTripNoteRequest {
@@ -280,5 +293,7 @@ export type CaptureAction = "RESUME" | "PAUSE";
 export type PositionSubject = "VEHICLE" | "DRIVER";
 
 export type ProjectStatus = "UPCOMING" | "ONGOING" | "PREVIOUS";
+
+export type RoadCategory = "PRIVATE" | "FOREST" | "MUNICIPALITY" | "COUNTY" | "NATIONAL" | "EUROPE" | "UNKNOWN";
 
 export type CameraPosition = "LEFT" | "RIGHT" | "TOP";

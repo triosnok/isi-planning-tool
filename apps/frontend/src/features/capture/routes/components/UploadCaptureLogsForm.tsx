@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import ErrorLabel from '@/features/error/components/ErrorLabel';
 import { useTranslations } from '@/features/i18n';
 import { cn } from '@/lib/utils';
 import {
@@ -62,6 +63,8 @@ const UploadCaptureLogsForm: Component<UploadCaptureLogsProps> = (props) => {
                 value={field.value}
               />
             </Label>
+
+            <ErrorLabel text={field.error} />
           </div>
         )}
       </Field>
@@ -78,6 +81,8 @@ const UploadCaptureLogsForm: Component<UploadCaptureLogsProps> = (props) => {
                 onChange={(f) => setValue(form, 'gnssLog', f)}
               />
             </Label>
+
+            <ErrorLabel text={field.error} />
           </div>
         )}
       </Field>
@@ -94,6 +99,8 @@ const UploadCaptureLogsForm: Component<UploadCaptureLogsProps> = (props) => {
                 onChange={(f) => setValue(form, 'topCameraLog', f)}
               />
             </Label>
+
+            <ErrorLabel text={field.error} />
           </div>
         )}
       </Field>
@@ -111,6 +118,8 @@ const UploadCaptureLogsForm: Component<UploadCaptureLogsProps> = (props) => {
                   onChange={(f) => setValue(form, 'leftCameraLog', f)}
                 />
               </Label>
+
+              <ErrorLabel text={field.error} />
             </div>
           )}
         </Field>
@@ -128,6 +137,8 @@ const UploadCaptureLogsForm: Component<UploadCaptureLogsProps> = (props) => {
                   onChange={(f) => setValue(form, 'rightCameraLog', f)}
                 />
               </Label>
+
+              <ErrorLabel text={field.error} />
             </div>
           )}
         </Field>

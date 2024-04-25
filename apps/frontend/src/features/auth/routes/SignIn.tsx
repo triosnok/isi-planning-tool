@@ -1,17 +1,18 @@
 import Logo from '@/components/logo/Logo';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Component } from 'solid-js';
-import { A, useNavigate } from '@solidjs/router';
-import { createForm, SubmitHandler, zodForm } from '@modular-forms/solid';
-import { z } from 'zod';
 import { Input } from '@/components/ui/input';
-import { useSignInMutation } from '../api';
+import { Label } from '@/components/ui/label';
+import ErrorLabel from '@/features/error/components/ErrorLabel';
 import { useTranslations } from '@/features/i18n';
+import { SubmitHandler, createForm, zodForm } from '@modular-forms/solid';
+import { A, useNavigate } from '@solidjs/router';
+import { Component } from 'solid-js';
+import { z } from 'zod';
+import { useSignInMutation } from '../api';
 
 const SignInSchema = z.object({
   email: z.string().email(),
-  password: z.string(),
+  password: z.string().min(1),
 });
 
 type SignInForm = z.infer<typeof SignInSchema>;
@@ -44,33 +45,39 @@ const SignIn: Component = () => {
             {t('AUTHENTICATION.SIGN_IN_TO')} inSight
           </h1>
 
-          <Label for='email' class='font-semibold'>
-            {t('USERS.FORM.EMAIL')}
-          </Label>
           <Field name='email'>
             {(field, props) => (
-              <Input
-                {...props}
-                type='email'
-                id='email'
-                placeholder={t('USERS.FORM.EMAIL')}
-                value={field.value}
-              />
+              <>
+                <Label for={field.name} class='font-semibold'>
+                  {t('USERS.FORM.EMAIL')}
+                </Label>
+                <Input
+                  {...props}
+                  type='email'
+                  id='email'
+                  placeholder={t('USERS.FORM.EMAIL')}
+                  value={field.value}
+                />
+                <ErrorLabel text={field.error} />
+              </>
             )}
           </Field>
 
-          <Label for='password' class='font-semibold'>
-            {t('USERS.FORM.PASSWORD')}
-          </Label>
           <Field name='password'>
             {(field, props) => (
-              <Input
-                {...props}
-                type='password'
-                id='password'
-                placeholder={t('USERS.FORM.PASSWORD')}
-                value={field.value}
-              />
+              <>
+                <Label for='password' class='font-semibold'>
+                  {t('USERS.FORM.PASSWORD')}
+                </Label>
+                <Input
+                  {...props}
+                  type='password'
+                  id='password'
+                  placeholder={t('USERS.FORM.PASSWORD')}
+                  value={field.value}
+                />
+                <ErrorLabel text={field.error} />
+              </>
             )}
           </Field>
 

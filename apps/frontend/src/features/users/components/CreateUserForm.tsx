@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import ErrorLabel from '@/features/error/components/ErrorLabel';
 import { useTranslations } from '@/features/i18n';
 import { cn } from '@/lib/utils';
 import { UserRole } from '@isi-insight/client';
@@ -46,6 +47,8 @@ const CreateUserForm: Component<CreateUserFormProps> = (props) => {
               value={field.value}
               placeholder={t('USERS.FORM.NAME')}
             />
+
+            <ErrorLabel text={field.error} />
           </>
         )}
       </Field>
@@ -63,6 +66,8 @@ const CreateUserForm: Component<CreateUserFormProps> = (props) => {
               value={field.value}
               placeholder={t('USERS.FORM.EMAIL')}
             />
+
+            <ErrorLabel text={field.error} />
           </>
         )}
       </Field>
@@ -80,6 +85,8 @@ const CreateUserForm: Component<CreateUserFormProps> = (props) => {
               value={field.value}
               placeholder={t('USERS.FORM.PHONE_NUMBER')}
             />
+
+            <ErrorLabel text={field.error} />
           </>
         )}
       </Field>
@@ -96,6 +103,8 @@ const CreateUserForm: Component<CreateUserFormProps> = (props) => {
               value={field.value}
               placeholder={t('USERS.FORM.PASSWORD')}
             />
+
+            <ErrorLabel text={field.error} />
           </>
         )}
       </Field>
@@ -111,6 +120,8 @@ const CreateUserForm: Component<CreateUserFormProps> = (props) => {
               value={field.value}
               placeholder={t('USERS.FORM.CONFIRM_PASSWORD')}
             />
+
+            <ErrorLabel text={field.error} />
           </>
         )}
       </Field>
@@ -126,6 +137,8 @@ const CreateUserForm: Component<CreateUserFormProps> = (props) => {
               value={field.value}
               onChange={(v) => setValue(form, 'role', v)}
             />
+
+            <ErrorLabel text={field.error} />
           </>
         )}
       </Field>

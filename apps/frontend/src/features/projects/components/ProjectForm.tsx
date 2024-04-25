@@ -2,6 +2,7 @@ import DatePicker from '@/components/temporal/DatePicker';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import ErrorLabel from '@/features/error/components/ErrorLabel';
 import { useTranslations } from '@/features/i18n';
 import { createForm, setValue, zodForm } from '@modular-forms/solid';
 import { Component } from 'solid-js';
@@ -25,7 +26,7 @@ const ProjectForm: Component<ProjectFormProps> = (props) => {
       name: props.name,
       referenceCode: props.referenceCode,
       startsAt: props.startsAt,
-      endsAt: props.endsAt,
+      endsAt: props.endsAt ?? undefined,
     },
   });
 
@@ -35,57 +36,71 @@ const ProjectForm: Component<ProjectFormProps> = (props) => {
       id='project-form'
       onSubmit={props.onSubmit}
     >
-      <Label for='name'>{t('PROJECTS.FORM.PROJECT_NAME')}</Label>
       <Field name='name'>
         {(field, props) => (
-          <Input
-            {...props}
-            type='text'
-            id='name'
-            placeholder={t('PROJECTS.FORM.PROJECT_NAME')}
-            value={field.value}
-          />
+          <>
+            <Label for={field.name}>{t('PROJECTS.FORM.PROJECT_NAME')}</Label>
+            <Input
+              {...props}
+              type='text'
+              id='name'
+              placeholder={t('PROJECTS.FORM.PROJECT_NAME')}
+              value={field.value}
+            />
+            <ErrorLabel text={field.error} />
+          </>
         )}
       </Field>
 
-      <Label for='referenceCode'>{t('PROJECTS.FORM.PROJECT_REFERENCE')}</Label>
       <Field name='referenceCode'>
         {(field, props) => (
-          <Input
-            {...props}
-            type='text'
-            id='referenceCode'
-            placeholder={t('PROJECTS.FORM.PROJECT_REFERENCE')}
-            value={field.value}
-          />
+          <>
+            <Label for={field.name}>
+              {t('PROJECTS.FORM.PROJECT_REFERENCE')}
+            </Label>
+            <Input
+              {...props}
+              type='text'
+              id='referenceCode'
+              placeholder={t('PROJECTS.FORM.PROJECT_REFERENCE')}
+              value={field.value}
+            />
+            <ErrorLabel text={field.error} />
+          </>
         )}
       </Field>
 
       <div class='flex justify-between gap-2'>
         <div>
-          <Label for='startsAt'>{t('GENERAL.START_DATE')}</Label>
           <Field name='startsAt' type='string'>
             {(field) => (
-              <DatePicker
-                value={field.value ?? new Date()}
-                onChange={(v) =>
-                  setValue(form, 'startsAt', v!.toISOString() ?? undefined)
-                }
-              />
+              <>
+                <Label for={field.name}>{t('GENERAL.START_DATE')}</Label>
+                <DatePicker
+                  value={field.value ?? new Date()}
+                  onChange={(v) =>
+                    setValue(form, 'startsAt', v!.toISOString() ?? undefined)
+                  }
+                />
+                <ErrorLabel text={field.error} />
+              </>
             )}
           </Field>
         </div>
         <div>
-          <Label for='endsAt'>{t('GENERAL.END_DATE')}</Label>
           <Field name='endsAt'>
             {(field) => (
-              <DatePicker
-                value={field.value}
-                onChange={(v) =>
-                  setValue(form, 'endsAt', v?.toISOString() ?? undefined)
-                }
-                clearable
-              />
+              <>
+                <Label for={field.name}>{t('GENERAL.END_DATE')}</Label>
+                <DatePicker
+                  value={field.value}
+                  onChange={(v) =>
+                    setValue(form, 'endsAt', v?.toISOString() ?? undefined)
+                  }
+                  clearable
+                />
+                <ErrorLabel text={field.error} />
+              </>
             )}
           </Field>
         </div>

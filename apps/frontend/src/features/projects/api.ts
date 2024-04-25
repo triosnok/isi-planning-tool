@@ -52,14 +52,14 @@ export const useProjectDetailsQuery = (id: string) => {
 export const ProjectSchema = z.object({
   projectId: z.string().optional(),
   name: z.string().min(1),
-  referenceCode: z.string(),
+  referenceCode: z.string().min(1),
   startsAt: z.string().datetime(),
   endsAt: z.string().datetime().optional(),
 });
 
 export const ProjectPlanSchema = z.object({
   planId: z.string().optional(),
-  importUrl: z.string(),
+  importUrl: z.string().min(1),
   startsAt: z.string().datetime(),
   endsAt: z.string().datetime(),
   vehicleId: z.string().optional(),
@@ -204,6 +204,8 @@ export const useProjectRailings = (
 
       const params = new URLSearchParams();
 
+      params.set('projectId', projectId);
+
       planIds.forEach((planId) => {
         params.append('planId', planId);
       });
@@ -213,7 +215,7 @@ export const useProjectRailings = (
       }
 
       const response = await axios.get<RoadRailing[]>(
-        `/api/v1/projects/${projectId}/railings?${params.toString()}`
+        `/api/v1/railings?${params.toString()}`
       );
 
       return response.data;

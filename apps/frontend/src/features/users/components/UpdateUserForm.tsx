@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { SwitchButton } from '@/components/ui/switch-button';
+import ErrorLabel from '@/features/error/components/ErrorLabel';
 import { useTranslations } from '@/features/i18n';
 import { cn } from '@/lib/utils';
 import { UserRole } from '@isi-insight/client';
@@ -61,6 +62,8 @@ const UpdateUserForm: Component<UpdateUserFormProps> = (props) => {
               value={field.value}
               placeholder={t('USERS.FORM.NAME')}
             />
+
+            <ErrorLabel text={field.error} />
           </>
         )}
       </Field>
@@ -78,6 +81,8 @@ const UpdateUserForm: Component<UpdateUserFormProps> = (props) => {
               value={field.value}
               placeholder={t('USERS.FORM.EMAIL')}
             />
+
+            <ErrorLabel text={field.error} />
           </>
         )}
       </Field>
@@ -95,6 +100,8 @@ const UpdateUserForm: Component<UpdateUserFormProps> = (props) => {
               value={field.value}
               placeholder={t('USERS.FORM.PHONE_NUMBER')}
             />
+
+            <ErrorLabel text={field.error} />
           </>
         )}
       </Field>
@@ -129,6 +136,8 @@ const UpdateUserForm: Component<UpdateUserFormProps> = (props) => {
                 value={field.value}
                 placeholder={t('USERS.FORM.PASSWORD')}
               />
+
+              <ErrorLabel text={field.error} />
             </>
           )}
         </Field>
@@ -145,6 +154,8 @@ const UpdateUserForm: Component<UpdateUserFormProps> = (props) => {
                 value={field.value}
                 placeholder={t('USERS.FORM.CONFIRM_PASSWORD')}
               />
+
+              <ErrorLabel text={field.error} />
             </>
           )}
         </Field>

@@ -1,12 +1,12 @@
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { Component, Show, createEffect } from 'solid-js';
+import { useTranslations } from '@/features/i18n';
+import { Component, Show } from 'solid-js';
 import {
   ProjectPlanSchemaValues,
   usePlanDetailsQuery,
   useProjectPlansMutation,
 } from '../api';
 import PlanForm from './PlanForm';
-import { useTranslations } from '@/features/i18n';
 
 export interface UpdateProjectPlanDialogProps {
   planId: string;
@@ -40,6 +40,7 @@ const UpdateProjectPlanDialog: Component<UpdateProjectPlanDialogProps> = (
             startsAt={plan.data?.startsAt}
             endsAt={plan.data?.endsAt}
             vehicleId={plan.data?.vehicleId ?? undefined}
+            imports={plan.data?.imports}
             onSubmit={handleSubmit}
           />
         </DialogContent>

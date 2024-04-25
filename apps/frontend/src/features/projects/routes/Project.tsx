@@ -9,11 +9,9 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { SeparatorWithText } from '@/components/ui/separator';
 import { SwitchButton } from '@/components/ui/switch-button';
-import { useProfile } from '@/features/auth/api';
 import { DateFormat, useTranslations } from '@/features/i18n';
 import UpdateProjectPlanDialog from '@/features/projects/components/UpdateProjectPlanDialog';
 import TripCard from '@/features/trips/components/TripCard';
-import { useTripsByUserQuery } from '@/features/users/api';
 import { LayoutProps, cn } from '@/lib/utils';
 import { A, useParams } from '@solidjs/router';
 import {
@@ -21,6 +19,7 @@ import {
   IconEdit,
   IconPlus,
 } from '@tabler/icons-solidjs';
+import { createVirtualizer } from '@tanstack/solid-virtual';
 import dayjs from 'dayjs';
 import {
   Component,
@@ -28,12 +27,17 @@ import {
   Show,
   Suspense,
   createMemo,
-  createSignal
+  createSignal,
 } from 'solid-js';
 import { useTripsDetailsQuery } from '../../trips/api';
 import NewTripDialog from '../../trips/components/NewTripDialog';
-import { useProjectDetailsQuery, useProjectPlansQuery } from '../api';
+import {
+  useProjectDetailsQuery,
+  useProjectPlansQuery,
+  useProjectRailings,
+} from '../api';
 import PlanCard from '../components/PlanCard';
+import RailingCard from '../components/RailingCard';
 import { useProjectSearchParams } from '../utils';
 
 const Project: Component<LayoutProps> = (props) => {
@@ -45,10 +49,6 @@ const Project: Component<LayoutProps> = (props) => {
   const [showNewTripDialog, setShowNewTripDialog] = createSignal(false);
   const [editPlanId, setEditPlanId] = createSignal<string>();
   const trips = useTripsDetailsQuery(params.id, searchParams.selectedPlans);
-  const profile = useProfile();
-
-  const activeTrips = useTripsByUserQuery(() => profile.data?.id, true);
-
   const planId = createMemo(() => {
     return searchParams.selectedPlans().length === 1
       ? searchParams.selectedPlans()[0]
@@ -206,7 +206,9 @@ const Project: Component<LayoutProps> = (props) => {
           </AccordionItem>
           <AccordionItem value='railings'>
             <AccordionTrigger>{t('RAILINGS.TITLE')}</AccordionTrigger>
-            <AccordionContent class='flex flex-col space-y-2 p-2'></AccordionContent>
+            <AccordionContent class='flex flex-col space-y-2 p-2'>
+              <RailingList />
+            </AccordionContent>
           </AccordionItem>
           <AccordionItem value='deviations'>
             <AccordionTrigger>{t('DEVIATIONS.TITLE')}</AccordionTrigger>
@@ -241,6 +243,52 @@ const Project: Component<LayoutProps> = (props) => {
         >
           {t('TRIPS.NEW_TRIP')}
         </Button>
+      </div>
+    </div>
+  );
+};
+
+const RailingList: Component = () => {
+  const params = useParams();
+  const searchParams = useProjectSearchParams();
+  const railings = useProjectRailings(
+    () => params.id,
+    searchParams.selectedPlans,
+    searchParams.hideCompleted
+  );
+
+  const [root, setRoot] = createSignal<Element | null>(null);
+
+  const virtualizer = createVirtualizer({
+    count: railings.data?.length ?? 0,
+    gap: 4,
+    estimateSize: () => 68, // height of the cards
+    getScrollElement: root,
+  });
+
+  return (
+    <div ref={setRoot} class='relative -mx-2 flex h-64 overflow-y-auto px-2'>
+      <div style={{ height: `${virtualizer.getTotalSize()}px` }}>
+        <For each={virtualizer.getVirtualItems()}>
+          {(item) => (
+            <div
+              class='absolute left-0 top-0 w-full pl-2 pr-1'
+              style={{
+                height: `${item.size}px`,
+                transform: `translateY(${item.start}px)`,
+              }}
+            >
+              <RailingCard
+                id={railings.data![item.index].id}
+                length={railings.data![item.index].length}
+                captureGrade={railings.data![item.index].captureGrade}
+                capturedAt={railings.data![item.index].capturedAt ?? undefined}
+                roads={railings.data![item.index].segments}
+                class='w-full'
+              />
+            </div>
+          )}
+        </For>
       </div>
     </div>
   );

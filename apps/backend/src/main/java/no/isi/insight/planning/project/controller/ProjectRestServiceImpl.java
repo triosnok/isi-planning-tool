@@ -14,18 +14,15 @@ import no.isi.insight.planning.client.project.ProjectRestService;
 import no.isi.insight.planning.client.project.view.CreateProjectRequest;
 import no.isi.insight.planning.client.project.view.ProjectDetails;
 import no.isi.insight.planning.client.project.view.ProjectStatus;
-import no.isi.insight.planning.client.project.view.RoadRailing;
 import no.isi.insight.planning.client.project.view.UpdateProjectRequest;
-import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.db.model.Project;
 import no.isi.insight.planning.db.repository.ProjectJdbcRepository;
 import no.isi.insight.planning.db.repository.ProjectJpaRepository;
-import no.isi.insight.planning.db.repository.RoadRailingJdbcRepository;
+import no.isi.insight.planning.error.model.NotFoundException;
 
 @RestController
 @RequiredArgsConstructor
 public class ProjectRestServiceImpl implements ProjectRestService {
-  private final RoadRailingJdbcRepository roadRailingJdbcRepository;
   private final ProjectJpaRepository projectJpaRepository;
   private final ProjectJdbcRepository projectJdbcRepository;
 
@@ -47,18 +44,6 @@ public class ProjectRestServiceImpl implements ProjectRestService {
     var details = this.projectJdbcRepository.findById(savedProject.getId());
 
     return ResponseEntity.ok(details.get());
-  }
-
-  @Override
-  @DriverAuthorization
-  public ResponseEntity<List<RoadRailing>> getRailings(
-      UUID projectId,
-      List<UUID> planId,
-      Optional<UUID> tripId,
-      Optional<Boolean> hideCompleted
-  ) {
-    var railings = this.roadRailingJdbcRepository.getRailings(projectId, planId, tripId, hideCompleted.orElse(false));
-    return ResponseEntity.ok(railings);
   }
 
   @Override
