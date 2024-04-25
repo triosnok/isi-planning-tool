@@ -260,7 +260,10 @@ const RailingList: Component = () => {
   const [root, setRoot] = createSignal<Element | null>(null);
 
   const virtualizer = createVirtualizer({
-    count: railings.data?.length ?? 0,
+    get count() {
+      const data = railings.data;
+      return data?.length ?? 0;
+    },
     gap: 4,
     estimateSize: () => 68, // height of the cards
     getScrollElement: root,
@@ -278,14 +281,18 @@ const RailingList: Component = () => {
                 transform: `translateY(${item.start}px)`,
               }}
             >
-              <RailingCard
-                id={railings.data![item.index].id}
-                length={railings.data![item.index].length}
-                captureGrade={railings.data![item.index].captureGrade}
-                capturedAt={railings.data![item.index].capturedAt ?? undefined}
-                roads={railings.data![item.index].segments}
-                class='w-full'
-              />
+              <Show when={railings.data?.[item.index]}>
+                {(rail) => (
+                  <RailingCard
+                    id={rail().id}
+                    length={rail().length}
+                    captureGrade={rail().captureGrade}
+                    capturedAt={rail().capturedAt ?? undefined}
+                    roads={rail().segments}
+                    class='w-full'
+                  />
+                )}
+              </Show>
             </div>
           )}
         </For>
