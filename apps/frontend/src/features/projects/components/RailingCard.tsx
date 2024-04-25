@@ -1,11 +1,13 @@
 import { NumberFormat, useTranslations } from '@/features/i18n';
-import { IconType } from '@/lib/utils';
+import { RailingStatus } from '@/lib/constants';
+import { IconType, cn, getRailingStatus } from '@/lib/utils';
 import { RailingRoadSegments } from '@isi-insight/client';
 import {
   IconPhoto,
   IconRulerMeasure,
   IconSquarePercentage,
 } from '@tabler/icons-solidjs';
+import { cva } from 'class-variance-authority';
 import { Component, For, Show } from 'solid-js';
 import RoadSign from './RoadSign';
 
@@ -15,13 +17,37 @@ export interface RailingCardProps {
   capturedAt?: string;
   captureGrade: number;
   roads: RailingRoadSegments[];
+  onClick?: () => void;
+  class?: string;
 }
+
+const railingCardVariants = cva(
+  'flex justify-between border rounded-md border-gray-300 dark:border-gray-900 p-2 hover:bg-gray-100 dark:hover:bg-gray-900',
+  {
+    variants: {
+      status: {
+        [RailingStatus.TODO]: [''],
+        [RailingStatus.ERROR]: [
+          'border-error-600 dark:border-error-600 dark:bg-error-950/50 dark:hover:bg-error-950',
+        ],
+        [RailingStatus.OK]: [
+          'border-success-600 dark:border-sucess-600 dark:bg-success-950/50 bg-success-100 dark:hover:bg-success-950',
+        ],
+      },
+    },
+  }
+);
 
 const RailingCard: Component<RailingCardProps> = (props) => {
   const { d, n } = useTranslations();
+  const status = getRailingStatus(props.captureGrade);
 
   return (
-    <div class='flex justify-between rounded-md border border-gray-900 p-2 hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900'>
+    <button
+      type='button'
+      onClick={props.onClick}
+      class={cn(railingCardVariants({ status }), props.class)}
+    >
       <div>
         <h3 class='text-lg font-semibold'>{props.id}</h3>
 
@@ -42,7 +68,7 @@ const RailingCard: Component<RailingCardProps> = (props) => {
           <CardDetail icon={IconPhoto} text={d(props.capturedAt)} />
         </Show>
       </div>
-    </div>
+    </button>
   );
 };
 

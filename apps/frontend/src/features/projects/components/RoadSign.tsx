@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 import { VariantProps, cva } from 'class-variance-authority';
 import { Component } from 'solid-js';
 
-const signVariants = cva('border p-0.5 font-medium text-xs w-fit', {
+const signVariants = cva('border py-0.5 px-1 font-medium text-xs w-fit', {
   variants: {
     type: {
       EUROPE: 'bg-success-700 border-gray-50 rounded-sm',

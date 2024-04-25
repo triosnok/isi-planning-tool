@@ -272,11 +272,8 @@ const RailingList: Component = () => {
         <For each={virtualizer.getVirtualItems()}>
           {(item) => (
             <div
+              class='absolute left-0 top-0 w-full pl-2 pr-1'
               style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
                 height: `${item.size}px`,
                 transform: `translateY(${item.start}px)`,
               }}
@@ -287,6 +284,7 @@ const RailingList: Component = () => {
                 captureGrade={railings.data![item.index].captureGrade}
                 capturedAt={railings.data![item.index].capturedAt ?? undefined}
                 roads={railings.data![item.index].segments}
+                class='w-full'
               />
             </div>
           )}
