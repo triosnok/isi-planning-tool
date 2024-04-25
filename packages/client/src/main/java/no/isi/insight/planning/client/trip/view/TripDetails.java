@@ -1,7 +1,6 @@
 package no.isi.insight.planning.client.trip.view;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.UUID;
 
 import lombok.Builder;
@@ -17,8 +16,6 @@ public record TripDetails(
   String driver,
   LocalDateTime startedAt,
   LocalDateTime endedAt,
-  String gnssLog,
-  Map<CameraPosition, String> cameraLogs,
   int sequenceNumber,
   Long noteCount,
   int deviations

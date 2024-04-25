@@ -15,13 +15,14 @@ import no.isi.insight.planning.client.trip.TripRestService;
 import no.isi.insight.planning.client.trip.view.CreateTripRequest;
 import no.isi.insight.planning.client.trip.view.TripDetails;
 import no.isi.insight.planning.client.trip.view.UpdateTripRequest;
-import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.db.model.ProjectPlan;
 import no.isi.insight.planning.db.model.Trip;
 import no.isi.insight.planning.db.model.Vehicle;
 import no.isi.insight.planning.db.repository.ProjectPlanJpaRepository;
+import no.isi.insight.planning.db.repository.TripJdbcRepository;
 import no.isi.insight.planning.db.repository.TripJpaRepository;
 import no.isi.insight.planning.db.repository.VehicleJpaRepository;
+import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.trip.event.TripEndedEvent;
 import no.isi.insight.planning.trip.event.TripStartedEvent;
 import no.isi.insight.planning.utility.RequestUtils;
@@ -30,6 +31,7 @@ import no.isi.insight.planning.utility.RequestUtils;
 @RequiredArgsConstructor
 public class TripRestServiceImpl implements TripRestService {
   private final TripJpaRepository tripJpaRepository;
+  private final TripJdbcRepository tripJdbcRepository;
   private final ProjectPlanJpaRepository planJpaRepository;
   private final VehicleJpaRepository vehicleJpaRepository;
   private final ApplicationEventPublisher eventPublisher;
@@ -78,8 +80,6 @@ public class TripRestServiceImpl implements TripRestService {
         savedTrip.getDriver().getFullName(),
         savedTrip.getStartedAt(),
         savedTrip.getEndedAt(),
-        savedTrip.getGnssLog(),
-        savedTrip.getCameraLogs(),
         savedTrip.getSequenceNumber(),
         Long.valueOf(0),
         0
@@ -106,8 +106,6 @@ public class TripRestServiceImpl implements TripRestService {
         trip.getDriver().getFullName(),
         trip.getStartedAt(),
         trip.getEndedAt(),
-        trip.getGnssLog(),
-        trip.getCameraLogs(),
         trip.getSequenceNumber(),
         noteCount,
         0
@@ -122,7 +120,7 @@ public class TripRestServiceImpl implements TripRestService {
       Optional<List<UUID>> planId,
       Optional<Boolean> active
   ) {
-    var trips = tripJpaRepository.findAll(projectId, planId.orElse(null), active);
+    var trips = tripJdbcRepository.findAllTrips(projectId, planId.orElse(null), active);
 
     return ResponseEntity.ok(trips);
   }
@@ -154,8 +152,6 @@ public class TripRestServiceImpl implements TripRestService {
         savedTrip.getDriver().getFullName(),
         savedTrip.getStartedAt(),
         savedTrip.getEndedAt(),
-        savedTrip.getGnssLog(),
-        savedTrip.getCameraLogs(),
         savedTrip.getSequenceNumber(),
         noteCount,
         0
