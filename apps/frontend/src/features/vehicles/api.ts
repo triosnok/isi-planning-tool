@@ -70,7 +70,7 @@ export const VehicleSchema = z.object({
   imageUrl: z.string().optional(),
   registrationNumber: z.string().min(1),
   camera: z.boolean(),
-  model: z.string(),
+  model: z.string().min(1),
   description: z.string(),
   gnssId: z.string(),
 });

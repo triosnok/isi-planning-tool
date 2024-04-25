@@ -74,7 +74,9 @@ export const useCaptureLogsQuery = () => {
 };
 
 export const CaptureLogSchema = z.object({
-  logIdentifier: z.string().min(1),
+  logIdentifier: z.string().min(1, {
+    message: 'Log identifier is required',
+  }),
   gnssLog: z.instanceof(File),
   topCameraLog: z.instanceof(File),
   leftCameraLog: z.instanceof(File),

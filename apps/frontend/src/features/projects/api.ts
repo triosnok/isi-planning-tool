@@ -52,14 +52,14 @@ export const useProjectDetailsQuery = (id: string) => {
 export const ProjectSchema = z.object({
   projectId: z.string().optional(),
   name: z.string().min(1),
-  referenceCode: z.string(),
+  referenceCode: z.string().min(1),
   startsAt: z.string().datetime(),
   endsAt: z.string().datetime().optional(),
 });
 
 export const ProjectPlanSchema = z.object({
   planId: z.string().optional(),
-  importUrl: z.string(),
+  importUrl: z.string().min(1),
   startsAt: z.string().datetime(),
   endsAt: z.string().datetime(),
   vehicleId: z.string().optional(),

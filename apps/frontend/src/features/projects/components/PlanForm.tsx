@@ -2,6 +2,7 @@ import DatePicker from '@/components/temporal/DatePicker';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import ErrorLabel from '@/features/error/components/ErrorLabel';
 import { useTranslations } from '@/features/i18n';
 import {
   useVehicleDetailsQuery,
@@ -63,23 +64,25 @@ const PlanForm: Component<PlanFormProps> = (props) => {
       id='new-project-plan-form'
       onSubmit={handleSubmit}
     >
-      <Label for='importUrl' class='mt-2'>
-        {t('RAILINGS.RAILING_IMPORT_URL')}
-      </Label>
-
       <Field name='importUrl'>
         {(field, props) => (
-          <Input
-            {...props}
-            type='url'
-            id='importUrl'
-            placeholder={t('GENERAL.URL')}
-            value={field.value}
-            onChange={(event) => {
-              setValue(form, 'importUrl', event.target.value);
-              setSelectedImport('');
-            }}
-          />
+          <>
+            <Label for={field.name} class='mt-2'>
+              {t('RAILINGS.RAILING_IMPORT_URL')}
+            </Label>
+            <Input
+              {...props}
+              type='url'
+              id='importUrl'
+              placeholder={t('GENERAL.URL')}
+              value={field.value}
+              onChange={(event) => {
+                setValue(form, 'importUrl', event.target.value);
+                setSelectedImport('');
+              }}
+            />
+            <ErrorLabel text={field.error} />
+          </>
         )}
       </Field>
 
@@ -96,51 +99,57 @@ const PlanForm: Component<PlanFormProps> = (props) => {
 
       <div class='flex justify-between gap-2'>
         <div class='flex-1'>
-          <Label for='startsAt'>{t('GENERAL.START_DATE')}</Label>
           <Field name='startsAt' type='string'>
             {(field) => (
-              <DatePicker
-                value={dayjs(field.value).toDate()}
-                class='w-full'
-                onChange={(v) => {
-                  setAvailableFrom(v!.toISOString());
-                  setValue(form, 'startsAt', v!.toISOString());
-                }}
-              />
+              <>
+                <Label for={field.name}>{t('GENERAL.START_DATE')}</Label>
+                <DatePicker
+                  value={dayjs(field.value).toDate()}
+                  class='w-full'
+                  onChange={(v) => {
+                    setAvailableFrom(v!.toISOString());
+                    setValue(form, 'startsAt', v!.toISOString());
+                  }}
+                />
+                <ErrorLabel text={field.error} />
+              </>
             )}
           </Field>
         </div>
 
         <div class='flex-1'>
-          <Label for='endsAt'>{t('GENERAL.END_DATE')}</Label>
           <Field name='endsAt' type='string'>
             {(field) => (
-              <DatePicker
-                value={dayjs(field.value).toDate()}
-                class='w-full'
-                onChange={(v) => {
-                  setAvailableTo(v!.toISOString());
-                  setValue(form, 'endsAt', v!.toISOString());
-                }}
-              />
+              <>
+                <Label for={field.name}>{t('GENERAL.END_DATE')}</Label>
+                <DatePicker
+                  value={dayjs(field.value).toDate()}
+                  class='w-full'
+                  onChange={(v) => {
+                    setAvailableTo(v!.toISOString());
+                    setValue(form, 'endsAt', v!.toISOString());
+                  }}
+                />
+                <ErrorLabel text={field.error} />
+              </>
             )}
           </Field>
         </div>
       </div>
 
-      <Label for='vehicle' class='mt-2'>
-        {t('VEHICLES.VEHICLE')}
-      </Label>
-
       <Field name='vehicleId'>
-        {(_field) => (
+        {(field) => (
           <Show when={vehicle.data || !props.vehicleId}>
+            <Label for={field.name} class='mt-2'>
+              {t('VEHICLES.VEHICLE')}
+            </Label>
             <VehicleSelect
               value={vehicle.data ?? undefined}
               vehicles={vehicles.data ?? []}
               onChange={(v) => setValue(form, 'vehicleId', v?.id)}
               emptyText={t('VEHICLES.NO_VEHICLE_SELECTED')}
             />
+            <ErrorLabel text={field.error} />
           </Show>
         )}
       </Field>

@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import ErrorLabel from '@/features/error/components/ErrorLabel';
 import { useTranslations } from '@/features/i18n';
 import { cn } from '@/lib/utils';
 import { createForm, zodForm } from '@modular-forms/solid';
@@ -45,6 +46,7 @@ const VehicleForm: Component<VehicleFormProps> = (props) => {
             </Label>
 
             <Input {...props} id={field.name} type='text' value={field.value} />
+            <ErrorLabel text={field.error} />
           </>
         )}
       </Field>
@@ -57,6 +59,7 @@ const VehicleForm: Component<VehicleFormProps> = (props) => {
             </Label>
 
             <Input {...props} type='text' value={field.value} />
+            <ErrorLabel text={field.error} />
           </>
         )}
       </Field>
@@ -73,6 +76,7 @@ const VehicleForm: Component<VehicleFormProps> = (props) => {
             </Label>
 
             <Input {...props} type='text' value={field.value} />
+            <ErrorLabel text={field.error} />
           </>
         )}
       </Field>
@@ -85,6 +89,7 @@ const VehicleForm: Component<VehicleFormProps> = (props) => {
             </Label>
 
             <Input {...props} type='text' value={field.value} />
+            <ErrorLabel text={field.error} />
           </>
         )}
       </Field>
