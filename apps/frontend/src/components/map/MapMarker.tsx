@@ -46,7 +46,7 @@ const MapMarker: Component<MapMarkerProps> = (props) => {
     const over = new Overlay({
       element: overlayElement,
       positioning: 'center-center',
-      className: 'transition-all',
+      className: 'transition-transform duration-1000 ease-linear',
       stopEvent: false,
       position: pos.getGeometry()?.getCoordinates(),
     });
@@ -56,9 +56,21 @@ const MapMarker: Component<MapMarkerProps> = (props) => {
     map.addOverlay(over);
 
     const onMoveStart = () =>
-      over.getElement()?.parentElement?.classList.remove('transition-all');
+      over
+        .getElement()
+        ?.parentElement?.classList.remove(
+          'transition-transform',
+          'duration-1000',
+          'ease-linear'
+        );
     const onMoveEnd = () =>
-      over.getElement()?.parentElement?.classList.add('transition-all');
+      over
+        .getElement()
+        ?.parentElement?.classList.add(
+          'transition-transform',
+          'duration-1000',
+          'ease-linear'
+        );
 
     map.addEventListener('movestart', onMoveStart);
     map.addEventListener('moveend', onMoveEnd);
@@ -88,7 +100,7 @@ const MapMarker: Component<MapMarkerProps> = (props) => {
         <Show when={props.heading !== undefined}>
           <div class='absolute left-1/2 top-1/2 flex h-[200%] w-[200%] -translate-x-1/2 -translate-y-1/2'>
             <div
-              class='flex h-full w-full items-start justify-center transition-transform'
+              class='flex h-full w-full items-start justify-center transition-transform duration-1000 ease-linear'
               style={{
                 transform: transform(),
               }}
