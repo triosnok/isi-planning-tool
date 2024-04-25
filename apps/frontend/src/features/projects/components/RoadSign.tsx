@@ -5,9 +5,9 @@ import { Component } from 'solid-js';
 const signVariants = cva('border py-0.5 px-1 font-medium text-xs w-fit', {
   variants: {
     type: {
-      EUROPE: 'bg-success-700 border-gray-50 rounded-sm',
-      NATIONAL: 'bg-success-700 border-gray-50 rounded-sm',
-      COUNTY: 'bg-gray-50 border-gray-950 rounded-sm',
+      EUROPE: 'bg-success-700 border-gray-50 rounded-sm text-gray-50',
+      NATIONAL: 'bg-success-700 border-gray-50 rounded-sm text-gray-50',
+      COUNTY: 'bg-gray-50 border-gray-950 rounded-sm text-gray-950',
       MUNICIPALITY: '',
       PRIVATE: '',
       FOREST: '',
