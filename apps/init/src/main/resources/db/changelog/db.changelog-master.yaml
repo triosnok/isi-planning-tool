@@ -126,3 +126,11 @@ databaseChangeLog:
         - sqlFile:
             path: 015-road-names-capture-pointz/001-alter-capture-pointz.sql
             relativeToChangelogFile: true
+  - changeSet: 
+      id: 016-trip-capture-details
+      author: gisle
+      changes:
+        - sqlFile:
+            path: 016-trip-capture-details/000-add-capture-details.sql
+            relativeToChangelogFile: true
+
