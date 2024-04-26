@@ -23,11 +23,11 @@ import no.isi.insight.planning.capture.event.CaptureDetailsEvent;
 import no.isi.insight.planning.capture.model.ProcessedLogEntry;
 import no.isi.insight.planning.client.capture.view.CaptureDetails;
 import no.isi.insight.planning.client.trip.view.CameraPosition;
-import no.isi.insight.planning.geometry.GeometryService;
 import no.isi.insight.planning.db.model.Trip;
 import no.isi.insight.planning.db.model.TripRailingCapture;
 import no.isi.insight.planning.db.repository.RoadRailingJpaRepository;
 import no.isi.insight.planning.db.repository.TripRailingCaptureJpaRepository;
+import no.isi.insight.planning.geometry.GeometryService;
 import no.isi.insight.planning.trip.event.TripEndedEvent;
 import no.isi.insight.planning.trip.event.TripStartedEvent;
 
@@ -199,15 +199,37 @@ public class CaptureReplayService {
     });
   }
 
-  public Optional<Point> getCurrentPosition(
+  /**
+   * Gets the current capture details for a trip. Note that a trip has to be active, thus has to be
+   * done before ending a trip.
+   * 
+   * @param tripId the id of the trip
+   * 
+   * @return the capture details, if available
+   */
+  public Optional<CaptureDetails> getCurrentCaptureDetails(
       UUID tripId
   ) {
-    if (!this.hasTrip(tripId)) {
+    var replay = this.replays.get(tripId);
+
+    if (replay == null) {
       return Optional.empty();
     }
 
-    return this.replays.get(tripId)
-      .getCaptureDetails()
+    return replay.getCaptureDetails();
+  }
+
+  /**
+   * Gets the current position of a trip.
+   * 
+   * @param tripId the id of the trip
+   * 
+   * @return the current position, if available
+   */
+  public Optional<Point> getCurrentPosition(
+      UUID tripId
+  ) {
+    return this.getCurrentCaptureDetails(tripId)
       .map(CaptureDetails::position)
       .map(geom -> this.geometryService.parsePoint(geom.wkt()).get());
   }
