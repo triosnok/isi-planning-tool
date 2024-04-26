@@ -143,7 +143,7 @@ public class RoadRailingJdbcRepository {
         ),
         rs.getDouble("length"),
         rs.getDouble("capture_grade"),
-        JdbcUtils.getNullableDate(rs, "captured_at"),
+        JdbcUtils.getNullableDateTime(rs, "captured_at"),
         segments
       );
     });

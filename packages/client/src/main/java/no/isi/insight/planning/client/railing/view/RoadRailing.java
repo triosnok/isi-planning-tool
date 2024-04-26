@@ -1,6 +1,6 @@
 package no.isi.insight.planning.client.railing.view;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import no.isi.insight.planning.client.annotation.GenerateTypeScript;
@@ -13,6 +13,6 @@ public record RoadRailing(
   Geometry geometry,
   double length,
   double captureGrade,
-  @Optional LocalDate capturedAt,
+  @Optional LocalDateTime capturedAt,
   List<RailingRoadSegments> segments
 ) {}
