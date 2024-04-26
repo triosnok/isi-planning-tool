@@ -157,6 +157,6 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
     this.userAccountJpaRepository.findById(id)
       .orElseThrow(() -> new NotFoundException("Could not find user with id: %s".formatted(id.toString())));
 
-    return ResponseEntity.ok(this.tripJdbcRepository.findAllByDriverId(id, active));
+    return ResponseEntity.ok(this.tripJdbcRepository.findAll(id, active));
   }
 }

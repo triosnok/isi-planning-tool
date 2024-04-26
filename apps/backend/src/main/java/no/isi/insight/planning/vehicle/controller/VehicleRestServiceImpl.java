@@ -131,7 +131,7 @@ public class VehicleRestServiceImpl implements VehicleRestService {
   public ResponseEntity<List<TripDetails>> findTripsByVehicleId(
       UUID id
   ) {
-    var trips = this.tripJdbcRepository.findAllByVehicleId(id).reversed();
+    var trips = this.tripJdbcRepository.findAll(id).reversed();
 
     return ResponseEntity.ok(trips);
   }

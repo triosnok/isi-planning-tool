@@ -90,30 +90,34 @@ public class TripJdbcRepository {
     return jdbcTemplate.query(TRIP_DETAILS_QUERY, params, TRIP_DETAILS_ROW_MAPPER);
   }
 
-  public List<TripDetails> findAllByVehicleId(
-      UUID vehicleId
-  ) {
-    var params = new MapSqlParameterSource().addValue("projectId", null, Types.OTHER)
-      .addValue("planIds", null, Types.ARRAY)
-      .addValue("driverId", null, Types.OTHER)
-      .addValue("vehicleId", vehicleId, Types.OTHER)
-      .addValue("active", null, Types.BOOLEAN);
-
-    return jdbcTemplate.query(TRIP_DETAILS_QUERY, params, TRIP_DETAILS_ROW_MAPPER);
-  }
-
-  public List<TripDetails> findAllByDriverId(
-      UUID driverId,
+  public List<TripDetails> findAll(
+      Optional<UUID> projectId,
+      List<UUID> planIds,
+      Optional<UUID> driverId,
+      Optional<UUID> vehicleId,
       Optional<Boolean> active
   ) {
     var params = new MapSqlParameterSource();
 
-    params.addValue("projectId", null, Types.OTHER);
-    params.addValue("planIds", null, Types.ARRAY);
-    params.addValue("driverId", driverId, Types.OTHER);
-    params.addValue("vehicleId", null, Types.OTHER);
+    params.addValue("projectId", projectId.orElse(null), Types.VARCHAR);
+    params.addValue("planIds", planIds, Types.VARCHAR);
     params.addValue("active", active.orElse(null), Types.BOOLEAN);
+    params.addValue("driverId", driverId.orElse(null), Types.VARCHAR);
+    params.addValue("vehicleId", vehicleId.orElse(null), Types.VARCHAR);
 
     return jdbcTemplate.query(TRIP_DETAILS_QUERY, params, TRIP_DETAILS_ROW_MAPPER);
+  }
+
+  public List<TripDetails> findAll(
+      UUID vehicleId
+  ) {
+    return this.findAll(Optional.empty(), null, Optional.empty(), Optional.of(vehicleId), Optional.empty());
+  }
+
+  public List<TripDetails> findAll(
+      UUID driverId,
+      Optional<Boolean> active
+  ) {
+    return this.findAll(Optional.empty(), null, Optional.of(driverId), Optional.empty(), active);
   }
 }
