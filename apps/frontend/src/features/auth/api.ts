@@ -23,7 +23,7 @@ export const useProfile = () => {
     staleTime: Infinity,
     queryFn: async () => {
       try {
-        const response = await axios.get<UserProfile>('api/v1/auth/profile');
+        const response = await axios.get<UserProfile>('/api/v1/auth/profile');
         return response.data;
       } catch (error) {
         return null;
