@@ -29,11 +29,9 @@ export type TripSchemaValues = z.infer<typeof TripSchema>;
 export const useTripMutation = () => {
   const qc = useQueryClient();
 
-  const onSuccess = (id: string) => {
+  const onSuccess = (trip: TripDetails) => {
     qc.invalidateQueries({ queryKey: [CacheKey.TRIP_LIST] });
-    qc.invalidateQueries({
-      queryKey: [CacheKey.TRIP_DETAILS, id],
-    });
+    qc.setQueryData([CacheKey.TRIP_DETAILS, trip.id], trip);
   };
 
   const create = createMutation(() => ({
@@ -42,6 +40,8 @@ export const useTripMutation = () => {
 
       return response.data;
     },
+
+    onSuccess: (data) => onSuccess(data),
   }));
 
   const update = createMutation(() => ({
@@ -53,11 +53,8 @@ export const useTripMutation = () => {
 
       return response.data;
     },
-    onSuccess: (_data, _variables, _context) => {
-      qc.invalidateQueries({
-        queryKey: [CacheKey.TRIP_LIST, CacheKey.TRIP_DETAILS],
-      });
-    },
+
+    onSuccess: (data) => onSuccess(data),
   }));
 
   return { create, update };
@@ -158,5 +155,3 @@ export const useTripNoteDetailsQuery = (tripId: string) => {
     },
   }));
 };
-
-//TODO: fix the rest of the caching issues here, its not ideal atm i think
