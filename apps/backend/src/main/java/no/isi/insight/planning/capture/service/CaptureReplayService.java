@@ -132,6 +132,8 @@ public class CaptureReplayService {
           }
 
           logReplay.incrementMetersCaptured();
+          // TODO: Transform geoid height to MSL to allow for proper Z values
+          point.getCoordinate().setZ(1.0);
 
           var capture = new TripRailingCapture(
             trip,
