@@ -12,6 +12,7 @@ import {
   onMount,
 } from 'solid-js';
 import { useMap } from './MapRoot';
+import { debounce } from '@solid-primitives/scheduled';
 
 export interface MapMarkerProps {
   children?: JSX.Element;
@@ -55,7 +56,7 @@ const MapMarker: Component<MapMarkerProps> = (props) => {
 
     map.addOverlay(over);
 
-    const onMoveStart = () =>
+    const disableTransition = () =>
       over
         .getElement()
         ?.parentElement?.classList.remove(
@@ -63,7 +64,7 @@ const MapMarker: Component<MapMarkerProps> = (props) => {
           'duration-1000',
           'ease-linear'
         );
-    const onMoveEnd = () =>
+    const enableTransition = () =>
       over
         .getElement()
         ?.parentElement?.classList.add(
@@ -72,13 +73,21 @@ const MapMarker: Component<MapMarkerProps> = (props) => {
           'ease-linear'
         );
 
-    map.addEventListener('movestart', onMoveStart);
-    map.addEventListener('moveend', onMoveEnd);
+    const debouncedReenable = debounce(enableTransition, 200);
+    const disableOnResize = () => {
+      disableTransition();
+      debouncedReenable();
+    };
+
+    map.addEventListener('movestart', disableTransition);
+    map.addEventListener('moveend', enableTransition);
+    map.addEventListener('change:size', disableOnResize);
 
     onCleanup(() => {
       map.removeOverlay(over);
-      map.removeEventListener('movestart', onMoveStart);
-      map.removeEventListener('moveend', onMoveEnd);
+      map.removeEventListener('movestart', disableTransition);
+      map.removeEventListener('moveend', enableTransition);
+      map.removeEventListener('change:size', disableOnResize);
     });
   });
 
