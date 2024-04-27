@@ -29,6 +29,7 @@ public class RoadRailingJdbcRepository {
   /**
    * Finds all stored railings for a project, with optional scoping by plan or trip.
    * 
+   * @param railingId     the railing id
    * @param projectId     the project id
    * @param planId        the plan id (optional)
    * @param tripId        the trip id (optional)
@@ -36,7 +37,8 @@ public class RoadRailingJdbcRepository {
    * 
    * @return a list of railings
    */
-  public List<RoadRailing> getRailings(
+  public List<RoadRailing> findAll(
+      Optional<Long> railingId,
       Optional<UUID> projectId,
       List<UUID> planIds,
       Optional<UUID> tripId,
@@ -91,6 +93,12 @@ public class RoadRailingJdbcRepository {
             trc.fk_road_railing_id,
             MAX(trc.captured_at) AS captured_at
           FROM trip_railing_capture trc
+          INNER JOIN trip t
+            ON trc.fk_trip_id = t.trip_id
+          INNER JOIN project_plan pp
+            ON t.fk_project_plan_id = pp.project_plan_id
+          WHERE 1=1
+            AND (:projectId IS NULL OR pp.fk_project_id = :projectId::uuid)
           GROUP BY trc.fk_road_railing_id
         )
         SELECT
@@ -106,6 +114,8 @@ public class RoadRailingJdbcRepository {
         FROM road_railing rr
         LEFT JOIN project_plan_road_railing pprr
           ON rr.road_railing_id = pprr.fk_road_railing_id
+          -- only consider plans whenever a project is defined, not for a single railing
+          AND :railingId IS NULL OR :projectId IS NOT NULL
         LEFT JOIN project_plan pp
           ON pprr.fk_project_plan_id = pp.project_plan_id
         LEFT JOIN segment_aggregate sa
@@ -113,17 +123,17 @@ public class RoadRailingJdbcRepository {
         LEFT JOIN last_capture lc
           ON rr.road_railing_id = lc.fk_road_railing_id
         WHERE 1=1
+          AND (:railingId IS NULL OR rr.road_railing_id = :railingId)
           AND (:projectId IS NULL OR pp.fk_project_id = :projectId::uuid)
           AND (COALESCE(:planIds, NULL) IS NULL OR pp.project_plan_id::text IN (:planIds))
           AND (:hideCompleted = FALSE OR COALESCE(sa.capture_fraction, 0) < 0.95)
       """;
 
-    var params = new MapSqlParameterSource();
-
-    params.addValue("projectId", projectId.orElse(null), Types.VARCHAR);
-    params.addValue("planIds", planIds, Types.VARCHAR);
-    params.addValue("tripId", tripId.orElse(null), Types.VARCHAR);
-    params.addValue("hideCompleted", hideCompleted, Types.BOOLEAN);
+    var params = new MapSqlParameterSource().addValue("railingId", railingId.orElse(null), Types.BIGINT)
+      .addValue("projectId", projectId.orElse(null), Types.VARCHAR)
+      .addValue("planIds", planIds, Types.VARCHAR)
+      .addValue("tripId", tripId.orElse(null), Types.VARCHAR)
+      .addValue("hideCompleted", hideCompleted, Types.BOOLEAN);
 
     return this.jdbcTemplate.query(sql, params, (rs, i) -> {
       var id = rs.getLong("road_railing_id");
@@ -147,6 +157,28 @@ public class RoadRailingJdbcRepository {
         segments
       );
     });
+  }
+
+  public List<RoadRailing> findAll(
+      Optional<UUID> projectId,
+      List<UUID> planIds,
+      Optional<UUID> tripId,
+      boolean hideCompleted
+  ) {
+    return this.findAll(Optional.empty(), projectId, planIds, tripId, hideCompleted);
+  }
+
+  public Optional<RoadRailing> findById(
+      Long id,
+      Optional<UUID> projectId
+  ) {
+    var railings = this.findAll(Optional.of(id), projectId, null, Optional.empty(), false);
+
+    if (railings.size() > 1) {
+      throw new IllegalStateException("");
+    }
+
+    return railings.stream().findFirst();
   }
 
 }
