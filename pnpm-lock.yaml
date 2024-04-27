@@ -38,6 +38,12 @@ importers:
       '@solid-primitives/refs':
         specifier: ^1.0.8
         version: 1.0.8(solid-js@1.8.12)
+      '@solid-primitives/scheduled':
+        specifier: ^1.4.3
+        version: 1.4.3(solid-js@1.8.12)
+      '@solid-primitives/storage':
+        specifier: ^3.5.0
+        version: 3.5.0(solid-js@1.8.12)
       '@solid-primitives/upload':
         specifier: ^0.0.117
         version: 0.0.117(solid-js@1.8.12)
@@ -638,11 +644,6 @@ packages:
     peerDependencies:
       solid-js: ^1.6.12
 
-  '@solid-primitives/scheduled@1.4.2':
-    resolution: {integrity: sha512-duKaugDQtPk0v6MnkBuEalWk66/vA2G7zzoimQEvmUdh2+K2o8t908HIfI2NdBfwakQMQBV4epE3TFeN2Vsveg==}
-    peerDependencies:
-      solid-js: ^1.6.12
-
   '@solid-primitives/scheduled@1.4.3':
     resolution: {integrity: sha512-HfWN5w7b7FEc6VPLBKnnE302h90jsLMuR28Fcf7neRGGf8jBj6wm6/UFQ00VlKexHFMR6KQ2u4VBh5a1ZcqM8g==}
     peerDependencies:
@@ -662,6 +663,18 @@ packages:
     resolution: {integrity: sha512-ZecE4BqY0oBk0YG00nzaAWO5Mjcny8Fc06CdbXadH9T9lzq/9GefqcSe/5AtdXqjvY/DtJ5C6CkcjPZO0o/eqg==}
     peerDependencies:
       solid-js: ^1.6.12
+
+  '@solid-primitives/storage@3.5.0':
+    resolution: {integrity: sha512-AqU3vrXz8XlxOgJIiP+oQxE/vFchGf4Qe7E5Xfa02DJdF9rD8CtiTmVZDBU08ViS7g0Nwc4IpStHvVO0jBMalQ==}
+    peerDependencies:
+      '@tauri-apps/plugin-store': '*'
+      solid-js: ^1.6.12
+      solid-start: '*'
+    peerDependenciesMeta:
+      '@tauri-apps/plugin-store':
+        optional: true
+      solid-start:
+        optional: true
 
   '@solid-primitives/styles@0.0.111':
     resolution: {integrity: sha512-1mBxOGAPXmfD5oYCvqjKBDN7SuNjz2qz7RdH7KtsuNLQh6lpuSKadtHnLvru0Y8Vz1InqTJisBIy/6P5kyDmPw==}
@@ -1969,7 +1982,7 @@ snapshots:
       '@solid-primitives/keyboard': 1.2.6(solid-js@1.8.12)
       '@solid-primitives/platform': 0.1.1(solid-js@1.8.12)
       '@solid-primitives/rootless': 1.4.3(solid-js@1.8.12)
-      '@solid-primitives/scheduled': 1.4.2(solid-js@1.8.12)
+      '@solid-primitives/scheduled': 1.4.3(solid-js@1.8.12)
       '@solid-primitives/static-store': 0.0.5(solid-js@1.8.12)
       '@solid-primitives/utils': 6.2.2(solid-js@1.8.12)
       solid-js: 1.8.12
@@ -1981,7 +1994,7 @@ snapshots:
       '@solid-primitives/media': 2.2.8(solid-js@1.8.12)
       '@solid-primitives/refs': 1.0.8(solid-js@1.8.12)
       '@solid-primitives/rootless': 1.4.3(solid-js@1.8.12)
-      '@solid-primitives/scheduled': 1.4.2(solid-js@1.8.12)
+      '@solid-primitives/scheduled': 1.4.3(solid-js@1.8.12)
       '@solid-primitives/static-store': 0.0.5(solid-js@1.8.12)
       '@solid-primitives/styles': 0.0.111(solid-js@1.8.12)
       '@solid-primitives/utils': 6.2.2(solid-js@1.8.12)
@@ -2081,10 +2094,6 @@ snapshots:
       '@solid-primitives/utils': 6.2.3(solid-js@1.8.12)
       solid-js: 1.8.12
 
-  '@solid-primitives/scheduled@1.4.2(solid-js@1.8.12)':
-    dependencies:
-      solid-js: 1.8.12
-
   '@solid-primitives/scheduled@1.4.3(solid-js@1.8.12)':
     dependencies:
       solid-js: 1.8.12
@@ -2100,6 +2109,11 @@ snapshots:
       solid-js: 1.8.12
 
   '@solid-primitives/static-store@0.0.8(solid-js@1.8.12)':
+    dependencies:
+      '@solid-primitives/utils': 6.2.3(solid-js@1.8.12)
+      solid-js: 1.8.12
+
+  '@solid-primitives/storage@3.5.0(solid-js@1.8.12)':
     dependencies:
       '@solid-primitives/utils': 6.2.3(solid-js@1.8.12)
       solid-js: 1.8.12

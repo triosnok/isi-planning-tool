@@ -27,6 +27,8 @@
     "@solid-primitives/i18n": "^2.0.1",
     "@solid-primitives/media": "^2.2.8",
     "@solid-primitives/refs": "^1.0.8",
+    "@solid-primitives/scheduled": "^1.4.3",
+    "@solid-primitives/storage": "^3.5.0",
     "@solid-primitives/upload": "^0.0.117",
     "@solidjs/router": "^0.11.5",
     "@tabler/icons-solidjs": "^2.47.0",
