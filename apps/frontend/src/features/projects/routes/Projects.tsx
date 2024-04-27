@@ -33,7 +33,7 @@ const Projects: Component = () => {
 
   return (
     <>
-      <div class='space-y-2 p-2'>
+      <div class='flex flex-col gap-2 overflow-y-auto p-2'>
         <div class='flex items-center justify-between'>
           <h1 class='text-4xl font-bold'>{t('PROJECTS.TITLE')}</h1>
           <Show when={profile.data?.role == 'PLANNER'}>
@@ -44,6 +44,7 @@ const Projects: Component = () => {
             </A>
           </Show>
         </div>
+
         <div>
           <p class='ml-1 font-semibold'>{t('VEHICLES.PREFERED_VEHICLE')}</p>
           <VehicleSelect
@@ -55,7 +56,8 @@ const Projects: Component = () => {
         </div>
         <Input placeholder={t('NAVIGATION.SEARCH')} />
       </div>
-      <Accordion multiple={true} defaultValue={['ongoing', 'upcoming']}>
+
+      <Accordion multiple={true} defaultValue={['ongoing', 'upcoming']} class='flex-1 overflow-y-auto'>
         <AccordionItem value='ongoing'>
           <AccordionTrigger>
             {t('PROJECTS.STATUS.ONGOING')} ({ongoingProjects.data?.length})
