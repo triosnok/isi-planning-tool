@@ -157,9 +157,27 @@ export interface UpdateProjectRequest {
     endsAt?: DateAsString | null;
 }
 
+export interface RailingCapture {
+    id: string;
+    segmentId: string;
+    railingId: number;
+    tripId: string;
+    planId: string;
+    projectId: string;
+    geometry: Geometry;
+    segmentCoverage: Range;
+    imageUrls: { [P in CameraPosition]?: string };
+    capturedAt: DateAsString;
+}
+
 export interface RailingRoadSegments {
     reference: string;
     category: RoadCategory;
+}
+
+export interface Range {
+    start: number;
+    end: number;
 }
 
 export interface RoadRailing {
@@ -201,8 +219,6 @@ export interface TripDetails {
     driver: string;
     startedAt: DateAsString;
     endedAt: DateAsString;
-    gnssLog: string;
-    cameraLogs: { [P in CameraPosition]?: string };
     sequenceNumber: number;
     noteCount: number;
     deviations: number;

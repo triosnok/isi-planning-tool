@@ -13,7 +13,7 @@ import { DateFormat, useTranslations } from '@/features/i18n';
 import UpdateProjectPlanDialog from '@/features/projects/components/UpdateProjectPlanDialog';
 import TripCard from '@/features/trips/components/TripCard';
 import { LayoutProps, cn } from '@/lib/utils';
-import { A, useParams } from '@solidjs/router';
+import { A, useNavigate, useParams } from '@solidjs/router';
 import {
   IconCircleCheckFilled,
   IconEdit,
@@ -210,6 +210,7 @@ const Project: Component<LayoutProps> = (props) => {
               <RailingList />
             </AccordionContent>
           </AccordionItem>
+
           <AccordionItem value='deviations'>
             <AccordionTrigger>{t('DEVIATIONS.TITLE')}</AccordionTrigger>
             <AccordionContent class='flex flex-col space-y-2 p-2'></AccordionContent>
@@ -251,6 +252,7 @@ const Project: Component<LayoutProps> = (props) => {
 const RailingList: Component = () => {
   const params = useParams();
   const searchParams = useProjectSearchParams();
+  const navigate = useNavigate();
   const railings = useProjectRailings(
     () => params.id,
     searchParams.selectedPlans,
@@ -289,6 +291,9 @@ const RailingList: Component = () => {
                     captureGrade={rail().captureGrade}
                     capturedAt={rail().capturedAt ?? undefined}
                     roads={rail().segments}
+                    onClick={() =>
+                      navigate(`/projects/${params.id}/railings/${rail().id}`)
+                    }
                     class='w-full'
                   />
                 )}
