@@ -125,7 +125,7 @@ const ImagePositionStatus: Component<ImagePositionStatusProps> = (props) => {
       <p class='text-sm'>{t(`TRIPS.TRIP_SUMMARY.${props.position}`)}</p>
 
       <div class='flex items-center gap-2'>
-        <p class='text-sm'>{n(props.count)}</p>
+        <p class='text-sm'>{n(props.count, NumberFormat.INTEGER)}</p>
 
         <Switch>
           <Match when={props.status === ImageStatus.OK}>
