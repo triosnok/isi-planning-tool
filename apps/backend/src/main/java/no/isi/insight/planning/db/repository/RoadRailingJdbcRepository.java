@@ -113,9 +113,7 @@ public class RoadRailingJdbcRepository {
           sa.capture_fraction AS capture_grade
         FROM road_railing rr
         LEFT JOIN project_plan_road_railing pprr
-          ON rr.road_railing_id = pprr.fk_road_railing_id
-          -- only consider plans whenever a project is defined, not for a single railing
-          AND :railingId IS NULL OR :projectId IS NOT NULL
+          ON (rr.road_railing_id = pprr.fk_road_railing_id AND (:railingId IS NULL OR :projectId IS NOT NULL))
         LEFT JOIN project_plan pp
           ON pprr.fk_project_plan_id = pp.project_plan_id
         LEFT JOIN segment_aggregate sa
