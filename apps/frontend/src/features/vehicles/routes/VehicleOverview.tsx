@@ -9,7 +9,6 @@ import { useTranslations } from '@/features/i18n';
 import { usePositions } from '@/features/positions';
 import { LayoutProps } from '@/lib/utils';
 import { useNavigate } from '@solidjs/router';
-import { IconGripVertical } from '@tabler/icons-solidjs';
 import { Component, For, Index, Show } from 'solid-js';
 import { useVehiclesQuery } from '../api';
 import VehicleCard from '../components/VehicleCard';
@@ -19,7 +18,7 @@ const VehicleOverview: Component<LayoutProps> = (props) => {
   const navigate = useNavigate();
   const { t } = useTranslations();
   const handleAddVehicle = () => navigate('/vehicles/new');
-  const { positions } = usePositions();
+  const { positions } = usePositions('VEHICLE');
 
   return (
     <div class='flex h-svh w-svw flex-col'>

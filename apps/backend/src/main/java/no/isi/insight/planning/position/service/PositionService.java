@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.isi.insight.planning.capture.event.CaptureDetailsEvent;
 import no.isi.insight.planning.client.position.view.PositionEvent;
+import no.isi.insight.planning.client.position.view.PositionSubject;
 import no.isi.insight.planning.position.model.PositionKey;
 import no.isi.insight.planning.position.model.PositionSubscription;
 
@@ -99,10 +100,14 @@ public class PositionService {
 
     var driver = event.trip().getDriver();
     var vehicle = event.trip().getVehicle();
-
-    var key = new PositionKey(
-      vehicle.getId(),
+    var driverKey = new PositionKey(
+      PositionSubject.DRIVER,
       driver.getUserAccountId()
+    );
+
+    var vehicleKey = new PositionKey(
+      PositionSubject.VEHICLE,
+      vehicle.getId()
     );
 
     var positionEvent = PositionEvent.builder()
@@ -113,7 +118,8 @@ public class PositionService {
       .heading(event.details().get().heading())
       .build();
 
-    this.positions.put(key, positionEvent);
+    this.positions.put(driverKey, positionEvent);
+    this.positions.put(vehicleKey, positionEvent);
   }
 
 }
