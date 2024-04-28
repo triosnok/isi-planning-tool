@@ -19,13 +19,13 @@ public interface PositionRestService {
 
   @Operation(
     summary = "Subscribe to position events, optionally filtered by subject",
-    description = "Server-sent events endpoint for subscribing to position events.\nIf a subject type is defined, an id also has to be defined. If none is defined, all known positions will be emitted."
+    description = "Server-sent events endpoint for subscribing to position events."
   )
   @GetExchange("/events")
   SseEmitter subscribe(
-      @Parameter(description = "The type of subject to subscribe to positions for, must be used with id")
-      @RequestParam("subject-type") Optional<PositionSubject> subject,
-      @Parameter(description = "The id of the subject to subscribe to positions for, must be used with subject-type")
+      @Parameter(description = "The type of subject to subscribe to positions for")
+      @RequestParam("subject-type") PositionSubject subject,
+      @Parameter(description = "The id of the subject to subscribe to positions for")
       @RequestParam("id") Optional<UUID> subjectId
   );
 
