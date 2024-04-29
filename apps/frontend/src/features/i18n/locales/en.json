@@ -7,6 +7,7 @@
     "PASSWORD": "Password",
     "CONFIRM_PASSWORD": "Confirm password",
     "FORGOT_PASSWORD": "Forgot password?",
+    "INCORRECT_PASSWORD": "Incorrect password",
     "RESET_PASSWORD": {
       "TITLE": "Reset password",
       "RESET_YOUR_PASSWORD": "Reset your password",
@@ -152,7 +153,7 @@
       "NAME": "Name",
       "DRIVER": "Driver",
       "CAPTURE_REMARKS": "Capture remarks",
-      "METERS_OF_RAILING_CAPTURED": "Meters of railing captured",
+      "METERS_OF_RAILING_CAPTURED": "Meters captured",
       "DEVIATIONS": "Deviations",
       "NOTES": "Notes",
       "LINKS": "Links",
