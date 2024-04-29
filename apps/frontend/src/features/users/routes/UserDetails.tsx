@@ -53,7 +53,7 @@ const UserDetails: Component = () => {
           </Show>
 
           <Show when={trips?.data}>
-            <TripTable trips={trips.data ?? []} driver={true} />
+            <TripTable trips={trips.data ?? []} driver={false} />
           </Show>
         </main>
 
