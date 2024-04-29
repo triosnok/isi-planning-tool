@@ -1,5 +1,6 @@
 package no.isi.insight.planning.deviation.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -11,15 +12,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import no.isi.insight.planning.auth.annotation.DriverAuthorization;
 import no.isi.insight.planning.client.deviation.DeviationRestService;
 import no.isi.insight.planning.client.deviation.view.CreateDeviationRequest;
+import no.isi.insight.planning.client.deviation.view.DeviationCount;
 import no.isi.insight.planning.client.deviation.view.DeviationDetails;
-import no.isi.insight.planning.error.model.BadRequestException;
-import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.db.model.TripRailingDeviation;
 import no.isi.insight.planning.db.repository.TripRailingCaptureJpaRepository;
 import no.isi.insight.planning.db.repository.TripRailingDeviationJdbcRepository;
 import no.isi.insight.planning.db.repository.TripRailingDeviationJpaRepository;
+import no.isi.insight.planning.db.utility.DateTrunc;
+import no.isi.insight.planning.error.model.BadRequestException;
+import no.isi.insight.planning.error.model.NotFoundException;
 
 @RestController
 @RequiredArgsConstructor
@@ -101,6 +105,16 @@ public class DeviationRestServiceImpl implements DeviationRestService {
     this.deviationJpaRepository.delete(deviation);
 
     return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @DriverAuthorization
+  public ResponseEntity<List<DeviationCount>> getDeviationCounts(
+      Optional<UUID> projectId,
+      Optional<UUID> planId
+  ) {
+    var counts = this.deviationJdbcRepository.getDeviationCounts(DateTrunc.WEEK, LocalDate.now(), projectId, planId);
+    return ResponseEntity.ok(counts);
   }
 
 }

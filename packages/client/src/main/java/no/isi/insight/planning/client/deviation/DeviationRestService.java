@@ -17,6 +17,7 @@ import org.springframework.web.service.annotation.PostExchange;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import no.isi.insight.planning.client.deviation.view.CreateDeviationRequest;
+import no.isi.insight.planning.client.deviation.view.DeviationCount;
 import no.isi.insight.planning.client.deviation.view.DeviationDetails;
 
 @Validated
@@ -45,6 +46,12 @@ public interface DeviationRestService {
   @DeleteExchange("/{id}")
   ResponseEntity<Void> deleteDeviation(
       @PathVariable UUID id
+  );
+
+  @GetExchange("/counts")
+  ResponseEntity<List<DeviationCount>> getDeviationCounts(
+      @RequestParam Optional<UUID> projectId,
+      @RequestParam Optional<UUID> planId
   );
 
 }

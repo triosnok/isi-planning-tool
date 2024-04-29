@@ -1,7 +1,7 @@
 package no.isi.insight.planning.db.repository;
 
 import java.sql.Types;
-
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,8 +16,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import no.isi.insight.planning.client.deviation.view.DeviationCount;
 import no.isi.insight.planning.client.deviation.view.DeviationDetails;
 import no.isi.insight.planning.client.geometry.Geometry;
+import no.isi.insight.planning.db.utility.DateTrunc;
 
 @Slf4j
 @Repository
@@ -104,6 +106,46 @@ public class TripRailingDeviationJdbcRepository {
     }
 
     return deviations.stream().findFirst();
+  }
+
+  // language=sql
+  private static final String DEVIATION_AGGREGATE_QUERY = """
+      SELECT
+        trd.deviation_type,
+        COUNT(*) AS count
+      FROM trip_railing_deviation trd
+      INNER JOIN trip_railing_capture trc
+        ON trd.fk_trip_railing_capture_id = trc.trip_railing_capture_id
+      INNER JOIN trip t
+        ON trc.fk_trip_id = t.trip_id
+      INNER JOIN project_plan pp
+        ON t.fk_project_plan_id = pp.project_plan_id
+      WHERE 1=1
+        AND (DATE_TRUNC(:trunc, trc.captured_at) = DATE_TRUNC(:trunc, :date))
+        AND (:projectId IS NULL OR pp.fk_project_id = :projectId::uuid)
+        AND (:planId IS NULL OR pp.project_plan_id = :planId::uuid)
+      GROUP BY 1
+    """;
+
+  public List<DeviationCount> getDeviationCounts(
+      DateTrunc trunc,
+      LocalDate date,
+      Optional<UUID> projectId,
+      Optional<UUID> planId
+  ) {
+    var params = new MapSqlParameterSource().addValue("trunc", trunc.name())
+      .addValue("date", date, Types.DATE)
+      .addValue("projectId", projectId.orElse(null), Types.VARCHAR)
+      .addValue("planId", planId.orElse(null), Types.VARCHAR);
+
+    return this.jdbcTemplate.query(
+      DEVIATION_AGGREGATE_QUERY,
+      params,
+      (rs, i) -> new DeviationCount(
+        rs.getString("deviation_type"),
+        rs.getLong("count")
+      )
+    );
   }
 
 }
