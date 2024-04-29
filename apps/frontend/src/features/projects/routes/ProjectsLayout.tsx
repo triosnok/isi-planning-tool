@@ -27,7 +27,7 @@ const ProjectsLayout: Component<LayoutProps> = (props) => {
           {props.children}
         </aside>
 
-        <div class='flex-1'>
+        <div class='flex-1 max-md:hidden'>
           <MapRoot class='relative h-full w-full' customZoom>
             <MapZoomControls class='absolute right-2 top-2' />
             <MapRailingLayer railings={railings.data} />
