@@ -16,15 +16,6 @@ public record CaptureDetails(
   boolean activeCapture,
   int metersCaptured,
   Map<CameraPosition, Long> images,
-  ImageAnalysis imageAnalysis
-) {
-
-  public float getStorageRemaining() {
-    if (this.totalStorage == 0) {
-      return 0;
-    }
-
-    return this.usedStorage / this.totalStorage;
-  }
-
-}
+  ImageAnalysis imageAnalysis,
+  float storageRemaining
+) {}

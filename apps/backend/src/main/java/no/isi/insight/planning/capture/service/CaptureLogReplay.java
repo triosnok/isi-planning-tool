@@ -143,7 +143,8 @@ public class CaptureLogReplay {
         this.playing && !this.finished(),
         this.metersCaptured,
         this.images,
-        imageAnalysis
+        imageAnalysis,
+        1.0f
       )
     );
   }
