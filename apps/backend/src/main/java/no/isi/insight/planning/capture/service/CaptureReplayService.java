@@ -46,6 +46,7 @@ public class CaptureReplayService {
   private final Map<UUID, List<SseEmitter>> emitters = new HashMap<>();
   private final Map<UUID, CaptureLogReplay> replays = new HashMap<>();
   private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
+  private final ImageAnalysisService imageAnalysisService;
 
   /**
    * Creates a new emitter for a given trips capture.
@@ -151,7 +152,8 @@ public class CaptureReplayService {
         }
 
         this.railingCaptureJpaRepository.saveAll(captures);
-      }
+      },
+      this.imageAnalysisService
     );
 
     this.replays.put(tripId, replay);

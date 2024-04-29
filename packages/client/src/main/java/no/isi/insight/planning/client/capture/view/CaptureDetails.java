@@ -15,7 +15,8 @@ public record CaptureDetails(
   float gpsSignal,
   boolean activeCapture,
   int metersCaptured,
-  Map<CameraPosition, Long> images
+  Map<CameraPosition, Long> images,
+  ImageAnalysis imageAnalysis
 ) {
 
   public float getStorageRemaining() {

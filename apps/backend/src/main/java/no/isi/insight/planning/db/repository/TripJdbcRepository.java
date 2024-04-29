@@ -73,11 +73,12 @@ public class TripJdbcRepository {
 
     CaptureDetails captureDetails = null;
 
-    
     try {
       captureDetails = this.objectMapper.readValue(rs.getBytes("capture_details"), CaptureDetails.class);
+    } catch (IllegalArgumentException e) {
+      // ignore, happens when capture details is null (capture not ended yet)
     } catch (Exception e) {
-      log.warn("Error parsing capture details JSON: {}", e.getMessage());
+      log.error("Failed to parse capture details for trip {}", e);
     }
 
     return new TripDetails(
