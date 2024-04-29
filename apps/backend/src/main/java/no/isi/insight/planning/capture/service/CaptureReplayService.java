@@ -46,6 +46,7 @@ public class CaptureReplayService {
   private final Map<UUID, List<SseEmitter>> emitters = new HashMap<>();
   private final Map<UUID, CaptureLogReplay> replays = new HashMap<>();
   private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
+  private final BINReader nn2000 = NN2000.getInstance().getReader();
 
   /**
    * Creates a new emitter for a given trips capture.
@@ -98,9 +99,12 @@ public class CaptureReplayService {
           return;
         }
 
-        var gpsPoint = this.geometryService.parsePoint(logEntry.position().wkt());
-        var point = this.geometryService.transformGpsToRail(gpsPoint.get());
+        var gpsPoint = this.geometryService.parsePoint(logEntry.position().wkt()).get();
+        var point = this.geometryService.transformGpsToRail(gpsPoint);
         point.setSRID(25833);
+
+        var zOffset = this.nn2000.getOffset(gpsPoint.getCoordinate());
+        point.getCoordinate().setZ(logEntry.height() - zOffset);
 
         var matches = matcher.matchRailings(point, logEntry.heading());
 
@@ -132,8 +136,6 @@ public class CaptureReplayService {
           }
 
           logReplay.incrementMetersCaptured();
-          // TODO: Transform geoid height to MSL to allow for proper Z values
-          point.getCoordinate().setZ(1.0);
 
           var capture = new TripRailingCapture(
             trip,
