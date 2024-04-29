@@ -75,8 +75,13 @@ const Project: Component<LayoutProps> = (props) => {
 
           <div class='space-y-2 px-2'>
             <div class='flex justify-between'>
-              <div>
-                <h1 class='text-4xl font-bold'>{project.data?.name}</h1>
+              <div class='min-w-0'>
+                <h1
+                  title={project.data?.name}
+                  class='truncate text-4xl font-bold'
+                >
+                  {project.data?.name}
+                </h1>
 
                 <h2>
                   <Show when={project.data} fallback='...'>
