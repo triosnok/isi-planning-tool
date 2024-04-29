@@ -7,7 +7,7 @@
     "PASSWORD": "Password",
     "CONFIRM_PASSWORD": "Confirm password",
     "FORGOT_PASSWORD": "Forgot password?",
-    "INCORRECT_PASSWORD": "Incorrect password",
+    "INCORRECT_PASSWORD": "Incorrect email or password",
     "RESET_PASSWORD": {
       "TITLE": "Reset password",
       "RESET_YOUR_PASSWORD": "Reset your password",
