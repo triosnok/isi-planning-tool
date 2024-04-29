@@ -47,6 +47,7 @@ export interface CaptureDetails {
     activeCapture: boolean;
     metersCaptured: number;
     images: { [P in CameraPosition]?: number };
+    imageAnalysis: ImageAnalysis;
     storageRemaining: number;
 }
 
@@ -54,6 +55,18 @@ export interface CaptureLogDetails {
     name: string;
     updatedAt: DateAsString;
     size: number;
+}
+
+export interface ImageAnalysis {
+    overall: ImageStatus;
+    remarks: ImageRemark[];
+    positions: { [P in CameraPosition]?: ImagePositionAnalysis };
+}
+
+export interface ImagePositionAnalysis {
+    count: number;
+    target: number;
+    status: ImageStatus;
 }
 
 export interface CreateDeviationRequest {
@@ -222,6 +235,7 @@ export interface TripDetails {
     sequenceNumber: number;
     noteCount: number;
     deviations: number;
+    captureDetails: CaptureDetails;
 }
 
 export interface TripNoteDetails {
@@ -305,6 +319,10 @@ export type DateAsString = string;
 export type UserRole = "DRIVER" | "PLANNER";
 
 export type CaptureAction = "RESUME" | "PAUSE";
+
+export type ImageRemark = "LEFT_RIGHT_IMBALANCE" | "TOP_SIDE_IMBALANCE";
+
+export type ImageStatus = "OK" | "WITHIN_TOLERANCE" | "OUT_OF_TOLERANCE";
 
 export type PositionSubject = "VEHICLE" | "DRIVER";
 

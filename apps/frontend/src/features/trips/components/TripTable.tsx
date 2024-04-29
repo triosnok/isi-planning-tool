@@ -103,8 +103,10 @@ const TripTable: Component<TripTableProps> = (props) => {
                 <Show when={props.driver}>
                   <TableCell>{trip.driver}</TableCell>
                 </Show>
-                {/* //TODO: capture remarks & meters of railing captured */}
-                <TableCell>remarks</TableCell>
+                {/* //TODO: meters of railing captured */}
+                <TableCell>
+                  {trip?.captureDetails?.imageAnalysis.remarks || ''}
+                </TableCell>
                 <TableCell>x meters</TableCell>
                 <TableCell>{trip.deviations}</TableCell>
                 <TableCell>{trip.noteCount}</TableCell>
