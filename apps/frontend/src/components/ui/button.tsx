@@ -41,7 +41,13 @@ export interface ButtonProps
 }
 
 const Button: Component<ButtonProps> = (props) => {
-  const [, rest] = splitProps(props, ['variant', 'size', 'class', 'loading']);
+  const [, rest] = splitProps(props, [
+    'variant',
+    'size',
+    'class',
+    'loading',
+    'children',
+  ]);
 
   return (
     <button
@@ -52,11 +58,10 @@ const Button: Component<ButtonProps> = (props) => {
       disabled={props.loading}
       {...rest}
     >
-      {props.loading && <IconLoader2 class='mr-2 animate-spin' />}
+      {props.loading && <IconLoader2 class='-ml-7 mr-2 size-5 animate-spin' />}
       <span>{props.children}</span>
     </button>
   );
 };
 
 export { Button, buttonVariants };
-
