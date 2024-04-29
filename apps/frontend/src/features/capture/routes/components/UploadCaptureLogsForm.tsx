@@ -17,6 +17,7 @@ import { Component, Show, createEffect, createSignal } from 'solid-js';
 import { CaptureLogSchema, CaptureLogSchemaValues } from '../../api';
 
 export type UploadCaptureLogsProps = {
+  isLoading: boolean;
   onSubmit: (values: any) => Promise<void>;
 };
 
@@ -34,7 +35,6 @@ const UploadCaptureLogsForm: Component<UploadCaptureLogsProps> = (props) => {
     values
   ) => {
     await props.onSubmit(values);
-
     setValue(form, 'gnssLog', emptyFile);
     setValue(form, 'topCameraLog', emptyFile);
     setValue(form, 'leftCameraLog', emptyFile);
@@ -144,8 +144,8 @@ const UploadCaptureLogsForm: Component<UploadCaptureLogsProps> = (props) => {
         </Field>
       </div>
 
-      <Button type='submit' class='mt-auto'>
-        Upload Logs
+      <Button type='submit' loading={props.isLoading} class='mt-auto'>
+        {t('CAPTURE.UPLOAD_LOGS')}
       </Button>
     </Form>
   );
