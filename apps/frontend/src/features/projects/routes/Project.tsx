@@ -177,6 +177,7 @@ const Project: Component<LayoutProps> = (props) => {
                       ongoingTripAmount={plan.activeTrips}
                       railingAmount={plan.railings}
                       onToggle={() => handlePlanToggled(plan.id)}
+                      segments={plan.segments}
                       selected={searchParams.selectedPlans().includes(plan.id)}
                       onEdit={() => setEditPlanId(plan.id)}
                     />

@@ -1,6 +1,6 @@
 import { NumberFormat, useTranslations } from '@/features/i18n';
 import { cn } from '@/lib/utils';
-import { IconCar, IconPencil, IconPoint } from '@tabler/icons-solidjs';
+import { IconCar, IconPencil, IconRoute } from '@tabler/icons-solidjs';
 import { Component } from 'solid-js';
 
 export interface PlanCardProps {
@@ -10,6 +10,7 @@ export interface PlanCardProps {
   length: number;
   car: string;
   ongoingTripAmount: number;
+  segments: string[];
   selected?: boolean;
   onToggle?: () => void;
   onEdit?: () => void;
@@ -53,6 +54,10 @@ const PlanCard: Component<PlanCardProps> = (props) => {
             <div class='flex items-center gap-1 text-gray-800 dark:text-gray-300'>
               <IconCar class='h-5 w-5' />
               <p>{props.car}</p>
+            </div>
+            <div class='flex items-center gap-1 text-gray-800 dark:text-gray-300'>
+              <IconRoute class='h-5 w-5' />
+              <p>{props.segments.join(', ')}</p>
             </div>
           </div>
         </div>

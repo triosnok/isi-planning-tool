@@ -143,6 +143,7 @@ export interface ProjectPlanDetails {
     vehicleModel?: string | null;
     registrationNumber?: string | null;
     imports: RailingImportDetails[];
+    segments: string[];
     activeTrips: number;
     railings: number;
     meters: number;
