@@ -19,6 +19,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import no.isi.insight.planning.client.capture.view.CaptureDetails;
 import no.isi.insight.planning.client.trip.view.CameraPosition;
 
 @Getter
@@ -62,6 +63,10 @@ public class Trip {
   @JdbcTypeCode(SqlTypes.JSON)
   @Column(name = "camera_logs")
   private Map<CameraPosition, String> cameraLogs;
+
+  @JdbcTypeCode(SqlTypes.JSON)
+  @Column(name = "capture_details")
+  private CaptureDetails captureDetails;
 
   @Embedded
   private Audit audit;
