@@ -1,6 +1,7 @@
 package no.isi.insight.planning.capture.service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -139,7 +140,7 @@ public class CaptureReplayService {
           var capture = new TripRailingCapture(
             trip,
             match.roadSegment(),
-            logEntry.timestamp(),
+            LocalDateTime.now(),
             point,
             logEntry.images(),
             match.segmentIndex(),
