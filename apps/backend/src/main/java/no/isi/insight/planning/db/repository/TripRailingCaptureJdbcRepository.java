@@ -155,7 +155,7 @@ public class TripRailingCaptureJdbcRepository {
       SELECT
         capture_date::date,
         SUM(cl.captured_length) AS captured_length
-      FROM GENERATE_SERIES(DATE_TRUNC('WEEK', NOW()), DATE_TRUNC('WEEK', NOW()) + INTERVAL '1 WEEK', INTERVAL '1 DAY') capture_date
+      FROM GENERATE_SERIES(DATE_TRUNC('WEEK', NOW()), DATE_TRUNC('WEEK', NOW()) + INTERVAL '6 DAYS', INTERVAL '1 DAY') capture_date
       LEFT JOIN capture_length cl
         ON capture_date::date = cl.captured_at
       GROUP BY 1
