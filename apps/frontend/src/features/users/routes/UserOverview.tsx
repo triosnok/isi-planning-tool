@@ -18,6 +18,17 @@ const UserOverview: Component<LayoutProps> = (props) => {
   const handleAddUser = () => navigate('/users/new');
   const { positions } = usePositions('DRIVER');
 
+  const userMap = () => {
+    const list = users.data;
+    const map = new Map<string, string>();
+
+    for (const user of list ?? []) {
+      map.set(user.id, user.fullName);
+    }
+
+    return map;
+  };
+
   return (
     <div class='flex h-svh w-svw flex-col'>
       <Header />
@@ -58,7 +69,7 @@ const UserOverview: Component<LayoutProps> = (props) => {
                 <MapDriverLayer
                   position={pos().geometry}
                   heading={pos().heading}
-                  fullName='Test User'
+                  fullName={userMap().get(pos().driverId) ?? ''}
                 />
               )}
             </Index>
