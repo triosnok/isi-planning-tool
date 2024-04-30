@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/features/i18n';
 import { IconType, cn } from '@/lib/utils';
-import { UserRole } from '@isi-insight/client';
+import { UserRole, UserStatus } from '@isi-insight/client';
 import { IconMail, IconPhone, IconPhotoX } from '@tabler/icons-solidjs';
 import { Component, Show } from 'solid-js';
-import UserStatus from './UserStatus';
+import UserStatusIndicator from './UserStatusIndicator';
 
 export interface UserCardProps {
   imageUrl?: string;
@@ -12,7 +12,7 @@ export interface UserCardProps {
   email: string;
   phoneNumber: string;
   role: UserRole;
-  status: string;
+  status: UserStatus;
   onDetailsClick?: () => void;
   class?: string;
 }
@@ -46,7 +46,7 @@ const UserCard: Component<UserCardProps> = (props) => {
         <p class='self-center text-xs text-gray-500'>{props.role}</p>
         <h2 class='self-center truncate text-xl font-semibold'>{props.name}</h2>
 
-        <UserStatus status={props.status} class='self-center' />
+        <UserStatusIndicator status={props.status} class='self-center' />
 
         <hr class='my-1 h-px w-full border-0 bg-gray-300 dark:bg-gray-700' />
 

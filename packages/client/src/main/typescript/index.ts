@@ -57,6 +57,11 @@ export interface CaptureLogDetails {
     size: number;
 }
 
+export interface CapturedMetersByDay {
+    date: DateAsString;
+    meters: number;
+}
+
 export interface ImageAnalysis {
     overall: ImageStatus;
     remarks: ImageRemark[];
@@ -73,6 +78,11 @@ export interface CreateDeviationRequest {
     captureId: string;
     deviationType: string;
     details: { [index: string]: string };
+}
+
+export interface DeviationCount {
+    type: string;
+    count: number;
 }
 
 export interface DeviationDetails {
@@ -281,6 +291,7 @@ export interface UserAccountDetails {
     email: string;
     phoneNumber: string;
     role: UserRole;
+    status: UserStatus;
 }
 
 export interface CreateVehicleRequest {
@@ -318,6 +329,8 @@ export interface VehicleDetails {
 export type DateAsString = string;
 
 export type UserRole = "DRIVER" | "PLANNER";
+
+export type UserStatus = "AVAILABLE" | "DRIVING";
 
 export type CaptureAction = "RESUME" | "PAUSE";
 
