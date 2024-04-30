@@ -32,7 +32,7 @@ public class ProjectPlanJdbcRepository {
       WITH railing_aggregate AS (
         SELECT
           pprr.fk_project_plan_id,
-          COUNT(*) AS railing_count,
+          COUNT(DISTINCT rr.road_railing_id) AS railing_count,
           SUM(rs.length) AS sum_meters,
           JSON_AGG(DISTINCT rs.road_reference) AS segments
         FROM project_plan_road_railing pprr
