@@ -3,14 +3,19 @@ import { DateFormat, useTranslations } from '@/features/i18n';
 import { Theme, useTheme } from '@/features/theme';
 import ActiveTripButton from '@/features/trips/components/ActiveTripButton';
 import { useTripsByUserQuery } from '@/features/users/api';
-import { cn } from '@/lib/utils';
+import { IconType, cn } from '@/lib/utils';
 import { A, useParams } from '@solidjs/router';
 import {
+  IconCapture,
+  IconCar,
+  IconClipboardList,
+  IconDashboard,
   IconLogout,
   IconMenu2,
   IconMoon,
   IconSearch,
   IconSettings,
+  IconUsers,
 } from '@tabler/icons-solidjs';
 import { Component, Show } from 'solid-js';
 import Logo from '../logo/Logo';
@@ -48,37 +53,41 @@ const Header: Component = () => {
           <A href='/' class='flex items-center gap-4 focus:outline-none'>
             <Logo variant='white' class='h-8' />
 
-            <span class='hidden select-none border-r-2 border-gray-200 pr-4 font-bold md:block'>
+            <span class='select-none border-r-2 border-gray-200 pr-4 font-bold max-md:hidden'>
               inSight
             </span>
           </A>
 
-          <ul class='hidden flex-row gap-4 md:flex'>
-            <li>
-              <A href='/projects' class='hover:underline'>
-                {t('PROJECTS.TITLE')}
-              </A>
-            </li>
-            <li>
-              <A href='/dashboard' class='hover:underline'>
-                {t('DASHBOARD.TITLE')}
-              </A>
-            </li>
-            <li>
-              <A href='/users' class='hover:underline'>
-                {t('USERS.TITLE')}
-              </A>
-            </li>
-            <li>
-              <A href='/vehicles' class='hover:underline'>
-                {t('VEHICLES.TITLE')}
-              </A>
-            </li>
-            <li>
-              <A href='/capture' class='hover:underline'>
-                {t('CAPTURE.TITLE')}
-              </A>
-            </li>
+          <ul class='hidden flex-row gap-1 md:flex'>
+            <HeaderLink
+              href='/projects'
+              icon={IconClipboardList}
+              text={t('PROJECTS.TITLE')}
+            />
+
+            <HeaderLink
+              href='/dashboard'
+              icon={IconDashboard}
+              text={t('DASHBOARD.TITLE')}
+            />
+
+            <HeaderLink
+              href='/users'
+              icon={IconUsers}
+              text={t('USERS.TITLE')}
+            />
+
+            <HeaderLink
+              href='/vehicles'
+              icon={IconCar}
+              text={t('VEHICLES.TITLE')}
+            />
+
+            <HeaderLink
+              href='/capture'
+              icon={IconCapture}
+              text={t('CAPTURE.TITLE')}
+            />
           </ul>
         </div>
       </nav>
@@ -174,6 +183,33 @@ const Header: Component = () => {
         </DropdownMenu>
       </section>
     </header>
+  );
+};
+
+interface HeaderLinkProps {
+  icon: IconType;
+  text?: string;
+  href: string;
+}
+
+/**
+ * Opinionated component for rendering headers
+ */
+const HeaderLink: Component<HeaderLinkProps> = (props) => {
+  return (
+    <li>
+      <A
+        href={props.href}
+        class={cn(
+          'flex items-center gap-1 rounded-md border-2 border-transparent px-2 py-1.5 text-sm font-medium transition-colors',
+          'hover:bg-brand-blue-900 focus:bg-brand-blue-900 focus:border-brand-blue-500 focus:outline-none',
+          'aria-[current=page]:bg-brand-blue-900/75 aria-[current=page]:hover:bg-brand-blue-900'
+        )}
+      >
+        <props.icon class='size-4' />
+        <span>{props.text}</span>
+      </A>
+    </li>
   );
 };
 
