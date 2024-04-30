@@ -15,10 +15,12 @@ import { createDropzone } from '@solid-primitives/upload';
 import { TbFile, TbUpload } from 'solid-icons/tb';
 import { Component, Show, createEffect, createSignal } from 'solid-js';
 import { CaptureLogSchema, CaptureLogSchemaValues } from '../../api';
+import { IconUpload } from '@tabler/icons-solidjs';
 
 export type UploadCaptureLogsProps = {
   isLoading: boolean;
   onSubmit: (values: any) => Promise<void>;
+  class?: string;
 };
 
 const UploadCaptureLogsForm: Component<UploadCaptureLogsProps> = (props) => {
@@ -45,7 +47,7 @@ const UploadCaptureLogsForm: Component<UploadCaptureLogsProps> = (props) => {
   return (
     <Form
       id='upload-capture-logs-form'
-      class='flex flex-col gap-4'
+      class={cn('flex flex-1 flex-col gap-4', props.class)}
       onSubmit={handleSubmit}
     >
       <Field name='logIdentifier'>
@@ -158,6 +160,7 @@ interface DropzoneProps {
    * This prop does not work with controlled file inputs, but when changing the value to undefined it will clear the dropzone.
    */
   value?: File;
+  class?: string;
   onChange?: (file: File) => void;
 }
 
@@ -191,18 +194,19 @@ const Dropzone: Component<DropzoneProps> = (props) => {
     <div
       ref={setRef}
       class={cn(
-        'flex cursor-pointer justify-center rounded-md border-2 border-dashed border-gray-300 py-20 transition-colors',
+        'flex cursor-pointer justify-center rounded-md border-2 border-dashed border-gray-300 py-6 transition-colors',
         'text-gray-700 hover:bg-gray-100',
         'dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-900',
         isDragOver() &&
-          'bg-brand-blue-50/50 border-brand-blue-400 dark:bg-brand-blue-950/50 dark:border-brand-blue-400 text-gray-950 dark:text-gray-50'
+          'bg-brand-blue-50/50 border-brand-blue-400 dark:bg-brand-blue-950/50 dark:border-brand-blue-400 text-gray-950 dark:text-gray-50',
+        props.class
       )}
     >
       <Show
         when={file()}
         fallback={
           <div class='flex flex-col items-center justify-center gap-2'>
-            <TbUpload class='size-12' />
+            <IconUpload class='size-12' />
             {props.title}
           </div>
         }

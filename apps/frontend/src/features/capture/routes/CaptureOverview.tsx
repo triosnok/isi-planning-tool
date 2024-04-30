@@ -21,20 +21,25 @@ const CaptureOverview: Component = () => {
   };
 
   return (
-    <div class='flex h-full w-full flex-col'>
+    <div class='flex h-svh w-svw flex-col'>
       <Header />
 
-      <section class='px-6 py-4'>
+      <section class='flex-1 overflow-y-hidden px-6 py-4 flex flex-col'>
         <h1 class='text-4xl font-bold'>Capture logs</h1>
 
-        <div class='flex flex-col lg:flex-row'>
+        <div class='flex flex-1 max-lg:flex-col'>
           <main class='flex-1'>
             <Show when={captureLogs?.data}>
               <CaptureLogsTable captureLogs={captureLogs.data ?? []} />
             </Show>
           </main>
-          <aside class='order-first lg:order-last lg:w-1/3 lg:pl-6'>
-            <UploadCaptureLogsForm isLoading={capture.isPending} onSubmit={handleSubmit} />
+
+          <aside class='max-lg:order-first lg:w-1/3 lg:pl-6 relative'>
+            <UploadCaptureLogsForm
+              isLoading={capture.isPending}
+              onSubmit={handleSubmit}
+              class='h-full'
+            />
           </aside>
         </div>
       </section>
