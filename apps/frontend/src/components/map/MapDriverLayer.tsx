@@ -20,7 +20,7 @@ const MapDriverLayer: Component<MapDriverLayerProps> = (props) => {
 
   return (
     <MapMarker position={props.position} heading={props.heading}>
-      <div class='text-sm font-semibold text-gray-50'>{initials()}</div>
+      <div class='text-sm font-semibold text-gray-50 w-5 text-center'>{initials()}</div>
     </MapMarker>
   );
 };
