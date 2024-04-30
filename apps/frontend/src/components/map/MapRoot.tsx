@@ -4,16 +4,19 @@ import { Projection } from 'ol/proj';
 import { XYZ } from 'ol/source';
 import { TileGrid } from 'ol/tilegrid';
 import {
+  Accessor,
   Component,
   JSX,
   Show,
   createContext,
+  createEffect,
   createSignal,
   onMount,
   useContext,
 } from 'solid-js';
 import './style.css';
 import { register } from 'ol/proj/proj4';
+import { KeyboardPan, DragPan, DragZoom, MouseWheelZoom } from 'ol/interaction';
 import proj4 from 'proj4';
 
 proj4.defs(
@@ -25,6 +28,8 @@ register(proj4);
 
 export interface MapContextValue {
   map: Map;
+  follow: Accessor<boolean>;
+  toggleFollow: () => void;
 }
 
 export const EPSG25833 = new Projection({
@@ -47,9 +52,13 @@ export const MapRoot: Component<{
   children?: JSX.Element;
   class?: string;
   customZoom?: boolean;
+  follow?: boolean;
 }> = (props) => {
   const [map, setMap] = createSignal<Map>();
+  const [follow, setFollow] = createSignal(props.follow ?? false);
   let container: HTMLDivElement;
+
+  const toggleFollow = () => setFollow((v) => !v);
 
   onMount(() => {
     const mountedMap = new Map({
@@ -83,11 +92,28 @@ export const MapRoot: Component<{
     setMap(mountedMap);
   });
 
+  createEffect(() => {
+    const following = follow();
+
+    map()
+      ?.getInteractions()
+      .forEach((int) => {
+        if (
+          int instanceof KeyboardPan ||
+          int instanceof DragPan ||
+          int instanceof DragZoom ||
+          int instanceof MouseWheelZoom
+        ) {
+          int.setActive(!following);
+        }
+      });
+  });
+
   return (
     <div class={props.class}>
       <div class='h-full w-full' ref={container!} />
       <Show when={map() !== undefined}>
-        <MapContext.Provider value={{ map: map()! }}>
+        <MapContext.Provider value={{ map: map()!, follow, toggleFollow }}>
           {props.children}
         </MapContext.Provider>
       </Show>
