@@ -100,7 +100,8 @@ With the above installed, you can start developing by:
 1. Cloning the repository
 2. Set up a run/debug config
 3. Run the backend using either of these options
-   a) Starting `PlanningApplicationDevelopment`, this will also required containers
+
+   a) Starting `PlanningApplicationDevelopment`, this will also run required containers
 
    b) Starting `PlanningApplication`, with environment variables defined in a `.env` file in the backend folder, using [this reference](#environment-variables). This will also require you to start docker containers manually (`docker compose up -d`)
 

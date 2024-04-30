@@ -23,11 +23,11 @@ const ProjectsLayout: Component<LayoutProps> = (props) => {
       <Header />
 
       <main class='flex flex-1 overflow-hidden'>
-        <aside class='w-full flex-shrink-0 overflow-hidden md:w-96'>
+        <aside class='flex w-full flex-shrink-0 flex-col overflow-hidden md:w-96'>
           {props.children}
         </aside>
 
-        <div class='flex-1'>
+        <div class='flex-1 max-md:hidden'>
           <MapRoot class='relative h-full w-full' customZoom>
             <MapZoomControls class='absolute right-2 top-2' />
             <MapRailingLayer railings={railings.data} />

@@ -7,6 +7,7 @@
     "PASSWORD": "Password",
     "CONFIRM_PASSWORD": "Confirm password",
     "FORGOT_PASSWORD": "Forgot password?",
+    "INCORRECT_PASSWORD": "Incorrect email or password",
     "RESET_PASSWORD": {
       "TITLE": "Reset password",
       "RESET_YOUR_PASSWORD": "Reset your password",
@@ -153,7 +154,7 @@
       "NAME": "Name",
       "DRIVER": "Driver",
       "CAPTURE_REMARKS": "Capture remarks",
-      "METERS_OF_RAILING_CAPTURED": "Meters of railing captured",
+      "METERS_OF_RAILING_CAPTURED": "Meters captured",
       "DEVIATIONS": "Deviations",
       "NOTES": "Notes",
       "LINKS": "Links",
@@ -199,7 +200,7 @@
     "NO_VEHICLE_SELECTED": "No vehicle selected.",
     "VIEW_DETAILS": "View details",
     "NO_VEHICLES_REGISTERED": "No vehicles registered.",
-    "PREFERED_VEHICLE": "Prefered vehicle",
+    "PREFERED_VEHICLE": "Preferred vehicle",
     "FORM": {
       "REGISTRATION_NUMBER": "Registration number",
       "MODEL": "Model",

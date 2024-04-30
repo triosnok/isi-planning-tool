@@ -20,17 +20,20 @@ export interface PositionParams {
  *
  * @returns the positions and the last time they were updated
  */
-export const usePositions = (subject?: Accessor<PositionParams>) => {
+export const usePositions = (
+  subjectType: PositionSubject,
+  subjectId?: Accessor<string>
+) => {
   const [positions, setPositions] = createSignal<PositionEvent[]>();
   const [lastUpdated, setLastUpdated] = createSignal<Dayjs>();
 
   createEffect(() => {
-    const params = subject?.();
+    const id = subjectId?.();
     const searchParams = new URLSearchParams();
+    searchParams.set('subject-type', subjectType);
 
-    if (params) {
-      searchParams.set('subject-type', params.type);
-      searchParams.set('id', params.id);
+    if (id) {
+      searchParams.set('id', id);
     }
 
     const es = new EventSource(
@@ -58,8 +61,11 @@ export const usePositions = (subject?: Accessor<PositionParams>) => {
  *
  * @returns the subjects position and the last time it was updated
  */
-export const useSubjectPosition = (subject: Accessor<PositionParams>) => {
-  const sub = usePositions(subject);
+export const useSubjectPosition = (
+  subjectType: PositionSubject,
+  subjectId: Accessor<string>
+) => {
+  const sub = usePositions(subjectType, subjectId);
 
   const position = createMemo(() => {
     return sub.positions()?.[0];

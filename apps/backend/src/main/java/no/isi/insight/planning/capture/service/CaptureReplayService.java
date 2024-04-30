@@ -1,6 +1,7 @@
 package no.isi.insight.planning.capture.service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,11 +24,11 @@ import no.isi.insight.planning.capture.event.CaptureDetailsEvent;
 import no.isi.insight.planning.capture.model.ProcessedLogEntry;
 import no.isi.insight.planning.client.capture.view.CaptureDetails;
 import no.isi.insight.planning.client.trip.view.CameraPosition;
-import no.isi.insight.planning.geometry.GeometryService;
 import no.isi.insight.planning.db.model.Trip;
 import no.isi.insight.planning.db.model.TripRailingCapture;
 import no.isi.insight.planning.db.repository.RoadRailingJpaRepository;
 import no.isi.insight.planning.db.repository.TripRailingCaptureJpaRepository;
+import no.isi.insight.planning.geometry.GeometryService;
 import no.isi.insight.planning.trip.event.TripEndedEvent;
 import no.isi.insight.planning.trip.event.TripStartedEvent;
 
@@ -46,6 +47,7 @@ public class CaptureReplayService {
   private final Map<UUID, List<SseEmitter>> emitters = new HashMap<>();
   private final Map<UUID, CaptureLogReplay> replays = new HashMap<>();
   private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
+  private final ImageAnalysisService imageAnalysisService;
 
   /**
    * Creates a new emitter for a given trips capture.
@@ -132,11 +134,13 @@ public class CaptureReplayService {
           }
 
           logReplay.incrementMetersCaptured();
+          // TODO: Transform geoid height to MSL to allow for proper Z values
+          point.getCoordinate().setZ(1.0);
 
           var capture = new TripRailingCapture(
             trip,
             match.roadSegment(),
-            logEntry.timestamp(),
+            LocalDateTime.now(),
             point,
             logEntry.images(),
             match.segmentIndex(),
@@ -149,7 +153,8 @@ public class CaptureReplayService {
         }
 
         this.railingCaptureJpaRepository.saveAll(captures);
-      }
+      },
+      this.imageAnalysisService
     );
 
     this.replays.put(tripId, replay);
@@ -197,15 +202,37 @@ public class CaptureReplayService {
     });
   }
 
-  public Optional<Point> getCurrentPosition(
+  /**
+   * Gets the current capture details for a trip. Note that a trip has to be active, thus has to be
+   * done before ending a trip.
+   * 
+   * @param tripId the id of the trip
+   * 
+   * @return the capture details, if available
+   */
+  public Optional<CaptureDetails> getCurrentCaptureDetails(
       UUID tripId
   ) {
-    if (!this.hasTrip(tripId)) {
+    var replay = this.replays.get(tripId);
+
+    if (replay == null) {
       return Optional.empty();
     }
 
-    return this.replays.get(tripId)
-      .getCaptureDetails()
+    return replay.getCaptureDetails();
+  }
+
+  /**
+   * Gets the current position of a trip.
+   * 
+   * @param tripId the id of the trip
+   * 
+   * @return the current position, if available
+   */
+  public Optional<Point> getCurrentPosition(
+      UUID tripId
+  ) {
+    return this.getCurrentCaptureDetails(tripId)
       .map(CaptureDetails::position)
       .map(geom -> this.geometryService.parsePoint(geom.wkt()).get());
   }

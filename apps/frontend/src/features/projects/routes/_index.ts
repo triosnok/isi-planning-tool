@@ -23,6 +23,10 @@ export const routes: RouteDefinition[] = [
           },
         ],
       },
+      {
+        path: '/:id/railings/:railingId',
+        component: lazy(() => import('./RailingDetails')),
+      },
     ],
     meta: {
       authentication: {

@@ -34,7 +34,7 @@ const Capture: Component = () => {
             </Show>
           </main>
           <aside class='order-first lg:order-last lg:w-1/3 lg:pl-6'>
-            <UploadCaptureLogsForm onSubmit={handleSubmit} />
+            <UploadCaptureLogsForm isLoading={capture.isPending} onSubmit={handleSubmit} />
           </aside>
         </div>
       </section>

@@ -20,6 +20,7 @@ public record ProjectPlanDetails(
   @Optional String vehicleModel,
   @Optional String registrationNumber,
   List<RailingImportDetails> imports,
+  List<String> segments,
   int activeTrips,
   int railings,
   double meters

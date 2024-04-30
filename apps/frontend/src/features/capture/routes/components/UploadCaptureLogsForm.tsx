@@ -17,6 +17,7 @@ import { Component, Show, createEffect, createSignal } from 'solid-js';
 import { CaptureLogSchema, CaptureLogSchemaValues } from '../../api';
 
 export type UploadCaptureLogsProps = {
+  isLoading: boolean;
   onSubmit: (values: any) => Promise<void>;
 };
 
@@ -34,7 +35,6 @@ const UploadCaptureLogsForm: Component<UploadCaptureLogsProps> = (props) => {
     values
   ) => {
     await props.onSubmit(values);
-
     setValue(form, 'gnssLog', emptyFile);
     setValue(form, 'topCameraLog', emptyFile);
     setValue(form, 'leftCameraLog', emptyFile);
@@ -144,8 +144,8 @@ const UploadCaptureLogsForm: Component<UploadCaptureLogsProps> = (props) => {
         </Field>
       </div>
 
-      <Button type='submit' class='mt-auto'>
-        Upload Logs
+      <Button type='submit' loading={props.isLoading} class='mt-auto'>
+        {t('CAPTURE.UPLOAD_LOGS')}
       </Button>
     </Form>
   );
@@ -191,9 +191,11 @@ const Dropzone: Component<DropzoneProps> = (props) => {
     <div
       ref={setRef}
       class={cn(
-        'flex justify-center rounded-md border border-dashed border-gray-400 py-20 transition-all hover:bg-gray-400/20 dark:border-white',
+        'flex cursor-pointer justify-center rounded-md border-2 border-dashed border-gray-300 py-20 transition-colors',
+        'text-gray-700 hover:bg-gray-100',
+        'dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-900',
         isDragOver() &&
-          'dark:bg-success-300/50 hover:bg-success-100 bg-success-100 border-success-300 hover:border-success-300 transition-all'
+          'bg-brand-blue-50/50 border-brand-blue-400 dark:bg-brand-blue-950/50 dark:border-brand-blue-400 text-gray-950 dark:text-gray-50'
       )}
     >
       <Show

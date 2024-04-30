@@ -16,6 +16,7 @@ public class CaptureLogReplay {
   private final int speed;
   private final Map<CameraPosition, Long> images;
   private final CaptureLogListener listener;
+  private final ImageAnalysisService imageAnalysisService;
 
   private int metersCaptured;
   private boolean playing;
@@ -30,13 +31,15 @@ public class CaptureLogReplay {
   public CaptureLogReplay(
       List<ProcessedLogEntry> log,
       int speed,
-      CaptureLogListener listener
+      CaptureLogListener listener,
+      ImageAnalysisService imageAnalysisService
   ) {
     this.log = log.listIterator();
     this.speed = speed;
     this.images = new HashMap<>();
     this.listener = listener;
     this.metersCaptured = 0;
+    this.imageAnalysisService = imageAnalysisService;
 
     // play the first second of the log to start with
     this.playing = true;
@@ -128,6 +131,8 @@ public class CaptureLogReplay {
       return Optional.empty();
     }
 
+    var imageAnalysis = this.imageAnalysisService.getImageAnalysis(this.images);
+
     return Optional.of(
       new CaptureDetails(
         0L,
@@ -137,7 +142,9 @@ public class CaptureLogReplay {
         0.99f,
         this.playing && !this.finished(),
         this.metersCaptured,
-        this.images
+        this.images,
+        imageAnalysis,
+        1.0f
       )
     );
   }

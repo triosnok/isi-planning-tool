@@ -42,7 +42,7 @@ no.isi.insight.planning:
       secret: ${AUTH_REFRESH_TOKEN_SECRET}
   integration.nvdb:
     client-name: isi-insight-dev
-    base-url: https://nvdbapiles.atlas.vegvesen.no/vegobjekter/api/v4
+    base-url: https://nvdbapiles-v3.atlas.vegvesen.no
   integration.minio:
     url: ${MINIO_URL}
     access-key: ${MINIO_ACCESS_KEY}

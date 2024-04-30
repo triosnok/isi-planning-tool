@@ -53,6 +53,7 @@ export const I18nProvider: Component<{ children: JSX.Element }> = (props) => {
       }),
       [NumberFormat.DECIMAL]: new Intl.NumberFormat(locale(), {
         style: 'decimal',
+        minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       }),
       [NumberFormat.PERCENTAGE]: new Intl.NumberFormat(locale(), {

@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import no.isi.insight.planning.client.capture.view.CaptureActionRequest;
+import no.isi.insight.planning.client.capture.view.CapturedMetersByDay;
 import no.isi.insight.planning.client.capture.view.CaptureLogDetails;
 
 @Tag(name = "Capture")
@@ -43,5 +44,8 @@ public interface CaptureRestService {
   ResponseEntity<Void> captureAction(
       @Validated @RequestBody CaptureActionRequest request
   );
+
+  @GetExchange("/stats")
+  ResponseEntity<List<CapturedMetersByDay>> getCaptureStats();
 
 }

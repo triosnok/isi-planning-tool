@@ -2,6 +2,7 @@ import DatePicker from '@/components/temporal/DatePicker';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
 import ErrorLabel from '@/features/error/components/ErrorLabel';
 import { useTranslations } from '@/features/i18n';
 import {
@@ -9,7 +10,6 @@ import {
   useVehiclesQuery,
 } from '@/features/vehicles/api';
 import VehicleSelect from '@/features/vehicles/components/VehicleSelect';
-import { cn } from '@/lib/utils';
 import { RailingImportDetails } from '@isi-insight/client';
 import {
   SubmitHandler,
@@ -17,6 +17,8 @@ import {
   setValue,
   zodForm,
 } from '@modular-forms/solid';
+import { A } from '@solidjs/router';
+import { IconArrowNarrowUp } from '@tabler/icons-solidjs';
 import dayjs from 'dayjs';
 import { Component, For, Show, createSignal } from 'solid-js';
 import { ProjectPlanSchema, ProjectPlanSchemaValues } from '../api';
@@ -36,9 +38,6 @@ export interface PlanFormProps {
 const PlanForm: Component<PlanFormProps> = (props) => {
   const [availableFrom, setAvailableFrom] = createSignal<string>();
   const [availableTo, setAvailableTo] = createSignal<string>();
-  const [selectedImport, setSelectedImport] = createSignal(
-    props?.imports?.[0]?.importedAt
-  );
 
   const [reimportRailings, setReimportRailings] = createSignal(false);
 
@@ -92,7 +91,6 @@ const PlanForm: Component<PlanFormProps> = (props) => {
                 value={field.value}
                 onChange={(event) => {
                   setValue(form, 'importUrl', event.target.value);
-                  setSelectedImport('');
                 }}
               />
               <ErrorLabel text={field.error} />
@@ -102,11 +100,8 @@ const PlanForm: Component<PlanFormProps> = (props) => {
 
         <Show when={props.imports}>
           <Label class='mt-2'>{t('PLANS.FORM.PREVIOUS_IMPORTS')}</Label>
-
           <PreviousImports
             imports={props.imports ?? []}
-            selected={selectedImport}
-            setSelected={setSelectedImport}
             onChange={(url) => setValue(form, 'importUrl', url)}
           />
         </Show>
@@ -179,55 +174,58 @@ const PlanForm: Component<PlanFormProps> = (props) => {
 export interface PreviousImportProps {
   imports: RailingImportDetails[];
   onChange?: (url: string) => void;
-  selected: () => string | undefined;
-  setSelected: (value: string) => void;
 }
 
 const PreviousImports: Component<PreviousImportProps> = (props) => {
   const { d, t } = useTranslations();
 
-  const handleChange = (url: string, importedAt: string) => {
-    if (props.selected() === importedAt) {
-      props.setSelected('');
-      props.onChange?.('');
-    } else {
-      props.setSelected(importedAt);
-      props.onChange?.(url);
-    }
+  const handleChange = (url: string) => {
+    props.onChange?.(url);
   };
 
+  function removeBaseUrl(fullUrl) {
+    const parsedUrl = new URL(fullUrl);
+    const baseUrl = `${parsedUrl.protocol}//${parsedUrl.host}/`;
+    return fullUrl.replace(baseUrl, '');
+  }
+
   return (
-    <div class='grid max-h-32 grid-cols-1 gap-2 overflow-y-auto pb-1 pr-1'>
+    <div class='grid grid-cols-1 gap-2 px-1'>
       <For each={props.imports}>
-        {(importDetails) => (
-          <button
-            title={importDetails.url}
-            type='button'
-            onClick={() =>
-              handleChange(importDetails.url, importDetails.importedAt)
-            }
-            class={cn(
-              `flex select-none flex-col overflow-hidden rounded-md border
-               p-2 text-sm transition-all hover:cursor-pointer hover:bg-gray-100
-                dark:border-gray-800 dark:hover:bg-gray-900`,
-              props.selected() === importDetails.importedAt &&
-                `border-brand-blue-500 dark:border-brand-blue-600 bg-brand-blue-50/40
-                 dark:bg-brand-blue-950/60 hover:bg-brand-blue-50/80 dark:hover:bg-brand-blue-950/80 `
-            )}
-          >
-            <p class='flex flex-row gap-1'>
-              <span class='font-semibold'>{t('RAILINGS.TITLE')}:</span>
-              <span>{importDetails.count}</span>
-            </p>
-            <p class='flex flex-row items-center gap-1'>
-              <span class='font-semibold'>{t('GENERAL.UPDATED_AT')}:</span>
-              <span>{d(importDetails.importedAt)}</span>
-            </p>
-            <p class='flex flex-row items-center gap-1'>
-              <span class='font-semibold'>URL:</span>
-              <span class='max-w-96 truncate'>{importDetails.url}</span>
-            </p>
-          </button>
+        {(importDetails, index) => (
+          <>
+            <div class='flex flex-row items-center justify-between'>
+              <div class='flex flex-col'>
+                <A
+                  href={importDetails.url}
+                  target='_blank'
+                  title={importDetails.url}
+                  class='max-w-96 truncate hover:underline'
+                >
+                  {removeBaseUrl(importDetails.url)}
+                </A>
+                <div class='flex flex-row gap-2'>
+                  <p>{d(importDetails.importedAt)}</p> {'-'}
+                  <p>
+                    {importDetails.count} {t('RAILINGS.TITLE')}
+                  </p>
+                </div>
+              </div>
+              <Button
+                type='button'
+                onClick={() => handleChange(importDetails.url)}
+              >
+                <IconArrowNarrowUp class='size-6' />
+              </Button>
+            </div>
+            <Show
+              when={
+                props.imports.length > 1 && index() !== props.imports.length - 1
+              }
+            >
+              <Separator />
+            </Show>
+          </>
         )}
       </For>
     </div>

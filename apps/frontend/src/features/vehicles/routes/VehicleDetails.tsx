@@ -19,10 +19,7 @@ const VehicleDetails: Component = () => {
   const vehicle = useVehicleDetailsQuery(params.id);
   const { update } = useVehicleMutation();
   const trips = useTripsByVehicleQuery(params.id);
-  const { position } = useSubjectPosition(() => ({
-    id: params.id,
-    type: 'VEHICLE',
-  }));
+  const { position } = useSubjectPosition('VEHICLE', () => params.id);
 
   const handleUpdateVehicle = async (vehicle: VehicleSchemaValues) => {
     try {

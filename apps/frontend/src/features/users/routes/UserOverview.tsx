@@ -16,7 +16,7 @@ const UserOverview: Component<LayoutProps> = (props) => {
   const navigate = useNavigate();
   const { t } = useTranslations();
   const handleAddUser = () => navigate('/users/new');
-  const { positions } = usePositions();
+  const { positions } = usePositions('DRIVER');
 
   return (
     <div class='flex h-svh w-svw flex-col'>

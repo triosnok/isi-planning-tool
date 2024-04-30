@@ -15,15 +15,7 @@ public record CaptureDetails(
   float gpsSignal,
   boolean activeCapture,
   int metersCaptured,
-  Map<CameraPosition, Long> images
-) {
-
-  public float getStorageRemaining() {
-    if (this.totalStorage == 0) {
-      return 0;
-    }
-
-    return this.usedStorage / this.totalStorage;
-  }
-
-}
+  Map<CameraPosition, Long> images,
+  ImageAnalysis imageAnalysis,
+  float storageRemaining
+) {}
