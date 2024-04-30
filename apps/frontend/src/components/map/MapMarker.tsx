@@ -13,12 +13,15 @@ import {
 } from 'solid-js';
 import { useMap } from './MapRoot';
 import { debounce } from '@solid-primitives/scheduled';
+import { linear } from 'ol/easing';
+import { toRadians } from 'ol/math';
 
 export interface MapMarkerProps {
   children?: JSX.Element;
   class?: string;
   position: InternalGeometry;
   heading?: number;
+  follow?: boolean;
 }
 
 const fmt = new WKT();
@@ -28,13 +31,18 @@ const READ_OPTIONS = {
   featureProjection: 'EPSG:25833',
 };
 
+const TRANSITION_CLASSES = ['transition-transform', 'duration-1000'];
+
+const EASED_TRANSITION_CLASSES = [...TRANSITION_CLASSES, 'ease-linear'];
+
 const MapMarker: Component<MapMarkerProps> = (props) => {
-  const { map } = useMap();
+  const ctx = useMap();
   const [carOverlay, setCarOverlay] = createSignal<Overlay>();
   let overlayElement: HTMLDivElement;
 
   const transform = () => {
     const angle = props.heading;
+    if (ctx.follow()) return undefined;
     return `rotate(${angle ?? 0}deg)`;
   };
 
@@ -47,55 +55,83 @@ const MapMarker: Component<MapMarkerProps> = (props) => {
     const over = new Overlay({
       element: overlayElement,
       positioning: 'center-center',
-      className: 'transition-transform duration-1000 ease-linear',
+      className: ctx.follow()
+        ? TRANSITION_CLASSES.join(' ')
+        : 'transition-transform duration-1000',
       stopEvent: false,
       position: pos.getGeometry()?.getCoordinates(),
     });
 
     setCarOverlay(over);
 
-    map.addOverlay(over);
+    ctx.map.addOverlay(over);
 
-    const disableTransition = () =>
-      over
-        .getElement()
-        ?.parentElement?.classList.remove(
-          'transition-transform',
-          'duration-1000',
-          'ease-linear'
-        );
-    const enableTransition = () =>
-      over
-        .getElement()
-        ?.parentElement?.classList.add(
-          'transition-transform',
-          'duration-1000',
-          'ease-linear'
-        );
+    const disableTransition = () => {
+      carOverlay()
+        ?.getElement()
+        ?.parentElement?.classList.remove(...EASED_TRANSITION_CLASSES);
+    };
+
+    const enableTransition = () => {
+      carOverlay()
+        ?.getElement()
+        ?.parentElement?.classList.add(...EASED_TRANSITION_CLASSES);
+    };
 
     const debouncedReenable = debounce(enableTransition, 200);
+
     const disableOnResize = () => {
       disableTransition();
       debouncedReenable();
     };
 
-    map.addEventListener('movestart', disableTransition);
-    map.addEventListener('moveend', enableTransition);
-    map.addEventListener('change:size', disableOnResize);
+    ctx.map.addEventListener('movestart', disableTransition);
+    ctx.map.addEventListener('moveend', enableTransition);
+    ctx.map.addChangeListener('size', disableOnResize);
+    ctx.map.getView().addChangeListener('resolution', disableOnResize);
 
     onCleanup(() => {
-      map.removeOverlay(over);
-      map.removeEventListener('movestart', disableTransition);
-      map.removeEventListener('moveend', enableTransition);
-      map.removeEventListener('change:size', disableOnResize);
+      ctx.map.removeOverlay(over);
+      ctx.map.removeEventListener('movestart', disableTransition);
+      ctx.map.removeEventListener('moveend', enableTransition);
+      ctx.map.removeChangeListener('size', disableOnResize);
+      ctx.map.getView().removeChangeListener('resolution', disableOnResize);
     });
   });
 
   createEffect(() => {
-    const wkt = fmt.readGeometry(props.position.wkt, READ_OPTIONS) as Point;
+    const following = ctx.follow();
     const overlay = carOverlay();
 
-    if (overlay) overlay.setPosition(wkt.getCoordinates());
+    if (following) {
+      ctx.map.getView().animate({ zoom: 14, duration: 1000 });
+
+      overlay?.getElement()?.parentElement?.classList.remove('ease-linear');
+    } else {
+      overlay
+        ?.getElement()
+        ?.parentElement?.classList.add(...EASED_TRANSITION_CLASSES);
+    }
+  });
+
+  createEffect(() => {
+    const wkt = fmt.readGeometry(props.position.wkt, READ_OPTIONS) as Point;
+    const rotationAngle = props.heading;
+    const overlay = carOverlay();
+    if (overlay === undefined) return;
+
+    overlay.setPosition(wkt.getCoordinates());
+
+    if (ctx.follow()) {
+      ctx.map.getView().animate({
+        easing: linear,
+        center: wkt.getCoordinates(),
+        duration: 1000,
+        rotation: -toRadians(rotationAngle ?? 0),
+      });
+    } else {
+      ctx.map.getView().animate({ rotation: 0, duration: 1000 });
+    }
   });
 
   return (
