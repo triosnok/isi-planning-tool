@@ -8,7 +8,7 @@ import {
 import CaptureLogsTable from './components/CaptureLogsTable';
 import UploadCaptureLogsForm from './components/UploadCaptureLogsForm';
 
-const Capture: Component = () => {
+const CaptureOverview: Component = () => {
   const capture = useUploadCaptureLog();
   const captureLogs = useCaptureLogsQuery();
 
@@ -42,4 +42,4 @@ const Capture: Component = () => {
   );
 };
 
-export default Capture;
+export default CaptureOverview;
