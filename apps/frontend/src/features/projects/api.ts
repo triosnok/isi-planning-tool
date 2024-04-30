@@ -59,7 +59,7 @@ export const ProjectSchema = z.object({
 
 export const ProjectPlanSchema = z.object({
   planId: z.string().optional(),
-  importUrl: z.string().min(1),
+  importUrl: z.string().optional(),
   startsAt: z.string().datetime(),
   endsAt: z.string().datetime(),
   vehicleId: z.string().optional(),

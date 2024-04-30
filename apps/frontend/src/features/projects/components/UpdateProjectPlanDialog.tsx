@@ -42,6 +42,7 @@ const UpdateProjectPlanDialog: Component<UpdateProjectPlanDialogProps> = (
             vehicleId={plan.data?.vehicleId ?? undefined}
             imports={plan.data?.imports}
             onSubmit={handleSubmit}
+            editing
           />
         </DialogContent>
       </Dialog>

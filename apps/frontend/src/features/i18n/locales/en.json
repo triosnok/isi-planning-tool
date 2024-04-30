@@ -86,6 +86,7 @@
     "EDIT_PROJECT_PLAN": "Edit project plan",
     "FORM": {
       "IMPORT_RAILINGS": "Import railings",
+      "REIMPORT_RAILINGS": "Reimport railings",
       "PREVIOUS_IMPORTS": "Previous imports"
     }
   },

@@ -20,6 +20,7 @@ import {
 import dayjs from 'dayjs';
 import { Component, For, Show, createSignal } from 'solid-js';
 import { ProjectPlanSchema, ProjectPlanSchemaValues } from '../api';
+import { SwitchButton } from '@/components/ui/switch-button';
 
 export interface PlanFormProps {
   planId?: string;
@@ -29,6 +30,7 @@ export interface PlanFormProps {
   vehicleId?: string;
   imports?: RailingImportDetails[];
   onSubmit?: (values: ProjectPlanSchemaValues) => void;
+  editing: boolean;
 }
 
 const PlanForm: Component<PlanFormProps> = (props) => {
@@ -37,6 +39,8 @@ const PlanForm: Component<PlanFormProps> = (props) => {
   const [selectedImport, setSelectedImport] = createSignal(
     props?.imports?.[0]?.importedAt
   );
+
+  const [reimportRailings, setReimportRailings] = createSignal(false);
 
   const [form, { Form, Field }] = createForm({
     validate: zodForm(ProjectPlanSchema),
@@ -64,37 +68,48 @@ const PlanForm: Component<PlanFormProps> = (props) => {
       id='new-project-plan-form'
       onSubmit={handleSubmit}
     >
-      <Field name='importUrl'>
-        {(field, props) => (
-          <>
-            <Label for={field.name} class='mt-2'>
-              {t('RAILINGS.RAILING_IMPORT_URL')}
-            </Label>
-            <Input
-              {...props}
-              type='url'
-              id='importUrl'
-              placeholder={t('GENERAL.URL')}
-              value={field.value}
-              onChange={(event) => {
-                setValue(form, 'importUrl', event.target.value);
-                setSelectedImport('');
-              }}
-            />
-            <ErrorLabel text={field.error} />
-          </>
-        )}
-      </Field>
+      <Show when={props.editing}>
+        <div class='flex items-center'>
+          <SwitchButton
+            onChange={() => setReimportRailings(!reimportRailings())}
+          />
+          <p class='text-sm'>{t('PLANS.FORM.REIMPORT_RAILINGS')}</p>
+        </div>
+      </Show>
 
-      <Show when={props.imports}>
-        <Label class='mt-2'>{t('PLANS.FORM.PREVIOUS_IMPORTS')}</Label>
+      <Show when={reimportRailings() || !props.editing}>
+        <Field name='importUrl'>
+          {(field, props) => (
+            <>
+              <Label for={field.name} class='mt-2'>
+                {t('RAILINGS.RAILING_IMPORT_URL')}
+              </Label>
+              <Input
+                {...props}
+                type='url'
+                id='importUrl'
+                placeholder={t('GENERAL.URL')}
+                value={field.value}
+                onChange={(event) => {
+                  setValue(form, 'importUrl', event.target.value);
+                  setSelectedImport('');
+                }}
+              />
+              <ErrorLabel text={field.error} />
+            </>
+          )}
+        </Field>
 
-        <PreviousImports
-          imports={props.imports ?? []}
-          selected={selectedImport}
-          setSelected={setSelectedImport}
-          onChange={(url) => setValue(form, 'importUrl', url)}
-        />
+        <Show when={props.imports}>
+          <Label class='mt-2'>{t('PLANS.FORM.PREVIOUS_IMPORTS')}</Label>
+
+          <PreviousImports
+            imports={props.imports ?? []}
+            selected={selectedImport}
+            setSelected={setSelectedImport}
+            onChange={(url) => setValue(form, 'importUrl', url)}
+          />
+        </Show>
       </Show>
 
       <div class='flex justify-between gap-2'>
