@@ -135,22 +135,22 @@ const Dashboard: Component = () => {
           </div>
         </Card>
 
-        <Card class='px-2 py-1'>
+        <Card class='flex flex-col px-2 py-1'>
           <CardHeader title={t('DEVIATIONS.TITLE')} />
-          <div class='relative flex-1'>
+          <div class='relative flex-1 overflow-hidden'>
             <PieChart
               data={deviationChartData()}
-              class='max-h-full max-w-full'
+              class='size-full max-h-full max-w-full'
             />
           </div>
         </Card>
 
         <Card class='flex flex-col px-2 py-1'>
           <CardHeader title={t('DASHBOARD.DAILY_METERS_CAPTURED')} />
-          <div class='relative flex-1'>
+          <div class='relative flex-1 overflow-hidden'>
             <BarChart
               data={metersCapturedData()}
-              class='max-h-full max-w-full'
+              class='max-h-full max-w-full size-full'
             />
           </div>
         </Card>
