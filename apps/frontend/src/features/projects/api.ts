@@ -113,6 +113,16 @@ export const useProjectsMutation = () => {
 export const useProjectPlansMutation = (projectId: string) => {
   const qc = useQueryClient();
 
+  const onSuccess = (id: string) => {
+    qc.invalidateQueries({ queryKey: [CacheKey.PROJECT_PLAN_LIST] });
+    qc.invalidateQueries({
+      queryKey: [CacheKey.PROJECT_PLAN_DETAILS, id],
+    });
+    qc.invalidateQueries({
+      queryKey: [CacheKey.PROJECT_RAILINGS],
+    });
+  };
+
   const create = createMutation(() => ({
     mutationFn: async (plan: Omit<CreateProjectPlanRequest, 'projectId'>) => {
       const response = await axios.post<CreateProjectPlanResponse>(
@@ -126,15 +136,7 @@ export const useProjectPlansMutation = (projectId: string) => {
       return response.data;
     },
 
-    onSuccess: (response) => {
-      qc.invalidateQueries({ queryKey: [CacheKey.PROJECT_PLAN_LIST] });
-      qc.invalidateQueries({
-        queryKey: [CacheKey.PROJECT_PLAN_DETAILS, response.projectPlanId],
-      });
-      qc.invalidateQueries({
-        queryKey: [CacheKey.PROJECT_RAILINGS],
-      });
-    },
+    onSuccess: (response) => onSuccess(response.projectPlanId),
   }));
 
   const update = createMutation(() => ({
@@ -147,12 +149,7 @@ export const useProjectPlansMutation = (projectId: string) => {
       return response.data;
     },
 
-    onSuccess: (response) => {
-      qc.invalidateQueries({ queryKey: [CacheKey.PROJECT_PLAN_LIST] });
-      qc.invalidateQueries({
-        queryKey: [CacheKey.PROJECT_PLAN_DETAILS, response.id],
-      });
-    },
+    onSuccess: (response) => onSuccess(response.id),
   }));
 
   return { create, update };

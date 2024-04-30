@@ -1,15 +1,15 @@
 import Header from '@/components/layout/Header';
+import MapDriverLayer from '@/components/map/MapDriverLayer';
 import MapRoot from '@/components/map/MapRoot';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useTranslations } from '@/features/i18n';
+import { usePositions } from '@/features/positions';
 import { LayoutProps } from '@/lib/utils';
 import { useNavigate } from '@solidjs/router';
 import { Component, For, Index } from 'solid-js';
 import { useUsersQuery } from '../api';
 import UserCard from '../components/UserCard';
-import { usePositions } from '@/features/positions';
-import MapDriverLayer from '@/components/map/MapDriverLayer';
 
 const UserOverview: Component<LayoutProps> = (props) => {
   const users = useUsersQuery();
@@ -41,7 +41,7 @@ const UserOverview: Component<LayoutProps> = (props) => {
                   name={user.fullName}
                   email={user.email}
                   phoneNumber={user.phoneNumber}
-                  status='driving'
+                  status={user.status}
                   role={user.role}
                   onDetailsClick={() => navigate(`/users/${user.id}`)}
                   class='min-w-48'
