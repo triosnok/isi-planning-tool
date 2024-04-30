@@ -1,7 +1,7 @@
 {
   "AUTHENTICATION": {
     "SIGN_IN": "Sign in",
-    "SIGN_IN_TO": "Sign in to", 
+    "SIGN_IN_TO": "Sign in to",
     "SIGN_OUT": "Sign out",
     "EMAIL": "E-mail",
     "PASSWORD": "Password",
@@ -32,7 +32,8 @@
   "DASHBOARD": {
     "TITLE": "Dashboard",
     "MAP": "Map",
-    "DAILY_METERS_CAPTURED": "Daily meters captured"
+    "DAILY_METERS_CAPTURED": "Daily meters captured",
+    "ACTIVE_PROJECTS_PROGRESS": "Active projects progress"
   },
   "DEVIATIONS": {
     "TITLE": "Deviations",

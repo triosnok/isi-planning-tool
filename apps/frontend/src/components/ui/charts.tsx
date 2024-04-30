@@ -48,6 +48,7 @@ export interface TypedChartProps {
   options?: ChartOptions;
   plugins?: ChartPlugin[];
   ref?: Ref<HTMLCanvasElement | null>;
+  class?: string;
   width?: number | undefined;
   height?: number | undefined;
 }
