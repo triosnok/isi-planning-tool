@@ -163,23 +163,23 @@ function showTooltip(context: ChartContext) {
     return;
   }
 
-  el.className = `p-2 bg-gray-50 text-gray-950 rounded-lg border shadow-sm text-sm ${
+  el.className = `flex flex-col p-2 overflow-hidden rounded-lg border-2 border-gray-300 bg-gray-50 p-1 dark:border-gray-700 dark:bg-gray-950 ${
     model.yAlign ?? `no-transform`
   }`;
 
   let content = '';
 
   model.title.forEach((title) => {
-    content += `<h3 class="font-semibold leading-none tracking-tight">${title}</h3>`;
+    content += `<h3 class="font-bold">${title}</h3>`;
   });
 
-  content += `<div class="mt-1 text-gray-950">`;
+  content += `<div>`;
   const body = model.body.flatMap((body) => body.lines);
   body.forEach((line, i) => {
     const colors = model.labelColors[i];
     content += `
         <div class="flex items-center">
-          <span class="inline-block h-2 w-2 mr-1 rounded-full border" style="background: ${colors.backgroundColor}; border-color: ${colors.borderColor}"></span>
+          <span class="inline-block h-2 w-2 mr-1 rounded-full" style="background: ${colors.backgroundColor}; border-color: ${colors.borderColor};"></span>
           ${line}
         </div>`;
   });
@@ -289,13 +289,12 @@ const ScatterChart = /* #__PURE__ */ createTypedChart('scatter', [
 ]);
 
 export {
-  BaseChart as Chart,
   BarChart,
-  BubbleChart,
-  DonutChart,
+  BubbleChart, BaseChart as Chart, DonutChart,
   LineChart,
   PieChart,
   PolarAreaChart,
   RadarChart,
-  ScatterChart,
+  ScatterChart
 };
+

@@ -4,6 +4,7 @@ import {
   CaptureActionRequest,
   CaptureDetails,
   CaptureLogDetails,
+  CapturedMetersByDay,
 } from '@isi-insight/client';
 import {
   createMutation,
@@ -110,6 +111,19 @@ export const useUploadCaptureLog = () => {
     },
     onSuccess: (_data, _variables, _context) => {
       qc.invalidateQueries({ queryKey: [CacheKey.CAPTURE_LOGS] });
+    },
+  }));
+};
+
+export const useCaptureMetersByDayQuery = () => {
+  return createQuery(() => ({
+    queryKey: [CacheKey.CAPTURE_METERS_BY_DAY],
+    queryFn: async () => {
+      const response = await axios.get<CapturedMetersByDay[]>(
+        `/api/v1/capture/stats`
+      );
+
+      return response.data;
     },
   }));
 };
