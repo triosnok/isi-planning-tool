@@ -3,7 +3,6 @@ package no.isi.insight.planning.useraccount.controller;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,15 +11,14 @@ import lombok.RequiredArgsConstructor;
 import no.isi.insight.planning.auth.annotation.DriverAuthorization;
 import no.isi.insight.planning.auth.annotation.PlannerAuthorization;
 import no.isi.insight.planning.auth.service.UserAccountService;
-import no.isi.insight.planning.client.auth.view.UserRole;
 import no.isi.insight.planning.client.trip.view.TripDetails;
 import no.isi.insight.planning.client.useraccount.UserAccountRestService;
 import no.isi.insight.planning.client.useraccount.view.CreateUserAccountRequest;
 import no.isi.insight.planning.client.useraccount.view.UpdateUserAccountRequest;
 import no.isi.insight.planning.client.useraccount.view.UserAccountDetails;
-import no.isi.insight.planning.db.model.UserAccount;
 import no.isi.insight.planning.db.model.UserAccountRole;
 import no.isi.insight.planning.db.repository.TripJdbcRepository;
+import no.isi.insight.planning.db.repository.UserAccountJdbcRepository;
 import no.isi.insight.planning.db.repository.UserAccountJpaRepository;
 import no.isi.insight.planning.error.model.NotFoundException;
 
@@ -31,29 +29,13 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
   private final UserAccountJpaRepository userAccountJpaRepository;
   private final UserAccountService userService;
   private final TripJdbcRepository tripJdbcRepository;
+  private final UserAccountJdbcRepository userAccountJdbcRepository;
 
   @Override
   @PlannerAuthorization
   public ResponseEntity<List<UserAccountDetails>> findAllUserAccounts() {
-
-    List<UserAccount> userAccounts = this.userAccountJpaRepository.findAll();
-
-    List<UserAccountDetails> userAccountDetailsList = userAccounts.stream().map(account -> {
-      UserRole role = switch (account.getRole()) {
-        case PLANNER -> UserRole.PLANNER;
-        case DRIVER -> UserRole.DRIVER;
-      };
-
-      return UserAccountDetails.builder()
-        .id(account.getUserAccountId())
-        .fullName(account.getFullName())
-        .email(account.getEmail())
-        .phoneNumber(account.getPhoneNumber())
-        .role(role)
-        .build();
-    }).collect(Collectors.toList());
-
-    return ResponseEntity.ok(userAccountDetailsList);
+    var users = this.userAccountJdbcRepository.findAll();
+    return ResponseEntity.ok(users);
   }
 
   @Override
@@ -61,23 +43,10 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
   public ResponseEntity<UserAccountDetails> findUserAccountById(
       UUID id
   ) {
-    var userAccount = this.userAccountJpaRepository.findById(id)
+    var userAccount = this.userAccountJdbcRepository.findById(id)
       .orElseThrow(() -> new NotFoundException("Could not find user with id: %s".formatted(id.toString())));
 
-    UserRole role = switch (userAccount.getRole()) {
-      case PLANNER -> UserRole.PLANNER;
-      case DRIVER -> UserRole.DRIVER;
-    };
-
-    return ResponseEntity.ok(
-      new UserAccountDetails(
-        userAccount.getUserAccountId(),
-        userAccount.getFullName(),
-        userAccount.getEmail(),
-        userAccount.getPhoneNumber(),
-        role
-      )
-    );
+    return ResponseEntity.ok(userAccount);
   }
 
   @Override
@@ -94,20 +63,9 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
     var userAccount = this.userService
       .createAccount(request.fullName(), request.email(), request.phoneNumber(), request.password(), role);
 
-    UserRole userRole = switch (userAccount.getRole()) {
-      case PLANNER -> UserRole.PLANNER;
-      case DRIVER -> UserRole.DRIVER;
-    };
+    var details = this.userAccountJdbcRepository.findById(userAccount.getUserAccountId()).get();
 
-    return ResponseEntity.ok(
-      new UserAccountDetails(
-        userAccount.getUserAccountId(),
-        userAccount.getFullName(),
-        userAccount.getEmail(),
-        userAccount.getPhoneNumber(),
-        userRole
-      )
-    );
+    return ResponseEntity.ok(details);
   }
 
   @Override
@@ -122,7 +80,7 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
       case DRIVER -> UserAccountRole.DRIVER;
     };
 
-    var updatedUserAccount = this.userService.updateAccount(
+    this.userService.updateAccount(
       id,
       request.fullName(),
       request.email(),
@@ -132,20 +90,9 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
       role
     );
 
-    UserRole userRole = switch (updatedUserAccount.getRole()) {
-      case PLANNER -> UserRole.PLANNER;
-      case DRIVER -> UserRole.DRIVER;
-    };
+    var details = this.userAccountJdbcRepository.findById(id).get();
 
-    return ResponseEntity.ok(
-      new UserAccountDetails(
-        updatedUserAccount.getUserAccountId(),
-        updatedUserAccount.getFullName(),
-        updatedUserAccount.getEmail(),
-        updatedUserAccount.getPhoneNumber(),
-        userRole
-      )
-    );
+    return ResponseEntity.ok(details);
   }
 
   @Override
