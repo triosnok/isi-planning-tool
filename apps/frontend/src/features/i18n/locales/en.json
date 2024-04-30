@@ -52,6 +52,7 @@
     "START_DATE": "Start date",
     "END_DATE": "End date",
     "CLEAR_DATE": "Clear date",
+    "SIZE": "Size",
     "STATUSES": {
       "AVAILABLE": "Available"
     },
