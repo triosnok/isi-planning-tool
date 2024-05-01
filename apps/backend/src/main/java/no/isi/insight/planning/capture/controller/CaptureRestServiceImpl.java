@@ -19,10 +19,9 @@ import no.isi.insight.planning.capture.service.CaptureReplayFileService;
 import no.isi.insight.planning.capture.service.CaptureReplayService;
 import no.isi.insight.planning.client.capture.CaptureRestService;
 import no.isi.insight.planning.client.capture.view.CaptureActionRequest;
-import no.isi.insight.planning.client.capture.view.CapturedMetersByDay;
 import no.isi.insight.planning.client.capture.view.CaptureLogDetails;
+import no.isi.insight.planning.client.capture.view.CapturedMetersByDay;
 import no.isi.insight.planning.client.trip.view.CameraPosition;
-import no.isi.insight.planning.db.repository.TripJpaRepository;
 import no.isi.insight.planning.db.repository.TripRailingCaptureJdbcRepository;
 import no.isi.insight.planning.error.model.NotFoundException;
 
@@ -31,7 +30,6 @@ import no.isi.insight.planning.error.model.NotFoundException;
 @RequiredArgsConstructor
 public class CaptureRestServiceImpl implements CaptureRestService {
   private final CaptureLogProcessor logProcessor;
-  private final TripJpaRepository tripJpaRepository;
   private final CaptureReplayFileService captureReplayFileService;
   private final CaptureReplayService captureReplayService;
   private final TripRailingCaptureJdbcRepository captureJdbcRepository;
@@ -116,8 +114,6 @@ public class CaptureRestServiceImpl implements CaptureRestService {
   public SseEmitter streamCapture(
       UUID tripId
   ) {
-    this.tripJpaRepository.findById(tripId).orElseThrow(() -> new NotFoundException("Trip not found"));
-
     if (!this.captureReplayService.hasTrip(tripId)) {
       var emitter = new SseEmitter();
 
