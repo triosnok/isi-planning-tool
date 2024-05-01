@@ -122,7 +122,7 @@ public class CaptureRestServiceImpl implements CaptureRestService {
       var emitter = new SseEmitter();
 
       try {
-        emitter.send(SseEmitter.event().name("ended").build());
+        emitter.send(SseEmitter.event().name("ended").data("").build());
       } catch (Exception e) {
         // failed to send event
       }
