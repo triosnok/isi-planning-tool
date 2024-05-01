@@ -93,7 +93,7 @@ export const useTripNoteMutation = (tripId: string) => {
   const qc = useQueryClient();
 
   const onSuccess = (id: string) => {
-    qc.invalidateQueries({ queryKey: [CacheKey.TRIP_NOTE_LIST] });
+    qc.invalidateQueries({ queryKey: [CacheKey.TRIP_NOTE_LIST, tripId] });
     qc.invalidateQueries({
       queryKey: [CacheKey.TRIP_NOTE_DETAILS, id],
     });
@@ -145,7 +145,7 @@ export const useTripNoteMutation = (tripId: string) => {
 
 export const useTripNoteDetailsQuery = (tripId: string) => {
   return createQuery(() => ({
-    queryKey: [CacheKey.TRIP_NOTE_LIST],
+    queryKey: [CacheKey.TRIP_NOTE_LIST, tripId],
     queryFn: async () => {
       const response = await axios.get<TripNoteDetails[]>(
         `/api/v1/trip-notes?tripId=${tripId}`
