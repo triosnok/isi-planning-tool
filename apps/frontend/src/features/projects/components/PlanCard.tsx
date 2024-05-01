@@ -1,3 +1,4 @@
+import IconProperty from '@/components/IconProperty';
 import { NumberFormat, useTranslations } from '@/features/i18n';
 import { cn } from '@/lib/utils';
 import { IconCar, IconPencil, IconRoute } from '@tabler/icons-solidjs';
@@ -51,14 +52,9 @@ const PlanCard: Component<PlanCardProps> = (props) => {
             <h3 class='text-xl font-semibold'>
               {props.startsAt} - {props.endsAt}
             </h3>
-            <div class='flex items-center gap-1 text-gray-800 dark:text-gray-300'>
-              <IconCar class='h-5 w-5' />
-              <p>{props.car}</p>
-            </div>
-            <div class='flex items-center gap-1 text-gray-800 dark:text-gray-300'>
-              <IconRoute class='h-5 w-5' />
-              <p>{props.segments.join(', ')}</p>
-            </div>
+
+            <IconProperty icon={IconCar} text={props.car} />
+            <IconProperty icon={IconRoute} text={props.segments.join(', ')} />
           </div>
         </div>
 

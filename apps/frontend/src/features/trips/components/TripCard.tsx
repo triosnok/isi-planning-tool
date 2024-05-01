@@ -1,3 +1,4 @@
+import IconProperty from '@/components/IconProperty';
 import { useTranslations } from '@/features/i18n';
 import {
   IconAlertCircleFilled,
@@ -60,15 +61,8 @@ const TripCard: Component<TripCardProps> = (props) => {
       </div>
 
       <div class='flex flex-col'>
-        <div class='flex flex-row gap-1'>
-          <IconSteeringWheel class='size-5' />
-          <p>{props.car}</p>
-        </div>
-
-        <div class='flex flex-row gap-1'>
-          <IconRulerMeasure class='size-5' />
-          <p>{props.length} km</p>
-        </div>
+        <IconProperty icon={IconSteeringWheel} text={props.car} />
+        <IconProperty icon={IconRulerMeasure} text={`${props.length} km`} />
       </div>
 
       <div class='absolute right-0 top-0 p-2'>

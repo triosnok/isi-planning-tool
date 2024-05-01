@@ -1,5 +1,6 @@
 import { Overlay } from 'ol';
 import { Component, Show, createSignal, onMount } from 'solid-js';
+import IconProperty from '../IconProperty';
 import { useMap } from './MapRoot';
 import { FeatureLike } from 'ol/Feature';
 import { NumberFormat, useTranslations } from '@/features/i18n';
@@ -9,7 +10,7 @@ import { cn } from '@/lib/utils';
 import { Coordinate } from 'ol/coordinate';
 
 const MapPopupLayer: Component = () => {
-  const { t, n } = useTranslations();
+  const { t, n, d } = useTranslations();
   const { map } = useMap();
   const [clickedFeature, setClickedFeature] = createSignal<FeatureLike>();
   const [clickedRailing, setClickedRailing] = createSignal<RoadRailing>();
@@ -74,28 +75,17 @@ const MapPopupLayer: Component = () => {
         </div>
         <div class='flex flex-col'>
           <hr class='my-0.5 h-0.5 border-0 bg-gray-300 dark:bg-gray-700' />
-          <div class='flex items-center gap-1'>
-            <IconRulerMeasure class='size-5' />
-            <p class='text-sm text-gray-600 dark:text-gray-400'>
-              {n(clickedRailing()?.length, NumberFormat.DECIMAL)} m
-            </p>
-          </div>
 
-          <div class='flex items-center gap-1'>
-            <IconCamera class='size-5' />
-            <Show
-              when={clickedRailing()?.capturedAt}
-              fallback={
-                <p class='text-sm text-gray-600 dark:text-gray-400'>
-                  {t('RAILINGS.NOT_YET_CAPTURED')}
-                </p>
-              }
-            >
-              <p class='text-sm text-gray-600 dark:text-gray-400'>
-                {clickedRailing()?.capturedAt}
-              </p>
-            </Show>
-          </div>
+          <IconProperty
+            icon={IconRulerMeasure}
+            text={`${n(clickedRailing()?.length)} m`}
+          />
+
+          <IconProperty
+            icon={IconCamera}
+            text={`${d(clickedRailing()?.capturedAt ?? undefined, DateFormat.DATETIME)}`}
+            fallbackText={t('RAILINGS.NOT_YET_CAPTURED')}
+          />
         </div>
       </div>
 

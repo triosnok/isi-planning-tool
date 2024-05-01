@@ -10,6 +10,7 @@ import {
 import { cva } from 'class-variance-authority';
 import { Component, For, Show } from 'solid-js';
 import RoadSign from './RoadSign';
+import IconProperty from '@/components/IconProperty';
 
 export interface RailingCardProps {
   id: number;
@@ -57,16 +58,24 @@ const RailingCard: Component<RailingCardProps> = (props) => {
       </div>
 
       <div class='flex flex-col gap-0.5'>
-        <CardDetail icon={IconRulerMeasure} text={`${n(props.length)} m`} />
+        <IconProperty
+          side='right'
+          icon={IconRulerMeasure}
+          text={`${n(props.length)} m`}
+        />
 
-        <CardDetail
+        <IconProperty
+          side='right'
           icon={IconSquarePercentage}
           text={n(props.captureGrade, NumberFormat.PERCENTAGE)}
         />
 
-        <Show when={props.capturedAt}>
-          <CardDetail icon={IconPhoto} text={d(props.capturedAt)} />
-        </Show>
+        <IconProperty
+          side='right'
+          show={props.capturedAt !== undefined}
+          icon={IconPhoto}
+          text={d(props.capturedAt)}
+        />
       </div>
     </button>
   );

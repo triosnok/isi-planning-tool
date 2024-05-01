@@ -3,6 +3,7 @@ import { Component } from 'solid-js';
 
 export interface ErrorLabelProps {
   text?: string;
+  class?: string;
 }
 
 const ErrorLabel: Component<ErrorLabelProps> = (props) => {
@@ -10,7 +11,8 @@ const ErrorLabel: Component<ErrorLabelProps> = (props) => {
     <strong
       class={cn(
         'dark:text-error-400 text-error-600 text-sm',
-        !props.text && 'hidden'
+        !props.text && 'hidden',
+        props.class
       )}
     >
       {props.text}
