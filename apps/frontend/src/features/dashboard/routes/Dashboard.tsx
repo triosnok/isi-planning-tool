@@ -86,7 +86,7 @@ const Dashboard: Component = () => {
     <div class='flex h-svh w-svw flex-col overflow-hidden bg-gray-200 dark:bg-gray-950'>
       <Header />
 
-      <div class='mt-2 px-32'>
+      <div class='mt-2 px-4 lg:px-32'>
         <Card class='p-2'>
           <Progress
             class='rounded-lg'
@@ -105,18 +105,27 @@ const Dashboard: Component = () => {
         </Card>
       </div>
 
-      <main class='grid flex-1 grid-cols-2 grid-rows-2 gap-2 overflow-hidden px-32 py-2'>
-        <Card class='relative'>
+      <main class='flex flex-1 grid-cols-1 grid-rows-4 flex-col gap-2 overflow-y-auto px-4 py-2 sm:grid sm:grid-cols-2 sm:grid-rows-2 lg:px-32'>
+        <Card class='relative flex-shrink-0 max-sm:aspect-square max-sm:w-full'>
           <MapRoot class='h-full w-full overflow-hidden rounded-md'>
             <MapZoomControls class='absolute right-2 top-2' />
           </MapRoot>
         </Card>
 
-        <Card class='px-2 py-1'>
+        <Card class='px-2 py-1 flex flex-col'>
           <CardHeader title={t('TRIPS.ACTIVE_TRIPS')} />
 
-          <div class='flex flex-col gap-2 overflow-y-auto'>
-            <For each={activeTrips.data}>
+          <div class='flex flex-col gap-2 overflow-y-auto flex-1'>
+            <For
+              each={activeTrips.data}
+              fallback={
+                <div class='flex items-center justify-center flex-1'> 
+                  <p class='text-center text-gray-500 max-sm:py-20'>
+                    No active trips
+                  </p>
+                </div>
+              }
+            >
               {(trip) => (
                 <A href={`/projects/${trip.projectId}/trip/${trip.id}`}>
                   <TripCard
@@ -150,7 +159,7 @@ const Dashboard: Component = () => {
           <div class='relative flex-1 overflow-hidden'>
             <BarChart
               data={metersCapturedData()}
-              class='max-h-full max-w-full size-full'
+              class='size-full max-h-full max-w-full'
             />
           </div>
         </Card>

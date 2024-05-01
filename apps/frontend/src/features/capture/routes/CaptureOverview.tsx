@@ -24,7 +24,7 @@ const CaptureOverview: Component = () => {
     <div class='flex h-svh w-svw flex-col'>
       <Header />
 
-      <section class='flex-1 overflow-y-hidden px-6 py-4 flex flex-col'>
+      <section class='flex-1 overflow-y-auto px-6 py-4 flex flex-col'>
         <h1 class='text-4xl font-bold'>Capture logs</h1>
 
         <div class='flex flex-1 max-lg:flex-col'>
