@@ -1,13 +1,14 @@
+import { DateFormat, NumberFormat, useTranslations } from '@/features/i18n';
+import { cn, getRailingStatus } from '@/lib/utils';
+import { RoadRailing } from '@isi-insight/client';
+import { IconCamera, IconRulerMeasure, IconX } from '@tabler/icons-solidjs';
 import { Overlay } from 'ol';
+import { FeatureLike } from 'ol/Feature';
 import { Component, Show, createSignal, onMount } from 'solid-js';
 import IconProperty from '../IconProperty';
 import { useMap } from './MapRoot';
-import { FeatureLike } from 'ol/Feature';
-import { NumberFormat, useTranslations } from '@/features/i18n';
-import { IconCamera, IconRulerMeasure, IconX } from '@tabler/icons-solidjs';
-import { RoadRailing } from '@isi-insight/client';
-import { cn } from '@/lib/utils';
-import { Coordinate } from 'ol/coordinate';
+import { A, useParams } from '@solidjs/router';
+import { RailingStatus } from '@/lib/constants';
 
 const MapPopupLayer: Component = () => {
   const { t, n, d } = useTranslations();
@@ -15,15 +16,27 @@ const MapPopupLayer: Component = () => {
   const [clickedFeature, setClickedFeature] = createSignal<FeatureLike>();
   const [clickedRailing, setClickedRailing] = createSignal<RoadRailing>();
   const [popup, setPopup] = createSignal<Overlay>();
+  const params = useParams();
 
   let popupElement: HTMLDivElement;
 
-  const getCompletionGradeColor = (completionGrade: number) => {
-    if (completionGrade === 0 || undefined) return 'text-brand-blue-500';
-    else if (completionGrade > 0 && completionGrade < 95)
-      return 'text-error-500';
-    else if (completionGrade >= 95 && completionGrade <= 120)
-      return 'text-success-500';
+  const railingStatus = () => {
+    const rail = clickedRailing();
+
+    if (rail) return getRailingStatus(rail.captureGrade);
+
+    return RailingStatus.TODO;
+  };
+
+  const link = () => {
+    const projectId = params.id;
+    const railingId = clickedRailing()?.id;
+
+    if (projectId && railingId) {
+      return `/projects/${projectId}/railings/${railingId}`;
+    }
+
+    return undefined;
   };
 
   onMount(() => {
@@ -58,11 +71,23 @@ const MapPopupLayer: Component = () => {
       <div class='z-20 flex min-w-48 flex-col overflow-hidden rounded-lg border-2 border-gray-300 bg-gray-50 p-1 dark:border-gray-700 dark:bg-gray-950'>
         <div class='flex justify-between'>
           <div class='flex items-center gap-1'>
-            <p class='font-bold'>{clickedRailing()?.id}</p>
+            <Show
+              when={link()}
+              fallback={<p class='font-bold'>{clickedRailing()?.id}</p>}
+            >
+              {(link) => (
+                <A class='font-bold hover:underline' href={link()}>
+                  {clickedRailing()?.id}
+                </A>
+              )}
+            </Show>
+
             <p
               class={cn(
                 'text-sm',
-                getCompletionGradeColor(clickedRailing()?.captureGrade!)
+                railingStatus() === RailingStatus.TODO && 'text-brand-blue-400',
+                railingStatus() === RailingStatus.ERROR && 'text-error-600',
+                railingStatus() === RailingStatus.OK && 'text-success-500'
               )}
             >
               {n(clickedRailing()?.captureGrade, NumberFormat.PERCENTAGE)}
@@ -89,6 +114,7 @@ const MapPopupLayer: Component = () => {
         </div>
       </div>
 
+      {/* Arrow */}
       <div class='z-20 -mt-1 h-1 w-[23px] bg-gray-50 dark:bg-gray-950' />
       <div class='-mt-2.5 h-5 w-5 rotate-45 border-b-2 border-r-2 border-gray-300 bg-gray-50 dark:border-gray-700 dark:bg-gray-950' />
     </div>

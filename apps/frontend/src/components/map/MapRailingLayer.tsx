@@ -49,6 +49,9 @@ class WebGLLayer extends Layer {
 
 const fmt = new WKT();
 
+// RailingStatus.TODO=brand-blue-400
+// RailingStatus.ERROR=error-600
+// RailingStatus.DONE=success-500
 const getRailingColor = (completionGrade: number, alpha = 1) => {
   const status = getRailingStatus(completionGrade);
   if (status === RailingStatus.TODO) return [33, 125, 255, alpha];
