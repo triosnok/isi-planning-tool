@@ -11,6 +11,8 @@ import {
   useUserMutation,
 } from '../api';
 import UpdateUserForm from '../components/UpdateUserForm';
+import Resizable from '@/components/layout/Resizable';
+import MapZoomControls from '@/components/map/MapZoomControls';
 
 const UserDetails: Component = () => {
   const params = useParams();
@@ -34,8 +36,13 @@ const UserDetails: Component = () => {
     <div class='flex h-svh w-svw flex-col'>
       <Header />
 
-      <div class='flex flex-1 overflow-hidden'>
-        <main class='flex-1 overflow-y-auto p-2 py-2'>
+      <Resizable.Root class='flex flex-1 overflow-hidden'>
+        <Resizable.Panel
+          as='main'
+          class='overflow-y-auto p-2 py-2 max-md:flex-1'
+          initialSize={0.6}
+          minSize={0.5}
+        >
           <BackLink />
 
           <Show when={user?.data}>
@@ -55,12 +62,16 @@ const UserDetails: Component = () => {
           <Show when={trips?.data}>
             <TripTable trips={trips.data ?? []} driver={false} />
           </Show>
-        </main>
+        </Resizable.Panel>
 
-        <aside class='w-0 md:w-1/3'>
-          <MapRoot class='h-full w-full' />
-        </aside>
-      </div>
+        <Resizable.Handle />
+
+        <Resizable.Panel as='aside' class='w-0 max-md:hidden' minSize={0.2}>
+          <MapRoot class='relative h-full w-full'>
+            <MapZoomControls class='absolute right-2 top-2' />
+          </MapRoot>
+        </Resizable.Panel>
+      </Resizable.Root>
     </div>
   );
 };

@@ -11,6 +11,7 @@ import { Component, For, Index } from 'solid-js';
 import { useUsersQuery } from '../api';
 import UserCard from '../components/UserCard';
 import Resizable from '@/components/layout/Resizable';
+import MapZoomControls from '@/components/map/MapZoomControls';
 
 const UserOverview: Component<LayoutProps> = (props) => {
   const users = useUsersQuery();
@@ -75,7 +76,7 @@ const UserOverview: Component<LayoutProps> = (props) => {
           initialSize={0.3}
           minSize={0.2}
         >
-          <MapRoot class='h-full w-full'>
+          <MapRoot class='h-full w-full relative'>
             <Index each={positions()}>
               {(pos) => (
                 <MapDriverLayer
@@ -85,6 +86,7 @@ const UserOverview: Component<LayoutProps> = (props) => {
                 />
               )}
             </Index>
+            <MapZoomControls class='absolute right-2 top-2' />
           </MapRoot>
         </Resizable.Panel>
 
