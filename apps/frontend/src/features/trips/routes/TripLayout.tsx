@@ -12,7 +12,7 @@ const TripLayout: Component<LayoutProps> = (props) => {
       <Header />
 
       <main class='flex flex-1'>
-        <MapRoot class='relative h-full w-full' customZoom follow>
+        <MapRoot class='relative h-full w-full' customZoom follow={false}>
           {props.children}
           <MapPopupLayer />
           <div class='absolute right-2 top-2 flex flex-col gap-2'>
