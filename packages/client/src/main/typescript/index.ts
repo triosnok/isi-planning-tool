@@ -139,8 +139,8 @@ export interface ProjectDetails {
     totalLength: number;
     deviations: number;
     notes: number;
-    status: ProjectStatus;
     progress: number;
+    status: ProjectStatus;
 }
 
 export interface ProjectPlanDetails {
@@ -188,6 +188,7 @@ export interface RailingCapture {
     tripId: string;
     planId: string;
     projectId: string;
+    tripSequenceNumber: number;
     geometry: Geometry;
     segmentCoverage: Range;
     imageUrls: { [P in CameraPosition]?: string };
@@ -252,7 +253,7 @@ export interface TripDetails {
 export interface TripNoteDetails {
     id: string;
     note: string;
-    geometry: Geometry;
+    geometry?: Geometry | null;
     createdAt: DateAsString;
 }
 

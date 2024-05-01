@@ -40,6 +40,7 @@ public class TripRailingCaptureJdbcRepository {
         t.trip_id,
         pp.project_plan_id,
         pp.fk_project_id,
+        t.sequence_number,
         LOWER(trc.segment_coverage) AS segment_coverage_start,
         UPPER(trc.segment_coverage) AS segment_coverage_end,
         ST_AsText(trc.position) AS wkt,
@@ -88,6 +89,7 @@ public class TripRailingCaptureJdbcRepository {
         .tripId(rs.getObject("trip_id", UUID.class))
         .planId(rs.getObject("project_plan_id", UUID.class))
         .projectId(rs.getObject("fk_project_id", UUID.class))
+        .tripSequenceNumber(rs.getInt("sequence_number"))
         .geometry(
           new Geometry(
             rs.getString("wkt"),

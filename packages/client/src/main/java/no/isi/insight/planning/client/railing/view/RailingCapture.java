@@ -18,6 +18,7 @@ public record RailingCapture(
   UUID tripId,
   UUID planId,
   UUID projectId,
+  int tripSequenceNumber,
   Geometry geometry,
   Range segmentCoverage,
   Map<CameraPosition, String> imageUrls,
