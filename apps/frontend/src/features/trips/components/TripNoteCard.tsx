@@ -22,6 +22,7 @@ const TripNoteCard: Component<TripNoteCardProps> = (props) => {
   const { t } = useTranslations();
   const { update } = useTripNoteMutation(props.tripId);
   let inputElement: HTMLInputElement;
+  let cardElement: HTMLDivElement;
 
   const [note, setNote] = createSignal(props.note);
 
@@ -47,8 +48,14 @@ const TripNoteCard: Component<TripNoteCardProps> = (props) => {
     }
   });
 
+  createEffect(() => {
+    const selected = props.selected;
+
+    if (selected === true) cardElement.scrollIntoView();
+  });
+
   return (
-    <div>
+    <div ref={cardElement!}>
       <p class='text-sm text-gray-600 dark:text-gray-400'>{props.createdAt}</p>
       <div
         onClick={(e) => {
