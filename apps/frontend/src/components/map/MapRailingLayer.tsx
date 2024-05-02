@@ -21,8 +21,9 @@ const DEFAULT_STYLE: WebGLStyle = {
   'stroke-color': ['*', ['get', FeatureProperty.COLOR], [220, 220, 220]],
   'stroke-width': ['get', FeatureProperty.WIDTH],
   'stroke-offset': 0,
-  'stroke-pattern-src': '/ar.png',
-  'stroke-pattern-offset': 10,
+  'stroke-pattern-src': '/railing-sprite.png',
+  'stroke-pattern-size': [20, 20],
+  'stroke-pattern-offset': [20, 0],
 };
 
 const HOVER_STYLE: WebGLStyle = {
