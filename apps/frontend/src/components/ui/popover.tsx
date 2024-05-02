@@ -19,8 +19,8 @@ const PopoverContent: Component<PopoverPrimitive.PopoverContentProps> = (
     <PopoverPrimitive.Portal>
       <PopoverPrimitive.Content
         class={cn(
-          'bg-gray-50 text-gray-950 data-[expanded]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[expanded]:fade-in-0 data-[closed]:zoom-out-95 data-[expanded]:zoom-in-95 z-50 origin-[var(--kb-gray-50-content-transform-origin)] rounded-md border p-4 shadow-md outline-none',
-          'dark:bg-gray-950 dark:text-gray-50 dark:border-gray-800',
+          'data-[expanded]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[expanded]:fade-in-0 data-[closed]:zoom-out-95 data-[expanded]:zoom-in-95 z-50 origin-[var(--kb-gray-50-content-transform-origin)] rounded-md border bg-gray-50 p-4 text-gray-950 shadow-md outline-none',
+          'dark:border-gray-800 dark:bg-gray-950 dark:text-gray-50',
           props.class
         )}
         {...rest}
@@ -29,4 +29,6 @@ const PopoverContent: Component<PopoverPrimitive.PopoverContentProps> = (
   );
 };
 
-export { Popover, PopoverTrigger, PopoverContent };
+const PopoverCloseButton = PopoverPrimitive.CloseButton;
+
+export { Popover, PopoverTrigger, PopoverContent, PopoverCloseButton };
