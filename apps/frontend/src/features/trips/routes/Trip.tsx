@@ -1,4 +1,4 @@
-import MapCarLayer from '@/components/map/MapCarLayer';
+import MapVehicleMarker from '@/components/map/MapVehicleMarker';
 import MapRailingLayer from '@/components/map/MapRailingLayer';
 import BackLink from '@/components/navigation/BackLink';
 import { Button } from '@/components/ui/button';
@@ -289,7 +289,7 @@ const Trip: Component = () => {
 
         <Show when={captureDetails()}>
           {(dt) => (
-            <MapCarLayer heading={dt().heading} position={dt().position} />
+            <MapVehicleMarker heading={dt().heading} position={dt().position} />
           )}
         </Show>
 

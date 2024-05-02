@@ -1,5 +1,5 @@
 import Header from '@/components/layout/Header';
-import MapCarLayer from '@/components/map/MapCarLayer';
+import MapVehicleMarker from '@/components/map/MapVehicleMarker';
 import MapRoot from '@/components/map/MapRoot';
 import BackLink from '@/components/navigation/BackLink';
 import { useSubjectPosition } from '@/features/positions';
@@ -75,7 +75,7 @@ const VehicleDetails: Component = () => {
 
             <Show when={position()}>
               {(pos) => (
-                <MapCarLayer
+                <MapVehicleMarker
                   position={pos().geometry}
                   heading={pos().heading}
                 />

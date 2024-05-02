@@ -1,7 +1,7 @@
 import Header from '@/components/layout/Header';
 import Resizable from '@/components/layout/Resizable';
-import MapCarLayer from '@/components/map/MapCarLayer';
 import MapRoot from '@/components/map/MapRoot';
+import MapVehicleMarker from '@/components/map/MapVehicleMarker';
 import MapZoomControls from '@/components/map/MapZoomControls';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -71,7 +71,7 @@ const VehicleOverview: Component<LayoutProps> = (props) => {
                 <MapZoomControls class='absolute right-2 top-2' />
                 <Index each={positions()}>
                   {(pos) => (
-                    <MapCarLayer
+                    <MapVehicleMarker
                       position={pos().geometry}
                       heading={pos().heading}
                     />

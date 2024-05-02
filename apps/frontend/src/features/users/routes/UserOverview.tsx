@@ -1,8 +1,16 @@
 import Header from '@/components/layout/Header';
-import MapDriverLayer from '@/components/map/MapDriverLayer';
+import Resizable from '@/components/layout/Resizable';
+import MapDriverMarker from '@/components/map/MapDriverMarker';
 import MapRoot from '@/components/map/MapRoot';
+import MapTripPopover from '@/components/map/MapTripPopover';
+import MapZoomControls from '@/components/map/MapZoomControls';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { useTranslations } from '@/features/i18n';
 import { usePositions } from '@/features/positions';
 import { LayoutProps } from '@/lib/utils';
@@ -10,8 +18,6 @@ import { useNavigate } from '@solidjs/router';
 import { Component, For, Index } from 'solid-js';
 import { useUsersQuery } from '../api';
 import UserCard from '../components/UserCard';
-import Resizable from '@/components/layout/Resizable';
-import MapZoomControls from '@/components/map/MapZoomControls';
 
 const UserOverview: Component<LayoutProps> = (props) => {
   const users = useUsersQuery();
@@ -76,14 +82,24 @@ const UserOverview: Component<LayoutProps> = (props) => {
           initialSize={0.3}
           minSize={0.2}
         >
-          <MapRoot class='h-full w-full relative'>
+          <MapRoot class='relative h-full w-full'>
             <Index each={positions()}>
               {(pos) => (
-                <MapDriverLayer
-                  position={pos().geometry}
-                  heading={pos().heading}
-                  fullName={userMap().get(pos().driverId) ?? ''}
-                />
+                <Popover>
+                  <PopoverTrigger
+                    as={(props) => (
+                      <MapDriverMarker
+                        {...props}
+                        position={pos().geometry}
+                        heading={pos().heading}
+                        fullName={userMap().get(pos().driverId) ?? ''}
+                      />
+                    )}
+                  />
+                  <PopoverContent>
+                    <MapTripPopover tripId={pos().tripId} />
+                  </PopoverContent>
+                </Popover>
               )}
             </Index>
             <MapZoomControls class='absolute right-2 top-2' />

@@ -4,22 +4,28 @@ import WKT from 'ol/format/WKT';
 import { Point } from 'ol/geom';
 import {
   Component,
+  ComponentProps,
   JSX,
   Show,
   createEffect,
   createSignal,
   onCleanup,
   onMount,
+  splitProps,
 } from 'solid-js';
 import { useMap } from './MapRoot';
 import { debounce } from '@solid-primitives/scheduled';
 import { linear } from 'ol/easing';
 import { toRadians } from 'ol/math';
+import { Ref, mergeRefs } from '@solid-primitives/refs';
+import { cn } from '@/lib/utils';
 
-export interface MapMarkerProps {
+export interface MapMarkerProps extends Omit<ComponentProps<'button'>, 'ref'> {
   children?: JSX.Element;
   class?: string;
   position: InternalGeometry;
+  ref?: Ref<HTMLButtonElement | null>;
+  onClick?: () => void;
   heading?: number;
   follow?: boolean;
 }
@@ -38,7 +44,16 @@ const EASED_TRANSITION_CLASSES = [...TRANSITION_CLASSES, 'ease-linear'];
 const MapMarker: Component<MapMarkerProps> = (props) => {
   const ctx = useMap();
   const [carOverlay, setCarOverlay] = createSignal<Overlay>();
-  let overlayElement: HTMLDivElement;
+  const [_, rest] = splitProps(props, [
+    'ref',
+    'class',
+    'position',
+    'heading',
+    'follow',
+    'children',
+  ]);
+
+  let overlayElement: HTMLButtonElement;
 
   const transform = () => {
     const angle = props.heading;
@@ -136,9 +151,16 @@ const MapMarker: Component<MapMarkerProps> = (props) => {
 
   return (
     <div class='hidden'>
-      <div
-        ref={overlayElement!}
-        class='bg-brand-blue border-brand-blue-300 relative rounded-full border p-1'
+      <button
+        type='button'
+        ref={mergeRefs(props.ref, (el) => (overlayElement = el!))}
+        class={cn(
+          'bg-brand-blue border-brand-blue-300 relative rounded-full border p-1',
+          props.ref === undefined &&
+            props.onClick === undefined &&
+            'cursor-default'
+        )}
+        {...rest}
       >
         <div class={props.class}>{props.children}</div>
 
@@ -154,7 +176,7 @@ const MapMarker: Component<MapMarkerProps> = (props) => {
             </div>
           </div>
         </Show>
-      </div>
+      </button>
     </div>
   );
 };
