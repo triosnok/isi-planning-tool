@@ -48,7 +48,7 @@ const NewTripDialog: Component<NewTripDialogProps> = (props) => {
   const [replaySpeed, setReplaySpeed] = createSignal<number>();
   const navigate = useNavigate();
   const logs = useCaptureLogsQuery();
-  const { create } = useTripMutation();
+  const trip = useTripMutation();
   const { t } = useTranslations();
 
   createEffect(() => {
@@ -60,7 +60,7 @@ const NewTripDialog: Component<NewTripDialogProps> = (props) => {
 
   const handleSubmit = async (values: CreateTripSchemaValues) => {
     try {
-      const tripDetails = await create.mutateAsync(values);
+      const tripDetails = await trip.create.mutateAsync(values);
       const tripId = tripDetails.id;
 
       props.onOpenChange(false);
@@ -114,7 +114,8 @@ const NewTripDialog: Component<NewTripDialogProps> = (props) => {
         </p>
 
         <Button
-          disabled={!selectedVehicle()}
+          disabled={!selectedVehicle() || trip.create.isPending}
+          loading={trip.create.isPending}
           onClick={() =>
             handleSubmit({
               vehicleId: selectedVehicle()?.id ?? '',
