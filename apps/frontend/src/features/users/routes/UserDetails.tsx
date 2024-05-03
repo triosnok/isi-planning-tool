@@ -13,11 +13,15 @@ import {
 import UpdateUserForm from '../components/UpdateUserForm';
 import Resizable from '@/components/layout/Resizable';
 import MapZoomControls from '@/components/map/MapZoomControls';
+import MapTripPopoverMarker from '@/components/map/MapTripPopoverMarker';
+import { useSubjectPosition } from '@/features/positions';
+import MapDriverMarker from '@/components/map/MapDriverMarker';
 
 const UserDetails: Component = () => {
   const params = useParams();
   const user = useUserDetailsQuery(params.id);
   const { update } = useUserMutation();
+  const position = useSubjectPosition('DRIVER', () => params.id);
 
   const trips = useTripsByUserQuery(() => params.id);
 
@@ -69,6 +73,17 @@ const UserDetails: Component = () => {
         <Resizable.Panel as='aside' class='w-0 max-md:hidden' minSize={0.2}>
           <MapRoot class='relative h-full w-full'>
             <MapZoomControls class='absolute right-2 top-2' />
+            <Show when={position.position()}>
+              {(pos) => (
+                <MapTripPopoverMarker
+                  as={MapDriverMarker}
+                  position={pos().geometry}
+                  heading={pos().heading}
+                  fullName={user.data?.fullName ?? ''}
+                  tripId={pos().tripId}
+                />
+              )}
+            </Show>
           </MapRoot>
         </Resizable.Panel>
       </Resizable.Root>

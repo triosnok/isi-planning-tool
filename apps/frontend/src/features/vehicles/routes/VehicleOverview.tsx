@@ -12,6 +12,7 @@ import { useNavigate } from '@solidjs/router';
 import { Component, For, Index, Show } from 'solid-js';
 import { useVehiclesQuery } from '../api';
 import VehicleCard from '../components/VehicleCard';
+import MapTripPopoverMarker from '@/components/map/MapTripPopoverMarker';
 
 const VehicleOverview: Component<LayoutProps> = (props) => {
   const vehicles = useVehiclesQuery();
@@ -71,9 +72,11 @@ const VehicleOverview: Component<LayoutProps> = (props) => {
                 <MapZoomControls class='absolute right-2 top-2' />
                 <Index each={positions()}>
                   {(pos) => (
-                    <MapVehicleMarker
+                    <MapTripPopoverMarker
+                      as={MapVehicleMarker}
                       position={pos().geometry}
                       heading={pos().heading}
+                      tripId={pos().tripId}
                     />
                   )}
                 </Index>

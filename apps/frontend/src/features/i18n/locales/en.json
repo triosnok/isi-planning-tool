@@ -87,6 +87,7 @@
     "ADD_PLAN": "Add plan",
     "NEW_PROJECT_PLAN": "New project plan",
     "EDIT_PROJECT_PLAN": "Edit project plan",
+    "FAILED_TO_CREATE_PLAN": "Failed to create",
     "FORM": {
       "IMPORT_RAILINGS": "Import railings",
       "REIMPORT_RAILINGS": "Reimport railings",

@@ -57,7 +57,15 @@ export const ProjectSchema = z.object({
   endsAt: z.string().datetime().optional(),
 });
 
-export const ProjectPlanSchema = z.object({
+export const CreateProjectPlanSchema = z.object({
+  planId: z.string().optional(),
+  importUrl: z.string(),
+  startsAt: z.string().datetime(),
+  endsAt: z.string().datetime(),
+  vehicleId: z.string().optional(),
+});
+
+export const UpdateProjectPlanSchema = z.object({
   planId: z.string().optional(),
   importUrl: z.string().optional(),
   startsAt: z.string().datetime(),
@@ -66,7 +74,12 @@ export const ProjectPlanSchema = z.object({
 });
 
 export type ProjectSchemaValues = z.infer<typeof ProjectSchema>;
-export type ProjectPlanSchemaValues = z.infer<typeof ProjectPlanSchema>;
+export type CreateProjectPlanSchemaValues = z.infer<
+  typeof CreateProjectPlanSchema
+>;
+export type UpdateProjectPlanSchemaValues = z.infer<
+  typeof UpdateProjectPlanSchema
+>;
 
 export const useProjectsMutation = () => {
   const qc = useQueryClient();
@@ -140,7 +153,7 @@ export const useProjectPlansMutation = (projectId: string) => {
   }));
 
   const update = createMutation(() => ({
-    mutationFn: async (plan: ProjectPlanSchemaValues) => {
+    mutationFn: async (plan: UpdateProjectPlanSchemaValues) => {
       const response = await axios.put<ProjectPlanDetails>(
         `/api/v1/project-plans/${plan.planId}`,
         plan

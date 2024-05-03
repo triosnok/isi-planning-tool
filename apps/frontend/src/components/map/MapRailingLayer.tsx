@@ -120,8 +120,7 @@ const MapRailingLayer: Component<MapRailingLayerProps> = (props) => {
     feature.set(FeatureProperty.WIDTH, 15);
     feature.set(
       FeatureProperty.COLOR,
-      [0, 255, 255, 1]
-      //getRailingColor(hovered?.captureGrade, 0.7)
+      getRailingColor(hovered?.captureGrade, 0.5)
     );
 
     const layer = new WebGLLayer(

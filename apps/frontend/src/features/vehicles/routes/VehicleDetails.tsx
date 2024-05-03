@@ -15,6 +15,7 @@ import {
 import VehicleForm from '../components/VehicleForm';
 import Resizable from '@/components/layout/Resizable';
 import MapZoomControls from '@/components/map/MapZoomControls';
+import MapTripPopoverMarker from '@/components/map/MapTripPopoverMarker';
 
 const VehicleDetails: Component = () => {
   const params = useParams();
@@ -75,9 +76,11 @@ const VehicleDetails: Component = () => {
 
             <Show when={position()}>
               {(pos) => (
-                <MapVehicleMarker
+                <MapTripPopoverMarker
+                  as={MapVehicleMarker}
                   position={pos().geometry}
                   heading={pos().heading}
+                  tripId={pos().tripId}
                 />
               )}
             </Show>

@@ -2,15 +2,10 @@ import Header from '@/components/layout/Header';
 import Resizable from '@/components/layout/Resizable';
 import MapDriverMarker from '@/components/map/MapDriverMarker';
 import MapRoot from '@/components/map/MapRoot';
-import MapTripPopover from '@/components/map/MapTripPopover';
+import MapTripPopoverMarker from '@/components/map/MapTripPopoverMarker';
 import MapZoomControls from '@/components/map/MapZoomControls';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
 import { useTranslations } from '@/features/i18n';
 import { usePositions } from '@/features/positions';
 import { LayoutProps } from '@/lib/utils';
@@ -85,21 +80,13 @@ const UserOverview: Component<LayoutProps> = (props) => {
           <MapRoot class='relative h-full w-full'>
             <Index each={positions()}>
               {(pos) => (
-                <Popover>
-                  <PopoverTrigger
-                    as={(props) => (
-                      <MapDriverMarker
-                        {...props}
-                        position={pos().geometry}
-                        heading={pos().heading}
-                        fullName={userMap().get(pos().driverId) ?? ''}
-                      />
-                    )}
-                  />
-                  <PopoverContent>
-                    <MapTripPopover tripId={pos().tripId} />
-                  </PopoverContent>
-                </Popover>
+                <MapTripPopoverMarker
+                  as={MapDriverMarker}
+                  position={pos().geometry}
+                  heading={pos().heading}
+                  fullName={userMap().get(pos().driverId) ?? ''}
+                  tripId={pos().tripId}
+                />
               )}
             </Index>
             <MapZoomControls class='absolute right-2 top-2' />

@@ -1,6 +1,8 @@
 import Card from '@/components/layout/Card';
 import Header from '@/components/layout/Header';
 import MapRoot from '@/components/map/MapRoot';
+import MapTripPopoverMarker from '@/components/map/MapTripPopoverMarker';
+import MapVehicleMarker from '@/components/map/MapVehicleMarker';
 import MapZoomControls from '@/components/map/MapZoomControls';
 import { BarChart, PieChart } from '@/components/ui/charts';
 import {
@@ -12,16 +14,18 @@ import { useProfile } from '@/features/auth/api';
 import { useCaptureMetersByDayQuery } from '@/features/capture/api';
 import { useDeviationCountsQuery } from '@/features/deviation';
 import { DateFormat, NumberFormat, useTranslations } from '@/features/i18n';
+import { usePositions } from '@/features/positions';
 import { useProjectsQuery } from '@/features/projects/api';
 import TripCard from '@/features/trips/components/TripCard';
 import { useTripsByUserQuery } from '@/features/users/api';
 import { A } from '@solidjs/router';
-import { Component, For } from 'solid-js';
+import { Component, For, Index } from 'solid-js';
 
 const Dashboard: Component = () => {
   const { t, d, n } = useTranslations();
   const metersPerDay = useCaptureMetersByDayQuery();
   const deviationCounts = useDeviationCountsQuery();
+  const positions = usePositions('VEHICLE');
 
   const deviationChartData = () => {
     const deviationsData = deviationCounts.data;
@@ -109,17 +113,27 @@ const Dashboard: Component = () => {
         <Card class='relative flex-shrink-0 max-sm:aspect-square max-sm:w-full'>
           <MapRoot class='h-full w-full overflow-hidden rounded-md'>
             <MapZoomControls class='absolute right-2 top-2' />
+            <Index each={positions.positions()}>
+              {(pos) => (
+                <MapTripPopoverMarker
+                  as={MapVehicleMarker}
+                  position={pos().geometry}
+                  heading={pos().heading}
+                  tripId={pos().tripId}
+                />
+              )}
+            </Index>
           </MapRoot>
         </Card>
 
-        <Card class='px-2 py-1 flex flex-col'>
+        <Card class='flex flex-col px-2 py-1'>
           <CardHeader title={t('TRIPS.ACTIVE_TRIPS')} />
 
-          <div class='flex flex-col gap-2 overflow-y-auto flex-1'>
+          <div class='flex flex-1 flex-col gap-2 overflow-y-auto'>
             <For
               each={activeTrips.data}
               fallback={
-                <div class='flex items-center justify-center flex-1'> 
+                <div class='flex flex-1 items-center justify-center'>
                   <p class='text-center text-gray-500 max-sm:py-20'>
                     No active trips
                   </p>

@@ -96,6 +96,13 @@ public class CaptureReplayService {
       logEntries,
       speed.orElse(1),
       (logEntry, logReplay) -> {
+        this.eventPublisher.publishEvent(
+          new CaptureDetailsEvent(
+            trip,
+            logReplay.getCaptureDetails()
+          )
+        );
+
         if (logEntry.images().size() == 0) {
           return;
         }
@@ -105,13 +112,6 @@ public class CaptureReplayService {
         point.setSRID(25833);
 
         var matches = matcher.matchRailings(point, logEntry.heading());
-
-        this.eventPublisher.publishEvent(
-          new CaptureDetailsEvent(
-            trip,
-            logReplay.getCaptureDetails()
-          )
-        );
 
         if (matches.isEmpty()) {
           return;
