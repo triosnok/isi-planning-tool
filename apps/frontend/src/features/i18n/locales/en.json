@@ -205,6 +205,7 @@
     "VIEW_DETAILS": "View details",
     "NO_VEHICLES_REGISTERED": "No vehicles registered.",
     "PREFERED_VEHICLE": "Preferred vehicle",
+    "FAILED_TO_UPDATE_VEHICLE": "Failed to update vehicle",
     "FORM": {
       "REGISTRATION_NUMBER": "Registration number",
       "MODEL": "Model",

@@ -20,13 +20,13 @@ import MapTripPopoverMarker from '@/components/map/MapTripPopoverMarker';
 const VehicleDetails: Component = () => {
   const params = useParams();
   const vehicle = useVehicleDetailsQuery(params.id);
-  const { update } = useVehicleMutation();
+  const vehicleMutation = useVehicleMutation();
   const trips = useTripsByVehicleQuery(params.id);
   const { position } = useSubjectPosition('VEHICLE', () => params.id);
 
   const handleUpdateVehicle = async (vehicle: VehicleSchemaValues) => {
     try {
-      await update.mutateAsync({
+      await vehicleMutation.update.mutateAsync({
         vehicleId: params.id,
         ...vehicle,
       });
@@ -44,7 +44,7 @@ const VehicleDetails: Component = () => {
           initialSize={0.6}
           minSize={0.5}
           class='flex-1 overflow-y-auto p-2 py-2'
-        >
+        > 
           <BackLink />
 
           <Show when={vehicle?.data}>
@@ -59,6 +59,7 @@ const VehicleDetails: Component = () => {
               description={vehicle.data?.description}
               gnssId={vehicle.data?.gnssId}
               model={vehicle.data?.model}
+              isError={vehicleMutation.update.isError}
               registrationNumber={vehicle.data?.registrationNumber}
             />
           </Show>
