@@ -11,6 +11,7 @@ import { Component, Show } from 'solid-js';
 import { Progress } from '@/components/ui/progress';
 import dayjs from 'dayjs';
 import IconProperty from '@/components/IconProperty';
+import ProjectStatusIndicator from './ProjectStatusIndicator';
 
 export interface ProjectCardProps {
   name: string;
@@ -52,11 +53,8 @@ const ProjectCard: Component<ProjectCardProps> = (props) => {
           <IconProperty icon={IconCalendarClock} text={durationString()} />
         </div>
 
-        <div>
-          <div class='text-success-500 flex flex-row-reverse items-center gap-1'>
-            <p>{t(`PROJECTS.STATUS.${props.status}`)}</p>
-            <IconCircleCheckFilled class='size-5' />
-          </div>
+        <div class='flex flex-col'>
+          <ProjectStatusIndicator status={props.status} />
 
           <Show when={props.deviations !== 0}>
             <div class='text-warning-500 flex flex-row-reverse items-center gap-1'>

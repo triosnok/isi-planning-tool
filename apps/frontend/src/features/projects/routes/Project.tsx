@@ -39,6 +39,7 @@ import {
 import PlanCard from '../components/PlanCard';
 import RailingCard from '../components/RailingCard';
 import { useProjectSearchParams } from '../utils';
+import ProjectStatusIndicator from '../components/ProjectStatusIndicator';
 
 const Project: Component<LayoutProps> = (props) => {
   const params = useParams();
@@ -97,8 +98,7 @@ const Project: Component<LayoutProps> = (props) => {
                 </h2>
 
                 <div class='text-success-500 flex items-center gap-1'>
-                  <IconCircleCheckFilled size={16} />
-                  <p class='text-sm'>{project.data?.status}</p>
+                  <ProjectStatusIndicator status={project.data?.status}/>
                 </div>
               </div>
               <A href={`/projects/${project.data?.id}/update`}>
