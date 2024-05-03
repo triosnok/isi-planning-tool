@@ -208,6 +208,8 @@
     "FAILED_TO_UPDATE_VEHICLE": "Failed to update vehicle",
     "FORM": {
       "REGISTRATION_NUMBER": "Registration number",
+      "REGRISTRATION_NUMBER_REQUIRED": "Registration number is required",
+      "VEHICLE_MODEL_REQUIRED": "Vehicle model is required",
       "MODEL": "Model",
       "GNSS_ID": "GNSS ID",
       "DESCRIPTION": "Description",
