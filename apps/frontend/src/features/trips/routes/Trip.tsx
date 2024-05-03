@@ -2,7 +2,7 @@ import MapVehicleMarker from '@/components/map/MapVehicleMarker';
 import MapRailingLayer from '@/components/map/MapRailingLayer';
 import BackLink from '@/components/navigation/BackLink';
 import { Button } from '@/components/ui/button';
-import { Indicator, IndicatorVariant } from '@/components/ui/indicator';
+import { Indicator, IndicatorVariant } from '@/features/trips/components/TripIndicator';
 import { Progress } from '@/components/ui/progress';
 import { SwitchButton } from '@/components/ui/switch-button';
 import { DateFormat, NumberFormat, useTranslations } from '@/features/i18n';
