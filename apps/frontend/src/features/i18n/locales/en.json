@@ -101,7 +101,10 @@
     "UPDATE_PROJECT": "Update project",
     "FORM": {
       "PROJECT_NAME": "Project name",
-      "PROJECT_REFERENCE": "Project reference"
+      "PROJECT_REFERENCE": "Project reference",
+      "PROJECT_REFERENCE_REQUIRED": "Project reference is required",
+      "PROJECT_NAME_REQUIRED": "Project name is required",
+      "FAILED_TO_CREATE_PROJECT": "Failed to create project"
     },
     "STATUS": {
       "ONGOING": "Ongoing",
@@ -188,8 +191,9 @@
       "CONFIRM_PASSWORD": "Confirm password",
       "UPDATE_USER": "Update user",
       "CREATE_USER": "Create user",
-      "FAILED_TO_UPDATE_USER": "Failed to update user",
       "NAME_IS_REQUIRED": "Name is required",
+      "FAILED_TO_UPDATE_USER": "Failed to update user",
+      "FAILED_TO_CREATE_USER": "Failed to create user",
       "INVALID_EMAIL_ADDRESS": "Invalid email address",
       "PASSWORD_IS_REQUIRED": "Password is required",
       "PASSWORDS_DO_NOT_MATCH": "Passwords do not match"

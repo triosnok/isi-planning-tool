@@ -17,6 +17,7 @@ import {
 import axios from 'axios';
 import { Accessor } from 'solid-js';
 import { z } from 'zod';
+import { TranslationKey } from '../i18n';
 
 export const useProjectsQuery = (status?: ProjectStatus) => {
   const params = new URLSearchParams();
@@ -51,8 +52,15 @@ export const useProjectDetailsQuery = (id: string) => {
 
 export const ProjectSchema = z.object({
   projectId: z.string().optional(),
-  name: z.string().min(1),
-  referenceCode: z.string().min(1),
+  name: z
+    .string()
+    .min(1, 'PROJECTS.FORM.PROJECT_NAME_REQUIRED' satisfies TranslationKey),
+  referenceCode: z
+    .string()
+    .min(
+      1,
+      'PROJECTS.FORM.PROJECT_REFERENCE_REQUIRED' satisfies TranslationKey
+    ),
   startsAt: z.string().datetime(),
   endsAt: z.string().datetime().optional(),
 });

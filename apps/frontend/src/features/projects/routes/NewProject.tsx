@@ -22,11 +22,11 @@ const NewProject: Component = () => {
     validate: zodForm(ProjectSchema),
   });
   const navigate = useNavigate();
-  const { create } = useProjectsMutation();
+  const projectMutation = useProjectsMutation();
 
   const handleSubmit = async (values: ProjectForm) => {
     try {
-      await create.mutateAsync(values);
+      await projectMutation.create.mutateAsync(values);
       navigate('/projects');
     } catch (error) {
       // ignored
@@ -39,7 +39,10 @@ const NewProject: Component = () => {
         <BackLink />
       </div>
       <h1 class='text-4xl font-bold'>{t('PROJECTS.NEW_PROJECT')}</h1>
-      <ProjectForm onSubmit={handleSubmit} />
+      <ProjectForm
+        isError={projectMutation.create.isError}
+        onSubmit={handleSubmit}
+      />
     </div>
   );
 };
