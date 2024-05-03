@@ -1,5 +1,6 @@
 import DatePicker from '@/components/temporal/DatePicker';
 import { Button } from '@/components/ui/button';
+import { Callout, CalloutContent, CalloutTitle } from '@/components/ui/callout';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
@@ -27,7 +28,6 @@ import {
   CreateProjectPlanSchemaValues,
   UpdateProjectPlanSchema,
 } from '../api';
-import { Callout, CalloutContent, CalloutTitle } from '@/components/ui/callout';
 
 export interface PlanFormProps {
   planId?: string;
@@ -176,12 +176,10 @@ const PlanForm: Component<PlanFormProps> = (props) => {
       </Field>
 
       <Show when={props.isError}>
-        <div class='pt-2'>
-          <Callout variant={'error'}>
-            <CalloutTitle>Error</CalloutTitle>
-            <CalloutContent>{t('PLANS.FAILED_TO_CREATE_PLAN')}</CalloutContent>
-          </Callout>
-        </div>
+        <Callout class='mt-2' variant={'error'}>
+          <CalloutTitle>Error</CalloutTitle>
+          <CalloutContent>{t('PLANS.FAILED_TO_CREATE_PLAN')}</CalloutContent>
+        </Callout>
       </Show>
 
       <Button loading={props.isLoading} class='mt-2 grow' type='submit'>

@@ -87,7 +87,7 @@
     "ADD_PLAN": "Add plan",
     "NEW_PROJECT_PLAN": "New project plan",
     "EDIT_PROJECT_PLAN": "Edit project plan",
-    "FAILED_TO_CREATE_PLAN": "Failed to create",
+    "FAILED_TO_CREATE_PLAN": "Failed to create plan",
     "FORM": {
       "IMPORT_RAILINGS": "Import railings",
       "REIMPORT_RAILINGS": "Reimport railings",
@@ -187,7 +187,8 @@
       "PASSWORD": "Password",
       "CONFIRM_PASSWORD": "Confirm password",
       "UPDATE_USER": "Update user",
-      "CREATE_USER": "Create user"
+      "CREATE_USER": "Create user",
+      "FAILED_TO_UPDATE_USER": "Failed to update user"
     },
     "ROLES": {
       "PLANNER": "Planner",

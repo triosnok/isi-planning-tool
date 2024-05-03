@@ -1,6 +1,11 @@
 import Header from '@/components/layout/Header';
+import Resizable from '@/components/layout/Resizable';
+import MapDriverMarker from '@/components/map/MapDriverMarker';
 import MapRoot from '@/components/map/MapRoot';
+import MapTripPopoverMarker from '@/components/map/MapTripPopoverMarker';
+import MapZoomControls from '@/components/map/MapZoomControls';
 import BackLink from '@/components/navigation/BackLink';
+import { useSubjectPosition } from '@/features/positions';
 import TripTable from '@/features/trips/components/TripTable';
 import { useParams } from '@solidjs/router';
 import { Component, Show } from 'solid-js';
@@ -11,23 +16,18 @@ import {
   useUserMutation,
 } from '../api';
 import UpdateUserForm from '../components/UpdateUserForm';
-import Resizable from '@/components/layout/Resizable';
-import MapZoomControls from '@/components/map/MapZoomControls';
-import MapTripPopoverMarker from '@/components/map/MapTripPopoverMarker';
-import { useSubjectPosition } from '@/features/positions';
-import MapDriverMarker from '@/components/map/MapDriverMarker';
 
 const UserDetails: Component = () => {
   const params = useParams();
   const user = useUserDetailsQuery(params.id);
-  const { update } = useUserMutation();
+  const userDetails = useUserMutation();
   const position = useSubjectPosition('DRIVER', () => params.id);
 
   const trips = useTripsByUserQuery(() => params.id);
 
   const handleUpdateUser = async (user: UpdateUserSchemaValues) => {
     try {
-      await update.mutateAsync({
+      await userDetails.update.mutateAsync({
         userId: params.id,
         ...user,
       });
@@ -58,6 +58,7 @@ const UserDetails: Component = () => {
               onSubmit={handleUpdateUser}
               userId={user.data?.id}
               name={user.data?.fullName}
+              isError={userDetails.update.isError}
               email={user.data?.email}
               phoneNumber={user.data?.phoneNumber}
             />
