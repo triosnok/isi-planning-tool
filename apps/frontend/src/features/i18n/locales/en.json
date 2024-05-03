@@ -188,7 +188,11 @@
       "CONFIRM_PASSWORD": "Confirm password",
       "UPDATE_USER": "Update user",
       "CREATE_USER": "Create user",
-      "FAILED_TO_UPDATE_USER": "Failed to update user"
+      "FAILED_TO_UPDATE_USER": "Failed to update user",
+      "NAME_IS_REQUIRED": "Name is required",
+      "INVALID_EMAIL_ADDRESS": "Invalid email address",
+      "PASSWORD_IS_REQUIRED": "Password is required",
+      "PASSWORDS_DO_NOT_MATCH": "Passwords do not match"
     },
     "ROLES": {
       "PLANNER": "Planner",
