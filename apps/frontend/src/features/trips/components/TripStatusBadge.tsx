@@ -14,7 +14,7 @@ const TripStatusBadge: Component<TripStatusBadgeProps> = (props) => {
   return (
     <p
       class={cn(
-        'text-success-800 dark:text-success-500 dark:bg-success-950 bg-success-100 rounded-md px-2 py-1 text-xs',
+        'text-success-800 dark:text-success-500 dark:bg-success-950 bg-success-100 rounded-md px-1.5 py-1 text-2xs',
         tripStatus() === 'ENDED' &&
           'bg-gray-500 text-gray-50 dark:bg-gray-800 dark:text-gray-50'
       )}

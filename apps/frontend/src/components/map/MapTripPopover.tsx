@@ -39,7 +39,7 @@ const MapTripPopover: Component<MapTripPopoverProps> = (props) => {
           text={trip.data?.driver}
           size='xs'
         />
-        <div class='flex justify-between'>
+        <div class='flex justify-between gap-4 items-center'>
           <IconProperty icon={IconCar} text='Toyota Corolla' size='xs' />
           <TripStatusBadge endedAt={trip.data?.endedAt} />
         </div>
