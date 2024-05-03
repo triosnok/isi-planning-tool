@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useTranslations } from '@/features/i18n';
 import { Component, Show } from 'solid-js';
 import {
-  ProjectPlanSchemaValues,
+  UpdateProjectPlanSchemaValues,
   usePlanDetailsQuery,
   useProjectPlansMutation,
 } from '../api';
@@ -20,7 +20,7 @@ const UpdateProjectPlanDialog: Component<UpdateProjectPlanDialogProps> = (
   const plan = usePlanDetailsQuery(props.planId);
   const { update } = useProjectPlansMutation(props.planId);
 
-  const handleSubmit = async (values: ProjectPlanSchemaValues) => {
+  const handleSubmit = async (values: UpdateProjectPlanSchemaValues) => {
     try {
       await update.mutateAsync(values);
       props.onOpenChange(false);

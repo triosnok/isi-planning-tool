@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { SwitchButton } from '@/components/ui/switch-button';
 import ErrorLabel from '@/features/error/components/ErrorLabel';
 import { useTranslations } from '@/features/i18n';
 import {
@@ -21,8 +22,11 @@ import { A } from '@solidjs/router';
 import { IconArrowNarrowUp } from '@tabler/icons-solidjs';
 import dayjs from 'dayjs';
 import { Component, For, Show, createSignal } from 'solid-js';
-import { ProjectPlanSchema, ProjectPlanSchemaValues } from '../api';
-import { SwitchButton } from '@/components/ui/switch-button';
+import {
+  CreateProjectPlanSchema,
+  CreateProjectPlanSchemaValues,
+  UpdateProjectPlanSchema,
+} from '../api';
 
 export interface PlanFormProps {
   planId?: string;
@@ -31,8 +35,8 @@ export interface PlanFormProps {
   endsAt?: string;
   vehicleId?: string;
   imports?: RailingImportDetails[];
-  onSubmit?: (values: ProjectPlanSchemaValues) => void;
-  editing: boolean;
+  onSubmit?: (values: CreateProjectPlanSchemaValues) => void;
+  editing?: boolean;
 }
 
 const PlanForm: Component<PlanFormProps> = (props) => {
@@ -42,7 +46,11 @@ const PlanForm: Component<PlanFormProps> = (props) => {
   const [reimportRailings, setReimportRailings] = createSignal(false);
 
   const [form, { Form, Field }] = createForm({
-    validate: zodForm(ProjectPlanSchema),
+    validate: zodForm(
+      props.planId === undefined
+        ? CreateProjectPlanSchema
+        : UpdateProjectPlanSchema
+    ),
     initialValues: {
       importUrl: props.importUrl,
       startsAt: props.startsAt,
@@ -55,7 +63,7 @@ const PlanForm: Component<PlanFormProps> = (props) => {
   const vehicles = useVehiclesQuery(availableFrom, availableTo);
   const vehicle = useVehicleDetailsQuery(props?.vehicleId!);
 
-  const handleSubmit: SubmitHandler<ProjectPlanSchemaValues> = async (
+  const handleSubmit: SubmitHandler<CreateProjectPlanSchemaValues> = async (
     values
   ) => {
     props.onSubmit?.({ ...values, planId: props.planId });
