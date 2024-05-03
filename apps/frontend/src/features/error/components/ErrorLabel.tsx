@@ -4,7 +4,6 @@ import { Component } from 'solid-js';
 
 export interface ErrorLabelProps {
   text?: TranslationKey | (string & {});
-  translate?: boolean;
   class?: string;
 }
 
@@ -13,13 +12,8 @@ const ErrorLabel: Component<ErrorLabelProps> = (props) => {
 
   const text = () => {
     const text = props.text;
-    const translate = props.translate;
 
-    if (translate && text) {
-      return t(text as any) ?? text;
-    }
-
-    return text;
+    return t(text as any) ?? text;
   };
 
   return (
