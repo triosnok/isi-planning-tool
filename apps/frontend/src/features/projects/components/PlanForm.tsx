@@ -27,6 +27,7 @@ import {
   CreateProjectPlanSchemaValues,
   UpdateProjectPlanSchema,
 } from '../api';
+import { Callout, CalloutContent, CalloutTitle } from '@/components/ui/callout';
 
 export interface PlanFormProps {
   planId?: string;
@@ -37,6 +38,7 @@ export interface PlanFormProps {
   imports?: RailingImportDetails[];
   onSubmit?: (values: CreateProjectPlanSchemaValues) => void;
   isLoading?: boolean;
+  isError?: boolean;
   editing?: boolean;
 }
 
@@ -172,6 +174,15 @@ const PlanForm: Component<PlanFormProps> = (props) => {
           </Show>
         )}
       </Field>
+
+      <Show when={props.isError}>
+        <div class='pt-2'>
+          <Callout variant={'error'}>
+            <CalloutTitle>Error</CalloutTitle>
+            <CalloutContent>{t('PLANS.FAILED_TO_CREATE_PLAN')}</CalloutContent>
+          </Callout>
+        </div>
+      </Show>
 
       <Button loading={props.isLoading} class='mt-2 grow' type='submit'>
         {t('GENERAL.IMPORT_AND_SAVE')}

@@ -43,6 +43,7 @@ const UpdateProjectPlanDialog: Component<UpdateProjectPlanDialogProps> = (
             imports={plan.data?.imports}
             onSubmit={handleSubmit}
             editing
+            isError={projectPlans.update.isError}
             isLoading={projectPlans.update.isPending}
           />
         </DialogContent>

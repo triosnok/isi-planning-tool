@@ -30,6 +30,7 @@ const NewProjectPlan = () => {
       <DialogContent>
         <DialogTitle>{t('PLANS.NEW_PROJECT_PLAN')}</DialogTitle>
         <PlanForm
+          isError={projectPlans.create.isError}
           isLoading={projectPlans.create.isPending}
           onSubmit={handleSubmit}
         />
