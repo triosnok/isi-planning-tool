@@ -36,6 +36,7 @@ export interface PlanFormProps {
   vehicleId?: string;
   imports?: RailingImportDetails[];
   onSubmit?: (values: CreateProjectPlanSchemaValues) => void;
+  isLoading?: boolean;
   editing?: boolean;
 }
 
@@ -172,7 +173,7 @@ const PlanForm: Component<PlanFormProps> = (props) => {
         )}
       </Field>
 
-      <Button class='mt-2 grow' type='submit'>
+      <Button loading={props.isLoading} class='mt-2 grow' type='submit'>
         {t('GENERAL.IMPORT_AND_SAVE')}
       </Button>
     </Form>

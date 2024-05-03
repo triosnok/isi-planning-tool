@@ -7,7 +7,7 @@ import PlanForm from '../components/PlanForm';
 const NewProjectPlan = () => {
   const navigate = useNavigate();
   const params = useParams();
-  const { create } = useProjectPlansMutation(params.id);
+  const projectPlans = useProjectPlansMutation(params.id);
   const { t } = useTranslations();
 
   const handleClose = (open: boolean) => {
@@ -18,7 +18,7 @@ const NewProjectPlan = () => {
 
   const handleSubmit = async (values: CreateProjectPlanSchemaValues) => {
     try {
-      await create.mutateAsync(values);
+      await projectPlans.create.mutateAsync(values);
       navigate('../..');
     } catch (error) {
       // ignore for now
@@ -29,7 +29,10 @@ const NewProjectPlan = () => {
     <Dialog open onOpenChange={handleClose}>
       <DialogContent>
         <DialogTitle>{t('PLANS.NEW_PROJECT_PLAN')}</DialogTitle>
-        <PlanForm onSubmit={handleSubmit} />
+        <PlanForm
+          isLoading={projectPlans.create.isPending}
+          onSubmit={handleSubmit}
+        />
       </DialogContent>
     </Dialog>
   );

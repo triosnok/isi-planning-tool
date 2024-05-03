@@ -18,11 +18,11 @@ const UpdateProjectPlanDialog: Component<UpdateProjectPlanDialogProps> = (
 ) => {
   const { t } = useTranslations();
   const plan = usePlanDetailsQuery(props.planId);
-  const { update } = useProjectPlansMutation(props.planId);
+  const projectPlans = useProjectPlansMutation(props.planId);
 
   const handleSubmit = async (values: UpdateProjectPlanSchemaValues) => {
     try {
-      await update.mutateAsync(values);
+      await projectPlans.update.mutateAsync(values);
       props.onOpenChange(false);
     } catch (error) {
       // ignore for now
@@ -43,6 +43,7 @@ const UpdateProjectPlanDialog: Component<UpdateProjectPlanDialogProps> = (
             imports={plan.data?.imports}
             onSubmit={handleSubmit}
             editing
+            isLoading={projectPlans.update.isPending}
           />
         </DialogContent>
       </Dialog>
