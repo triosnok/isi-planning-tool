@@ -2,7 +2,7 @@ import MapVehicleMarker from '@/components/map/MapVehicleMarker';
 import MapRailingLayer from '@/components/map/MapRailingLayer';
 import BackLink from '@/components/navigation/BackLink';
 import { Button } from '@/components/ui/button';
-import { Indicator, IndicatorVariant } from '@/features/trips/components/TripIndicator';
+import { TripIndicator, TripIndicatorVariant } from '@/features/trips/components/TripIndicator';
 import { Progress } from '@/components/ui/progress';
 import { SwitchButton } from '@/components/ui/switch-button';
 import { DateFormat, NumberFormat, useTranslations } from '@/features/i18n';
@@ -82,35 +82,35 @@ const Trip: Component = () => {
   const storageIndicator = createMemo(() => {
     const storage = captureDetails()?.storageRemaining;
 
-    if (storage === undefined) return IndicatorVariant.UNDETERMINED;
-    if (storage >= 0.5) return IndicatorVariant.SUCCESS;
-    if (storage >= 0.25) return IndicatorVariant.WARNING;
-    return IndicatorVariant.ERROR;
+    if (storage === undefined) return TripIndicatorVariant.UNDETERMINED;
+    if (storage >= 0.5) return TripIndicatorVariant.SUCCESS;
+    if (storage >= 0.25) return TripIndicatorVariant.WARNING;
+    return TripIndicatorVariant.ERROR;
   });
 
   const gpsIndicator = createMemo(() => {
     const gpsSignal = captureDetails()?.gpsSignal;
 
-    if (gpsSignal === undefined) return IndicatorVariant.UNDETERMINED;
-    if (gpsSignal >= 0.95) return IndicatorVariant.SUCCESS;
-    if (gpsSignal >= 0.75) return IndicatorVariant.WARNING;
-    return IndicatorVariant.ERROR;
+    if (gpsSignal === undefined) return TripIndicatorVariant.UNDETERMINED;
+    if (gpsSignal >= 0.95) return TripIndicatorVariant.SUCCESS;
+    if (gpsSignal >= 0.75) return TripIndicatorVariant.WARNING;
+    return TripIndicatorVariant.ERROR;
   });
 
   const imageIndicator = createMemo(() => {
     const images = captureDetails()?.images;
 
-    if (images === undefined) return IndicatorVariant.UNDETERMINED;
+    if (images === undefined) return TripIndicatorVariant.UNDETERMINED;
 
     const analysis = getImageAnalysis(captureDetails()?.images ?? {});
 
     switch (analysis.overall) {
       case ImageStatus.OK:
-        return IndicatorVariant.SUCCESS;
+        return TripIndicatorVariant.SUCCESS;
       case ImageStatus.WITHIN_TOLERANCE:
-        return IndicatorVariant.WARNING;
+        return TripIndicatorVariant.WARNING;
       case ImageStatus.OUT_OF_TOLERANCE:
-        return IndicatorVariant.ERROR;
+        return TripIndicatorVariant.ERROR;
     }
   });
 
@@ -172,7 +172,7 @@ const Trip: Component = () => {
                 </div>
               </div>
               <section class='grid grid-cols-2 gap-2 text-sm md:grid-cols-4'>
-                <Indicator
+                <TripIndicator
                   variant={storageIndicator()}
                   icon={IconDatabase}
                   indicates='Storage left'
@@ -182,7 +182,7 @@ const Trip: Component = () => {
                   )}
                 />
 
-                <Indicator
+                <TripIndicator
                   variant={gpsIndicator()}
                   icon={IconCurrentLocation}
                   indicates='GPS'
@@ -192,11 +192,11 @@ const Trip: Component = () => {
                   )}
                 />
 
-                <Indicator
+                <TripIndicator
                   variant={
                     captureDetails()?.activeCapture
-                      ? IndicatorVariant.SUCCESS
-                      : IndicatorVariant.UNDETERMINED
+                      ? TripIndicatorVariant.SUCCESS
+                      : TripIndicatorVariant.UNDETERMINED
                   }
                   icon={IconVideo}
                   indicates='Capture'
@@ -205,7 +205,7 @@ const Trip: Component = () => {
                   }
                 />
 
-                <Indicator
+                <TripIndicator
                   variant={imageIndicator()}
                   icon={IconPhoto}
                   indicates='Images'

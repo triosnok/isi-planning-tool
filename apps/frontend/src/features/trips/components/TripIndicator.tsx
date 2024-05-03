@@ -6,40 +6,40 @@ import { cva } from 'class-variance-authority';
 
 import { IconType, cn } from '@/lib/utils';
 
-export enum IndicatorVariant {
+export enum TripIndicatorVariant {
   UNDETERMINED = 'undetermined',
   SUCCESS = 'success',
   WARNING = 'warning',
   ERROR = 'error',
 }
 
-const indicatorVariants = cva('rounded-lg border-2 p-2 truncate', {
+const tripIndicatorVariants = cva('rounded-lg border-2 p-2 truncate', {
   variants: {
     variant: {
-      [IndicatorVariant.UNDETERMINED]:
+      [TripIndicatorVariant.UNDETERMINED]:
         'border-gray-200 bg-gray-50 text-gray-950 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-50',
-      [IndicatorVariant.SUCCESS]:
+      [TripIndicatorVariant.SUCCESS]:
         'border-success-600 bg-success-50 text-success-950 dark:bg-success-950 dark:text-success-50',
-      [IndicatorVariant.WARNING]:
+      [TripIndicatorVariant.WARNING]:
         'border-warning-400 bg-warning-50 text-warning-950 dark:bg-warning-950 dark:text-warning-50',
-      [IndicatorVariant.ERROR]:
+      [TripIndicatorVariant.ERROR]:
         'border-error-600 bg-error-50 text-error-950 dark:bg-error-950 dark:text-error-50',
     },
   },
   defaultVariants: {
-    variant: IndicatorVariant.UNDETERMINED,
+    variant: TripIndicatorVariant.UNDETERMINED,
   },
 });
 
-export interface IndicatorProps
+export interface TripIndicatorProps
   extends ComponentProps<'div'>,
-    VariantProps<typeof indicatorVariants> {
+    VariantProps<typeof tripIndicatorVariants> {
   icon: IconType;
   indicates: string;
   status: string;
 }
 
-const Indicator: Component<IndicatorProps> = (props) => {
+const TripIndicator: Component<TripIndicatorProps> = (props) => {
   const [local, rest] = splitProps(props, [
     'variant',
     'class',
@@ -51,7 +51,7 @@ const Indicator: Component<IndicatorProps> = (props) => {
   return (
     <div
       class={cn(
-        indicatorVariants({ variant: local.variant }),
+        tripIndicatorVariants({ variant: local.variant }),
         local.class,
         'flex flex-col items-center justify-center'
       )}
@@ -64,4 +64,4 @@ const Indicator: Component<IndicatorProps> = (props) => {
   );
 };
 
-export { Indicator, indicatorVariants };
+export { TripIndicator, tripIndicatorVariants };
