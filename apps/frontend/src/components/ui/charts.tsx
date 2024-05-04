@@ -10,6 +10,7 @@ import {
 } from 'solid-js';
 import { unwrap } from 'solid-js/store';
 
+import { NumberFormat, useTranslations } from '@/features/i18n';
 import { cn } from '@/lib/utils';
 import { mergeRefs, Ref } from '@solid-primitives/refs';
 import type {
@@ -66,6 +67,7 @@ export interface ChartContext {
 }
 
 const BaseChart: Component<ChartProps> = (rawProps) => {
+  const { n } = useTranslations();
   const [canvasRef, setCanvasRef] = createSignal<HTMLCanvasElement | null>();
   const [chart, setChart] = createSignal<Chart>();
   const [chartContext, setChartContext] = createSignal<ChartContext>();
@@ -88,6 +90,11 @@ const BaseChart: Component<ChartProps> = (rawProps) => {
       config.options.plugins.tooltip = {
         enabled: false,
         external: setChartContext,
+        callbacks: {
+          label: ({ dataset, raw }) => {
+            return `${dataset.label}: ${n(raw as any, NumberFormat.INTEGER)}`;
+          },
+        },
       };
     }
 
