@@ -11,7 +11,6 @@ import { useNavigate } from '@solidjs/router';
 import { Component } from 'solid-js';
 import { z } from 'zod';
 import { useTripMutation } from '../api';
-import { getImageAnalysis } from '../utils';
 import ImageSummary from './ImageSummary';
 
 export interface TripSummaryDialogProps {
@@ -44,7 +43,7 @@ const TripSummaryDialog: Component<TripSummaryDialogProps> = (props) => {
     }
   };
 
-  const analysis = () => getImageAnalysis(props.captureDetails?.images ?? {});
+  const analysis = () => props?.captureDetails?.imageAnalysis;
 
   return (
     <Dialog open={props.open} onOpenChange={props.onOpenChange}>

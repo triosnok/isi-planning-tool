@@ -11,7 +11,7 @@ import { ImageAnalysis } from '@isi-insight/client';
 import ImagePositionStatus from './ImagePositionStatus';
 
 export interface ImageSummaryProps {
-  analysis: ImageAnalysis;
+  analysis: ImageAnalysis | undefined;
 }
 
 const ImageSummary: Component<ImageSummaryProps> = (props) => {
@@ -36,20 +36,20 @@ const ImageSummary: Component<ImageSummaryProps> = (props) => {
   );
 
   return (
-    <div class={tripSummaryVariants({ status: props.analysis.overall })}>
+    <div class={tripSummaryVariants({ status: props.analysis?.overall })}>
       <div class='flex flex-row justify-between pb-2'>
         <p class='max-w-full self-center truncate font-medium'>
           {t('TRIPS.TRIP_SUMMARY.AMOUNT_OF_IMAGES_TAKEN')}
         </p>
 
         <Switch>
-          <Match when={props.analysis.overall === 'OK'}>
+          <Match when={props.analysis?.overall === 'OK'}>
             <IconCircleCheckFilled class='text-success-600 size-5' />
           </Match>
-          <Match when={props.analysis.overall === 'OUT_OF_TOLERANCE'}>
+          <Match when={props.analysis?.overall === 'OUT_OF_TOLERANCE'}>
             <IconCircleXFilled class='text-error-600 size-5' />
           </Match>
-          <Match when={props.analysis.overall === 'WITHIN_TOLERANCE'}>
+          <Match when={props.analysis?.overall === 'WITHIN_TOLERANCE'}>
             <IconAlertCircleFilled class='text-warning-600 size-5' />
           </Match>
         </Switch>
@@ -57,24 +57,24 @@ const ImageSummary: Component<ImageSummaryProps> = (props) => {
 
       <ImagePositionStatus
         position='LEFT'
-        count={props.analysis.positions.LEFT?.count}
-        status={props.analysis.positions.LEFT?.status}
+        count={props.analysis?.positions.LEFT?.count}
+        status={props.analysis?.positions.LEFT?.status}
       />
 
       <ImagePositionStatus
         position='RIGHT'
-        count={props.analysis.positions.RIGHT?.count}
-        status={props.analysis.positions.RIGHT?.status}
+        count={props.analysis?.positions.RIGHT?.count}
+        status={props.analysis?.positions.RIGHT?.status}
       />
 
       <ImagePositionStatus
         position='TOP'
-        count={props.analysis.positions.TOP?.count}
-        status={props.analysis.positions.TOP?.status}
+        count={props.analysis?.positions.TOP?.count}
+        status={props.analysis?.positions.TOP?.status}
       />
 
       <ul class='text-error-500 mt-2 list-inside list-disc text-sm'>
-        <For each={props.analysis.remarks}>
+        <For each={props.analysis?.remarks}>
           {(remark) => (
             <li>
               <span class='-ml-2'>

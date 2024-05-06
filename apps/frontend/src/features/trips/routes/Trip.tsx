@@ -1,11 +1,7 @@
-import MapVehicleMarker from '@/components/map/MapVehicleMarker';
 import MapRailingLayer from '@/components/map/MapRailingLayer';
+import MapVehicleMarker from '@/components/map/MapVehicleMarker';
 import BackLink from '@/components/navigation/BackLink';
 import { Button } from '@/components/ui/button';
-import {
-  TripIndicator,
-  TripIndicatorVariant,
-} from '@/features/trips/components/TripIndicator';
 import { Progress } from '@/components/ui/progress';
 import { SwitchButton } from '@/components/ui/switch-button';
 import { DateFormat, NumberFormat, useTranslations } from '@/features/i18n';
@@ -13,6 +9,10 @@ import {
   useProjectDetailsQuery,
   useProjectRailings,
 } from '@/features/projects/api';
+import {
+  TripIndicator,
+  TripIndicatorVariant,
+} from '@/features/trips/components/TripIndicator';
 import { cn } from '@/lib/utils';
 import { CaptureAction } from '@isi-insight/client';
 import { Collapsible } from '@kobalte/core';
@@ -29,18 +29,17 @@ import dayjs from 'dayjs';
 import { Component, Show, createMemo, createSignal } from 'solid-js';
 import { useTripDetailsQuery } from '../api';
 
+import Header from '@/components/layout/Header';
+import MapFollowVehicleToggle from '@/components/map/MapFollowVehicleToggle';
+import MapPopupLayer from '@/components/map/MapPopupLayer';
+import MapRoot from '@/components/map/MapRoot';
+import MapZoomControls from '@/components/map/MapZoomControls';
 import {
   useTripCaptureAction,
   useTripCaptureDetails,
 } from '@/features/capture/api';
 import TripNoteModule from '../components/TripNoteModule';
 import TripSummaryDialog from '../components/TripSummaryDialog';
-import { ImageStatus, getImageAnalysis } from '../utils';
-import MapZoomControls from '@/components/map/MapZoomControls';
-import MapFollowVehicleToggle from '@/components/map/MapFollowVehicleToggle';
-import MapPopupLayer from '@/components/map/MapPopupLayer';
-import Header from '@/components/layout/Header';
-import MapRoot from '@/components/map/MapRoot';
 
 const Trip: Component = () => {
   const params = useParams();
@@ -105,14 +104,14 @@ const Trip: Component = () => {
 
     if (images === undefined) return TripIndicatorVariant.UNDETERMINED;
 
-    const analysis = getImageAnalysis(captureDetails()?.images ?? {});
+    const analysis = captureDetails()?.imageAnalysis;
 
-    switch (analysis.overall) {
-      case ImageStatus.OK:
+    switch (analysis?.overall) {
+      case 'OK':
         return TripIndicatorVariant.SUCCESS;
-      case ImageStatus.WITHIN_TOLERANCE:
+      case 'WITHIN_TOLERANCE':
         return TripIndicatorVariant.WARNING;
-      case ImageStatus.OUT_OF_TOLERANCE:
+      case 'OUT_OF_TOLERANCE':
         return TripIndicatorVariant.ERROR;
     }
   });
