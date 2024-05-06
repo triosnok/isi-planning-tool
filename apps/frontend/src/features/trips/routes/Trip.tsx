@@ -255,7 +255,7 @@ const Trip: Component = () => {
             </div>
           </section>
 
-          <div class='relative flex-1 overflow-hidden max-md:hidden'>
+          <div class='relative flex-1'>
             <Show when={showTripNoteModule()}>
               <TripNoteModule
                 tripId={params.tripId}
@@ -296,7 +296,12 @@ const Trip: Component = () => {
         <MapPopupLayer />
         <MapRailingLayer railings={railings.data} />
 
-        <div class='absolute right-2 top-2 flex flex-col gap-2'>
+        <div
+          class={cn(
+            'absolute right-2 top-2 flex flex-col gap-2',
+            showTripNoteModule() && 'max-md:hidden'
+          )}
+        >
           <MapZoomControls />
           <MapFollowVehicleToggle />
         </div>
