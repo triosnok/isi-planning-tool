@@ -13,6 +13,7 @@ import {
 import { useProfile } from '@/features/auth/api';
 import { useCaptureMetersByDayQuery } from '@/features/capture/api';
 import { useDeviationCountsQuery } from '@/features/deviation';
+import ErrorLabel from '@/features/error/components/ErrorLabel';
 import { DateFormat, NumberFormat, useTranslations } from '@/features/i18n';
 import { usePositions } from '@/features/positions';
 import { useProjectsQuery } from '@/features/projects/api';
@@ -98,7 +99,7 @@ const Dashboard: Component = () => {
           >
             <div class='my-1 flex justify-between'>
               <ProgressLabel>
-                {t('DASHBOARD.ACTIVE_PROJECTS_PROGRESS')}
+                {t('DASHBOARD.ONGOING_PROJECTS_PROGRESS')}
               </ProgressLabel>
               <ProgressValueLabel>
                 {n(ongoingProjectsProgress().captured, NumberFormat.INTEGER)} /{' '}

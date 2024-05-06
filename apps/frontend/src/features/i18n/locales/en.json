@@ -33,7 +33,7 @@
     "TITLE": "Dashboard",
     "MAP": "Map",
     "DAILY_METERS_CAPTURED": "Daily meters captured",
-    "ACTIVE_PROJECTS_PROGRESS": "Active projects progress"
+    "ONGOING_PROJECTS_PROGRESS": "Ongoing projects progress"
   },
   "DEVIATIONS": {
     "TITLE": "Deviations",
