@@ -24,6 +24,7 @@ import TripNoteMarker from './TripNoteMarker';
 export interface TripNoteModuleProps {
   tripId: string;
   open: boolean;
+  showMapNotes?: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
@@ -178,15 +179,17 @@ const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
         </div>
       </section>
 
-      <For each={notes.data}>
-        {(note) => (
-          <TripNoteMarker
-            note={note}
-            onSelected={() => handleTripNoteToggled(note.id)}
-            selected={selectedTripNotes().includes(note.id)}
-          />
-        )}
-      </For>
+      <Show when={props.showMapNotes !== false}>
+        <For each={notes.data}>
+          {(note) => (
+            <TripNoteMarker
+              note={note}
+              onSelected={() => handleTripNoteToggled(note.id)}
+              selected={selectedTripNotes().includes(note.id)}
+            />
+          )}
+        </For>
+      </Show>
     </>
   );
 };

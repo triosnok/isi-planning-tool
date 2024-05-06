@@ -34,6 +34,7 @@ import MapFollowVehicleToggle from '@/components/map/MapFollowVehicleToggle';
 import MapPopupLayer from '@/components/map/MapPopupLayer';
 import MapRoot from '@/components/map/MapRoot';
 import MapZoomControls from '@/components/map/MapZoomControls';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import {
   useTripCaptureAction,
   useTripCaptureDetails,
@@ -64,6 +65,7 @@ const Trip: Component = () => {
   const [showSummaryDialog, setShowSummaryDialog] = createSignal(false);
   const [showTripNoteModule, setShowTripNoteModule] = createSignal(false);
   const [showMore, setShowMore] = createSignal(false);
+  const [showTripNoteDialog, setShowTripNoteDialog] = createSignal(false);
 
   const progressValue = () => {
     const captureValue = captureDetails()?.metersCaptured ?? 0;
@@ -147,17 +149,29 @@ const Trip: Component = () => {
                     </Show>
                   </span>
                 </div>
+
+                {/* Desktop trip note button */}
                 <Button
                   onClick={() => setShowTripNoteModule(!showTripNoteModule())}
                   class={cn(
-                    'order-last md:order-none',
+                    'order-last max-md:hidden md:order-none',
                     showTripNoteModule() &&
                       'bg-success-600 hover:bg-success-600/90'
                   )}
                 >
                   <div class='flex items-center gap-2'>
                     <IconMessage />
-                    <p class='md:hidden'>{t('NOTES.ADD_NOTE')}</p>
+                  </div>
+                </Button>
+
+                {/* Mobile trip note button */}
+                <Button
+                  onClick={() => setShowTripNoteDialog(true)}
+                  class='order-last md:order-none md:hidden'
+                >
+                  <div class='flex items-center gap-2'>
+                    <IconMessage />
+                    <span>{t('NOTES.SHOW_NOTES')}</span>
                   </div>
                 </Button>
 
@@ -255,7 +269,7 @@ const Trip: Component = () => {
             </div>
           </section>
 
-          <div class='relative flex-1'>
+          <div class='relative flex-1 overflow-hidden max-md:hidden'>
             <Show when={showTripNoteModule()}>
               <TripNoteModule
                 tripId={params.tripId}
@@ -264,6 +278,26 @@ const Trip: Component = () => {
               />
             </Show>
           </div>
+
+          <Dialog
+            open={showTripNoteDialog()}
+            onOpenChange={() => {
+              setShowTripNoteDialog(false);
+              setShowTripNoteModule(false);
+            }}
+          >
+            <DialogContent>
+              <TripNoteModule
+                tripId={params.tripId}
+                showMapNotes={false}
+                open={true}
+                onOpenChange={() => {
+                  setShowTripNoteDialog(false);
+                  setShowTripNoteModule(false);
+                }}
+              />
+            </DialogContent>
+          </Dialog>
 
           <Show when={!tripDetails.data?.endedAt}>
             <div class='pointer-events-auto w-full space-y-2 rounded-md bg-gray-50 p-2 max-md:hidden dark:bg-gray-950'>
@@ -296,12 +330,7 @@ const Trip: Component = () => {
         <MapPopupLayer />
         <MapRailingLayer railings={railings.data} />
 
-        <div
-          class={cn(
-            'absolute right-2 top-2 flex flex-col gap-2',
-            showTripNoteModule() && 'max-md:hidden'
-          )}
-        >
+        <div class='absolute right-2 top-2 flex flex-col gap-2'>
           <MapZoomControls />
           <MapFollowVehicleToggle />
         </div>
