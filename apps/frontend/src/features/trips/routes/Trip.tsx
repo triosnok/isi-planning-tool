@@ -2,7 +2,10 @@ import MapVehicleMarker from '@/components/map/MapVehicleMarker';
 import MapRailingLayer from '@/components/map/MapRailingLayer';
 import BackLink from '@/components/navigation/BackLink';
 import { Button } from '@/components/ui/button';
-import { TripIndicator, TripIndicatorVariant } from '@/features/trips/components/TripIndicator';
+import {
+  TripIndicator,
+  TripIndicatorVariant,
+} from '@/features/trips/components/TripIndicator';
 import { Progress } from '@/components/ui/progress';
 import { SwitchButton } from '@/components/ui/switch-button';
 import { DateFormat, NumberFormat, useTranslations } from '@/features/i18n';
@@ -128,9 +131,7 @@ const Trip: Component = () => {
         <div class='pointer-events-none absolute left-0 top-0 flex h-full w-full flex-col gap-2 overflow-hidden max-md:flex-col-reverse md:w-1/2 md:p-4 lg:w-2/5 xl:w-1/3'>
           <section class='pointer-events-auto bg-gray-50 p-2 max-md:rounded-t-lg md:rounded-md dark:bg-gray-900'>
             <div class='flex flex-col'>
-              <div class='hidden md:flex'>
-                <BackLink href='../..' />
-              </div>
+              <BackLink href='../..' />
             </div>
 
             <div class='space-y-2'>
