@@ -1,11 +1,11 @@
 import type { Component, ComponentProps } from 'solid-js';
 import { splitProps } from 'solid-js';
 
-import { DialogContentProps, DialogDescriptionProps, DialogOverlayProps, DialogPortalProps, Dialog as DialogPrimitive, DialogTitleProps, DialogTriggerProps} from '@kobalte/core/dialog';
-import { TbX } from 'solid-icons/tb';
+import { DialogContentProps, DialogDescriptionProps, DialogOverlayProps, DialogPortalProps, Dialog as DialogPrimitive, DialogTitleProps, DialogTriggerProps } from '@kobalte/core/dialog';
 
 import { cn } from '@/lib/utils';
 import { PolymorphicProps } from '@kobalte/core/polymorphic';
+import { IconX } from '@tabler/icons-solidjs';
 
 const SideDrawer = DialogPrimitive;
 
@@ -64,7 +64,7 @@ const SideDrawerContent: Component<
       >
         {props.children}
         <DialogPrimitive.CloseButton class='data-[expanded]:bg-brand-red-700 absolute right-4 top-4 rounded-sm opacity-70 ring-offset-gray-50 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 disabled:pointer-events-none data-[expanded]:text-gray-500'>
-          <TbX class='size-4' />
+          <IconX class='size-4' />
           <span class='sr-only'>Close</span>
         </DialogPrimitive.CloseButton>
       </DialogPrimitive.Content>
@@ -126,11 +126,6 @@ const SideDrawerDescription: Component<
 };
 
 export {
-  SideDrawer,
-  SideDrawerTrigger,
-  SideDrawerContent,
-  SideDrawerHeader,
-  SideDrawerFooter,
-  SideDrawerTitle,
-  SideDrawerDescription,
+  SideDrawer, SideDrawerContent, SideDrawerDescription, SideDrawerFooter, SideDrawerHeader, SideDrawerTitle, SideDrawerTrigger
 };
+

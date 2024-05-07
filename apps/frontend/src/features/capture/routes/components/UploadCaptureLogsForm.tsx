@@ -12,10 +12,9 @@ import {
   zodForm,
 } from '@modular-forms/solid';
 import { createDropzone } from '@solid-primitives/upload';
-import { TbFile, TbUpload } from 'solid-icons/tb';
+import { IconFile, IconUpload } from '@tabler/icons-solidjs';
 import { Component, Show, createEffect, createSignal } from 'solid-js';
 import { CaptureLogSchema, CaptureLogSchemaValues } from '../../api';
-import { IconUpload } from '@tabler/icons-solidjs';
 
 export type UploadCaptureLogsProps = {
   isLoading: boolean;
@@ -213,7 +212,7 @@ const Dropzone: Component<DropzoneProps> = (props) => {
       >
         {(f) => (
           <div class='flex flex-col items-center justify-center gap-2'>
-            <TbFile class='size-12' />
+            <IconFile class='size-12' />
             {f().name}
           </div>
         )}

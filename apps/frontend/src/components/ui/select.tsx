@@ -2,10 +2,10 @@ import type { Component } from 'solid-js';
 import { splitProps } from 'solid-js';
 
 import { SelectContentProps, SelectItemProps, Select as SelectPrimitive, SelectTriggerProps } from '@kobalte/core/select';
-import { TbCheck, TbChevronDown } from 'solid-icons/tb';
 
 import { cn } from '@/lib/utils';
 import { PolymorphicProps } from '@kobalte/core/polymorphic';
+import { IconCheck, IconChevronDown } from '@tabler/icons-solidjs';
 
 const Select = SelectPrimitive;
 
@@ -26,7 +26,7 @@ const SelectTrigger: Component<
     >
       {props.children}
       <SelectPrimitive.Icon>
-        <TbChevronDown class='size-4 opacity-50' />
+        <IconChevronDown class='size-4 opacity-50' />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   );
@@ -66,7 +66,7 @@ const SelectItem: Component<
     >
       <span class='absolute left-2 flex size-3.5 items-center justify-center'>
         <SelectPrimitive.ItemIndicator>
-          <TbCheck class='size-4' />
+          <IconCheck class='size-4' />
         </SelectPrimitive.ItemIndicator>
       </span>
       <SelectPrimitive.ItemLabel class='flex-1'>

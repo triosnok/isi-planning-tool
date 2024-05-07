@@ -7,10 +7,10 @@ import {
   Accordion as AccordionPrimitive,
   AccordionTriggerProps,
 } from '@kobalte/core/accordion';
-import { TbChevronDown } from 'solid-icons/tb';
 
 import { cn } from '@/lib/utils';
 import { PolymorphicProps } from '@kobalte/core/polymorphic';
+import { IconChevronDown } from '@tabler/icons-solidjs';
 
 const Accordion = AccordionPrimitive;
 
@@ -37,7 +37,7 @@ const AccordionTrigger: Component<
         {...rest}
       >
         {props.children}
-        <TbChevronDown class='size-4 shrink-0 transition-transform duration-200' />
+        <IconChevronDown class='size-4 shrink-0 transition-transform duration-200' />
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   );

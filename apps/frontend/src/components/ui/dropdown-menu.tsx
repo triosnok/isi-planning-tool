@@ -13,10 +13,10 @@ import {
   DropdownMenuSubContentProps,
   DropdownMenuSubTriggerProps,
 } from '@kobalte/core/dropdown-menu';
-import { TbCheck, TbChevronRight, TbCircle } from 'solid-icons/tb';
 
 import { cn } from '@/lib/utils';
 import { PolymorphicProps } from '@kobalte/core/polymorphic';
+import { IconCheck, IconChevronRight, IconCircle } from '@tabler/icons-solidjs';
 
 const DropdownMenu: Component<DropdownMenuRootProps> = (props) => {
   return <DropdownMenuPrimitive gutter={4} {...props} />;
@@ -116,7 +116,7 @@ const DropdownMenuSubTrigger: Component<
       {...rest}
     >
       {props.children}
-      <TbChevronRight class='ml-auto h-4 w-4' />
+      <IconChevronRight class='ml-auto h-4 w-4' />
     </DropdownMenuPrimitive.SubTrigger>
   );
 };
@@ -150,7 +150,7 @@ const DropdownMenuCheckboxItem: Component<
     >
       <span class='absolute left-2 flex h-3.5 w-3.5 items-center justify-center'>
         <DropdownMenuPrimitive.ItemIndicator>
-          <TbCheck class='h-4 w-4' />
+          <IconCheck class='h-4 w-4' />
         </DropdownMenuPrimitive.ItemIndicator>
       </span>
       {props.children}
@@ -188,7 +188,7 @@ const DropdownMenuRadioItem: Component<
     >
       <span class='absolute left-2 flex h-3.5 w-3.5 items-center justify-center'>
         <DropdownMenuPrimitive.ItemIndicator>
-          <TbCircle class='h-2 w-2 fill-current' />
+          <IconCircle class='h-2 w-2 fill-current' />
         </DropdownMenuPrimitive.ItemIndicator>
       </span>
       {props.children}
@@ -212,5 +212,6 @@ export {
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 };
+

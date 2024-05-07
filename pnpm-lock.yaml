@@ -89,9 +89,6 @@ importers:
       proj4:
         specifier: ^2.11.0
         version: 2.11.0
-      solid-icons:
-        specifier: ^1.1.0
-        version: 1.1.0(solid-js@1.8.17)
       solid-js:
         specifier: ^1.8.17
         version: 1.8.17
@@ -1407,11 +1404,6 @@ packages:
     resolution: {integrity: sha512-8qTlDJDRhKE+qWt4T5MLaeuv7RMJ13tEEmHASjieO6q6/nCmw842T4lG8kAly4VC1bKCxUf0/oCczo9TD5096A==}
     peerDependencies:
       solid-js: ^1.8
-
-  solid-icons@1.1.0:
-    resolution: {integrity: sha512-IesTfr/F1ElVwH2E1110s2RPXH4pujKfSs+koT8rwuTAdleO5s26lNSpqJV7D1+QHooJj18mcOiz2PIKs0ic+A==}
-    peerDependencies:
-      solid-js: '*'
 
   solid-js@1.8.17:
     resolution: {integrity: sha512-E0FkUgv9sG/gEBWkHr/2XkBluHb1fkrHywUgA6o6XolPDCJ4g1HaLmQufcBBhiF36ee40q+HpG/vCZu7fLpI3Q==}
@@ -2768,10 +2760,6 @@ snapshots:
   solid-focus-trap@0.1.5(solid-js@1.8.17):
     dependencies:
       '@corvu/utils': 0.1.1(solid-js@1.8.17)
-      solid-js: 1.8.17
-
-  solid-icons@1.1.0(solid-js@1.8.17):
-    dependencies:
       solid-js: 1.8.17
 
   solid-js@1.8.17:
