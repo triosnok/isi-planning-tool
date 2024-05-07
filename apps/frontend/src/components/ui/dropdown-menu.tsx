@@ -1,15 +1,25 @@
 import type { Component, ComponentProps } from 'solid-js';
 import { splitProps } from 'solid-js';
 
-import { DropdownMenu as DropdownMenuPrimitive } from '@kobalte/core';
+import {
+  DropdownMenuCheckboxItemProps,
+  DropdownMenuContentProps,
+  DropdownMenuGroupLabelProps,
+  DropdownMenuItemProps,
+  DropdownMenu as DropdownMenuPrimitive,
+  DropdownMenuRadioItemProps,
+  DropdownMenuRootProps,
+  DropdownMenuSeparatorProps,
+  DropdownMenuSubContentProps,
+  DropdownMenuSubTriggerProps,
+} from '@kobalte/core/dropdown-menu';
 import { TbCheck, TbChevronRight, TbCircle } from 'solid-icons/tb';
 
 import { cn } from '@/lib/utils';
+import { PolymorphicProps } from '@kobalte/core/polymorphic';
 
-const DropdownMenu: Component<DropdownMenuPrimitive.DropdownMenuRootProps> = (
-  props
-) => {
-  return <DropdownMenuPrimitive.Root gutter={4} {...props} />;
+const DropdownMenu: Component<DropdownMenuRootProps> = (props) => {
+  return <DropdownMenuPrimitive gutter={4} {...props} />;
 };
 
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
@@ -17,7 +27,7 @@ const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
 
 const DropdownMenuContent: Component<
-  DropdownMenuPrimitive.DropdownMenuContentProps
+  PolymorphicProps<'div', DropdownMenuContentProps>
 > = (props) => {
   const [, rest] = splitProps(props, ['class']);
   return (
@@ -36,7 +46,7 @@ const DropdownMenuContent: Component<
 };
 
 const DropdownMenuItem: Component<
-  DropdownMenuPrimitive.DropdownMenuItemProps
+  PolymorphicProps<'div', DropdownMenuItemProps>
 > = (props) => {
   const [, rest] = splitProps(props, ['class']);
   return (
@@ -77,7 +87,7 @@ const DropdownMenuLabel: Component<
 };
 
 const DropdownMenuSeparator: Component<
-  DropdownMenuPrimitive.DropdownMenuSeparatorProps
+  PolymorphicProps<'div', DropdownMenuSeparatorProps>
 > = (props) => {
   const [, rest] = splitProps(props, ['class']);
   return (
@@ -94,7 +104,7 @@ const DropdownMenuSeparator: Component<
 const DropdownMenuSub = DropdownMenuPrimitive.Sub;
 
 const DropdownMenuSubTrigger: Component<
-  DropdownMenuPrimitive.DropdownMenuSubTriggerProps
+  PolymorphicProps<'div', DropdownMenuSubTriggerProps>
 > = (props) => {
   const [, rest] = splitProps(props, ['class', 'children']);
   return (
@@ -112,7 +122,7 @@ const DropdownMenuSubTrigger: Component<
 };
 
 const DropdownMenuSubContent: Component<
-  DropdownMenuPrimitive.DropdownMenuSubContentProps
+  PolymorphicProps<'div', DropdownMenuSubContentProps>
 > = (props) => {
   const [, rest] = splitProps(props, ['class']);
   return (
@@ -127,7 +137,7 @@ const DropdownMenuSubContent: Component<
 };
 
 const DropdownMenuCheckboxItem: Component<
-  DropdownMenuPrimitive.DropdownMenuCheckboxItemProps
+  PolymorphicProps<'div', DropdownMenuCheckboxItemProps>
 > = (props) => {
   const [, rest] = splitProps(props, ['class', 'children']);
   return (
@@ -151,7 +161,7 @@ const DropdownMenuCheckboxItem: Component<
 const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 
 const DropdownMenuGroupLabel: Component<
-  DropdownMenuPrimitive.DropdownMenuGroupLabelProps
+  PolymorphicProps<'div', DropdownMenuGroupLabelProps>
 > = (props) => {
   const [, rest] = splitProps(props, ['class']);
   return (
@@ -165,7 +175,7 @@ const DropdownMenuGroupLabel: Component<
 const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
 
 const DropdownMenuRadioItem: Component<
-  DropdownMenuPrimitive.DropdownMenuRadioItemProps
+  PolymorphicProps<'div', DropdownMenuRadioItemProps>
 > = (props) => {
   const [, rest] = splitProps(props, ['class', 'children']);
   return (
@@ -188,19 +198,19 @@ const DropdownMenuRadioItem: Component<
 
 export {
   DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuPortal,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuShortcut,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubTrigger,
-  DropdownMenuSubContent,
   DropdownMenuCheckboxItem,
+  DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuGroupLabel,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
 };

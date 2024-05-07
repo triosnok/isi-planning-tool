@@ -1,24 +1,25 @@
 import type { Component } from 'solid-js';
 import { splitProps } from 'solid-js';
 
-import { Select as SelectPrimitive } from '@kobalte/core';
+import { SelectContentProps, SelectItemProps, Select as SelectPrimitive, SelectTriggerProps } from '@kobalte/core/select';
 import { TbCheck, TbChevronDown } from 'solid-icons/tb';
 
 import { cn } from '@/lib/utils';
+import { PolymorphicProps } from '@kobalte/core/polymorphic';
 
-const Select = SelectPrimitive.Root;
+const Select = SelectPrimitive;
 
 const SelectValue = SelectPrimitive.Value;
 
-const SelectTrigger: Component<SelectPrimitive.SelectTriggerProps> = (
-  props
-) => {
+const SelectTrigger: Component<
+  PolymorphicProps<'div', SelectTriggerProps>
+> = (props) => {
   const [, rest] = splitProps(props, ['class', 'children']);
   return (
     <SelectPrimitive.Trigger
       class={cn(
         'flex h-10 w-full items-center justify-between rounded-md border border-gray-200 bg-transparent px-3 py-2 text-sm ring-offset-gray-50 placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-900 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
-        'dark:border-gray-400 dark:focus-visible:ring-gray-400 dark:ring-offset-gray-400',
+        'dark:border-gray-400 dark:ring-offset-gray-400 dark:focus-visible:ring-gray-400',
         props.class
       )}
       {...rest}
@@ -31,9 +32,9 @@ const SelectTrigger: Component<SelectPrimitive.SelectTriggerProps> = (
   );
 };
 
-const SelectContent: Component<SelectPrimitive.SelectContentProps> = (
-  props
-) => {
+const SelectContent: Component<
+  PolymorphicProps<'div', SelectContentProps>
+> = (props) => {
   const [, rest] = splitProps(props, ['class']);
   return (
     <SelectPrimitive.Portal>
@@ -50,7 +51,9 @@ const SelectContent: Component<SelectPrimitive.SelectContentProps> = (
   );
 };
 
-const SelectItem: Component<SelectPrimitive.SelectItemProps> = (props) => {
+const SelectItem: Component<
+  PolymorphicProps<'div', SelectItemProps>
+> = (props) => {
   const [, rest] = splitProps(props, ['class', 'children']);
   return (
     <SelectPrimitive.Item
@@ -73,4 +76,4 @@ const SelectItem: Component<SelectPrimitive.SelectItemProps> = (props) => {
   );
 };
 
-export { Select, SelectValue, SelectTrigger, SelectContent, SelectItem };
+export { Select, SelectContent, SelectItem, SelectTrigger, SelectValue };

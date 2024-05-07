@@ -1,19 +1,24 @@
 import type { Component } from 'solid-js';
 import { splitProps } from 'solid-js';
 
-import { Popover as PopoverPrimitive } from '@kobalte/core';
+import {
+  PopoverContentProps,
+  Popover as PopoverPrimitive,
+  PopoverRootProps,
+} from '@kobalte/core/popover';
 
 import { cn } from '@/lib/utils';
+import { PolymorphicProps } from '@kobalte/core/polymorphic';
 
-const Popover: Component<PopoverPrimitive.PopoverRootProps> = (props) => {
-  return <PopoverPrimitive.Root gutter={4} {...props} />;
+const Popover: Component<PopoverRootProps> = (props) => {
+  return <PopoverPrimitive gutter={4} {...props} />;
 };
 
 const PopoverTrigger = PopoverPrimitive.Trigger;
 
-const PopoverContent: Component<PopoverPrimitive.PopoverContentProps> = (
-  props
-) => {
+const PopoverContent: Component<
+  PolymorphicProps<'div', PopoverContentProps>
+> = (props) => {
   const [, rest] = splitProps(props, ['class']);
   return (
     <PopoverPrimitive.Portal>
@@ -31,4 +36,4 @@ const PopoverContent: Component<PopoverPrimitive.PopoverContentProps> = (
 
 const PopoverCloseButton = PopoverPrimitive.CloseButton;
 
-export { Popover, PopoverTrigger, PopoverContent, PopoverCloseButton };
+export { Popover, PopoverCloseButton, PopoverContent, PopoverTrigger };
