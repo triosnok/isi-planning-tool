@@ -20,7 +20,10 @@ import no.isi.insight.planning.db.model.UserAccountRole;
 import no.isi.insight.planning.db.repository.TripJdbcRepository;
 import no.isi.insight.planning.db.repository.UserAccountJdbcRepository;
 import no.isi.insight.planning.db.repository.UserAccountJpaRepository;
+import no.isi.insight.planning.error.model.ForbiddenException;
 import no.isi.insight.planning.error.model.NotFoundException;
+import no.isi.insight.planning.error.model.UnauthorizedException;
+import no.isi.insight.planning.utility.RequestUtils;
 
 @RestController
 @RequiredArgsConstructor
@@ -69,11 +72,22 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
   }
 
   @Override
-  @PlannerAuthorization
   public ResponseEntity<UserAccountDetails> updateUserAccount(
       UpdateUserAccountRequest request,
       UUID id
   ) {
+    var account = RequestUtils.getRequestingUserAccount()
+      .orElseThrow(() -> new UnauthorizedException("Not authorized"));
+
+    // only planners are allowed to update other users
+    var permitted = switch (account.getRole()) {
+      case PLANNER -> true;
+      case DRIVER -> account.getUserAccountId().equals(id);
+    };
+
+    if (!permitted) {
+      throw new ForbiddenException("Not authorized to update user with id: %s".formatted(id));
+    }
 
     UserAccountRole role = switch (request.role()) {
       case PLANNER -> UserAccountRole.PLANNER;
