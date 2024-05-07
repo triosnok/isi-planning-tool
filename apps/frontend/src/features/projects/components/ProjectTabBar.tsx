@@ -1,5 +1,5 @@
 import { useTranslations } from '@/features/i18n';
-import { cn } from '@/lib/utils';
+import { IconType, cn } from '@/lib/utils';
 import { IconClipboardList, IconMap } from '@tabler/icons-solidjs';
 import { Component } from 'solid-js';
 
@@ -37,9 +37,9 @@ const ProjectTabBar: Component<ProjectTabBarProps> = (props) => {
 };
 
 interface TabButtonProps {
-  isActive: boolean | undefined;
-  icon: any;
-  text: string | undefined;
+  isActive?: boolean;
+  icon: IconType;
+  text?: string;
   onClick: () => void;
 }
 
@@ -51,7 +51,8 @@ const TabButton: Component<TabButtonProps> = (props) => {
       onClick={props.onClick}
       class={cn(
         'border-gray flex flex-col items-center border-t-2 py-1 text-center text-xs transition-colors',
-        props.isActive && 'border-brand-blue-500 dark:border-brand-blue-600 bg-brand-blue-50/40 dark:bg-brand-blue-950/60 text-brand-blue-500 dark:text-brand-blue-600'
+        props.isActive &&
+          'border-brand-blue-500 dark:border-brand-blue-600 bg-brand-blue-50/40 dark:bg-brand-blue-950/60 text-brand-blue-500 dark:text-brand-blue-600'
       )}
     >
       <props.icon class='size-6' />
