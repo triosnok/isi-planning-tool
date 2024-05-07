@@ -50,12 +50,12 @@ const TabButton: Component<TabButtonProps> = (props) => {
       type='button'
       onClick={props.onClick}
       class={cn(
-        'border-gray flex flex-col items-center border-t-4 pb-1 pt-2 text-center transition-colors hover:bg-gray-200',
-        props.isActive && 'border-brand-blue border-t-4'
+        'border-gray flex flex-col items-center border-t-2 py-1 text-center text-xs transition-colors',
+        props.isActive && 'border-brand-blue-500 dark:border-brand-blue-600 bg-brand-blue-50/40 dark:bg-brand-blue-950/60 text-brand-blue-500 dark:text-brand-blue-600'
       )}
     >
-      <props.icon class={cn('size-10', props.isActive && 'text-brand-blue')} />
-      <span class={cn(props.isActive && 'text-brand-blue')}>{props.text}</span>
+      <props.icon class='size-6' />
+      <span>{props.text}</span>
     </button>
   );
 };
