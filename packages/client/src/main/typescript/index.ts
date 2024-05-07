@@ -93,6 +93,10 @@ export interface DeviationDetails {
     details: { [index: string]: string };
 }
 
+export interface FileUploadResponse {
+    url: string;
+}
+
 export interface Geometry {
     wkt: string;
     srid: number;
@@ -224,6 +228,10 @@ export interface RoadSegment {
     length: number;
 }
 
+export interface SearchResult {
+    type: "PROJECT" | "USER" | "VEHICLE";
+}
+
 export interface CreateTripNoteRequest {
     tripId: string;
     note: string;
@@ -240,6 +248,9 @@ export interface TripDetails {
     id: string;
     projectPlanId: string;
     projectId: string;
+    vehicleId: string;
+    vehicleModel: string;
+    vehicleRegistrationNumber: string;
     project: string;
     driver: string;
     startedAt: DateAsString;
@@ -327,6 +338,26 @@ export interface VehicleDetails {
     active: boolean;
 }
 
+export interface ProjectResult extends SearchResult {
+    type: "PROJECT";
+    id: string;
+    name: string;
+    referenceCode: string;
+}
+
+export interface UserResult extends SearchResult {
+    type: "USER";
+    id: string;
+    fullName: string;
+}
+
+export interface VehicleResult extends SearchResult {
+    type: "VEHICLE";
+    id: string;
+    model: string;
+    registrationNumber: string;
+}
+
 export type DateAsString = string;
 
 export type UserRole = "DRIVER" | "PLANNER";
@@ -346,3 +377,7 @@ export type ProjectStatus = "UPCOMING" | "ONGOING" | "PREVIOUS";
 export type RoadCategory = "PRIVATE" | "FOREST" | "MUNICIPALITY" | "COUNTY" | "NATIONAL" | "EUROPE" | "UNKNOWN";
 
 export type CameraPosition = "LEFT" | "RIGHT" | "TOP";
+
+export type ResultType = "PROJECT" | "USER" | "VEHICLE";
+
+export type SearchResultUnion = ProjectResult | UserResult | VehicleResult;
