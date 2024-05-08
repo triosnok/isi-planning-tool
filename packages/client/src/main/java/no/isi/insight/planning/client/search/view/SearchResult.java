@@ -17,7 +17,9 @@ import no.isi.insight.planning.client.annotation.GenerateTypeScript;
 @JsonSubTypes({
     @JsonSubTypes.Type(value = SearchResult.ProjectResult.class, name = "PROJECT"),
     @JsonSubTypes.Type(value = SearchResult.UserResult.class, name = "USER"),
-    @JsonSubTypes.Type(value = SearchResult.VehicleResult.class, name = "VEHICLE")
+    @JsonSubTypes.Type(value = SearchResult.VehicleResult.class, name = "VEHICLE"),
+    @JsonSubTypes.Type(value = SearchResult.RailingResult.class, name = "RAILING"),
+    @JsonSubTypes.Type(value = SearchResult.RoadSegmentResult.class, name = "ROAD_SEGMENT")
 })
 public abstract class SearchResult {
   private ResultType type;
@@ -25,7 +27,9 @@ public abstract class SearchResult {
   public static enum ResultType {
     PROJECT,
     USER,
-    VEHICLE
+    VEHICLE,
+    RAILING,
+    ROAD_SEGMENT
   }
 
   @Data
@@ -41,6 +45,7 @@ public abstract class SearchResult {
   public static class UserResult extends SearchResult {
     private UUID id;
     private String fullName;
+    private String email;
   }
 
   @Data
@@ -49,6 +54,26 @@ public abstract class SearchResult {
     private UUID id;
     private String model;
     private String registrationNumber;
+  }
+
+  @Data
+  @EqualsAndHashCode(callSuper = false)
+  public static class RailingResult extends SearchResult {
+    private Long id;
+    private UUID projectId;
+    private String projectName;
+    private String projectReferenceCode;
+  }
+
+  @Data
+  @EqualsAndHashCode(callSuper = false)
+  public static class RoadSegmentResult extends SearchResult {
+    private String id;
+    private Long railingId;
+    private String roadSystemReference;
+    private UUID projectId;
+    private String projectName;
+    private String projectReferenceCode;
   }
 
 }

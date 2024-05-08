@@ -130,6 +130,17 @@
     "PREVIOUS": "Previous",
     "NEXT": "Next"
   },
+  "SEARCH": {
+    "RESULT_TYPE": {
+      "PROJECT": "Projects",
+      "RAILING": "Railings",
+      "TRIP": "Trips",
+      "USER": "Users",
+      "VEHICLE": "Vehicles",
+      "ROAD_SEGMENT": "DASDASDSA"
+    },
+    "RESULT_LIMIT_REACHED": "Showing only the first 100 results, be more specific to narrow down the search."
+  },
   "TRIPS": {
     "TITLE": "Trips",
     "TRIP": "Trip",

@@ -20,4 +20,5 @@ export enum CacheKey {
   TRIP_NOTE_DETAILS = 'TRIP_NOTE_DETAILS',
   USER_LIST = 'USER_LIST',
   USER_DETAILS = 'USER',
+  SEARCH = 'SEARCH',
 }
