@@ -40,7 +40,7 @@ import ProjectStatusIndicator from '../components/ProjectStatusIndicator';
 import RailingCard from '../components/RailingCard';
 import { useProjectSearchParams } from '../utils';
 
-const Project: Component<LayoutProps> = (props) => {
+const ProjectDetails: Component<LayoutProps> = (props) => {
   const params = useParams();
   const project = useProjectDetailsQuery(params.id);
   const plans = useProjectPlansQuery(params.id);
@@ -310,4 +310,4 @@ const RailingList: Component = () => {
   );
 };
 
-export default Project;
+export default ProjectDetails;

@@ -18,7 +18,7 @@ import { IconPlus } from '@tabler/icons-solidjs';
 import { Component, For, Show } from 'solid-js';
 import { useProjectsQuery } from '../api';
 
-const Projects: Component = () => {
+const ProjectOverview: Component = () => {
   const ongoingProjects = useProjectsQuery('ONGOING');
   const upcomingProjects = useProjectsQuery('UPCOMING');
   const previousProjects = useProjectsQuery('PREVIOUS');
@@ -138,4 +138,4 @@ const Projects: Component = () => {
   );
 };
 
-export default Projects;
+export default ProjectOverview;

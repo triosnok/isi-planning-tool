@@ -7,12 +7,12 @@ export const routes: RouteDefinition[] = [
     path: '/projects',
     component: lazy(() => import('./ProjectsLayout')),
     children: [
-      { path: '/', component: lazy(() => import('./Projects')) },
+      { path: '/', component: lazy(() => import('./ProjectOverview')) },
       { path: '/new', component: lazy(() => import('./NewProject')) },
       { path: '/:id/update', component: lazy(() => import('./UpdateProject')) },
       {
         path: '/:id',
-        component: lazy(() => import('./Project')),
+        component: lazy(() => import('./ProjectDetails')),
         children: [
           {
             path: '/',
