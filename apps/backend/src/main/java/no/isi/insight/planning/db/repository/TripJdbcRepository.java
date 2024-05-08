@@ -27,6 +27,22 @@ public class TripJdbcRepository {
 
   // language=sql
   private static final String TRIP_DETAILS_QUERY = """
+    WITH trip_note_count AS (
+      SELECT
+        tn.fk_trip_id AS trip_id,
+        COUNT(*) AS note_count
+      FROM trip_note tn 
+      GROUP BY tn.fk_trip_id
+    ),
+    trip_deviation_count AS (
+      SELECT
+        trc.fk_trip_id AS trip_id,
+        COUNT(*) AS deviation_count
+      FROM trip_railing_deviation trd
+      INNER JOIN trip_railing_capture trc
+        ON trd.fk_trip_railing_capture_id = trc.trip_railing_capture_id
+      GROUP BY trc.fk_trip_id
+    )
     SELECT
       t.trip_id AS id,
       pp.project_plan_id AS project_plan_id,
@@ -39,11 +55,8 @@ public class TripJdbcRepository {
       t.started_at,
       t.ended_at,
       t.sequence_number,
-      COALESCE(
-          (SELECT COUNT(*) FROM trip_note tn WHERE tn.fk_trip_id = t.trip_id),
-          0
-      ) AS note_count,
-      0 AS deviations,
+      COALESCE(tnc.note_count, 0) AS note_count,
+      COALESCE(tdc.deviation_count, 0) AS deviations,
       t.capture_details
     FROM
       trip t
@@ -55,6 +68,10 @@ public class TripJdbcRepository {
       ON t.fk_driver_user_id = d.user_account_id
     INNER JOIN vehicle v
       ON t.fk_vehicle_id = v.vehicle_id
+    LEFT JOIN trip_note_count tnc
+      ON t.trip_id = tnc.trip_id
+    LEFT JOIN trip_deviation_count tdc
+      ON t.trip_id = tdc.trip_id
     WHERE (:projectId IS NULL OR p.project_id = :projectId::uuid)
       AND (:driverId IS NULL OR d.user_account_id = :driverId::uuid)
       AND (:vehicleId IS NULL OR v.vehicle_id = :vehicleId::uuid)
