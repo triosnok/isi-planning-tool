@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import no.isi.insight.planning.auth.annotation.DriverAuthorization;
+import no.isi.insight.planning.capture.service.CaptureReplayService;
 import no.isi.insight.planning.client.trip.TripRestService;
 import no.isi.insight.planning.client.trip.view.CreateTripRequest;
 import no.isi.insight.planning.client.trip.view.TripDetails;
@@ -35,6 +36,7 @@ public class TripRestServiceImpl implements TripRestService {
   private final ProjectPlanJpaRepository planJpaRepository;
   private final VehicleJpaRepository vehicleJpaRepository;
   private final ApplicationEventPublisher eventPublisher;
+  private final CaptureReplayService captureReplayService;
 
   @Override
   @DriverAuthorization
@@ -76,13 +78,17 @@ public class TripRestServiceImpl implements TripRestService {
         savedTrip.getId(),
         savedTrip.getProjectPlan().getProject().getId(),
         savedTrip.getProjectPlan().getId(),
+        savedTrip.getVehicle().getId(),
+        savedTrip.getVehicle().getModel(),
+        savedTrip.getVehicle().getRegistrationNumber(),
         savedTrip.getProjectPlan().getProject().getName(),
         savedTrip.getDriver().getFullName(),
         savedTrip.getStartedAt(),
         savedTrip.getEndedAt(),
         savedTrip.getSequenceNumber(),
         Long.valueOf(0),
-        0
+        0,
+        null
       )
     );
   }
@@ -102,13 +108,17 @@ public class TripRestServiceImpl implements TripRestService {
         trip.getId(),
         trip.getProjectPlan().getId(),
         trip.getProjectPlan().getProject().getId(),
+        trip.getVehicle().getId(),
+        trip.getVehicle().getModel(),
+        trip.getVehicle().getRegistrationNumber(),
         trip.getProjectPlan().getProject().getName(),
         trip.getDriver().getFullName(),
         trip.getStartedAt(),
         trip.getEndedAt(),
         trip.getSequenceNumber(),
         noteCount,
-        0
+        0,
+        trip.getCaptureDetails()
       )
     );
   }
@@ -120,7 +130,7 @@ public class TripRestServiceImpl implements TripRestService {
       Optional<List<UUID>> planId,
       Optional<Boolean> active
   ) {
-    var trips = tripJdbcRepository.findAllTrips(projectId, planId.orElse(null), active);
+    var trips = tripJdbcRepository.findAll(projectId, planId.orElse(null), active);
 
     return ResponseEntity.ok(trips);
   }
@@ -132,7 +142,9 @@ public class TripRestServiceImpl implements TripRestService {
       UpdateTripRequest request
   ) {
     Trip trip = tripJpaRepository.findById(tripId).orElseThrow(() -> new NotFoundException("Trip not found"));
+    var captureDetails = this.captureReplayService.getCurrentCaptureDetails(tripId);
 
+    trip.setCaptureDetails(captureDetails.orElse(null));
     trip.setEndedAt(LocalDateTime.now());
     trip.setGnssLog(request.gnssLog());
     trip.setCameraLogs(request.cameraLogs());
@@ -148,13 +160,17 @@ public class TripRestServiceImpl implements TripRestService {
         savedTrip.getId(),
         savedTrip.getProjectPlan().getId(),
         savedTrip.getProjectPlan().getProject().getId(),
+        savedTrip.getVehicle().getId(),
+        savedTrip.getVehicle().getModel(),
+        savedTrip.getVehicle().getRegistrationNumber(),
         savedTrip.getProjectPlan().getProject().getName(),
         savedTrip.getDriver().getFullName(),
         savedTrip.getStartedAt(),
         savedTrip.getEndedAt(),
         savedTrip.getSequenceNumber(),
         noteCount,
-        0
+        0,
+        savedTrip.getCaptureDetails()
       )
     );
   }

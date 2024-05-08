@@ -1,13 +1,13 @@
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { useNavigate, useParams } from '@solidjs/router';
-import PlanForm from '../components/PlanForm';
-import { ProjectPlanSchemaValues, useProjectPlansMutation } from '../api';
 import { useTranslations } from '@/features/i18n';
+import { useNavigate, useParams } from '@solidjs/router';
+import { CreateProjectPlanSchemaValues, useProjectPlansMutation } from '../api';
+import PlanForm from '../components/PlanForm';
 
 const NewProjectPlan = () => {
   const navigate = useNavigate();
   const params = useParams();
-  const { create } = useProjectPlansMutation(params.id);
+  const projectPlans = useProjectPlansMutation(params.id);
   const { t } = useTranslations();
 
   const handleClose = (open: boolean) => {
@@ -16,9 +16,9 @@ const NewProjectPlan = () => {
     }
   };
 
-  const handleSubmit = async (values: ProjectPlanSchemaValues) => {
+  const handleSubmit = async (values: CreateProjectPlanSchemaValues) => {
     try {
-      await create.mutateAsync(values);
+      await projectPlans.create.mutateAsync(values);
       navigate('../..');
     } catch (error) {
       // ignore for now
@@ -29,7 +29,11 @@ const NewProjectPlan = () => {
     <Dialog open onOpenChange={handleClose}>
       <DialogContent>
         <DialogTitle>{t('PLANS.NEW_PROJECT_PLAN')}</DialogTitle>
-        <PlanForm onSubmit={handleSubmit} />
+        <PlanForm
+          isError={projectPlans.create.isError}
+          isLoading={projectPlans.create.isPending}
+          onSubmit={handleSubmit}
+        />
       </DialogContent>
     </Dialog>
   );

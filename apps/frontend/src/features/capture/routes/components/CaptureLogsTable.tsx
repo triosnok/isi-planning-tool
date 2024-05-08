@@ -18,7 +18,7 @@ export interface CaptureLogsTableProps {
 }
 
 const CaptureLogsTable: Component<CaptureLogsTableProps> = (props) => {
-  const { t, d } = useTranslations();
+  const { t, d, n } = useTranslations();
 
   const [currentPage, setCurrentPage] = createSignal(1);
   const itemsPerPage = 15;
@@ -45,6 +45,7 @@ const CaptureLogsTable: Component<CaptureLogsTableProps> = (props) => {
           <TableRow>
             <TableHead>{t('CAPTURE.LOG_IDENTIFIER')}</TableHead>
             <TableHead>{t('GENERAL.UPDATED_AT')}</TableHead>
+            <TableHead class='text-right'>{t('GENERAL.SIZE')}</TableHead>
           </TableRow>
         </TableHeader>
         <Show when={currentCaptureLogs().length === 0}>
@@ -58,6 +59,9 @@ const CaptureLogsTable: Component<CaptureLogsTableProps> = (props) => {
               <TableRow>
                 <TableCell>{captureLog.name}</TableCell>
                 <TableCell>{d(captureLog.updatedAt)}</TableCell>
+                <TableCell class='text-right'>
+                  {n(captureLog.size / 1000 ** 2)} MB
+                </TableCell>
               </TableRow>
             )}
           </For>

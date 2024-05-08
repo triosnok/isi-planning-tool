@@ -1,22 +1,29 @@
 package no.isi.insight.planning.db.repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import no.isi.insight.planning.client.capture.view.CaptureDetails;
 import no.isi.insight.planning.client.trip.view.TripDetails;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class TripJdbcRepository {
   private final NamedParameterJdbcTemplate jdbcTemplate;
+  private final ObjectMapper objectMapper;
 
   // language=sql
   private static final String TRIP_DETAILS_QUERY = """
@@ -24,6 +31,9 @@ public class TripJdbcRepository {
       t.trip_id AS id,
       pp.project_plan_id AS project_plan_id,
       p.project_id AS project_id,
+      v.vehicle_id AS vehicle_id,
+      v.model AS vehicle_model,
+      v.registration_number AS vehicle_registration_number,
       p.name AS project_name,
       d.full_name AS driver_full_name,
       t.started_at,
@@ -33,7 +43,8 @@ public class TripJdbcRepository {
           (SELECT COUNT(*) FROM trip_note tn WHERE tn.fk_trip_id = t.trip_id),
           0
       ) AS note_count,
-      0 AS deviations
+      0 AS deviations,
+      t.capture_details
     FROM
       trip t
     INNER JOIN project_plan pp
@@ -53,42 +64,43 @@ public class TripJdbcRepository {
         t.started_at DESC;
     """;
 
-  private static final RowMapper<TripDetails> TRIP_DETAILS_ROW_MAPPER = (rs, i) -> {
+  private TripDetails mapTripDetailsPlan(
+      ResultSet rs,
+      int index
+  ) throws SQLException {
     var id = rs.getString("id");
 
     if (rs.wasNull()) {
       return null;
     }
 
+    CaptureDetails captureDetails = null;
+
+    try {
+      captureDetails = this.objectMapper.readValue(rs.getBytes("capture_details"), CaptureDetails.class);
+    } catch (IllegalArgumentException e) {
+      // ignore, happens when capture details is null (capture not ended yet)
+    } catch (Exception e) {
+      log.error("Failed to parse capture details for trip {}", e);
+    }
+
     return new TripDetails(
       UUID.fromString(id),
       UUID.fromString(rs.getString("project_plan_id")),
       UUID.fromString(rs.getString("project_id")),
+      UUID.fromString(rs.getString("vehicle_id")),
+      rs.getString("vehicle_model"),
+      rs.getString("vehicle_registration_number"),
       rs.getString("project_name"),
       rs.getString("driver_full_name"),
       rs.getTimestamp("started_at").toLocalDateTime(),
       rs.getTimestamp("ended_at") != null ? rs.getTimestamp("ended_at").toLocalDateTime() : null,
       rs.getInt("sequence_number"),
       rs.getLong("note_count"),
-      rs.getInt("deviations")
+      rs.getInt("deviations"),
+      captureDetails
     );
   };
-
-  public List<TripDetails> findAllTrips(
-      Optional<UUID> projectId,
-      List<UUID> planIds,
-      Optional<Boolean> active
-  ) {
-    var params = new MapSqlParameterSource();
-
-    params.addValue("projectId", projectId.orElse(null), Types.VARCHAR);
-    params.addValue("planIds", planIds, Types.VARCHAR);
-    params.addValue("active", active.orElse(null), Types.BOOLEAN);
-    params.addValue("driverId", null, Types.VARCHAR);
-    params.addValue("vehicleId", null, Types.VARCHAR);
-
-    return jdbcTemplate.query(TRIP_DETAILS_QUERY, params, TRIP_DETAILS_ROW_MAPPER);
-  }
 
   public List<TripDetails> findAll(
       Optional<UUID> projectId,
@@ -105,7 +117,15 @@ public class TripJdbcRepository {
     params.addValue("driverId", driverId.orElse(null), Types.VARCHAR);
     params.addValue("vehicleId", vehicleId.orElse(null), Types.VARCHAR);
 
-    return jdbcTemplate.query(TRIP_DETAILS_QUERY, params, TRIP_DETAILS_ROW_MAPPER);
+    return jdbcTemplate.query(TRIP_DETAILS_QUERY, params, this::mapTripDetailsPlan);
+  }
+
+  public List<TripDetails> findAll(
+      Optional<UUID> projectId,
+      List<UUID> planIds,
+      Optional<Boolean> active
+  ) {
+    return this.findAll(projectId, planIds, Optional.empty(), Optional.empty(), active);
   }
 
   public List<TripDetails> findAll(

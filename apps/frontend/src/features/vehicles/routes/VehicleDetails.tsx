@@ -1,5 +1,5 @@
 import Header from '@/components/layout/Header';
-import MapCarLayer from '@/components/map/MapCarLayer';
+import MapVehicleMarker from '@/components/map/MapVehicleMarker';
 import MapRoot from '@/components/map/MapRoot';
 import BackLink from '@/components/navigation/BackLink';
 import { useSubjectPosition } from '@/features/positions';
@@ -13,17 +13,20 @@ import {
   useVehicleMutation,
 } from '../api';
 import VehicleForm from '../components/VehicleForm';
+import Resizable from '@/components/layout/Resizable';
+import MapZoomControls from '@/components/map/MapZoomControls';
+import MapTripPopoverMarker from '@/components/map/MapTripPopoverMarker';
 
 const VehicleDetails: Component = () => {
   const params = useParams();
   const vehicle = useVehicleDetailsQuery(params.id);
-  const { update } = useVehicleMutation();
+  const vehicleMutation = useVehicleMutation();
   const trips = useTripsByVehicleQuery(params.id);
   const { position } = useSubjectPosition('VEHICLE', () => params.id);
 
   const handleUpdateVehicle = async (vehicle: VehicleSchemaValues) => {
     try {
-      await update.mutateAsync({
+      await vehicleMutation.update.mutateAsync({
         vehicleId: params.id,
         ...vehicle,
       });
@@ -36,8 +39,12 @@ const VehicleDetails: Component = () => {
     <div class='flex h-svh w-svw flex-col'>
       <Header />
 
-      <div class='flex flex-1 overflow-hidden'>
-        <main class='flex-1 overflow-y-auto p-2 py-2'>
+      <Resizable.Root class='flex flex-1 overflow-hidden'>
+        <Resizable.Panel
+          initialSize={0.6}
+          minSize={0.5}
+          class='flex-1 overflow-y-auto p-2 py-2'
+        > 
           <BackLink />
 
           <Show when={vehicle?.data}>
@@ -52,6 +59,7 @@ const VehicleDetails: Component = () => {
               description={vehicle.data?.description}
               gnssId={vehicle.data?.gnssId}
               model={vehicle.data?.model}
+              isError={vehicleMutation.update.isError}
               registrationNumber={vehicle.data?.registrationNumber}
             />
           </Show>
@@ -59,21 +67,27 @@ const VehicleDetails: Component = () => {
           <Show when={trips?.data}>
             <TripTable trips={trips.data ?? []} driver={true} />
           </Show>
-        </main>
+        </Resizable.Panel>
 
-        <aside class='w-0 md:w-1/3'>
-          <MapRoot class='h-full w-full'>
+        <Resizable.Handle />
+
+        <Resizable.Panel as='aside' minSize={0.2} class='w-0 md:w-1/3'>
+          <MapRoot class='relative h-full w-full'>
+            <MapZoomControls class='absolute right-2 top-2' />
+
             <Show when={position()}>
               {(pos) => (
-                <MapCarLayer
+                <MapTripPopoverMarker
+                  as={MapVehicleMarker}
                   position={pos().geometry}
                   heading={pos().heading}
+                  tripId={pos().tripId}
                 />
               )}
             </Show>
           </MapRoot>
-        </aside>
-      </div>
+        </Resizable.Panel>
+      </Resizable.Root>
     </div>
   );
 };

@@ -1,6 +1,11 @@
 import Pagination from '@/components/navigation/Pagination';
 import { Input } from '@/components/ui/input';
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import {
   Table,
   TableBody,
   TableCaption,
@@ -9,11 +14,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { DateFormat, useTranslations } from '@/features/i18n';
-import { TripDetails } from '@isi-insight/client';
+import { DateFormat, NumberFormat, useTranslations } from '@/features/i18n';
+import { ImageRemark, TripDetails } from '@isi-insight/client';
 import { A } from '@solidjs/router';
 import dayjs from 'dayjs';
 import { Component, For, Show, createSignal } from 'solid-js';
+import ImageSummary from './ImageSummary';
 
 export interface TripTableProps {
   trips: TripDetails[];
@@ -21,7 +27,7 @@ export interface TripTableProps {
 }
 
 const TripTable: Component<TripTableProps> = (props) => {
-  const { t, d } = useTranslations();
+  const { t, d, n } = useTranslations();
 
   const [currentPage, setCurrentPage] = createSignal(1);
   const itemsPerPage = 10;
@@ -71,11 +77,15 @@ const TripTable: Component<TripTableProps> = (props) => {
             <TableHead class='leading-4'>
               {t('TRIPS.TRIP_TABLE.CAPTURE_REMARKS')}
             </TableHead>
-            <TableHead class='leading-4'>
+            <TableHead class='text-right leading-4'>
               {t('TRIPS.TRIP_TABLE.METERS_OF_RAILING_CAPTURED')}
             </TableHead>
-            <TableHead>{t('TRIPS.TRIP_TABLE.DEVIATIONS')}</TableHead>
-            <TableHead>{t('TRIPS.TRIP_TABLE.NOTES')}</TableHead>
+            <TableHead class='text-right'>
+              {t('TRIPS.TRIP_TABLE.DEVIATIONS')}
+            </TableHead>
+            <TableHead class='text-right'>
+              {t('TRIPS.TRIP_TABLE.NOTES')}
+            </TableHead>
             <TableHead>{t('TRIPS.TRIP_TABLE.LINKS')}</TableHead>
           </TableRow>
         </TableHeader>
@@ -97,17 +107,41 @@ const TripTable: Component<TripTableProps> = (props) => {
                     {duration(trip.startedAt, trip.endedAt ?? '')}
                   </TableCell>
                 </Show>
-                <TableCell>
+                <TableCell class='whitespace-nowrap'>
                   {trip.project} - {t('TRIPS.TRIP')} {trip.sequenceNumber}
                 </TableCell>
                 <Show when={props.driver}>
                   <TableCell>{trip.driver}</TableCell>
                 </Show>
-                {/* //TODO: capture remarks & meters of railing captured */}
-                <TableCell>remarks</TableCell>
-                <TableCell>x meters</TableCell>
-                <TableCell>{trip.deviations}</TableCell>
-                <TableCell>{trip.noteCount}</TableCell>
+                <TableCell>
+                  <Show
+                    when={
+                      trip?.captureDetails?.imageAnalysis?.remarks?.length > 0
+                    }
+                  >
+                    <Popover>
+                      <PopoverTrigger>
+                        <span class='text-error-500 whitespace-nowrap font-semibold hover:underline'>
+                          {trip?.captureDetails?.imageAnalysis?.remarks
+                            ?.length + ' remarks'}
+                        </span>
+                      </PopoverTrigger>
+                      <PopoverContent class='mt-2 border-0 bg-transparent p-0'>
+                        <ImageSummary
+                          analysis={trip.captureDetails.imageAnalysis}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </Show>
+                </TableCell>
+                <TableCell class='text-right'>
+                  {n(
+                    trip.captureDetails?.metersCaptured ?? 0,
+                    NumberFormat.INTEGER
+                  )}
+                </TableCell>
+                <TableCell class='text-right'>{trip.deviations}</TableCell>
+                <TableCell class='text-right'>{trip.noteCount}</TableCell>
                 <TableCell>
                   <div class='text-brand-blue-400 flex w-24 flex-col gap-2'>
                     <A href={`/projects/${trip.projectId}/trip/${trip.id}`}>

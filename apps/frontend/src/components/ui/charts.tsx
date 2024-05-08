@@ -2,6 +2,7 @@ import type { Component } from 'solid-js';
 import {
   createEffect,
   createSignal,
+  For,
   mergeProps,
   on,
   onCleanup,
@@ -9,6 +10,8 @@ import {
 } from 'solid-js';
 import { unwrap } from 'solid-js/store';
 
+import { NumberFormat, useTranslations } from '@/features/i18n';
+import { cn } from '@/lib/utils';
 import { mergeRefs, Ref } from '@solid-primitives/refs';
 import type {
   ChartComponent,
@@ -42,12 +45,14 @@ import {
   ScatterController,
   Tooltip,
 } from 'chart.js';
+import { Portal } from 'solid-js/web';
 
 export interface TypedChartProps {
   data: ChartData;
   options?: ChartOptions;
   plugins?: ChartPlugin[];
   ref?: Ref<HTMLCanvasElement | null>;
+  class?: string;
   width?: number | undefined;
   height?: number | undefined;
 }
@@ -62,8 +67,10 @@ export interface ChartContext {
 }
 
 const BaseChart: Component<ChartProps> = (rawProps) => {
+  const { n } = useTranslations();
   const [canvasRef, setCanvasRef] = createSignal<HTMLCanvasElement | null>();
   const [chart, setChart] = createSignal<Chart>();
+  const [chartContext, setChartContext] = createSignal<ChartContext>();
 
   const props = mergeProps(
     {
@@ -78,6 +85,19 @@ const BaseChart: Component<ChartProps> = (rawProps) => {
   const init = () => {
     const ctx = canvasRef()?.getContext('2d') as ChartItem;
     const config = unwrap(props);
+
+    if (config.options.plugins) {
+      config.options.plugins.tooltip = {
+        enabled: false,
+        external: setChartContext,
+        callbacks: {
+          label: ({ dataset, raw }) => {
+            return `${dataset.label}: ${n(raw as any, NumberFormat.INTEGER)}`;
+          },
+        },
+      };
+    }
+
     const chart = new Chart(ctx, {
       type: config.type,
       data: config.data,
@@ -140,60 +160,55 @@ const BaseChart: Component<ChartProps> = (rawProps) => {
   });
 
   Chart.register(Colors, Filler, Legend, Tooltip);
+
   return (
-    <canvas
-      ref={mergeRefs(props.ref, (el) => setCanvasRef(el))}
-      height={props.height}
-      width={props.width}
-    />
+    <>
+      <canvas
+        ref={mergeRefs(props.ref, (el) => setCanvasRef(el))}
+        height={props.height}
+        width={props.width}
+        class={props.class}
+      />
+
+      <Portal>
+        <div
+          id='chartjs-tooltip'
+          class={cn(
+            'pointer-events-none absolute flex flex-col rounded-lg border p-2 transition-all',
+            'border-gray-300 bg-gray-50 dark:border-gray-700 dark:bg-gray-950',
+            chartContext()?.tooltip.yAlign ?? 'no-transform'
+          )}
+          style={{
+            opacity: chartContext()?.tooltip.opacity ?? 0,
+            left: `${(chartContext()?.chart.canvas.getBoundingClientRect()?.left ?? 0) + window.scrollX + (chartContext()?.tooltip.caretX ?? 0)}px`,
+            top: `${(chartContext()?.chart.canvas.getBoundingClientRect()?.top ?? 0) + window.scrollY + (chartContext()?.tooltip.caretY ?? 0)}px`,
+          }}
+        >
+          <h3 class='font-bold'>{chartContext()?.tooltip.title}</h3>
+
+          <For each={chartContext()?.tooltip.body?.flatMap((l) => l.lines)}>
+            {(line, i) => {
+              const color = () => chartContext()?.tooltip.labelColors[i()];
+
+              return (
+                <div class='flex items-center'>
+                  <span
+                    class='mr-1 inline-block size-2 rounded-full'
+                    style={{
+                      background: color()?.backgroundColor.toString(),
+                      'border-color': color()?.borderColor.toString(),
+                    }}
+                  />
+                  {line}
+                </div>
+              );
+            }}
+          </For>
+        </div>
+      </Portal>
+    </>
   );
 };
-
-function showTooltip(context: ChartContext) {
-  let el = document.getElementById('chartjs-tooltip');
-  if (!el) {
-    el = document.createElement('div');
-    el.id = 'chartjs-tooltip';
-    document.body.appendChild(el);
-  }
-
-  const model = context.tooltip;
-  if (model.opacity === 0 || !model.body) {
-    el.style.opacity = '0';
-    return;
-  }
-
-  el.className = `p-2 bg-gray-50 text-gray-950 rounded-lg border shadow-sm text-sm ${
-    model.yAlign ?? `no-transform`
-  }`;
-
-  let content = '';
-
-  model.title.forEach((title) => {
-    content += `<h3 class="font-semibold leading-none tracking-tight">${title}</h3>`;
-  });
-
-  content += `<div class="mt-1 text-gray-950">`;
-  const body = model.body.flatMap((body) => body.lines);
-  body.forEach((line, i) => {
-    const colors = model.labelColors[i];
-    content += `
-        <div class="flex items-center">
-          <span class="inline-block h-2 w-2 mr-1 rounded-full border" style="background: ${colors.backgroundColor}; border-color: ${colors.borderColor}"></span>
-          ${line}
-        </div>`;
-  });
-  content += `</div>`;
-
-  el.innerHTML = content;
-
-  const pos = context.chart.canvas.getBoundingClientRect();
-  el.style.opacity = '1';
-  el.style.position = 'absolute';
-  el.style.left = `${pos.left + window.scrollX + model.caretX}px`;
-  el.style.top = `${pos.top + window.scrollY + model.caretY}px`;
-  el.style.pointerEvents = 'none';
-}
 
 function createTypedChart(
   type: ChartType,
@@ -234,10 +249,6 @@ function createTypedChart(
             },
           }
         : { display: false },
-      tooltip: {
-        enabled: false,
-        external: (context) => showTooltip(context),
-      },
     },
   };
 
@@ -289,9 +300,9 @@ const ScatterChart = /* #__PURE__ */ createTypedChart('scatter', [
 ]);
 
 export {
-  BaseChart as Chart,
   BarChart,
   BubbleChart,
+  BaseChart as Chart,
   DonutChart,
   LineChart,
   PieChart,

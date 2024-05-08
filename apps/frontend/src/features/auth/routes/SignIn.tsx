@@ -1,12 +1,13 @@
 import Logo from '@/components/logo/Logo';
 import { Button } from '@/components/ui/button';
+import { Callout, CalloutContent, CalloutTitle } from '@/components/ui/callout';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import ErrorLabel from '@/features/error/components/ErrorLabel';
 import { useTranslations } from '@/features/i18n';
 import { SubmitHandler, createForm, zodForm } from '@modular-forms/solid';
 import { A, useNavigate } from '@solidjs/router';
-import { Component } from 'solid-js';
+import { Component, Show } from 'solid-js';
 import { z } from 'zod';
 import { useSignInMutation } from '../api';
 
@@ -21,10 +22,11 @@ const SignIn: Component = () => {
   const { t } = useTranslations();
   const [, { Form, Field }] = createForm({ validate: zodForm(SignInSchema) });
   const navigate = useNavigate();
-  const { mutateAsync } = useSignInMutation();
+  const signIn = useSignInMutation();
+
   const handleSubmit: SubmitHandler<SignInForm> = async (values) => {
     try {
-      await mutateAsync(values);
+      await signIn.mutateAsync(values);
       navigate('/');
     } catch (error) {
       // ignored
@@ -87,7 +89,18 @@ const SignIn: Component = () => {
             </A>
           </div>
 
-          <Button class='mt-4'>{t('AUTHENTICATION.SIGN_IN')}</Button>
+          <Show when={signIn.error}>
+            <Callout variant={'error'}>
+              <CalloutTitle>Error</CalloutTitle>
+              <CalloutContent>
+                {t('AUTHENTICATION.INCORRECT_PASSWORD')}
+              </CalloutContent>
+            </Callout>
+          </Show>
+
+          <Button loading={signIn.isPending} class='mt-4'>
+            {t('AUTHENTICATION.SIGN_IN')}
+          </Button>
         </Form>
       </main>
     </div>

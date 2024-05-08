@@ -20,7 +20,7 @@ const VehicleStatus: Component<VehicleStatusProps> = (props) => {
       fallback={
         <p
           class={cn(
-            'text-error-500 flex items-center gap-0.5 text-sm',
+            'text-error-500 flex items-center gap-1 text-sm',
             props.class
           )}
         >
@@ -31,7 +31,7 @@ const VehicleStatus: Component<VehicleStatusProps> = (props) => {
     >
       <p
         class={cn(
-          'text-success-500 flex items-center gap-0.5 text-sm',
+          'text-success-500 flex items-center gap-1 text-sm',
           props.class
         )}
       >

@@ -24,28 +24,57 @@ public class ProjectJdbcRepository {
   private static final String PROJECT_DETAILS_QUERY = """
       WITH trip_aggregate AS (
         SELECT
-          NULL::uuid AS fk_project_plan_id,
-          0 AS active_trips,
-          0 AS notes,
-          0 AS deviations
+          t.fk_project_plan_id,
+          COUNT(*) AS active_trips
+        FROM trip t
+        WHERE t.ended_at IS NULL
+        GROUP BY t.fk_project_plan_id
+      ),
+      trip_note_aggregate AS (
+        SELECT
+          t.fk_project_plan_id,
+          COUNT(*) AS notes
+        FROM trip_note tn
+        INNER JOIN trip t
+          ON tn.fk_trip_id = t.trip_id
+        GROUP BY t.fk_project_plan_id
+      ),
+      deviation_aggregate AS (
+        SELECT
+          t.fk_project_plan_id,
+          COUNT(*) AS deviations
+        FROM trip_railing_deviation trd
+        INNER JOIN trip_railing_capture trc
+          ON trd.fk_trip_railing_capture_id = trc.trip_railing_capture_id
+        INNER JOIN trip t 
+          ON trc.fk_trip_id = t.trip_id
+        GROUP BY t.fk_project_plan_id
+      ),
+      segment_aggregate AS (
+        SELECT
+          ppscv.project_plan_id,
+          SUM(ppscv.coverage) AS captured_length,
+          SUM(ppscv.length) AS total_length
+        FROM project_plan_segment_coverage_view ppscv
+        GROUP BY ppscv.project_plan_id
       ),
       plan_aggregate AS (
         SELECT
           pp.fk_project_id,
-          SUM(0) AS captured_length,
-          SUM(rr.length) AS total_length,
+          SUM(sa.captured_length) AS captured_length,
+          SUM(sa.total_length) AS total_length,
           SUM(ta.active_trips) AS active_trips,
-          SUM(ta.notes) AS notes,
-          SUM(ta.deviations) AS deviations
+          SUM(tna.notes) AS notes,
+          SUM(da.deviations) AS deviations
         FROM project_plan pp
         LEFT JOIN trip_aggregate ta
           ON pp.project_plan_id = ta.fk_project_plan_id
-        LEFT JOIN project_plan_road_railing pprr
-          ON pp.project_plan_id = pprr.fk_project_plan_id
-        LEFT JOIN vehicle v
-          ON pp.fk_vehicle_id = v.vehicle_id
-        LEFT JOIN road_railing rr
-          ON pprr.fk_road_railing_id = rr.road_railing_id
+        LEFT JOIN segment_aggregate sa
+          ON pp.project_plan_id = sa.project_plan_id
+        LEFT JOIN trip_note_aggregate tna
+          ON pp.project_plan_id = tna.fk_project_plan_id
+        LEFT JOIN deviation_aggregate da
+          ON pp.project_plan_id = da.fk_project_plan_id
         GROUP BY pp.fk_project_id
       )
       SELECT

@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { createForm, zodForm } from '@modular-forms/solid';
 import { Component, Show } from 'solid-js';
 import { VehicleSchema, VehicleSchemaValues } from '../api';
+import { Callout, CalloutContent, CalloutTitle } from '@/components/ui/callout';
 
 export interface VehicleFormProps {
   class?: string;
@@ -16,6 +17,7 @@ export interface VehicleFormProps {
   description?: string;
   model?: string;
   gnssId?: string;
+  isError?: boolean;
   onSubmit: (values: VehicleSchemaValues) => void;
 }
 
@@ -93,6 +95,15 @@ const VehicleForm: Component<VehicleFormProps> = (props) => {
           </>
         )}
       </Field>
+
+      <Show when={props.isError}>
+        <Callout variant={'error'}>
+          <CalloutTitle>Error</CalloutTitle>
+          <CalloutContent>
+            {t('VEHICLES.FAILED_TO_UPDATE_VEHICLE')}
+          </CalloutContent>
+        </Callout>
+      </Show>
 
       <Button type='submit' class='mt-auto'>
         <Show

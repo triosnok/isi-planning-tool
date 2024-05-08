@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Callout, CalloutContent, CalloutTitle } from '@/components/ui/callout';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { SwitchButton } from '@/components/ui/switch-button';
@@ -18,6 +19,7 @@ export interface UpdateUserFormProps {
   email?: string;
   phoneNumber?: string;
   role?: UserRole;
+  isError?: boolean;
   onSubmit: (values: UpdateUserSchemaValues) => void;
 }
 const UpdateUserForm: Component<UpdateUserFormProps> = (props) => {
@@ -40,8 +42,16 @@ const UpdateUserForm: Component<UpdateUserFormProps> = (props) => {
     props.onSubmit(values);
 
     if (changePassword()) {
-      setValue(form, 'password', '', { shouldFocus: false });
-      setValue(form, 'passwordConfirmation', '', { shouldFocus: false });
+      setValue(form, 'password', '', {
+        shouldFocus: false,
+        shouldValidate: false,
+      });
+      setValue(form, 'passwordConfirmation', '', {
+        shouldFocus: false,
+        shouldValidate: false,
+      });
+      setChangePassword(false);
+      setValue(form, 'changePassword', false);
     }
   };
 
@@ -175,6 +185,15 @@ const UpdateUserForm: Component<UpdateUserFormProps> = (props) => {
           </>
         )}
       </Field>
+
+      <Show when={props.isError}>
+        <Callout class='mt-2' variant={'error'}>
+          <CalloutTitle>Error</CalloutTitle>
+          <CalloutContent>
+            {t('USERS.FORM.FAILED_TO_UPDATE_USER')}
+          </CalloutContent>
+        </Callout>
+      </Show>
 
       <Button type='submit' class='mt-2'>
         {t('USERS.FORM.UPDATE_USER')}

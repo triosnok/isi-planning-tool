@@ -11,12 +11,12 @@ import VehicleForm from '../components/VehicleForm';
 
 const AddVehicle: Component = () => {
   const { t } = useTranslations();
-  const { create } = useVehicleMutation();
+  const vehicleMutation = useVehicleMutation();
   const navigate = useNavigate();
 
   const handleSubmit = async (values: VehicleSchemaValues) => {
     try {
-      await create.mutateAsync(values);
+      await vehicleMutation.create.mutateAsync(values);
       navigate('/vehicles');
     } catch (error) {
       console.error('Failed to create vehicle');
@@ -36,7 +36,7 @@ const AddVehicle: Component = () => {
           <h2 class='text-2xl font-bold'>{t('VEHICLES.ADD_VEHICLE')}</h2>
         </SideDrawerHeader>
 
-        <VehicleForm onSubmit={handleSubmit} class='flex-1' />
+        <VehicleForm isError={vehicleMutation.create.isError} onSubmit={handleSubmit} class='flex-1' />
       </SideDrawerContent>
     </SideDrawer>
   );

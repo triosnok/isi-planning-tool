@@ -1,8 +1,10 @@
 import DatePicker from '@/components/temporal/DatePicker';
 import { Button } from '@/components/ui/button';
+import { Callout, CalloutContent, CalloutTitle } from '@/components/ui/callout';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { SwitchButton } from '@/components/ui/switch-button';
 import ErrorLabel from '@/features/error/components/ErrorLabel';
 import { useTranslations } from '@/features/i18n';
 import {
@@ -21,7 +23,12 @@ import { A } from '@solidjs/router';
 import { IconArrowNarrowUp } from '@tabler/icons-solidjs';
 import dayjs from 'dayjs';
 import { Component, For, Show, createSignal } from 'solid-js';
-import { ProjectPlanSchema, ProjectPlanSchemaValues } from '../api';
+import {
+  CreateProjectPlanSchema,
+  CreateProjectPlanSchemaValues,
+  UpdateProjectPlanSchema,
+} from '../api';
+
 export interface PlanFormProps {
   planId?: string;
   importUrl?: string;
@@ -29,15 +36,24 @@ export interface PlanFormProps {
   endsAt?: string;
   vehicleId?: string;
   imports?: RailingImportDetails[];
-  onSubmit?: (values: ProjectPlanSchemaValues) => void;
+  onSubmit?: (values: CreateProjectPlanSchemaValues) => void;
+  isLoading?: boolean;
+  isError?: boolean;
+  editing?: boolean;
 }
 
 const PlanForm: Component<PlanFormProps> = (props) => {
   const [availableFrom, setAvailableFrom] = createSignal<string>();
   const [availableTo, setAvailableTo] = createSignal<string>();
 
+  const [reimportRailings, setReimportRailings] = createSignal(false);
+
   const [form, { Form, Field }] = createForm({
-    validate: zodForm(ProjectPlanSchema),
+    validate: zodForm(
+      props.planId === undefined
+        ? CreateProjectPlanSchema
+        : UpdateProjectPlanSchema
+    ),
     initialValues: {
       importUrl: props.importUrl,
       startsAt: props.startsAt,
@@ -50,7 +66,7 @@ const PlanForm: Component<PlanFormProps> = (props) => {
   const vehicles = useVehiclesQuery(availableFrom, availableTo);
   const vehicle = useVehicleDetailsQuery(props?.vehicleId!);
 
-  const handleSubmit: SubmitHandler<ProjectPlanSchemaValues> = async (
+  const handleSubmit: SubmitHandler<CreateProjectPlanSchemaValues> = async (
     values
   ) => {
     props.onSubmit?.({ ...values, planId: props.planId });
@@ -62,34 +78,44 @@ const PlanForm: Component<PlanFormProps> = (props) => {
       id='new-project-plan-form'
       onSubmit={handleSubmit}
     >
-      <Field name='importUrl'>
-        {(field, props) => (
-          <>
-            <Label for={field.name} class='mt-2'>
-              {t('RAILINGS.RAILING_IMPORT_URL')}
-            </Label>
-            <Input
-              {...props}
-              type='url'
-              id='importUrl'
-              placeholder={t('GENERAL.URL')}
-              value={field.value}
-              onChange={(event) => {
-                setValue(form, 'importUrl', event.target.value);
-              }}
-            />
-            <ErrorLabel text={field.error} />
-          </>
-        )}
-      </Field>
+      <Show when={props.editing}>
+        <div class='flex items-center'>
+          <SwitchButton
+            onChange={() => setReimportRailings(!reimportRailings())}
+          />
+          <p class='text-sm'>{t('PLANS.FORM.REIMPORT_RAILINGS')}</p>
+        </div>
+      </Show>
 
-      <Show when={props.imports}>
-        <Label class='mt-2'>{t('PLANS.FORM.PREVIOUS_IMPORTS')}</Label>
+      <Show when={reimportRailings() || !props.editing}>
+        <Field name='importUrl'>
+          {(field, props) => (
+            <>
+              <Label for={field.name} class='mt-2'>
+                {t('RAILINGS.RAILING_IMPORT_URL')}
+              </Label>
+              <Input
+                {...props}
+                type='url'
+                id='importUrl'
+                placeholder={t('GENERAL.URL')}
+                value={field.value}
+                onChange={(event) => {
+                  setValue(form, 'importUrl', event.target.value);
+                }}
+              />
+              <ErrorLabel text={field.error} />
+            </>
+          )}
+        </Field>
 
-        <PreviousImports
-          imports={props.imports ?? []}
-          onChange={(url) => setValue(form, 'importUrl', url)}
-        />
+        <Show when={props.imports}>
+          <Label class='mt-2'>{t('PLANS.FORM.PREVIOUS_IMPORTS')}</Label>
+          <PreviousImports
+            imports={props.imports ?? []}
+            onChange={(url) => setValue(form, 'importUrl', url)}
+          />
+        </Show>
       </Show>
 
       <div class='flex justify-between gap-2'>
@@ -149,7 +175,14 @@ const PlanForm: Component<PlanFormProps> = (props) => {
         )}
       </Field>
 
-      <Button class='mt-2 grow' type='submit'>
+      <Show when={props.isError}>
+        <Callout class='mt-2' variant={'error'}>
+          <CalloutTitle>Error</CalloutTitle>
+          <CalloutContent>{t('PLANS.FAILED_TO_CREATE_PLAN')}</CalloutContent>
+        </Callout>
+      </Show>
+
+      <Button loading={props.isLoading} class='mt-2 grow' type='submit'>
         {t('GENERAL.IMPORT_AND_SAVE')}
       </Button>
     </Form>

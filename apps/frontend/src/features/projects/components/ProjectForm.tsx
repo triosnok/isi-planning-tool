@@ -1,11 +1,12 @@
 import DatePicker from '@/components/temporal/DatePicker';
 import { Button } from '@/components/ui/button';
+import { Callout, CalloutContent, CalloutTitle } from '@/components/ui/callout';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import ErrorLabel from '@/features/error/components/ErrorLabel';
 import { useTranslations } from '@/features/i18n';
 import { createForm, setValue, zodForm } from '@modular-forms/solid';
-import { Component } from 'solid-js';
+import { Component, Show } from 'solid-js';
 import { ProjectSchema, ProjectSchemaValues } from '../api';
 
 export type ProjectFormProps = {
@@ -14,6 +15,7 @@ export type ProjectFormProps = {
   referenceCode?: string;
   startsAt?: string;
   endsAt?: string;
+  isError?: boolean;
   onSubmit: (values: ProjectSchemaValues) => Promise<void>;
 };
 
@@ -105,6 +107,15 @@ const ProjectForm: Component<ProjectFormProps> = (props) => {
           </Field>
         </div>
       </div>
+
+      <Show when={props.isError}>
+        <Callout class='mt-2' variant={'error'}>
+          <CalloutTitle>Error</CalloutTitle>
+          <CalloutContent>
+            {t('PROJECTS.FORM.FAILED_TO_CREATE_PROJECT')}
+          </CalloutContent>
+        </Callout>
+      </Show>
 
       <div class='mt-auto'>
         <Button class='w-full' type='submit'>

@@ -5,7 +5,7 @@ import { lazy } from 'solid-js';
 export const routes: RouteDefinition[] = [
   {
     path: '/capture',
-    component: lazy(() => import('./Capture')),
+    component: lazy(() => import('./CaptureOverview')),
     meta: {
       authentication: {
         status: AuthStatus.SIGNED_IN,

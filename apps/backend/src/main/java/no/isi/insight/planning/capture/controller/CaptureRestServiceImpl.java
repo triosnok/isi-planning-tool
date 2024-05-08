@@ -20,18 +20,19 @@ import no.isi.insight.planning.capture.service.CaptureReplayService;
 import no.isi.insight.planning.client.capture.CaptureRestService;
 import no.isi.insight.planning.client.capture.view.CaptureActionRequest;
 import no.isi.insight.planning.client.capture.view.CaptureLogDetails;
+import no.isi.insight.planning.client.capture.view.CapturedMetersByDay;
 import no.isi.insight.planning.client.trip.view.CameraPosition;
+import no.isi.insight.planning.db.repository.TripRailingCaptureJdbcRepository;
 import no.isi.insight.planning.error.model.NotFoundException;
-import no.isi.insight.planning.db.repository.TripJpaRepository;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 public class CaptureRestServiceImpl implements CaptureRestService {
   private final CaptureLogProcessor logProcessor;
-  private final TripJpaRepository tripJpaRepository;
   private final CaptureReplayFileService captureReplayFileService;
   private final CaptureReplayService captureReplayService;
+  private final TripRailingCaptureJdbcRepository captureJdbcRepository;
 
   @Override
   @PlannerAuthorization
@@ -113,13 +114,11 @@ public class CaptureRestServiceImpl implements CaptureRestService {
   public SseEmitter streamCapture(
       UUID tripId
   ) {
-    this.tripJpaRepository.findById(tripId).orElseThrow(() -> new NotFoundException("Trip not found"));
-
     if (!this.captureReplayService.hasTrip(tripId)) {
       var emitter = new SseEmitter();
 
       try {
-        emitter.send(SseEmitter.event().name("ended").build());
+        emitter.send(SseEmitter.event().name("ended").data("").build());
       } catch (Exception e) {
         // failed to send event
       }
@@ -132,6 +131,11 @@ public class CaptureRestServiceImpl implements CaptureRestService {
     var emitter = this.captureReplayService.createEmitter(tripId);
 
     return emitter;
+  }
+
+  @Override
+  public ResponseEntity<List<CapturedMetersByDay>> getCaptureStats() {
+    return ResponseEntity.ok(this.captureJdbcRepository.findAggregates());
   }
 
 }

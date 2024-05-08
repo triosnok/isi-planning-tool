@@ -14,6 +14,8 @@ import no.isi.insight.planning.client.geometry.Geometry;
 
 class CaptureLogReplayTests {
 
+  private final ImageAnalysisService imageAnalysisService = new ImageAnalysisService();
+
   private List<ProcessedLogEntry> generateLog() {
     var startTime = LocalDateTime.now();
     var log = new ArrayList<ProcessedLogEntry>();
@@ -42,7 +44,8 @@ class CaptureLogReplayTests {
     var replay = new CaptureLogReplay(
       log,
       1,
-      (logEntry, logReplay) -> {}
+      (logEntry, logReplay) -> {},
+      this.imageAnalysisService
     );
 
     var details = replay.getCaptureDetails();
@@ -68,7 +71,8 @@ class CaptureLogReplayTests {
     var replay = new CaptureLogReplay(
       log,
       1,
-      (logEntry, logReplay) -> {}
+      (logEntry, logReplay) -> {},
+      this.imageAnalysisService
     );
 
     replay.resume();
@@ -90,7 +94,8 @@ class CaptureLogReplayTests {
     var replay = new CaptureLogReplay(
       log,
       1,
-      (logEntry, logReplay) -> {}
+      (logEntry, logReplay) -> {},
+      this.imageAnalysisService
     );
 
     replay.resume();

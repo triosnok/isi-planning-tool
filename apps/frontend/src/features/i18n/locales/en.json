@@ -1,12 +1,13 @@
 {
   "AUTHENTICATION": {
     "SIGN_IN": "Sign in",
-    "SIGN_IN_TO": "Sign in to", 
+    "SIGN_IN_TO": "Sign in to",
     "SIGN_OUT": "Sign out",
     "EMAIL": "E-mail",
     "PASSWORD": "Password",
     "CONFIRM_PASSWORD": "Confirm password",
     "FORGOT_PASSWORD": "Forgot password?",
+    "INCORRECT_PASSWORD": "Incorrect email or password",
     "RESET_PASSWORD": {
       "TITLE": "Reset password",
       "RESET_YOUR_PASSWORD": "Reset your password",
@@ -31,7 +32,8 @@
   "DASHBOARD": {
     "TITLE": "Dashboard",
     "MAP": "Map",
-    "DAILY_METERS_CAPTURED": "Daily meters captured"
+    "DAILY_METERS_CAPTURED": "Daily meters captured",
+    "ONGOING_PROJECTS_PROGRESS": "Ongoing projects progress"
   },
   "DEVIATIONS": {
     "TITLE": "Deviations",
@@ -51,6 +53,7 @@
     "START_DATE": "Start date",
     "END_DATE": "End date",
     "CLEAR_DATE": "Clear date",
+    "SIZE": "Size",
     "STATUSES": {
       "AVAILABLE": "Available"
     },
@@ -76,6 +79,7 @@
     "TITLE": "Notes",
     "NOTE": "Note",
     "ADD_NOTE": "Add note",
+    "SHOW_NOTES": "Show notes",
     "CLICK_TO_EXPAND": "Click to expand"
   },
   "PLANS": {
@@ -84,8 +88,10 @@
     "ADD_PLAN": "Add plan",
     "NEW_PROJECT_PLAN": "New project plan",
     "EDIT_PROJECT_PLAN": "Edit project plan",
+    "FAILED_TO_CREATE_PLAN": "Failed to create plan",
     "FORM": {
       "IMPORT_RAILINGS": "Import railings",
+      "REIMPORT_RAILINGS": "Reimport railings",
       "PREVIOUS_IMPORTS": "Previous imports"
     }
   },
@@ -96,7 +102,10 @@
     "UPDATE_PROJECT": "Update project",
     "FORM": {
       "PROJECT_NAME": "Project name",
-      "PROJECT_REFERENCE": "Project reference"
+      "PROJECT_REFERENCE": "Project reference",
+      "PROJECT_REFERENCE_REQUIRED": "Project reference is required",
+      "PROJECT_NAME_REQUIRED": "Project name is required",
+      "FAILED_TO_CREATE_PROJECT": "Failed to create project"
     },
     "STATUS": {
       "ONGOING": "Ongoing",
@@ -134,6 +143,7 @@
     "SHOW_LESS": "Show less",
     "ACTIVE_TRIPS": "Active trips",
     "GO_TO_ACTIVE_TRIP": "Go to active trip",
+    "NOW": "now",
     "TRIP_SUMMARY": {
       "TITLE": "Trip summary",
       "TOTAL_RAILING_METERS_CAPTURED": "A total of {{ meters }} meters of railing has been captured",
@@ -152,7 +162,7 @@
       "NAME": "Name",
       "DRIVER": "Driver",
       "CAPTURE_REMARKS": "Capture remarks",
-      "METERS_OF_RAILING_CAPTURED": "Meters of railing captured",
+      "METERS_OF_RAILING_CAPTURED": "Meters captured",
       "DEVIATIONS": "Deviations",
       "NOTES": "Notes",
       "LINKS": "Links",
@@ -182,7 +192,13 @@
       "PASSWORD": "Password",
       "CONFIRM_PASSWORD": "Confirm password",
       "UPDATE_USER": "Update user",
-      "CREATE_USER": "Create user"
+      "CREATE_USER": "Create user",
+      "NAME_IS_REQUIRED": "Name is required",
+      "FAILED_TO_UPDATE_USER": "Failed to update user",
+      "FAILED_TO_CREATE_USER": "Failed to create user",
+      "INVALID_EMAIL_ADDRESS": "Invalid email address",
+      "PASSWORD_IS_REQUIRED": "Password is required",
+      "PASSWORDS_DO_NOT_MATCH": "Passwords do not match"
     },
     "ROLES": {
       "PLANNER": "Planner",
@@ -198,9 +214,12 @@
     "NO_VEHICLE_SELECTED": "No vehicle selected.",
     "VIEW_DETAILS": "View details",
     "NO_VEHICLES_REGISTERED": "No vehicles registered.",
-    "PREFERED_VEHICLE": "Prefered vehicle",
+    "PREFERED_VEHICLE": "Preferred vehicle",
+    "FAILED_TO_UPDATE_VEHICLE": "Failed to update vehicle",
     "FORM": {
       "REGISTRATION_NUMBER": "Registration number",
+      "REGRISTRATION_NUMBER_REQUIRED": "Registration number is required",
+      "VEHICLE_MODEL_REQUIRED": "Vehicle model is required",
       "MODEL": "Model",
       "GNSS_ID": "GNSS ID",
       "DESCRIPTION": "Description",

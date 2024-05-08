@@ -21,6 +21,7 @@ import {
   useRailingCaptureQuery,
   useRailingRoadSegmentsQuery,
 } from '../api/railing';
+import IconProperty from '@/components/IconProperty';
 
 const RailingDetails: Component = () => {
   const params = useParams();
@@ -126,12 +127,13 @@ const RailingDetails: Component = () => {
         </div>
       </section>
 
-      <section class='flex-1 divide-y divide-gray-300 dark:divide-gray-800 overflow-y-auto'>
+      <section class='flex-1 divide-y divide-gray-300 overflow-y-auto dark:divide-gray-800'>
         <For each={captures.data}>
           {(capture) => (
             <CaptureCard
               capturedAt={capture.capturedAt}
               segmentCoverage={capture.segmentCoverage}
+              tripSequenceNumber={capture.tripSequenceNumber}
               images={capture.imageUrls as any}
               class='w-full'
               onClick={() => setSelectedCapture(capture)}
@@ -154,8 +156,9 @@ const SegmentCard: Component<SegmentCardProps> = (props) => {
     <button
       type='button'
       class={cn(
-        'rounded-md border border-gray-400 bg-gray-300 dark:border-gray-800 dark:bg-gray-900 px-2 py-1 text-sm',
-        props.selected && 'border-brand-blue-600 bg-brand-blue-50/50 dark:bg-brand-blue-950/50'
+        'rounded-md border border-gray-400 bg-gray-300 px-2 py-1 text-sm dark:border-gray-800 dark:bg-gray-900',
+        props.selected &&
+          'border-brand-blue-600 bg-brand-blue-50/50 dark:bg-brand-blue-950/50 dark:border-brand-blue-600'
       )}
       onClick={props.onClick}
     >
@@ -179,12 +182,13 @@ const ImagePreview: Component<ImagePreviewProps> = (props) => {
       type='button'
       class={cn(
         'rounded-md border border-transparent p-1',
-        props.selected && 'border-brand-blue-600 bg-brand-blue-50/50 dark:bg-brand-blue-950/50',
+        props.selected &&
+          'border-brand-blue-600 bg-brand-blue-50/50 dark:bg-brand-blue-950/50',
         props.class
       )}
       onClick={props.onClick}
     >
-      <div class='flex aspect-video items-center justify-center overflow-hidden rounded-sm border bg-gray-300 text-sm border-gray-400 dark:border-gray-800 dark:bg-gray-900'>
+      <div class='flex aspect-video items-center justify-center overflow-hidden rounded-sm border border-gray-400 bg-gray-300 text-sm dark:border-gray-800 dark:bg-gray-900'>
         <span class='truncate text-xs'>
           <Show when={props.name} fallback={'NO IMAGE'}>
             {props.name}
@@ -193,7 +197,9 @@ const ImagePreview: Component<ImagePreviewProps> = (props) => {
       </div>
 
       <Show when={!props.hidePosition}>
-        <p class='text-left text-sm dark:text-gray-400 text-gray-700'>{props.position}</p>
+        <p class='text-left text-sm text-gray-700 dark:text-gray-400'>
+          {props.position}
+        </p>
       </Show>
     </button>
   );
@@ -201,6 +207,7 @@ const ImagePreview: Component<ImagePreviewProps> = (props) => {
 
 interface CaptureCardProps {
   segmentCoverage: Range;
+  tripSequenceNumber: number;
   capturedAt: string;
   images: Record<CameraPosition, string>;
   onClick?: () => void;
@@ -208,7 +215,7 @@ interface CaptureCardProps {
 }
 
 const CaptureCard: Component<CaptureCardProps> = (props) => {
-  const { d, n } = useTranslations();
+  const { t, d, n } = useTranslations();
 
   const images = () => {
     const keys = Object.keys(props.images) as CameraPosition[];
@@ -219,24 +226,20 @@ const CaptureCard: Component<CaptureCardProps> = (props) => {
     <button
       type='button'
       onClick={props.onClick}
-      class={cn('flex flex-col p-1 hover:bg-gray-200 dark:hover:bg-gray-900', props.class)}
+      class={cn(
+        'flex flex-col p-1 hover:bg-gray-200 dark:hover:bg-gray-900',
+        props.class
+      )}
     >
       <p class='text-lg font-semibold'>
-        [{n(props.segmentCoverage.start)}-{n(props.segmentCoverage.end)}]
+        [{n(props.segmentCoverage.start)}-{n(props.segmentCoverage.end)}] - {t('TRIPS.TRIP')} {props.tripSequenceNumber}
       </p>
       <div class='flex items-center gap-1'>
-        <CaptureDetail icon={IconCalendar} text={d(props.capturedAt)} />
-        <CaptureDetail icon={IconCamera} text={images()} />
+        <IconProperty icon={IconCalendar} text={d(props.capturedAt)} />
+        <IconProperty icon={IconCamera} text={images()} />
       </div>
     </button>
   );
 };
-
-const CaptureDetail: Component<{ icon: IconType; text: string }> = (props) => (
-  <div class='flex items-center gap-1'>
-    <props.icon class='size-4 text-gray-600' />
-    <span class='text-sm'>{props.text}</span>
-  </div>
-);
 
 export default RailingDetails;

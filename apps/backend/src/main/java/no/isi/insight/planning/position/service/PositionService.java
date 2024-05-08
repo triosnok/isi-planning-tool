@@ -84,6 +84,8 @@ public class PositionService {
         Thread.sleep(1000L);
       } catch (AsyncRequestNotUsableException e) {
         // ignored, happens rather frequent - probably related to the client reconnecting
+      } catch (IllegalStateException e) {
+        // ignored, happens when emitter is already completed (e.g. when user changes page)
       } catch (Exception e) {
         log.error("Error in position subscription", e);
       }

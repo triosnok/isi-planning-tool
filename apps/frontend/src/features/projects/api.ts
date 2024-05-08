@@ -17,6 +17,7 @@ import {
 import axios from 'axios';
 import { Accessor } from 'solid-js';
 import { z } from 'zod';
+import { TranslationKey } from '../i18n';
 
 export const useProjectsQuery = (status?: ProjectStatus) => {
   const params = new URLSearchParams();
@@ -51,22 +52,42 @@ export const useProjectDetailsQuery = (id: string) => {
 
 export const ProjectSchema = z.object({
   projectId: z.string().optional(),
-  name: z.string().min(1),
-  referenceCode: z.string().min(1),
+  name: z
+    .string()
+    .min(1, 'PROJECTS.FORM.PROJECT_NAME_REQUIRED' satisfies TranslationKey),
+  referenceCode: z
+    .string()
+    .min(
+      1,
+      'PROJECTS.FORM.PROJECT_REFERENCE_REQUIRED' satisfies TranslationKey
+    ),
   startsAt: z.string().datetime(),
   endsAt: z.string().datetime().optional(),
 });
 
-export const ProjectPlanSchema = z.object({
+export const CreateProjectPlanSchema = z.object({
   planId: z.string().optional(),
-  importUrl: z.string().min(1),
+  importUrl: z.string(),
+  startsAt: z.string().datetime(),
+  endsAt: z.string().datetime(),
+  vehicleId: z.string().optional(),
+});
+
+export const UpdateProjectPlanSchema = z.object({
+  planId: z.string().optional(),
+  importUrl: z.string().optional(),
   startsAt: z.string().datetime(),
   endsAt: z.string().datetime(),
   vehicleId: z.string().optional(),
 });
 
 export type ProjectSchemaValues = z.infer<typeof ProjectSchema>;
-export type ProjectPlanSchemaValues = z.infer<typeof ProjectPlanSchema>;
+export type CreateProjectPlanSchemaValues = z.infer<
+  typeof CreateProjectPlanSchema
+>;
+export type UpdateProjectPlanSchemaValues = z.infer<
+  typeof UpdateProjectPlanSchema
+>;
 
 export const useProjectsMutation = () => {
   const qc = useQueryClient();
@@ -113,6 +134,16 @@ export const useProjectsMutation = () => {
 export const useProjectPlansMutation = (projectId: string) => {
   const qc = useQueryClient();
 
+  const onSuccess = (id: string) => {
+    qc.invalidateQueries({ queryKey: [CacheKey.PROJECT_PLAN_LIST] });
+    qc.invalidateQueries({
+      queryKey: [CacheKey.PROJECT_PLAN_DETAILS, id],
+    });
+    qc.invalidateQueries({
+      queryKey: [CacheKey.PROJECT_RAILINGS],
+    });
+  };
+
   const create = createMutation(() => ({
     mutationFn: async (plan: Omit<CreateProjectPlanRequest, 'projectId'>) => {
       const response = await axios.post<CreateProjectPlanResponse>(
@@ -126,19 +157,11 @@ export const useProjectPlansMutation = (projectId: string) => {
       return response.data;
     },
 
-    onSuccess: (response) => {
-      qc.invalidateQueries({ queryKey: [CacheKey.PROJECT_PLAN_LIST] });
-      qc.invalidateQueries({
-        queryKey: [CacheKey.PROJECT_PLAN_DETAILS, response.projectPlanId],
-      });
-      qc.invalidateQueries({
-        queryKey: [CacheKey.PROJECT_RAILINGS],
-      });
-    },
+    onSuccess: (response) => onSuccess(response.projectPlanId),
   }));
 
   const update = createMutation(() => ({
-    mutationFn: async (plan: ProjectPlanSchemaValues) => {
+    mutationFn: async (plan: UpdateProjectPlanSchemaValues) => {
       const response = await axios.put<ProjectPlanDetails>(
         `/api/v1/project-plans/${plan.planId}`,
         plan
@@ -147,12 +170,7 @@ export const useProjectPlansMutation = (projectId: string) => {
       return response.data;
     },
 
-    onSuccess: (response) => {
-      qc.invalidateQueries({ queryKey: [CacheKey.PROJECT_PLAN_LIST] });
-      qc.invalidateQueries({
-        queryKey: [CacheKey.PROJECT_PLAN_DETAILS, response.id],
-      });
-    },
+    onSuccess: (response) => onSuccess(response.id),
   }));
 
   return { create, update };

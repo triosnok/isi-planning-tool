@@ -47,6 +47,7 @@ export interface CaptureDetails {
     activeCapture: boolean;
     metersCaptured: number;
     images: { [P in CameraPosition]?: number };
+    imageAnalysis: ImageAnalysis;
     storageRemaining: number;
 }
 
@@ -56,10 +57,32 @@ export interface CaptureLogDetails {
     size: number;
 }
 
+export interface CapturedMetersByDay {
+    date: DateAsString;
+    meters: number;
+}
+
+export interface ImageAnalysis {
+    overall: ImageStatus;
+    remarks: ImageRemark[];
+    positions: { [P in CameraPosition]?: ImagePositionAnalysis };
+}
+
+export interface ImagePositionAnalysis {
+    count: number;
+    target: number;
+    status: ImageStatus;
+}
+
 export interface CreateDeviationRequest {
     captureId: string;
     deviationType: string;
     details: { [index: string]: string };
+}
+
+export interface DeviationCount {
+    type: string;
+    count: number;
 }
 
 export interface DeviationDetails {
@@ -68,6 +91,10 @@ export interface DeviationDetails {
     position: Geometry;
     deviationType: string;
     details: { [index: string]: string };
+}
+
+export interface FileUploadResponse {
+    url: string;
 }
 
 export interface Geometry {
@@ -130,6 +157,7 @@ export interface ProjectPlanDetails {
     vehicleModel?: string | null;
     registrationNumber?: string | null;
     imports: RailingImportDetails[];
+    segments: string[];
     activeTrips: number;
     railings: number;
     meters: number;
@@ -164,6 +192,7 @@ export interface RailingCapture {
     tripId: string;
     planId: string;
     projectId: string;
+    tripSequenceNumber: number;
     geometry: Geometry;
     segmentCoverage: Range;
     imageUrls: { [P in CameraPosition]?: string };
@@ -199,6 +228,10 @@ export interface RoadSegment {
     length: number;
 }
 
+export interface SearchResult {
+    type: "PROJECT" | "USER" | "VEHICLE";
+}
+
 export interface CreateTripNoteRequest {
     tripId: string;
     note: string;
@@ -215,6 +248,9 @@ export interface TripDetails {
     id: string;
     projectPlanId: string;
     projectId: string;
+    vehicleId: string;
+    vehicleModel: string;
+    vehicleRegistrationNumber: string;
     project: string;
     driver: string;
     startedAt: DateAsString;
@@ -222,12 +258,13 @@ export interface TripDetails {
     sequenceNumber: number;
     noteCount: number;
     deviations: number;
+    captureDetails: CaptureDetails;
 }
 
 export interface TripNoteDetails {
     id: string;
     note: string;
-    geometry: Geometry;
+    geometry?: Geometry | null;
     createdAt: DateAsString;
 }
 
@@ -266,6 +303,7 @@ export interface UserAccountDetails {
     email: string;
     phoneNumber: string;
     role: UserRole;
+    status: UserStatus;
 }
 
 export interface CreateVehicleRequest {
@@ -300,11 +338,37 @@ export interface VehicleDetails {
     active: boolean;
 }
 
+export interface ProjectResult extends SearchResult {
+    type: "PROJECT";
+    id: string;
+    name: string;
+    referenceCode: string;
+}
+
+export interface UserResult extends SearchResult {
+    type: "USER";
+    id: string;
+    fullName: string;
+}
+
+export interface VehicleResult extends SearchResult {
+    type: "VEHICLE";
+    id: string;
+    model: string;
+    registrationNumber: string;
+}
+
 export type DateAsString = string;
 
 export type UserRole = "DRIVER" | "PLANNER";
 
+export type UserStatus = "AVAILABLE" | "DRIVING";
+
 export type CaptureAction = "RESUME" | "PAUSE";
+
+export type ImageRemark = "LEFT_RIGHT_IMBALANCE" | "TOP_SIDE_IMBALANCE";
+
+export type ImageStatus = "OK" | "WITHIN_TOLERANCE" | "OUT_OF_TOLERANCE";
 
 export type PositionSubject = "VEHICLE" | "DRIVER";
 
@@ -313,3 +377,7 @@ export type ProjectStatus = "UPCOMING" | "ONGOING" | "PREVIOUS";
 export type RoadCategory = "PRIVATE" | "FOREST" | "MUNICIPALITY" | "COUNTY" | "NATIONAL" | "EUROPE" | "UNKNOWN";
 
 export type CameraPosition = "LEFT" | "RIGHT" | "TOP";
+
+export type ResultType = "PROJECT" | "USER" | "VEHICLE";
+
+export type SearchResultUnion = ProjectResult | UserResult | VehicleResult;

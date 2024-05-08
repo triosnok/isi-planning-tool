@@ -11,12 +11,12 @@ import CreateUserForm from '../components/CreateUserForm';
 
 const AddUser: Component = () => {
   const { t } = useTranslations();
-  const { create } = useUserMutation();
+  const userMutation = useUserMutation();
   const navigate = useNavigate();
 
   const handleSubmit = async (values: CreateUserSchemaValues) => {
     try {
-      await create.mutateAsync(values);
+      await userMutation.create.mutateAsync(values);
       navigate('/users');
     } catch (error) {
       console.error('Failed to create user');
@@ -36,7 +36,7 @@ const AddUser: Component = () => {
           <h2 class='text-2xl font-bold'>{t('USERS.ADD_USER')}</h2>
         </SideDrawerHeader>
 
-        <CreateUserForm onSubmit={handleSubmit} class='flex-1' />
+        <CreateUserForm isError={userMutation.create.isError} onSubmit={handleSubmit} class='flex-1' />
       </SideDrawerContent>
     </SideDrawer>
   );

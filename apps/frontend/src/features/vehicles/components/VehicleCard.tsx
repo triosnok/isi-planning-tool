@@ -10,6 +10,7 @@ import {
 } from '@tabler/icons-solidjs';
 import { Component, Show } from 'solid-js';
 import VehicleStatus from './VehicleStatus';
+import IconProperty from '@/components/IconProperty';
 
 export interface VehicleCardProps {
   imageUrl: string;
@@ -53,9 +54,9 @@ const VehicleCard: Component<VehicleCardProps> = (props) => {
 
         <hr class='my-1 h-px w-full border-0 bg-gray-300 dark:bg-gray-700' />
 
-        <VehicleDetail icon={Icon123} text={props.registrationNumber} />
-        <VehicleDetail icon={IconCamera} text={props.camera ? 'Yes' : 'No'} />
-        <VehicleDetail icon={IconGps} text={props.gnssId} />
+        <IconProperty icon={Icon123} text={props.registrationNumber} />
+        <IconProperty icon={IconCamera} text={props.camera ? 'Yes' : 'No'} />
+        <IconProperty icon={IconGps} text={props.gnssId} />
       </div>
 
       <Button
@@ -66,20 +67,6 @@ const VehicleCard: Component<VehicleCardProps> = (props) => {
         {t('VEHICLES.VIEW_DETAILS')}
       </Button>
     </div>
-  );
-};
-
-interface VehicleDetailProps {
-  icon: IconType;
-  text: string;
-}
-
-const VehicleDetail: Component<VehicleDetailProps> = (props) => {
-  return (
-    <p class='flex items-center gap-1 text-sm text-gray-800 dark:text-gray-300'>
-      <props.icon class='h-5 w-5 text-gray-500' />
-      <span class='truncate'>{props.text}</span>
-    </p>
   );
 };
 

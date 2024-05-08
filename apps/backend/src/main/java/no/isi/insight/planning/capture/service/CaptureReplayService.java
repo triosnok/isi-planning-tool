@@ -1,6 +1,7 @@
 package no.isi.insight.planning.capture.service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +48,7 @@ public class CaptureReplayService {
   private final Map<UUID, CaptureLogReplay> replays = new HashMap<>();
   private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
   private final BINReader nn2000 = NN2000.getInstance().getReader();
+  private final ImageAnalysisService imageAnalysisService;
 
   /**
    * Creates a new emitter for a given trips capture.
@@ -95,6 +97,13 @@ public class CaptureReplayService {
       logEntries,
       speed.orElse(1),
       (logEntry, logReplay) -> {
+        this.eventPublisher.publishEvent(
+          new CaptureDetailsEvent(
+            trip,
+            logReplay.getCaptureDetails()
+          )
+        );
+
         if (logEntry.images().size() == 0) {
           return;
         }
@@ -107,13 +116,6 @@ public class CaptureReplayService {
         point.getCoordinate().setZ(logEntry.height() - zOffset);
 
         var matches = matcher.matchRailings(point, logEntry.heading());
-
-        this.eventPublisher.publishEvent(
-          new CaptureDetailsEvent(
-            trip,
-            logReplay.getCaptureDetails()
-          )
-        );
 
         if (matches.isEmpty()) {
           return;
@@ -140,7 +142,7 @@ public class CaptureReplayService {
           var capture = new TripRailingCapture(
             trip,
             match.roadSegment(),
-            logEntry.timestamp(),
+            LocalDateTime.now(),
             point,
             logEntry.images(),
             match.segmentIndex(),
@@ -153,7 +155,8 @@ public class CaptureReplayService {
         }
 
         this.railingCaptureJpaRepository.saveAll(captures);
-      }
+      },
+      this.imageAnalysisService
     );
 
     this.replays.put(tripId, replay);

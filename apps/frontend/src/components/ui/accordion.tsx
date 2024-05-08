@@ -1,23 +1,29 @@
 import type { Component } from 'solid-js';
 import { splitProps } from 'solid-js';
 
-import { Accordion as AccordionPrimitive } from '@kobalte/core';
-import { TbChevronDown } from 'solid-icons/tb';
+import {
+  AccordionContentProps,
+  AccordionItemProps,
+  Accordion as AccordionPrimitive,
+  AccordionTriggerProps,
+} from '@kobalte/core/accordion';
 
 import { cn } from '@/lib/utils';
+import { PolymorphicProps } from '@kobalte/core/polymorphic';
+import { IconChevronDown } from '@tabler/icons-solidjs';
 
-const Accordion = AccordionPrimitive.Root;
+const Accordion = AccordionPrimitive;
 
-const AccordionItem: Component<AccordionPrimitive.AccordionItemProps> = (
+const AccordionItem: Component<PolymorphicProps<'div', AccordionItemProps>> = (
   props
 ) => {
   const [, rest] = splitProps(props, ['class']);
   return <AccordionPrimitive.Item class={cn('', props.class)} {...rest} />;
 };
 
-const AccordionTrigger: Component<AccordionPrimitive.AccordionTriggerProps> = (
-  props
-) => {
+const AccordionTrigger: Component<
+  PolymorphicProps<'div', AccordionTriggerProps>
+> = (props) => {
   const [, rest] = splitProps(props, ['class', 'children']);
   return (
     <AccordionPrimitive.Header class='flex'>
@@ -31,15 +37,15 @@ const AccordionTrigger: Component<AccordionPrimitive.AccordionTriggerProps> = (
         {...rest}
       >
         {props.children}
-        <TbChevronDown class='size-4 shrink-0 transition-transform duration-200' />
+        <IconChevronDown class='size-4 shrink-0 transition-transform duration-200' />
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   );
 };
 
-const AccordionContent: Component<AccordionPrimitive.AccordionContentProps> = (
-  props
-) => {
+const AccordionContent: Component<
+  PolymorphicProps<'div', AccordionContentProps>
+> = (props) => {
   const [, rest] = splitProps(props, ['class', 'children']);
   return (
     <AccordionPrimitive.Content
@@ -54,4 +60,4 @@ const AccordionContent: Component<AccordionPrimitive.AccordionContentProps> = (
   );
 };
 
-export { Accordion, AccordionItem, AccordionTrigger, AccordionContent };
+export { Accordion, AccordionContent, AccordionItem, AccordionTrigger };

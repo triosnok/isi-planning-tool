@@ -11,6 +11,7 @@ import { A } from '@solidjs/router';
 import { Icon123, IconCamera } from '@tabler/icons-solidjs';
 import { Component, Show, createSignal } from 'solid-js';
 import VehicleStatus from './VehicleStatus';
+import IconProperty from '@/components/IconProperty';
 
 export interface VehicleSelectProps {
   value?: VehicleDetails;
@@ -88,15 +89,9 @@ const VehicleSelectItem: Component<VehicleSelectItemProps> = (props) => {
     <div class='relative w-full rounded-md text-left'>
       <p class='text-lg font-semibold'>{props.model}</p>
 
-      <p class='flex items-center gap-0.5 text-sm'>
-        <Icon123 class='h-5 w-5' />
-        <span>{props.registrationNumber}</span>
-      </p>
+      <IconProperty icon={Icon123} text={props.registrationNumber} />
 
-      <p class='flex items-center gap-0.5 text-sm'>
-        <IconCamera class='h-5 w-5' />
-        <span>{props.camera ? 'Yes' : 'No'}</span>
-      </p>
+      <IconProperty icon={IconCamera} text={props.camera ? 'Yes' : 'No'} />
 
       <VehicleStatus
         available={props.available}

@@ -16,6 +16,7 @@ import type en from './locales/en.json';
 export type Locale = 'en' | 'no';
 export type RawDictionary = typeof en;
 export type Dictionary = i18n.Flatten<RawDictionary>;
+export type TranslationKey = keyof Dictionary;
 
 /**
  * Fetches the dictionary for the given locale

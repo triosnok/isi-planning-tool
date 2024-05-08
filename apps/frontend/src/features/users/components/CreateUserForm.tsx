@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Callout, CalloutContent, CalloutTitle } from '@/components/ui/callout';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import ErrorLabel from '@/features/error/components/ErrorLabel';
@@ -6,7 +7,7 @@ import { useTranslations } from '@/features/i18n';
 import { cn } from '@/lib/utils';
 import { UserRole } from '@isi-insight/client';
 import { createForm, setValue, zodForm } from '@modular-forms/solid';
-import { Component } from 'solid-js';
+import { Component, Show } from 'solid-js';
 import { CreateUserSchema, CreateUserSchemaValues } from '../api';
 import UserRoleRadio from './UserRoleRadio';
 
@@ -17,6 +18,7 @@ export interface CreateUserFormProps {
   email?: string;
   phoneNumber?: string;
   role?: UserRole;
+  isError?: boolean;
   onSubmit: (values: CreateUserSchemaValues) => void;
 }
 
@@ -142,6 +144,16 @@ const CreateUserForm: Component<CreateUserFormProps> = (props) => {
           </>
         )}
       </Field>
+
+      <Show when={props.isError}>
+        <Callout class='mt-2' variant={'error'}>
+          <CalloutTitle>Error</CalloutTitle>
+          <CalloutContent>
+            {t('USERS.FORM.FAILED_TO_CREATE_USER')}
+          </CalloutContent>
+        </Callout>
+      </Show>
+
       <Button type='submit' class='mt-auto'>
         {t('USERS.FORM.CREATE_USER')}
       </Button>

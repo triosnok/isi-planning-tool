@@ -1,6 +1,7 @@
 package no.isi.insight.planning.db.repository;
 
 import java.sql.Types;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import no.isi.insight.planning.client.capture.view.CapturedMetersByDay;
 import no.isi.insight.planning.client.geometry.Geometry;
 import no.isi.insight.planning.client.railing.view.RailingCapture;
 import no.isi.insight.planning.client.railing.view.Range;
@@ -38,6 +40,7 @@ public class TripRailingCaptureJdbcRepository {
         t.trip_id,
         pp.project_plan_id,
         pp.fk_project_id,
+        t.sequence_number,
         LOWER(trc.segment_coverage) AS segment_coverage_start,
         UPPER(trc.segment_coverage) AS segment_coverage_end,
         ST_AsText(trc.position) AS wkt,
@@ -86,6 +89,7 @@ public class TripRailingCaptureJdbcRepository {
         .tripId(rs.getObject("trip_id", UUID.class))
         .planId(rs.getObject("project_plan_id", UUID.class))
         .projectId(rs.getObject("fk_project_id", UUID.class))
+        .tripSequenceNumber(rs.getInt("sequence_number"))
         .geometry(
           new Geometry(
             rs.getString("wkt"),
@@ -129,6 +133,47 @@ public class TripRailingCaptureJdbcRepository {
       double segmentIndex
   ) {
     return this.findAll(railingId, segmentId, segmentIndex, Optional.empty(), Optional.empty(), Optional.empty());
+  }
+
+  // language=sql
+  private static final String CAPTURE_AGGREGATE_QUERY = """
+      WITH capture_aggregate AS (
+        SELECT
+          trc.fk_road_railing_id,
+          trc.fk_road_segment_id,
+          trc.captured_at::date AS captured_at,
+          RANGE_AGG(trc.segment_coverage) AS captured
+        FROM trip_railing_capture trc
+        GROUP BY 1,2,3
+      ),
+      capture_length AS (
+        SELECT
+          ca.fk_road_railing_id,
+          ca.captured_at,
+          SUM(UPPER(ca.captured) - LOWER(ca.captured)) AS captured_length
+        FROM capture_aggregate ca
+        GROUP BY 1,2
+      )
+      SELECT
+        capture_date::date,
+        SUM(cl.captured_length) AS captured_length
+      FROM GENERATE_SERIES(DATE_TRUNC('WEEK', NOW()), DATE_TRUNC('WEEK', NOW()) + INTERVAL '6 DAYS', INTERVAL '1 DAY') capture_date
+      LEFT JOIN capture_length cl
+        ON capture_date::date = cl.captured_at
+      GROUP BY 1
+    """;
+
+  public List<CapturedMetersByDay> findAggregates() {
+    var params = new MapSqlParameterSource().addValue("date", LocalDate.now());
+
+    return this.jdbcTemplate.query(
+      CAPTURE_AGGREGATE_QUERY,
+      params,
+      (rs, i) -> new CapturedMetersByDay(
+        rs.getObject("capture_date", LocalDate.class),
+        rs.getDouble("captured_length")
+      )
+    );
   }
 
 }

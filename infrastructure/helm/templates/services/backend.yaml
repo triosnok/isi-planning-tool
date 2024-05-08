@@ -53,12 +53,16 @@ spec:
           containerPort: {{ include "backend.port" . }}
         livenessProbe:
           httpGet:
-            path: /actuator/health
+            path: /actuator/health/liveness
             port: {{ include "backend.port" . }}
+            initialDelaySeconds: 3
+            periodSeconds: 3
         readinessProbe:
           httpGet:
-            path: /actuator/health
+            path: /actuator/health/readiness
             port: {{ include "backend.port" . }}
+            initialDelaySeconds: 3
+            periodSeconds: 3
         envFrom:
           - secretRef:
               name: {{ include "backend.name" . }}

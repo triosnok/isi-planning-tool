@@ -12,6 +12,7 @@ import {
 import axios from 'axios';
 import { Accessor } from 'solid-js';
 import { z } from 'zod';
+import { TranslationKey } from '../i18n';
 
 export const useVehiclesQuery = (
   availableFrom?: Accessor<string | undefined>,
@@ -68,9 +69,16 @@ export const useVehicleDetailsQuery = (id: string) => {
 export const VehicleSchema = z.object({
   vehicleId: z.string().optional(),
   imageUrl: z.string().optional(),
-  registrationNumber: z.string().min(1),
+  registrationNumber: z
+    .string()
+    .min(
+      1,
+      'VEHICLES.FORM.REGRISTRATION_NUMBER_REQUIRED' satisfies TranslationKey
+    ),
   camera: z.boolean(),
-  model: z.string().min(1),
+  model: z
+    .string()
+    .min(1, 'VEHICLES.FORM.VEHICLE_MODEL_REQUIRED' satisfies TranslationKey),
   description: z.string(),
   gnssId: z.string(),
 });

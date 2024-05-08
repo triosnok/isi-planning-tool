@@ -1,16 +1,17 @@
 import type { Component, ComponentProps } from 'solid-js';
 import { splitProps } from 'solid-js';
 
-import { Dialog as DialogPrimitive } from '@kobalte/core';
-import { TbX } from 'solid-icons/tb';
+import { DialogContentProps, DialogDescriptionProps, DialogOverlayProps, DialogPortalProps, Dialog as DialogPrimitive, DialogTitleProps, DialogTriggerProps } from '@kobalte/core/dialog';
 
 import { cn } from '@/lib/utils';
+import { PolymorphicProps } from '@kobalte/core/polymorphic';
+import { IconX } from '@tabler/icons-solidjs';
 
-const SideDrawer = DialogPrimitive.Root;
+const SideDrawer = DialogPrimitive;
 
-const SideDrawerTrigger: Component<DialogPrimitive.DialogTriggerProps> = (
-  props
-) => {
+const SideDrawerTrigger: Component<
+  PolymorphicProps<'div', DialogTriggerProps>
+> = (props) => {
   const [, rest] = splitProps(props, ['children']);
   return (
     <DialogPrimitive.Trigger {...rest}>
@@ -19,9 +20,9 @@ const SideDrawerTrigger: Component<DialogPrimitive.DialogTriggerProps> = (
   );
 };
 
-const SideDrawerPortal: Component<DialogPrimitive.DialogPortalProps> = (
-  props
-) => {
+const SideDrawerPortal: Component<
+  PolymorphicProps<'div', DialogPortalProps>
+> = (props) => {
   const [, rest] = splitProps(props, ['children']);
   return (
     <DialogPrimitive.Portal {...rest}>
@@ -32,9 +33,9 @@ const SideDrawerPortal: Component<DialogPrimitive.DialogPortalProps> = (
   );
 };
 
-const SideDrawerOverlay: Component<DialogPrimitive.DialogOverlayProps> = (
-  props
-) => {
+const SideDrawerOverlay: Component<
+  PolymorphicProps<'div', DialogOverlayProps>
+> = (props) => {
   const [, rest] = splitProps(props, ['class']);
   return (
     <DialogPrimitive.Overlay
@@ -47,23 +48,23 @@ const SideDrawerOverlay: Component<DialogPrimitive.DialogOverlayProps> = (
   );
 };
 
-const SideDrawerContent: Component<DialogPrimitive.DialogContentProps> = (
-  props
-) => {
+const SideDrawerContent: Component<
+  PolymorphicProps<'div', DialogContentProps>
+> = (props) => {
   const [, rest] = splitProps(props, ['class', 'children']);
   return (
     <SideDrawerPortal>
       <SideDrawerOverlay />
       <DialogPrimitive.Content
         class={cn(
-          'data-[expanded]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[expanded]:fade-in-0 data-[closed]:slide-out-to-right-full data-[expanded]:slide-in-from-right-full fixed right-0 z-50 grid h-svh w-full max-w-lg gap-4 border-l bg-gray-50 p-6 shadow-lg duration-200 outline-none dark:border-gray-800 dark:bg-gray-900',
+          'data-[expanded]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[expanded]:fade-in-0 data-[closed]:slide-out-to-right-full data-[expanded]:slide-in-from-right-full fixed right-0 z-50 grid h-svh w-full max-w-lg gap-4 border-l bg-gray-50 p-6 shadow-lg outline-none duration-200 dark:border-gray-800 dark:bg-gray-900',
           props.class
         )}
         {...rest}
       >
         {props.children}
         <DialogPrimitive.CloseButton class='data-[expanded]:bg-brand-red-700 absolute right-4 top-4 rounded-sm opacity-70 ring-offset-gray-50 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 disabled:pointer-events-none data-[expanded]:text-gray-500'>
-          <TbX class='size-4' />
+          <IconX class='size-4' />
           <span class='sr-only'>Close</span>
         </DialogPrimitive.CloseButton>
       </DialogPrimitive.Content>
@@ -97,9 +98,9 @@ const SideDrawerFooter: Component<ComponentProps<'div'>> = (props) => {
   );
 };
 
-const SideDrawerTitle: Component<DialogPrimitive.DialogTitleProps> = (
-  props
-) => {
+const SideDrawerTitle: Component<
+  PolymorphicProps<'div', DialogTitleProps>
+> = (props) => {
   const [, rest] = splitProps(props, ['class']);
   return (
     <DialogPrimitive.Title
@@ -113,7 +114,7 @@ const SideDrawerTitle: Component<DialogPrimitive.DialogTitleProps> = (
 };
 
 const SideDrawerDescription: Component<
-  DialogPrimitive.DialogDescriptionProps
+  PolymorphicProps<'div', DialogDescriptionProps>
 > = (props) => {
   const [, rest] = splitProps(props, ['class']);
   return (
@@ -125,11 +126,6 @@ const SideDrawerDescription: Component<
 };
 
 export {
-  SideDrawer,
-  SideDrawerTrigger,
-  SideDrawerContent,
-  SideDrawerHeader,
-  SideDrawerFooter,
-  SideDrawerTitle,
-  SideDrawerDescription,
+  SideDrawer, SideDrawerContent, SideDrawerDescription, SideDrawerFooter, SideDrawerHeader, SideDrawerTitle, SideDrawerTrigger
 };
+

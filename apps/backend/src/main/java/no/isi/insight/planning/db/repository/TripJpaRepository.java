@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import no.isi.insight.planning.db.model.Trip;
 
@@ -15,6 +16,7 @@ public interface TripJpaRepository extends Repository<Trip, UUID> {
       Trip trip
   );
 
+  @Transactional(readOnly = true)
   Optional<Trip> findById(
       UUID id
   );

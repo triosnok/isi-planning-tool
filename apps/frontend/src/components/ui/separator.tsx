@@ -1,14 +1,17 @@
 import type { Component } from 'solid-js';
 import { splitProps } from 'solid-js';
 
-import { Separator as SeparatorPrimitive } from '@kobalte/core';
+import { Separator as SeparatorPrimitive, SeparatorRootProps } from '@kobalte/core/separator';
 
 import { cn } from '@/lib/utils';
+import { PolymorphicProps } from '@kobalte/core/polymorphic';
 
-const Separator: Component<SeparatorPrimitive.SeparatorRootProps> = (props) => {
+const Separator: Component<
+  PolymorphicProps<'div', SeparatorRootProps>
+> = (props) => {
   const [, rest] = splitProps(props, ['class', 'orientation']);
   return (
-    <SeparatorPrimitive.Root
+    <SeparatorPrimitive
       orientation={props.orientation ?? 'horizontal'}
       class={cn(
         'bg-border shrink-0',

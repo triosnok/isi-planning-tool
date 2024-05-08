@@ -32,11 +32,14 @@ public class ProjectPlanJdbcRepository {
       WITH railing_aggregate AS (
         SELECT
           pprr.fk_project_plan_id,
-          COUNT(*) AS railing_count,
-          SUM(rr.length) AS sum_meters
+          COUNT(DISTINCT rr.road_railing_id) AS railing_count,
+          SUM(rs.length) AS sum_meters,
+          JSON_AGG(DISTINCT rs.road_reference) AS segments
         FROM project_plan_road_railing pprr
         LEFT JOIN road_railing rr
           ON pprr.fk_road_railing_id = rr.road_railing_id
+        LEFT JOIN road_segment rs
+          ON rr.road_railing_id = rs.fk_road_railing_id
         GROUP BY pprr.fk_project_plan_id
       ),
       trip_aggregate AS (
@@ -59,7 +62,8 @@ public class ProjectPlanJdbcRepository {
         v.registration_number,
         ta.active_trips,
         ra.railing_count,
-        ra.sum_meters
+        ra.sum_meters,
+        COALESCE(ra.segments, '[]'::json) AS segments
       FROM project_plan pp
       LEFT JOIN vehicle v
         ON pp.fk_vehicle_id = v.vehicle_id
@@ -96,6 +100,14 @@ public class ProjectPlanJdbcRepository {
       log.warn("Failed to parse railing imports JSON column: {}", e.getMessage());
     }
 
+    List<String> segments = List.of();
+
+    try {
+      segments = Arrays.asList(this.objectMapper.readValue(rs.getBytes("segments"), String[].class));
+    } catch (Exception e) {
+      log.warn("Failed to map segments for road railing with id={}, {}", id, e.getMessage());
+    }
+
     return ProjectPlanDetails.builder()
       .id(id)
       .projectId(rs.getObject("fk_project_id", UUID.class))
@@ -108,6 +120,7 @@ public class ProjectPlanJdbcRepository {
       .railings(rs.getInt("railing_count"))
       .vehicleId(rs.getObject("fk_vehicle_id", UUID.class))
       .imports(imports)
+      .segments(segments)
       .meters(rs.getDouble("sum_meters"))
       .build();
   };

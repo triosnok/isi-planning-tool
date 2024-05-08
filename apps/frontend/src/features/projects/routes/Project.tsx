@@ -15,9 +15,8 @@ import TripCard from '@/features/trips/components/TripCard';
 import { LayoutProps, cn } from '@/lib/utils';
 import { A, useNavigate, useParams } from '@solidjs/router';
 import {
-  IconCircleCheckFilled,
   IconEdit,
-  IconPlus,
+  IconPlus
 } from '@tabler/icons-solidjs';
 import { createVirtualizer } from '@tanstack/solid-virtual';
 import dayjs from 'dayjs';
@@ -37,6 +36,7 @@ import {
   useProjectRailings,
 } from '../api';
 import PlanCard from '../components/PlanCard';
+import ProjectStatusIndicator from '../components/ProjectStatusIndicator';
 import RailingCard from '../components/RailingCard';
 import { useProjectSearchParams } from '../utils';
 
@@ -75,8 +75,13 @@ const Project: Component<LayoutProps> = (props) => {
 
           <div class='space-y-2 px-2'>
             <div class='flex justify-between'>
-              <div>
-                <h1 class='text-4xl font-bold'>{project.data?.name}</h1>
+              <div class='min-w-0'>
+                <h1
+                  title={project.data?.name}
+                  class='truncate text-4xl font-bold'
+                >
+                  {project.data?.name}
+                </h1>
 
                 <h2>
                   <Show when={project.data} fallback='...'>
@@ -92,8 +97,7 @@ const Project: Component<LayoutProps> = (props) => {
                 </h2>
 
                 <div class='text-success-500 flex items-center gap-1'>
-                  <IconCircleCheckFilled size={16} />
-                  <p class='text-sm'>{project.data?.status}</p>
+                  <ProjectStatusIndicator status={project.data?.status} />
                 </div>
               </div>
               <A href={`/projects/${project.data?.id}/update`}>
@@ -172,6 +176,7 @@ const Project: Component<LayoutProps> = (props) => {
                       ongoingTripAmount={plan.activeTrips}
                       railingAmount={plan.railings}
                       onToggle={() => handlePlanToggled(plan.id)}
+                      segments={plan.segments}
                       selected={searchParams.selectedPlans().includes(plan.id)}
                       onEdit={() => setEditPlanId(plan.id)}
                     />
@@ -191,11 +196,10 @@ const Project: Component<LayoutProps> = (props) => {
                     <A href={`/projects/${params.id}/trip/${trip.id}`}>
                       <TripCard
                         sequenceNumber={trip.sequenceNumber}
-                        startedAt={d(trip.startedAt, DateFormat.MONTH_DAY)}
-                        endedAt={d(trip.endedAt, DateFormat.MONTH_DAY)}
+                        startedAt={trip.startedAt}
+                        endedAt={trip.endedAt}
                         deviations={trip.deviations}
                         notes={trip.noteCount}
-                        length={320}
                         car={trip.driver}
                       />
                     </A>
