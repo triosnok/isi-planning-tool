@@ -143,6 +143,7 @@
     "SHOW_LESS": "Show less",
     "ACTIVE_TRIPS": "Active trips",
     "GO_TO_ACTIVE_TRIP": "Go to active trip",
+    "NOW": "now",
     "TRIP_SUMMARY": {
       "TITLE": "Trip summary",
       "TOTAL_RAILING_METERS_CAPTURED": "A total of {{ meters }} meters of railing has been captured",
