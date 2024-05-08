@@ -1,10 +1,10 @@
 import IconProperty from '@/components/IconProperty';
-import { useTranslations } from '@/features/i18n';
+import { DateFormat, useTranslations } from '@/features/i18n';
 import {
   IconAlertCircleFilled,
+  IconClock,
   IconMessage,
-  IconRulerMeasure,
-  IconSteeringWheel,
+  IconSteeringWheel
 } from '@tabler/icons-solidjs';
 import { cva } from 'class-variance-authority';
 import dayjs from 'dayjs';
@@ -15,7 +15,6 @@ export interface TripCardProps {
   endedAt?: string;
   deviations?: number;
   notes?: number;
-  length?: number;
   car?: string;
   status?: 'active' | 'inactive' | 'dashboard';
 }
@@ -47,7 +46,7 @@ const TripCard: Component<TripCardProps> = (props) => {
     else return validEndDate ? 'inactive' : 'active';
   };
 
-  const { t } = useTranslations();
+  const { t, d } = useTranslations();
 
   return (
     <div class={tripCardVariants({ status: tripStatus() })}>
@@ -56,13 +55,16 @@ const TripCard: Component<TripCardProps> = (props) => {
           {t('TRIPS.TRIP')} {props.sequenceNumber}
         </p>
         <p class='text-sm text-gray-500 dark:text-gray-400'>
-          {props.startedAt}
+          {d(props.startedAt, DateFormat.MONTH_DAY)}
         </p>
       </div>
 
       <div class='flex flex-col'>
         <IconProperty icon={IconSteeringWheel} text={props.car} />
-        <IconProperty icon={IconRulerMeasure} text={`${props.length} km`} />
+        <IconProperty
+          icon={IconClock}
+          text={`${d(props.startedAt, DateFormat.TIME)} - ${validEndDate ? d(props.endedAt, DateFormat.TIME) : t('TRIPS.NOW')}`}
+        />
       </div>
 
       <div class='absolute right-0 top-0 p-2'>

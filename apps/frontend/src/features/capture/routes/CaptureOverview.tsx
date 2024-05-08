@@ -7,10 +7,12 @@ import {
 } from '../api';
 import CaptureLogsTable from './components/CaptureLogsTable';
 import UploadCaptureLogsForm from './components/UploadCaptureLogsForm';
+import { useTranslations } from '@/features/i18n';
 
 const CaptureOverview: Component = () => {
   const capture = useUploadCaptureLog();
   const captureLogs = useCaptureLogsQuery();
+  const { t } = useTranslations();
 
   const handleSubmit = async (values: CaptureLogSchemaValues) => {
     try {
@@ -25,7 +27,7 @@ const CaptureOverview: Component = () => {
       <Header />
 
       <section class='flex-1 overflow-y-auto px-6 py-4 flex flex-col'>
-        <h1 class='text-4xl font-bold'>Capture logs</h1>
+        <h1 class='text-4xl font-bold'>{t('CAPTURE.CAPTURE_LOGS')}</h1>
 
         <div class='flex flex-1 max-lg:flex-col'>
           <main class='flex-1'>
