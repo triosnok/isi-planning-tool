@@ -229,7 +229,7 @@ export interface RoadSegment {
 }
 
 export interface SearchResult {
-    type: "PROJECT" | "USER" | "VEHICLE";
+    type: "PROJECT" | "USER" | "VEHICLE" | "RAILING" | "ROAD_SEGMENT";
 }
 
 export interface CreateTripNoteRequest {
@@ -349,6 +349,7 @@ export interface UserResult extends SearchResult {
     type: "USER";
     id: string;
     fullName: string;
+    email: string;
 }
 
 export interface VehicleResult extends SearchResult {
@@ -356,6 +357,24 @@ export interface VehicleResult extends SearchResult {
     id: string;
     model: string;
     registrationNumber: string;
+}
+
+export interface RailingResult extends SearchResult {
+    type: "RAILING";
+    id: number;
+    projectId: string;
+    projectName: string;
+    projectReferenceCode: string;
+}
+
+export interface RoadSegmentResult extends SearchResult {
+    type: "ROAD_SEGMENT";
+    id: string;
+    railingId: number;
+    roadSystemReference: string;
+    projectId: string;
+    projectName: string;
+    projectReferenceCode: string;
 }
 
 export type DateAsString = string;
@@ -378,6 +397,6 @@ export type RoadCategory = "PRIVATE" | "FOREST" | "MUNICIPALITY" | "COUNTY" | "N
 
 export type CameraPosition = "LEFT" | "RIGHT" | "TOP";
 
-export type ResultType = "PROJECT" | "USER" | "VEHICLE";
+export type ResultType = "PROJECT" | "USER" | "VEHICLE" | "RAILING" | "ROAD_SEGMENT";
 
-export type SearchResultUnion = ProjectResult | UserResult | VehicleResult;
+export type SearchResultUnion = ProjectResult | UserResult | VehicleResult | RailingResult | RoadSegmentResult;

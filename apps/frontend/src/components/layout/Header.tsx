@@ -111,11 +111,6 @@ const Header: Component = () => {
       </nav>
 
       <section class='flex flex-1 flex-row-reverse gap-8'>
-        <CommandSearch.Root>
-          <CommandSearch.Trigger />
-          <CommandSearch.Dialog />
-        </CommandSearch.Root>
-
         <SideDrawer>
           <SideDrawerTrigger class='text-gray-50 md:hidden'>
             <IconMenu2 />
@@ -270,6 +265,8 @@ const Header: Component = () => {
             tripId={activeTrips.data?.[0].id!}
           />
         </Show>
+
+        <CommandSearch />
       </section>
     </header>
   );
