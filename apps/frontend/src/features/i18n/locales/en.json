@@ -130,6 +130,15 @@
     "PREVIOUS": "Previous",
     "NEXT": "Next"
   },
+  "SEARCH": {
+    "RESULT_TYPE": {
+      "PROJECT": "Projects",
+      "RAILING": "Railings",
+      "TRIP": "Trips",
+      "USER": "Users",
+      "VEHICLE": "Vehicles"
+    }
+  },
   "TRIPS": {
     "TITLE": "Trips",
     "TRIP": "Trip",

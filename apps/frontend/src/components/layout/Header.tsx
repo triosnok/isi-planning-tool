@@ -1,5 +1,6 @@
 import { useProfile, useSignOutMutation } from '@/features/auth/api';
 import { DateFormat, useTranslations } from '@/features/i18n';
+import { CommandSearch } from '@/features/search';
 import { Theme, useTheme } from '@/features/theme';
 import ActiveTripButton from '@/features/trips/components/ActiveTripButton';
 import { useTripsByUserQuery } from '@/features/users/api';
@@ -13,7 +14,6 @@ import {
   IconLogout,
   IconMenu2,
   IconMoon,
-  IconSearch,
   IconSettings,
   IconUsers,
 } from '@tabler/icons-solidjs';
@@ -28,13 +28,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import { SwitchButton } from '../ui/switch-button';
+import { Separator } from '../ui/separator';
 import {
   SideDrawer,
   SideDrawerContent,
   SideDrawerTrigger,
 } from '../ui/side-drawer';
-import { Separator } from '../ui/separator';
+import { SwitchButton } from '../ui/switch-button';
 
 const Header: Component = () => {
   const theme = useTheme();
@@ -110,22 +110,12 @@ const Header: Component = () => {
         </div>
       </nav>
 
-      <label
-        class={cn(
-          'hidden flex-1 items-center justify-center rounded-md border pl-2 focus-within:ring-2 lg:flex',
-          'border-gray-300 bg-gray-50 ring-gray-300',
-          'dark:border-gray-800 dark:bg-gray-900 dark:ring-gray-400'
-        )}
-      >
-        <IconSearch class='h-5 w-5 text-gray-400 dark:text-gray-500' />
-
-        <input
-          class='h-8 flex-1 bg-transparent px-2 focus:outline-none'
-          placeholder={t('NAVIGATION.SEARCH')}
-        />
-      </label>
-
       <section class='flex flex-1 flex-row-reverse gap-8'>
+        <CommandSearch.Root>
+          <CommandSearch.Trigger />
+          <CommandSearch.Dialog />
+        </CommandSearch.Root>
+
         <SideDrawer>
           <SideDrawerTrigger class='text-gray-50 md:hidden'>
             <IconMenu2 />
