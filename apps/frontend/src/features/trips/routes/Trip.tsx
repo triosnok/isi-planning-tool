@@ -300,7 +300,7 @@ const Trip: Component = () => {
           </Dialog>
 
           <Show when={!tripDetails.data?.endedAt}>
-            <div class='pointer-events-auto w-full space-y-2 rounded-md bg-gray-50 p-2 max-md:hidden dark:bg-gray-950'>
+            <div class='pointer-events-auto w-full space-y-2 rounded-md bg-gray-50 p-2 max-md:hidden dark:bg-gray-900'>
               <Button onClick={handleCaptureAction} class='w-full'>
                 <Show
                   when={!captureDetails()?.activeCapture}
