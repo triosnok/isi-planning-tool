@@ -16,6 +16,7 @@ import {
   useUserMutation,
 } from '../api';
 import UpdateUserForm from '../components/UpdateUserForm';
+import MapContainer from '@/components/map/MapContainer';
 
 const UserDetails: Component = () => {
   const params = useParams();
@@ -72,8 +73,10 @@ const UserDetails: Component = () => {
         <Resizable.Handle />
 
         <Resizable.Panel as='aside' class='w-0 max-md:hidden' minSize={0.2}>
-          <MapRoot class='relative h-full w-full'>
-            <MapZoomControls class='absolute right-2 top-2' />
+          <MapRoot>
+            <MapContainer class='relative h-full w-full'>
+              <MapZoomControls class='absolute right-2 top-2' />
+            </MapContainer>
             <Show when={position.position()}>
               {(pos) => (
                 <MapTripPopoverMarker

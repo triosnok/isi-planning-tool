@@ -1,6 +1,8 @@
 import Header from '@/components/layout/Header';
 import Resizable from '@/components/layout/Resizable';
+import MapContainer from '@/components/map/MapContainer';
 import MapRoot from '@/components/map/MapRoot';
+import MapTripPopoverMarker from '@/components/map/MapTripPopoverMarker';
 import MapVehicleMarker from '@/components/map/MapVehicleMarker';
 import MapZoomControls from '@/components/map/MapZoomControls';
 import { Button } from '@/components/ui/button';
@@ -12,7 +14,6 @@ import { useNavigate } from '@solidjs/router';
 import { Component, For, Index, Show } from 'solid-js';
 import { useVehiclesQuery } from '../api';
 import VehicleCard from '../components/VehicleCard';
-import MapTripPopoverMarker from '@/components/map/MapTripPopoverMarker';
 
 const VehicleOverview: Component<LayoutProps> = (props) => {
   const vehicles = useVehiclesQuery();
@@ -68,8 +69,10 @@ const VehicleOverview: Component<LayoutProps> = (props) => {
         >
           {(panel) => (
             <Show when={!panel.collapsed}>
-              <MapRoot class='relative h-full w-full'>
-                <MapZoomControls class='absolute right-2 top-2' />
+              <MapRoot>
+                <MapContainer class='relative h-full w-full'>
+                  <MapZoomControls class='absolute right-2 top-2' />
+                </MapContainer>
                 <Index each={positions()}>
                   {(pos) => (
                     <MapTripPopoverMarker

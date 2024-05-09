@@ -16,6 +16,7 @@ import VehicleForm from '../components/VehicleForm';
 import Resizable from '@/components/layout/Resizable';
 import MapZoomControls from '@/components/map/MapZoomControls';
 import MapTripPopoverMarker from '@/components/map/MapTripPopoverMarker';
+import MapContainer from '@/components/map/MapContainer';
 
 const VehicleDetails: Component = () => {
   const params = useParams();
@@ -44,7 +45,7 @@ const VehicleDetails: Component = () => {
           initialSize={0.6}
           minSize={0.5}
           class='flex-1 overflow-y-auto p-2 py-2'
-        > 
+        >
           <BackLink />
 
           <Show when={vehicle?.data}>
@@ -72,8 +73,10 @@ const VehicleDetails: Component = () => {
         <Resizable.Handle />
 
         <Resizable.Panel as='aside' minSize={0.2} class='w-0 md:w-1/3'>
-          <MapRoot class='relative h-full w-full'>
-            <MapZoomControls class='absolute right-2 top-2' />
+          <MapRoot>
+            <MapContainer class='relative h-full w-full'>
+              <MapZoomControls class='absolute right-2 top-2' />
+            </MapContainer>
 
             <Show when={position()}>
               {(pos) => (

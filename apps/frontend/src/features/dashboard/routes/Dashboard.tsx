@@ -1,5 +1,6 @@
 import Card from '@/components/layout/Card';
 import Header from '@/components/layout/Header';
+import MapContainer from '@/components/map/MapContainer';
 import MapRoot from '@/components/map/MapRoot';
 import MapTripPopoverMarker from '@/components/map/MapTripPopoverMarker';
 import MapVehicleMarker from '@/components/map/MapVehicleMarker';
@@ -13,7 +14,6 @@ import {
 import { useProfile } from '@/features/auth/api';
 import { useCaptureMetersByDayQuery } from '@/features/capture/api';
 import { useDeviationCountsQuery } from '@/features/deviation';
-import ErrorLabel from '@/features/error/components/ErrorLabel';
 import { DateFormat, NumberFormat, useTranslations } from '@/features/i18n';
 import { usePositions } from '@/features/positions';
 import { useProjectsQuery } from '@/features/projects/api';
@@ -112,8 +112,11 @@ const Dashboard: Component = () => {
 
       <main class='flex flex-1 grid-cols-1 grid-rows-4 flex-col gap-2 overflow-y-auto px-4 py-2 sm:grid sm:grid-cols-2 sm:grid-rows-2 lg:px-32'>
         <Card class='relative flex-shrink-0 max-sm:aspect-square max-sm:w-full'>
-          <MapRoot class='h-full w-full overflow-hidden rounded-md'>
-            <MapZoomControls class='absolute right-2 top-2' />
+          <MapRoot>
+            <MapContainer class='h-full w-full overflow-hidden rounded-md'>
+              <MapZoomControls class='absolute right-2 top-2' />
+            </MapContainer>
+
             <Index each={positions.positions()}>
               {(pos) => (
                 <MapTripPopoverMarker

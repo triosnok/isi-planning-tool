@@ -1,8 +1,11 @@
 import { Map, View } from 'ol';
+import { DragPan, DragZoom, KeyboardPan, MouseWheelZoom } from 'ol/interaction';
 import TileLayer from 'ol/layer/WebGLTile';
 import { Projection } from 'ol/proj';
+import { register } from 'ol/proj/proj4';
 import { XYZ } from 'ol/source';
 import { TileGrid } from 'ol/tilegrid';
+import proj4 from 'proj4';
 import {
   Accessor,
   Component,
@@ -15,9 +18,6 @@ import {
   useContext,
 } from 'solid-js';
 import './style.css';
-import { register } from 'ol/proj/proj4';
-import { KeyboardPan, DragPan, DragZoom, MouseWheelZoom } from 'ol/interaction';
-import proj4 from 'proj4';
 
 proj4.defs(
   'EPSG:25833',
@@ -30,6 +30,7 @@ export interface MapContextValue {
   map: Map;
   follow: Accessor<boolean>;
   toggleFollow: () => void;
+  setTarget: (element: HTMLElement) => void;
 }
 
 export const EPSG25833 = new Projection({
@@ -55,6 +56,7 @@ export const MapRoot: Component<{
   follow?: boolean;
 }> = (props) => {
   const [map, setMap] = createSignal<Map>();
+  const [target, setTarget] = createSignal<HTMLElement>();
   const [follow, setFollow] = createSignal(props.follow ?? false);
   let container: HTMLDivElement;
 
@@ -92,6 +94,15 @@ export const MapRoot: Component<{
     setMap(mountedMap);
   });
 
+  // sets the target element of the map, registered to the context by using
+  // the MapContainer component
+  createEffect(() => {
+    const targetElement = target();
+    const mapInstance = map();
+
+    mapInstance?.setTarget(targetElement);
+  });
+
   createEffect(() => {
     const following = follow();
 
@@ -110,14 +121,13 @@ export const MapRoot: Component<{
   });
 
   return (
-    <div class={props.class}>
-      <div class='h-full w-full' ref={container!} />
-      <Show when={map() !== undefined}>
-        <MapContext.Provider value={{ map: map()!, follow, toggleFollow }}>
-          {props.children}
-        </MapContext.Provider>
-      </Show>
-    </div>
+    <Show when={map() !== undefined}>
+      <MapContext.Provider
+        value={{ map: map()!, follow, toggleFollow, setTarget }}
+      >
+        {props.children}
+      </MapContext.Provider>
+    </Show>
   );
 };
 

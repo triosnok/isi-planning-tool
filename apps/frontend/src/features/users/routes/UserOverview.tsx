@@ -13,6 +13,7 @@ import { useNavigate } from '@solidjs/router';
 import { Component, For, Index } from 'solid-js';
 import { useUsersQuery } from '../api';
 import UserCard from '../components/UserCard';
+import MapContainer from '@/components/map/MapContainer';
 
 const UserOverview: Component<LayoutProps> = (props) => {
   const users = useUsersQuery();
@@ -77,7 +78,10 @@ const UserOverview: Component<LayoutProps> = (props) => {
           initialSize={0.3}
           minSize={0.2}
         >
-          <MapRoot class='relative h-full w-full'>
+          <MapRoot>
+            <MapContainer class='relative h-full w-full'>
+              <MapZoomControls class='absolute right-2 top-2' />
+            </MapContainer>
             <Index each={positions()}>
               {(pos) => (
                 <MapTripPopoverMarker
@@ -89,7 +93,6 @@ const UserOverview: Component<LayoutProps> = (props) => {
                 />
               )}
             </Index>
-            <MapZoomControls class='absolute right-2 top-2' />
           </MapRoot>
         </Resizable.Panel>
 

@@ -1,4 +1,5 @@
 import Header from '@/components/layout/Header';
+import MapContainer from '@/components/map/MapContainer';
 import MapPopupLayer from '@/components/map/MapPopupLayer';
 import MapRailingLayer from '@/components/map/MapRailingLayer';
 import MapRoot from '@/components/map/MapRoot';
@@ -25,29 +26,31 @@ const ProjectsLayout: Component<LayoutProps> = (props) => {
     <div class='flex h-svh w-svw flex-col overflow-hidden'>
       <Header />
 
-      <main class='flex flex-1 overflow-hidden'>
-        <aside
-          class={cn(
-            'flex w-full flex-shrink-0 flex-col overflow-hidden md:w-96',
-            showMobileMap() && 'max-md:hidden'
-          )}
-        >
-          {props.children}
-        </aside>
+      <MapRoot>
+        <main class='flex flex-1 overflow-hidden'>
+          <aside
+            class={cn(
+              'flex w-full flex-shrink-0 flex-col overflow-hidden md:w-96',
+              showMobileMap() && 'max-md:hidden'
+            )}
+          >
+            {props.children}
+          </aside>
 
-        <div
-          class={cn(
-            'flex-1',
-            showMobileMap() ? 'max-md:flex' : 'max-md:hidden'
-          )}
-        >
-          <MapRoot class='relative h-full w-full' customZoom>
-            <MapZoomControls class='absolute right-2 top-2' />
-            <MapRailingLayer railings={railings.data} />
-            <MapPopupLayer />
-          </MapRoot>
-        </div>
-      </main>
+          <div
+            class={cn(
+              'flex-1',
+              showMobileMap() ? 'max-md:flex' : 'max-md:hidden'
+            )}
+          >
+            <MapContainer class='relative h-full w-full'>
+              <MapZoomControls class='absolute right-2 top-2' />
+              <MapRailingLayer railings={railings.data} />
+              <MapPopupLayer />
+            </MapContainer>
+          </div>
+        </main>
+      </MapRoot>
 
       <div class='md:hidden'>
         <ProjectTabBar
