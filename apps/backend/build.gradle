@@ -45,6 +45,9 @@ tasks.named('test') {
 }
 
 jib {
+  // excludes dev-only dependencies in the image, such as devtools, init etc.
+  configurationName = "productionRuntimeClasspath"
+
   from {
     image = 'eclipse-temurin:21-jre'
   }
