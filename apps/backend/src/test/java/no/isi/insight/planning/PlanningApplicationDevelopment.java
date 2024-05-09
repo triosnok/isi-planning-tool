@@ -52,7 +52,7 @@ public class PlanningApplicationDevelopment {
       UserAccountJpaRepository userRepository
   ) {
     if (userRepository.findByEmail("dev@email.invalid").isEmpty()) {
-      userService.createAccount("Developer", "dev@email.invalid", null, "dev", UserAccountRole.PLANNER);
+      userService.createAccount("Developer", "dev@email.invalid", "57b114ab-0f6f-4dc8-9ead-3963d00b67f1", null, "dev", UserAccountRole.PLANNER);
     }
 
     return true;

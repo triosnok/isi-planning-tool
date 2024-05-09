@@ -34,6 +34,7 @@ public class UserAccountJdbcRepository {
         ua.user_account_id,
         ua.full_name,
         ua.email,
+        ua.image_url,
         ua.phone_number,
         ua.role,
         at.count
@@ -60,6 +61,7 @@ public class UserAccountJdbcRepository {
       .id(UUID.fromString(id))
       .fullName(rs.getString("full_name"))
       .email(rs.getString("email"))
+      .imageUrl(rs.getString("image_url"))
       .phoneNumber(rs.getString("phone_number"))
       .role(UserRole.fromString(rs.getString("role")))
       .status(status)

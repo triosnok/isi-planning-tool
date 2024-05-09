@@ -10,13 +10,13 @@ import org.junit.jupiter.api.Test;
 
 import lombok.RequiredArgsConstructor;
 import no.isi.insight.planning.annotation.IntegrationTest;
-import no.isi.insight.planning.error.model.NotFoundException;
 import no.isi.insight.planning.db.model.Project;
 import no.isi.insight.planning.db.model.ProjectPlan;
 import no.isi.insight.planning.db.model.Trip;
 import no.isi.insight.planning.db.model.UserAccount;
 import no.isi.insight.planning.db.model.UserAccountRole;
 import no.isi.insight.planning.db.model.Vehicle;
+import no.isi.insight.planning.error.model.NotFoundException;
 
 @IntegrationTest
 @RequiredArgsConstructor
@@ -58,6 +58,7 @@ class TripJpaRepositoryTests {
     userAccount = new UserAccount(
       "Test User",
       "test.user@gmail.com",
+      "57b114ab-0f6f-4dc8-9ead-3963d00b67f1",
       "12-345-678",
       "password",
       UserAccountRole.DRIVER

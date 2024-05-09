@@ -45,6 +45,10 @@ public class UserAccount implements Serializable {
   private String email;
 
   @Setter
+  @Column(name = "image_url")
+  private String imageUrl;
+
+  @Setter
   @Column(name = "phone_number")
   private String phoneNumber;
 
@@ -72,12 +76,14 @@ public class UserAccount implements Serializable {
    * @param fullName    the full name of the user
    * @param email       the email of the user
    * @param phoneNumber the phone number of the user
+   * @param imageUrl    the image URL of the user
    * @param password    the password of the user
    * @param role        the role of the user
    */
   public UserAccount(
       String fullName,
       String email,
+      String imageUrl,
       String phoneNumber,
       String password,
       UserAccountRole role
@@ -85,6 +91,7 @@ public class UserAccount implements Serializable {
     this.fullName = fullName;
     this.phoneNumber = phoneNumber;
     this.email = email;
+    this.imageUrl = imageUrl;
     this.password = password;
     this.role = role;
   }

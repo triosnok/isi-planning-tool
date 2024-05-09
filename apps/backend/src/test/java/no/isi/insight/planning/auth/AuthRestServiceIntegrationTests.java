@@ -11,10 +11,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
-import no.isi.insight.planning.client.auth.view.SignInRequest;
 import no.isi.insight.planning.annotation.IntegrationTest;
 import no.isi.insight.planning.auth.service.JwtService;
 import no.isi.insight.planning.auth.service.UserAccountService;
+import no.isi.insight.planning.client.auth.view.SignInRequest;
 import no.isi.insight.planning.db.model.UserAccount;
 import no.isi.insight.planning.db.model.UserAccountRole;
 
@@ -30,9 +30,22 @@ class AuthRestServiceIntegrationTests {
 
   @BeforeEach
   void setup() {
-    this.driver = this.userService.createAccount("Driver", "driver@email.invalid", "", "pass", UserAccountRole.DRIVER);
-    this.planner = this.userService
-      .createAccount("Planner", "planner@email.invalid", "", "anotherpass", UserAccountRole.DRIVER);
+    this.driver = this.userService.createAccount(
+      "Driver",
+      "driver@email.invalid",
+      "57b114ab-0f6f-4dc8-9ead-3963d00b67f1",
+      "",
+      "pass",
+      UserAccountRole.DRIVER
+    );
+    this.planner = this.userService.createAccount(
+      "Planner",
+      "planner@email.invalid",
+      "57b114ab-0f6f-4dc8-9ead-3963d00b67f1",
+      "",
+      "anotherpass",
+      UserAccountRole.DRIVER
+    );
   }
 
   @AfterEach

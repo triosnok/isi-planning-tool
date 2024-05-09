@@ -14,6 +14,7 @@ public record CreateUserAccountRequest(
   @NotBlank String fullName,
   @NotBlank String email,
   @Optional String phoneNumber,
+  @Optional String imageUrl,
   @NotBlank String password,
   @NotBlank String passwordConfirmation,
   @NotNull UserRole role

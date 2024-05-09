@@ -30,6 +30,7 @@ public class UserAccountService {
   public UserAccount createAccount(
       String fullName,
       String email,
+      String imageUrl,
       String phone,
       String password,
       UserAccountRole role
@@ -39,6 +40,7 @@ public class UserAccountService {
     var userAccount = new UserAccount(
       fullName,
       email,
+      imageUrl,
       phone,
       encodedPassword,
       role
@@ -62,6 +64,7 @@ public class UserAccountService {
       UUID id,
       String fullName,
       String email,
+      String imageUrl,
       String phone,
       String password,
       Boolean changePassword,
@@ -73,6 +76,7 @@ public class UserAccountService {
 
     userAccount.setFullName(fullName);
     userAccount.setEmail(email);
+    userAccount.setImageUrl(imageUrl);
     userAccount.setPhoneNumber(phone);
 
     if (changePassword) {

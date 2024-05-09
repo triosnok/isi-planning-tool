@@ -64,7 +64,7 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
     };
 
     var userAccount = this.userService
-      .createAccount(request.fullName(), request.email(), request.phoneNumber(), request.password(), role);
+      .createAccount(request.fullName(), request.email(), request.imageUrl(), request.phoneNumber(), request.password(), role);
 
     var details = this.userAccountJdbcRepository.findById(userAccount.getUserAccountId()).get();
 
@@ -98,6 +98,7 @@ public class UserAccountRestServiceImpl implements UserAccountRestService {
       id,
       request.fullName(),
       request.email(),
+      request.imageUrl(),
       request.phoneNumber(),
       request.password(),
       request.changePassword(),

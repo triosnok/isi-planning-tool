@@ -13,8 +13,8 @@ public record UserAccountDetails(
   UUID id,
   String fullName,
   String email,
+  String imageUrl,
   String phoneNumber,
   UserRole role,
   UserStatus status
-  // String imageUrl
 ) {}

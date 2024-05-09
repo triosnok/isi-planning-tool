@@ -80,7 +80,8 @@ class TripNoteRestServiceIntegrationTests {
     vehicleJpaRepository.save(vehicle);
 
     String uniqueEmail = UUID.randomUUID().toString() + "@email.invalid";
-    this.userAccount = this.userService.createAccount("Driver", uniqueEmail, "", "pass", UserAccountRole.DRIVER);
+    this.userAccount = this.userService
+      .createAccount("Driver", uniqueEmail, "57b114ab-0f6f-4dc8-9ead-3963d00b67f1", "", "pass", UserAccountRole.DRIVER);
 
     trip = new Trip(
       vehicle,

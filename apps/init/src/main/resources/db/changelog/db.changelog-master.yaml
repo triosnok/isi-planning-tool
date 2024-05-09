@@ -140,4 +140,11 @@ databaseChangeLog:
         - sqlFile:
             path: 017-segment-coverage/000-segment-coverage-view.sql
             relativeToChangelogFile: true
+  - changeSet: 
+      id: 018-user-image-url
+      author: gisle
+      changes:
+        - sqlFile:
+            path: 018-user-image-url/000-add-user-image-url-column.sql
+            relativeToChangelogFile: true
 

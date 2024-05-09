@@ -14,6 +14,7 @@ public record UpdateUserAccountRequest(
   @NotBlank String fullName,
   @NotBlank String email,
   @Optional String phoneNumber,
+  @Optional String imageUrl,
   boolean changePassword,
   @Optional String password,
   @Optional String passwordConfirmation,

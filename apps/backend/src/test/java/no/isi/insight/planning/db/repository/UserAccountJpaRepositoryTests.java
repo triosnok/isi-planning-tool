@@ -21,6 +21,7 @@ class UserAccountJpaRepositoryTests {
     UserAccount newUser = new UserAccount(
       "Martin Skibidi",
       "martin.skibidi@gmail.com",
+      "57b114ab-0f6f-4dc8-9ead-3963d00b67f1",
       "12-456-789",
       "password",
       UserAccountRole.PLANNER

@@ -85,11 +85,23 @@ class TripRestServiceIntegrationTests {
     String uniquePlannerEmail = UUID.randomUUID().toString() + "@email.invalid";
     String uniqueDriverEmail = UUID.randomUUID().toString() + "@email.invalid";
 
-    this.plannerUserAccount = this.userService
-      .createAccount("Planner", uniquePlannerEmail, "", "pass", UserAccountRole.PLANNER);
+    this.plannerUserAccount = this.userService.createAccount(
+      "Planner",
+      uniquePlannerEmail,
+      "57b114ab-0f6f-4dc8-9ead-3963d00b67f1",
+      "",
+      "pass",
+      UserAccountRole.PLANNER
+    );
 
-    this.driverUserAccount = this.userService
-      .createAccount("Driver", uniqueDriverEmail, "", "pass", UserAccountRole.DRIVER);
+    this.driverUserAccount = this.userService.createAccount(
+      "Driver",
+      uniqueDriverEmail,
+      "57b114ab-0f6f-4dc8-9ead-3963d00b67f1",
+      "",
+      "pass",
+      UserAccountRole.DRIVER
+    );
   }
 
   @Test

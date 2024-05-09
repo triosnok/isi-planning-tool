@@ -44,8 +44,14 @@ class VehicleRestServiceIntegrationTests {
       "gnss-123"
     );
 
-    this.userAccount = this.userService
-      .createAccount("Planner", "test@invalid.no", "", "pass", UserAccountRole.PLANNER);
+    this.userAccount = this.userService.createAccount(
+      "Planner",
+      "test@invalid.no",
+      "57b114ab-0f6f-4dc8-9ead-3963d00b67f1",
+      "",
+      "pass",
+      UserAccountRole.PLANNER
+    );
 
   }
 

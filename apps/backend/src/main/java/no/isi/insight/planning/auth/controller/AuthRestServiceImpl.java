@@ -178,6 +178,7 @@ public class AuthRestServiceImpl implements AuthRestService {
         user.getUserAccountId(),
         user.getFullName(),
         user.getEmail(),
+        user.getImageUrl(),
         user.getPhoneNumber(),
         request.password(),
         true,

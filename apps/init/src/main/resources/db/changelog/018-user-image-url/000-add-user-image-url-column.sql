@@ -1,0 +1,1 @@
+ALTER TABLE user_account ADD COLUMN image_url TEXT;
