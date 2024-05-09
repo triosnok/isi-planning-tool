@@ -35,8 +35,13 @@ For Java code this means, namespacing using packages.
 .
 └── no.isi.insight.planning
     ├── capture
+    │   ├── controller
+    │   └── service
     ├── project
+    │   ├── controller
+    │   └── service
     └── vehicle
+        └── ...
 ```
 
 For TypeScript code, code is organized into feature folders.
@@ -92,7 +97,7 @@ To get started with development, the following software is prerequisite:
 
 - Java 21 (LTS)
 - Docker
-- PNPM 8
+- PNPM 9
 - Node.js 20 (LTS)
 
 With the above installed, you can start developing by:
@@ -101,11 +106,11 @@ With the above installed, you can start developing by:
 2. Set up a run/debug config
 3. Run the backend using either of these options
 
-   a) Starting `PlanningApplicationDevelopment`, this will also run required containers
+   a) Starting `PlanningApplicationDevelopment`, this will also run required containers using Testcontainers
 
    b) Starting `PlanningApplication`, with environment variables defined in a `.env` file in the backend folder, using [this reference](#environment-variables). This will also require you to start docker containers manually (`docker compose up -d`)
 
-   c) Running in CLI using Gradle (`./gradlew :apps:backend:bootRun`)
+   c) Running in CLI using Gradle (`./gradlew :apps:backend:bootRun`), this also requires you to start containers as described in b)
 
 4. Install PNPM dependencies (`pnpm install`)
 5. Start the frontend (`pnpm dev`)
@@ -127,4 +132,4 @@ This will start the deployment pipeline, releasing artifacts to GitHub and deplo
 
 Details on how environments are configured can be found in the [infrastructure](infrastructure) folder.
 
-The application can be deployed to other environments using Docker, just make sure to set the required environment variables for the backend service.
+The application can be deployed to other environments using the published container images, just make sure to set the required environment variables for the backend service.
