@@ -1,5 +1,6 @@
 import Header from '@/components/layout/Header';
 import Resizable from '@/components/layout/Resizable';
+import MapContainer from '@/components/map/MapContainer';
 import MapDriverMarker from '@/components/map/MapDriverMarker';
 import MapRoot from '@/components/map/MapRoot';
 import MapTripPopoverMarker from '@/components/map/MapTripPopoverMarker';
@@ -13,7 +14,6 @@ import { useNavigate } from '@solidjs/router';
 import { Component, For, Index } from 'solid-js';
 import { useUsersQuery } from '../api';
 import UserCard from '../components/UserCard';
-import MapContainer from '@/components/map/MapContainer';
 
 const UserOverview: Component<LayoutProps> = (props) => {
   const users = useUsersQuery();
@@ -57,7 +57,7 @@ const UserOverview: Component<LayoutProps> = (props) => {
             <For each={users.data}>
               {(user) => (
                 <UserCard
-                  imageUrl='placeholder'
+                  imageUrl={user.imageUrl}
                   name={user.fullName}
                   email={user.email}
                   phoneNumber={user.phoneNumber}

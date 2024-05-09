@@ -1,9 +1,11 @@
+import Dropzone from '@/components/input/Dropzone';
 import { Button } from '@/components/ui/button';
 import { Callout, CalloutContent, CalloutTitle } from '@/components/ui/callout';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { SwitchButton } from '@/components/ui/switch-button';
 import ErrorLabel from '@/features/error/components/ErrorLabel';
+import { useFileUploadMutation } from '@/features/file';
 import { useTranslations } from '@/features/i18n';
 import { cn } from '@/lib/utils';
 import { UserRole } from '@isi-insight/client';
@@ -17,11 +19,13 @@ export interface UpdateUserFormProps {
   userId?: string;
   name?: string;
   email?: string;
+  imageUrl?: string;
   phoneNumber?: string;
   role?: UserRole;
   isError?: boolean;
   onSubmit: (values: UpdateUserSchemaValues) => void;
 }
+
 const UpdateUserForm: Component<UpdateUserFormProps> = (props) => {
   const { t } = useTranslations();
 
@@ -31,27 +35,47 @@ const UpdateUserForm: Component<UpdateUserFormProps> = (props) => {
       userId: props.userId,
       fullName: props.name,
       email: props.email,
+      imageUrl: props.imageUrl,
       phoneNumber: props.phoneNumber ?? undefined,
       changePassword: false,
       role: props.role,
     },
   });
   const [changePassword, setChangePassword] = createSignal(false);
+  const fileUploadQuery = useFileUploadMutation('users');
+  const [profilePicture, setProfilePicture] = createSignal<File | undefined>(
+    undefined
+  );
 
-  const handleSubmit = (values: UpdateUserSchemaValues) => {
-    props.onSubmit(values);
+  const handleSubmit = async (values: UpdateUserSchemaValues) => {
+    try {
+      if (profilePicture()) {
+        const image = await fileUploadQuery.mutateAsync(
+          profilePicture() as File
+        );
 
-    if (changePassword()) {
-      setValue(form, 'password', '', {
-        shouldFocus: false,
-        shouldValidate: false,
-      });
-      setValue(form, 'passwordConfirmation', '', {
-        shouldFocus: false,
-        shouldValidate: false,
-      });
-      setChangePassword(false);
-      setValue(form, 'changePassword', false);
+        values.imageUrl = image.url;
+        setProfilePicture(undefined);
+      } else {
+        values.imageUrl = props.imageUrl;
+      }
+
+      props.onSubmit(values);
+
+      if (changePassword()) {
+        setValue(form, 'password', '', {
+          shouldFocus: false,
+          shouldValidate: false,
+        });
+        setValue(form, 'passwordConfirmation', '', {
+          shouldFocus: false,
+          shouldValidate: false,
+        });
+        setChangePassword(false);
+        setValue(form, 'changePassword', false);
+      }
+    } catch (error) {
+      // ignore
     }
   };
 
@@ -185,6 +209,16 @@ const UpdateUserForm: Component<UpdateUserFormProps> = (props) => {
           </>
         )}
       </Field>
+
+      <label for='profilePicture'>
+        <Dropzone
+          name='profilePicture'
+          title={t('USERS.FORM.DROP_IMAGE_HERE') || ''}
+          onChange={setProfilePicture}
+          value={profilePicture()}
+          class='mt-2'
+        />
+      </label>
 
       <Show when={props.isError}>
         <Callout class='mt-2' variant={'error'}>

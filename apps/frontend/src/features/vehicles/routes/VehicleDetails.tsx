@@ -58,6 +58,7 @@ const VehicleDetails: Component = () => {
               vehicleId={vehicle.data?.id}
               camera={vehicle.data?.camera}
               description={vehicle.data?.description}
+              imageUrl={vehicle.data?.imageUrl}
               gnssId={vehicle.data?.gnssId}
               model={vehicle.data?.model}
               isError={vehicleMutation.update.isError}

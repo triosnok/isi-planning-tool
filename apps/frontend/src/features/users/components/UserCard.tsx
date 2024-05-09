@@ -1,11 +1,11 @@
+import IconProperty from '@/components/IconProperty';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/features/i18n';
-import { IconType, cn } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { UserRole, UserStatus } from '@isi-insight/client';
 import { IconMail, IconPhone, IconPhotoX } from '@tabler/icons-solidjs';
 import { Component, Show } from 'solid-js';
 import UserStatusIndicator from './UserStatusIndicator';
-import IconProperty from '@/components/IconProperty';
 
 export interface UserCardProps {
   imageUrl?: string;
@@ -37,10 +37,7 @@ const UserCard: Component<UserCardProps> = (props) => {
           </div>
         }
       >
-        <img
-          class='m-auto size-24 rounded-full'
-          src='https://placehold.co/400x400/png'
-        />
+        {(url) => <img class='m-auto size-24 rounded-full' src={url()} />}
       </Show>
 
       <div class='m-2 flex flex-col'>

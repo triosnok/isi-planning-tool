@@ -1,13 +1,15 @@
+import Dropzone from '@/components/input/Dropzone';
 import { Button } from '@/components/ui/button';
 import { Callout, CalloutContent, CalloutTitle } from '@/components/ui/callout';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import ErrorLabel from '@/features/error/components/ErrorLabel';
+import { useFileUploadMutation } from '@/features/file';
 import { useTranslations } from '@/features/i18n';
 import { cn } from '@/lib/utils';
 import { UserRole } from '@isi-insight/client';
 import { createForm, setValue, zodForm } from '@modular-forms/solid';
-import { Component, Show } from 'solid-js';
+import { Component, Show, createSignal } from 'solid-js';
 import { CreateUserSchema, CreateUserSchemaValues } from '../api';
 import UserRoleRadio from './UserRoleRadio';
 
@@ -28,8 +30,26 @@ const CreateUserForm: Component<CreateUserFormProps> = (props) => {
     validate: zodForm(CreateUserSchema),
   });
 
-  const handleSubmit = (values: CreateUserSchemaValues) => {
-    props.onSubmit(values);
+  const fileUploadQuery = useFileUploadMutation('users');
+  const [profilePicture, setProfilePicture] = createSignal<File | undefined>(
+    undefined
+  );
+
+  const handleSubmit = async (values: CreateUserSchemaValues) => {
+    try {
+      if (profilePicture()) {
+        const image = await fileUploadQuery.mutateAsync(
+          profilePicture() as File
+        );
+
+        values.imageUrl = image.url;
+        setProfilePicture(undefined);
+      }
+
+      props.onSubmit(values);
+    } catch (error) {
+      // ignore
+    }
   };
 
   return (
@@ -144,6 +164,16 @@ const CreateUserForm: Component<CreateUserFormProps> = (props) => {
           </>
         )}
       </Field>
+
+      <label for='profilePicture'>
+        <Dropzone
+          name='profilePicture'
+          title={t('USERS.FORM.DROP_IMAGE_HERE') || ''}
+          onChange={setProfilePicture}
+          value={profilePicture()}
+          class='mt-2'
+        />
+      </label>
 
       <Show when={props.isError}>
         <Callout class='mt-2' variant={'error'}>

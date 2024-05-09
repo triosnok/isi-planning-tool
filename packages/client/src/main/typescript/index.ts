@@ -143,8 +143,8 @@ export interface ProjectDetails {
     totalLength: number;
     deviations: number;
     notes: number;
-    progress: number;
     status: ProjectStatus;
+    progress: number;
 }
 
 export interface ProjectPlanDetails {
@@ -282,6 +282,7 @@ export interface CreateUserAccountRequest {
     fullName: string;
     email: string;
     phoneNumber?: string | null;
+    imageUrl?: string | null;
     password: string;
     passwordConfirmation: string;
     role: UserRole;
@@ -291,6 +292,7 @@ export interface UpdateUserAccountRequest {
     fullName: string;
     email: string;
     phoneNumber?: string | null;
+    imageUrl?: string | null;
     changePassword: boolean;
     password?: string | null;
     passwordConfirmation?: string | null;
@@ -301,6 +303,7 @@ export interface UserAccountDetails {
     id: string;
     fullName: string;
     email: string;
+    imageUrl: string;
     phoneNumber: string;
     role: UserRole;
     status: UserStatus;
@@ -316,7 +319,7 @@ export interface CreateVehicleRequest {
 }
 
 export interface UpdateVehicleRequest {
-    imageUrl: string;
+    imageUrl?: string | null;
     registrationNumber: string;
     model: string;
     camera: boolean;

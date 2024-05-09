@@ -59,6 +59,7 @@ const UserDetails: Component = () => {
               onSubmit={handleUpdateUser}
               userId={user.data?.id}
               name={user.data?.fullName}
+              imageUrl={user.data?.imageUrl}
               isError={userDetails.update.isError}
               email={user.data?.email}
               phoneNumber={user.data?.phoneNumber}
