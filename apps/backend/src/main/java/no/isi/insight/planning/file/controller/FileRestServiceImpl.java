@@ -1,12 +1,8 @@
 package no.isi.insight.planning.file.controller;
 
 import java.util.List;
+import java.util.UUID;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
@@ -16,11 +12,10 @@ import io.minio.GetObjectArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.isi.insight.planning.auth.annotation.Authenticated;
+import no.isi.insight.planning.client.file.FileRestService;
 import no.isi.insight.planning.client.file.view.FileUploadResponse;
 import no.isi.insight.planning.error.model.BadRequestException;
 import no.isi.insight.planning.error.model.InternalErrorException;
@@ -32,12 +27,9 @@ import no.isi.insight.planning.error.model.InternalErrorException;
  */
 @Slf4j
 @RestController
-@RequestMapping(FileController.CONTROLLER_PREFIX)
 @RequiredArgsConstructor
-public class FileController {
+public class FileRestServiceImpl implements FileRestService {
   private final MinioClient minioClient;
-
-  public static final String CONTROLLER_PREFIX = "/api/v1/static";
 
   private static final List<String> ALLOWED_BUCKETS = List.of("vehicles", "users");
 
@@ -51,19 +43,16 @@ public class FileController {
     }
   }
 
+  @Override
   @Authenticated
-  @GetMapping("/{bucket}/**")
   public StreamingResponseBody get(
-      @PathVariable String bucket,
-      HttpServletRequest request,
-      HttpServletResponse response
+      String bucket,
+      String key
   ) {
     if (!ALLOWED_BUCKETS.contains(bucket)) {
       throw new BadRequestException("Invalid bucket");
     }
 
-    var offset = request.getRequestURI().indexOf("/%s/".formatted(bucket));
-    var key = request.getRequestURI().substring(offset + bucket.length() + 2);
     var args = GetObjectArgs.builder().bucket(bucket).object(key);
 
     try {
@@ -78,26 +67,24 @@ public class FileController {
     }
   }
 
+  @Override
   @Authenticated
-  @PutMapping("/{bucket}/**")
-  public FileUploadResponse put(
-      @PathVariable String bucket,
-      @RequestParam MultipartFile file,
-      HttpServletRequest request,
-      HttpServletResponse response
+  public FileUploadResponse upload(
+      String bucket,
+      MultipartFile file
   ) {
     if (!ALLOWED_BUCKETS.contains(bucket)) {
       throw new BadRequestException("Invalid bucket");
     }
 
-    var offset = request.getRequestURI().indexOf("/%s/".formatted(bucket));
-    var key = request.getRequestURI().substring(offset + bucket.length() + 2);
+    // random file key is generated to avoid collisions
+    var key = UUID.randomUUID().toString();
 
     try {
       this.ensureBucket(bucket);
       var args = PutObjectArgs.builder().bucket(bucket).object(key).stream(file.getInputStream(), file.getSize(), -1);
       this.minioClient.putObject(args.build());
-      return new FileUploadResponse("%s/%s/%s".formatted(CONTROLLER_PREFIX, bucket, key));
+      return new FileUploadResponse("%s/%s/%s".formatted(FileRestService.PREFIX, bucket, key));
     } catch (Exception e) {
       log.error("Error uploading file: {}", e.getMessage(), e);
       throw new InternalErrorException("Unknown error uploading file");
