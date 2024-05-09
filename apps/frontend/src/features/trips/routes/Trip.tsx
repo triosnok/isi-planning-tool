@@ -288,7 +288,7 @@ const Trip: Component = () => {
                 setShowTripNoteModule(false);
               }}
             >
-              <DialogContent>
+              <DialogContent class='p-0'>
                 <TripNoteModule
                   tripId={params.tripId}
                   showMapNotes={false}

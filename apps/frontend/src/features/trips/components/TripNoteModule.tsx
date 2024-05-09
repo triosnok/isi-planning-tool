@@ -99,7 +99,7 @@ const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
 
   return (
     <>
-      <section class='pointer-events-auto flex h-full flex-col overflow-hidden rounded-md bg-gray-50 p-2 dark:bg-gray-900'>
+      <section class='pointer-events-auto flex h-full flex-col overflow-hidden rounded-md bg-gray-50 p-2 md:dark:bg-gray-900 dark:bg-gray-950'>
         <div class='space-y-2'>
           <p class='text-2xl font-semibold'>{t('NOTES.TITLE')}</p>
 
