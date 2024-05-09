@@ -11,4 +11,5 @@ export const enum LayerProperty {
 export const enum LayerType {
   RAILING = 'RAILING',
   RAILING_HOVER = 'RAILING_HOVER',
+  ROAD_SEGMENT = 'ROAD_SEGMENT',
 }
