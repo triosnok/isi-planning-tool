@@ -14,6 +14,7 @@ import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 import org.springframework.web.service.annotation.PutExchange;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import no.isi.insight.planning.client.trip.view.CreateTripNoteRequest;
 import no.isi.insight.planning.client.trip.view.TripNoteDetails;
@@ -23,22 +24,26 @@ import no.isi.insight.planning.client.trip.view.UpdateTripNoteRequest;
 @HttpExchange("/api/v1/trip-notes")
 public interface TripNoteRestService {
 
+  @Operation(summary = "Creates a new trip note")
   @PostExchange
   ResponseEntity<TripNoteDetails> addNote(
       @Validated @RequestBody CreateTripNoteRequest request
   );
 
+  @Operation(summary = "Updates a trip note")
   @PutExchange("/{noteId}")
   ResponseEntity<TripNoteDetails> updateNote(
       @PathVariable UUID noteId,
       @Validated @RequestBody UpdateTripNoteRequest request
   );
 
+  @Operation(summary = "Lists all notes for a trip")
   @GetExchange
   ResponseEntity<List<TripNoteDetails>> getNotesByTripId(
       @RequestParam UUID tripId
   );
 
+  @Operation(summary = "Deletes a trip note from the system")
   @DeleteExchange("/{noteId}")
   ResponseEntity<TripNoteDetails> deleteNote(
       @PathVariable UUID noteId

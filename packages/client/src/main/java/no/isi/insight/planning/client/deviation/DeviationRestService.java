@@ -14,6 +14,7 @@ import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import no.isi.insight.planning.client.deviation.view.CreateDeviationRequest;
@@ -26,6 +27,7 @@ import no.isi.insight.planning.client.deviation.view.DeviationDetails;
 public interface DeviationRestService {
 
   @GetExchange
+  @Operation(summary = "")
   ResponseEntity<List<DeviationDetails>> listDeviations(
       @RequestParam Optional<UUID> projectId,
       @RequestParam Optional<UUID> planId,
@@ -34,21 +36,25 @@ public interface DeviationRestService {
   );
 
   @PostExchange
+  @Operation(summary = "")
   ResponseEntity<DeviationDetails> createDeviation(
       @RequestBody @Valid CreateDeviationRequest request
   );
 
   @PostExchange("/batch")
+  @Operation(summary = "")
   ResponseEntity<Void> createDeviations(
       @RequestBody List<@Valid CreateDeviationRequest> request
   );
 
   @DeleteExchange("/{id}")
+  @Operation(summary = "")
   ResponseEntity<Void> deleteDeviation(
       @PathVariable UUID id
   );
 
   @GetExchange("/counts")
+  @Operation(summary = "")
   ResponseEntity<List<DeviationCount>> getDeviationCounts(
       @RequestParam Optional<UUID> projectId,
       @RequestParam Optional<UUID> planId

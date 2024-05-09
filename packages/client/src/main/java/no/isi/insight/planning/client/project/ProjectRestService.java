@@ -14,6 +14,7 @@ import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 import org.springframework.web.service.annotation.PutExchange;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import no.isi.insight.planning.client.project.view.CreateProjectRequest;
 import no.isi.insight.planning.client.project.view.ProjectDetails;
@@ -29,6 +30,7 @@ public interface ProjectRestService {
    * 
    * @param request the details of the project to create
    */
+  @Operation(summary = "Creates a new project")
   @PostExchange
   ResponseEntity<ProjectDetails> createProject(
       @Validated @RequestBody CreateProjectRequest request
@@ -37,6 +39,7 @@ public interface ProjectRestService {
   /**
    * Get a list of all projects.
    */
+  @Operation(summary = "Lists projects with optional status filtering")
   @GetExchange
   ResponseEntity<List<ProjectDetails>> getProjects(
       @RequestParam Optional<ProjectStatus> status
@@ -47,11 +50,13 @@ public interface ProjectRestService {
    * 
    * @param projectId the id of the project to find
    */
+  @Operation(summary = "Finds a project by its id")
   @GetExchange("/{projectId}")
   ResponseEntity<ProjectDetails> getProject(
       @PathVariable UUID projectId
   );
 
+  @Operation(summary = "Updates a projects details")
   @PutExchange("/{projectId}")
   ResponseEntity<ProjectDetails> updateProject(
       @PathVariable UUID projectId,

@@ -30,6 +30,7 @@ public interface RailingRestService {
    * 
    * @return a list of railings
    */
+  @Operation(summary = "Lists railings with optional filtering")
   @GetExchange
   ResponseEntity<List<RoadRailing>> getRailings(
       @RequestParam Optional<UUID> projectId,
@@ -38,12 +39,14 @@ public interface RailingRestService {
       @RequestParam Optional<Boolean> hideCompleted
   );
 
+  @Operation(summary = "Finds a railing by its id, optionally scoped to a project")
   @GetExchange("/{id}")
   ResponseEntity<RoadRailing> getRailing(
       @PathVariable Long id,
       @RequestParam Optional<UUID> projectId
   );
 
+  @Operation(summary = "Lists the segments a railing is placed along")
   @GetExchange("/{id}/segments")
   ResponseEntity<List<RoadSegment>> getSegments(
       @PathVariable Long id

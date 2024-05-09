@@ -30,7 +30,7 @@ public interface ProjectPlanRestService {
   );
 
   @GetExchange("/{planId}")
-  @Operation(summary = "Gets a project plan by id")
+  @Operation(summary = "Finds a project plan by id")
   ResponseEntity<ProjectPlanDetails> getPlan(
       @PathVariable UUID planId
   );

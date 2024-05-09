@@ -14,6 +14,7 @@ import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import no.isi.insight.planning.client.capture.view.CaptureActionRequest;
 import no.isi.insight.planning.client.capture.view.CapturedMetersByDay;
@@ -23,6 +24,7 @@ import no.isi.insight.planning.client.capture.view.CaptureLogDetails;
 @HttpExchange("/api/v1/capture")
 public interface CaptureRestService {
 
+  @Operation(summary = "Uploads and processes a capture log")
   @PostExchange(contentType = MediaType.MULTIPART_FORM_DATA_VALUE)
   void uploadLogs(
       @RequestParam String logId,
@@ -32,19 +34,23 @@ public interface CaptureRestService {
       @RequestParam MultipartFile rightCameraLog
   );
 
+  @Operation(summary = "Lists uploaded capture logs")
   @GetExchange("/logs")
   List<CaptureLogDetails> getCaptureLogs();
 
+  @Operation(summary = "Event-stream of an ongoing captures details")
   @GetExchange("/stream")
   SseEmitter streamCapture(
       @RequestParam UUID tripId
   );
 
+  @Operation(summary = "Perform an action on an ongoing capture")
   @PostExchange("/actions")
   ResponseEntity<Void> captureAction(
       @Validated @RequestBody CaptureActionRequest request
   );
 
+  @Operation(summary = "Finds a summary of meters captured by day")
   @GetExchange("/stats")
   ResponseEntity<List<CapturedMetersByDay>> getCaptureStats();
 

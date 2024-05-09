@@ -14,6 +14,7 @@ import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 import org.springframework.web.service.annotation.PutExchange;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import no.isi.insight.planning.client.trip.view.CreateTripRequest;
 import no.isi.insight.planning.client.trip.view.TripDetails;
@@ -23,16 +24,19 @@ import no.isi.insight.planning.client.trip.view.UpdateTripRequest;
 @HttpExchange("/api/v1/trips")
 public interface TripRestService {
 
+  @Operation(summary = "Creates a new trip")
   @PostExchange
   ResponseEntity<TripDetails> createTrip(
       @Validated @RequestBody CreateTripRequest request
   );
 
+  @Operation(summary = "Finds a trip by its id")
   @GetExchange("/{tripId}")
   ResponseEntity<TripDetails> getTrip(
       @PathVariable UUID tripId
   );
 
+  @Operation(summary = "Lists trips with optional filtering")
   @GetExchange
   ResponseEntity<List<TripDetails>> getTrips(
       @RequestParam Optional<UUID> projectId,
@@ -40,6 +44,7 @@ public interface TripRestService {
       @RequestParam Optional<Boolean> active
   );
 
+  @Operation(summary = "Updates a trip")
   @PutExchange("/{tripId}")
   ResponseEntity<TripDetails> updateTrip(
       @PathVariable UUID tripId,
