@@ -37,7 +37,8 @@
   },
   "DEVIATIONS": {
     "TITLE": "Deviations",
-    "DEVIATION": "Deviation"
+    "DEVIATION": "Deviation",
+    "NO_DEVIATIONS_REPORTED": "No deviations reported"
   },
   "ERROR": {
     "PAGE_NOT_FOUND": "We could not find the page you were looking for.",

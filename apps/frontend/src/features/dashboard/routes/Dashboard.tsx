@@ -20,7 +20,7 @@ import { useProjectsQuery } from '@/features/projects/api';
 import TripCard from '@/features/trips/components/TripCard';
 import { useTripsByUserQuery } from '@/features/users/api';
 import { A } from '@solidjs/router';
-import { Component, For, Index } from 'solid-js';
+import { Component, For, Index, Show } from 'solid-js';
 
 const Dashboard: Component = () => {
   const { t, d, n } = useTranslations();
@@ -164,6 +164,17 @@ const Dashboard: Component = () => {
         <Card class='flex flex-col px-2 py-1'>
           <CardHeader title={t('DEVIATIONS.TITLE')} />
           <div class='relative flex-1 overflow-hidden'>
+            <Show
+              when={
+                deviationCounts.data !== undefined &&
+                deviationCounts.data.length === 0
+              }
+            >
+              <div class='flex h-full w-full items-center justify-center'>
+                <p class='text-gray-500'>{t('DEVIATIONS.NO_DEVIATIONS_REPORTED')}</p>
+              </div>
+            </Show>
+
             <PieChart
               data={deviationChartData()}
               class='size-full max-h-full max-w-full'
