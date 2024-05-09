@@ -52,7 +52,7 @@ const CommandSearch: Component<CommandSearchRootProps> = (props) => {
       case 'PROJECT':
         return `${item.name} - ${item.referenceCode}`;
       case 'USER':
-        return `${item.fullName}`;
+        return `${item.fullName} (${item.email})`;
       case 'VEHICLE':
         return `${item.model} (${item.registrationNumber ?? 'N/A'})`;
       case 'RAILING':
