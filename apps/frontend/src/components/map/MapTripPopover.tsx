@@ -1,10 +1,9 @@
 import { useTripDetailsQuery } from '@/features/trips/api';
-import { Component } from 'solid-js';
-import IconProperty from '../IconProperty';
-import { IconCar, IconSteeringWheel, IconX } from '@tabler/icons-solidjs';
-import { Button } from '../ui/button';
 import TripStatusBadge from '@/features/trips/components/TripStatusBadge';
 import { A } from '@solidjs/router';
+import { IconCar, IconSteeringWheel, IconX } from '@tabler/icons-solidjs';
+import { Component } from 'solid-js';
+import IconProperty from '../IconProperty';
 import { PopoverCloseButton } from '../ui/popover';
 
 export interface MapTripPopoverProps {
@@ -39,8 +38,12 @@ const MapTripPopover: Component<MapTripPopoverProps> = (props) => {
           text={trip.data?.driver}
           size='xs'
         />
-        <div class='flex justify-between gap-4 items-center'>
-          <IconProperty icon={IconCar} text='Toyota Corolla' size='xs' />
+        <div class='flex items-center justify-between gap-4'>
+          <IconProperty
+            icon={IconCar}
+            text={`${trip.data?.vehicleModel ?? ''} ${trip.data?.vehicleRegistrationNumber ?? ''}`}
+            size='xs'
+          />
           <TripStatusBadge endedAt={trip.data?.endedAt} />
         </div>
       </div>

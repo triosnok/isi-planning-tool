@@ -152,7 +152,6 @@ const Dashboard: Component = () => {
                     endedAt={d(trip.endedAt, DateFormat.MONTH_DAY)}
                     deviations={trip.deviations}
                     notes={trip.noteCount}
-                    length={320}
                     car={trip.driver}
                     status='dashboard'
                   />

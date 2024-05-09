@@ -16,6 +16,7 @@ const MapTripPopoverMarker = <T extends MapMarkerProps>(
   return (
     <Popover>
       <PopoverTrigger
+        // @ts-ignore - the component props would need to be overriden head in order for it to work as intended
         as={(triggerProps) => <props.as {...triggerProps} {...rest} />}
       />
 
