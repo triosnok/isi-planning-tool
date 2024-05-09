@@ -121,12 +121,14 @@ export const MapRoot: Component<{
   });
 
   return (
-    <Show when={map() !== undefined}>
-      <MapContext.Provider
-        value={{ map: map()!, follow, toggleFollow, setTarget }}
-      >
-        {props.children}
-      </MapContext.Provider>
+    <Show when={map()}>
+      {(map) => (
+        <MapContext.Provider
+          value={{ map: map(), follow, toggleFollow, setTarget }}
+        >
+          {props.children}
+        </MapContext.Provider>
+      )}
     </Show>
   );
 };

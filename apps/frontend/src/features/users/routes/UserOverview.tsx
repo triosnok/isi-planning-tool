@@ -72,13 +72,13 @@ const UserOverview: Component<LayoutProps> = (props) => {
 
         <Resizable.Handle />
 
-        <Resizable.Panel
-          as='aside'
-          class='max-md:hidden'
-          initialSize={0.3}
-          minSize={0.2}
-        >
-          <MapRoot>
+        <MapRoot>
+          <Resizable.Panel
+            as='aside'
+            class='max-md:hidden'
+            initialSize={0.3}
+            minSize={0.2}
+          >
             <MapContainer class='relative h-full w-full'>
               <MapZoomControls class='absolute right-2 top-2' />
             </MapContainer>
@@ -93,8 +93,8 @@ const UserOverview: Component<LayoutProps> = (props) => {
                 />
               )}
             </Index>
-          </MapRoot>
-        </Resizable.Panel>
+          </Resizable.Panel>
+        </MapRoot>
 
         {props.children}
       </Resizable.Root>

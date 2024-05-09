@@ -72,11 +72,12 @@ const UserDetails: Component = () => {
 
         <Resizable.Handle />
 
-        <Resizable.Panel as='aside' class='w-0 max-md:hidden' minSize={0.2}>
-          <MapRoot>
+        <MapRoot>
+          <Resizable.Panel as='aside' class='w-0 max-md:hidden' minSize={0.2}>
             <MapContainer class='relative h-full w-full'>
               <MapZoomControls class='absolute right-2 top-2' />
             </MapContainer>
+
             <Show when={position.position()}>
               {(pos) => (
                 <MapTripPopoverMarker
@@ -88,8 +89,8 @@ const UserDetails: Component = () => {
                 />
               )}
             </Show>
-          </MapRoot>
-        </Resizable.Panel>
+          </Resizable.Panel>
+        </MapRoot>
       </Resizable.Root>
     </div>
   );

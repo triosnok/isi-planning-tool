@@ -72,8 +72,8 @@ const VehicleDetails: Component = () => {
 
         <Resizable.Handle />
 
-        <Resizable.Panel as='aside' minSize={0.2} class='w-0 md:w-1/3'>
-          <MapRoot>
+        <MapRoot>
+          <Resizable.Panel as='aside' minSize={0.2} class='w-0 md:w-1/3'>
             <MapContainer class='relative h-full w-full'>
               <MapZoomControls class='absolute right-2 top-2' />
             </MapContainer>
@@ -88,8 +88,8 @@ const VehicleDetails: Component = () => {
                 />
               )}
             </Show>
-          </MapRoot>
-        </Resizable.Panel>
+          </Resizable.Panel>
+        </MapRoot>
       </Resizable.Root>
     </div>
   );

@@ -61,32 +61,29 @@ const VehicleOverview: Component<LayoutProps> = (props) => {
 
         <Resizable.Handle />
 
-        <Resizable.Panel
-          as='aside'
-          class='max-md:hidden'
-          initialSize={0.3}
-          minSize={0.2}
-        >
-          {(panel) => (
-            <Show when={!panel.collapsed}>
-              <MapRoot>
-                <MapContainer class='relative h-full w-full'>
-                  <MapZoomControls class='absolute right-2 top-2' />
-                </MapContainer>
-                <Index each={positions()}>
-                  {(pos) => (
-                    <MapTripPopoverMarker
-                      as={MapVehicleMarker}
-                      position={pos().geometry}
-                      heading={pos().heading}
-                      tripId={pos().tripId}
-                    />
-                  )}
-                </Index>
-              </MapRoot>
-            </Show>
-          )}
-        </Resizable.Panel>
+        <MapRoot>
+          <Resizable.Panel
+            as='aside'
+            class='max-md:hidden'
+            initialSize={0.3}
+            minSize={0.2}
+          >
+            <MapContainer class='relative h-full w-full'>
+              <MapZoomControls class='absolute right-2 top-2' />
+            </MapContainer>
+
+            <Index each={positions()}>
+              {(pos) => (
+                <MapTripPopoverMarker
+                  as={MapVehicleMarker}
+                  position={pos().geometry}
+                  heading={pos().heading}
+                  tripId={pos().tripId}
+                />
+              )}
+            </Index>
+          </Resizable.Panel>
+        </MapRoot>
       </Resizable.Root>
 
       {props.children}
