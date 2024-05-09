@@ -57,7 +57,7 @@ const SideDrawerContent: Component<
       <SideDrawerOverlay />
       <DialogPrimitive.Content
         class={cn(
-          'data-[expanded]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[expanded]:fade-in-0 data-[closed]:slide-out-to-right-full data-[expanded]:slide-in-from-right-full fixed right-0 z-50 grid h-svh w-full max-w-lg gap-4 border-l bg-gray-50 p-6 shadow-lg outline-none duration-200 dark:border-gray-800 dark:bg-gray-900',
+          'data-[expanded]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[expanded]:fade-in-0 data-[closed]:slide-out-to-right-full data-[expanded]:slide-in-from-right-full fixed right-0 z-50 grid h-svh w-full max-w-lg gap-4 border-l bg-gray-50 p-6 shadow-lg outline-none duration-200 dark:border-gray-800 dark:bg-gray-950',
           props.class
         )}
         {...rest}
