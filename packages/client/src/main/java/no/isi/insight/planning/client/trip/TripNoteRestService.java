@@ -20,7 +20,7 @@ import no.isi.insight.planning.client.trip.view.CreateTripNoteRequest;
 import no.isi.insight.planning.client.trip.view.TripNoteDetails;
 import no.isi.insight.planning.client.trip.view.UpdateTripNoteRequest;
 
-@Tag(name = "Trip Notes")
+@Tag(name = "Trip Notes", description = "Operations on the collection of trip notes")
 @HttpExchange("/api/v1/trip-notes")
 public interface TripNoteRestService {
 

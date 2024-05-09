@@ -25,7 +25,7 @@ import no.isi.insight.planning.client.vehicle.view.CreateVehicleRequest;
 import no.isi.insight.planning.client.vehicle.view.UpdateVehicleRequest;
 import no.isi.insight.planning.client.vehicle.view.VehicleDetails;
 
-@Tag(name = "Vehicles")
+@Tag(name = "Vehicles", description = "Operations on the collection of vehicles")
 @HttpExchange("/api/v1/vehicles")
 public interface VehicleRestService {
 

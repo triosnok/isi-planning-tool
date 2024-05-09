@@ -16,7 +16,7 @@ import no.isi.insight.planning.client.auth.view.SignInRequest;
 import no.isi.insight.planning.client.auth.view.SignInResponse;
 import no.isi.insight.planning.client.auth.view.UserProfile;
 
-@Tag(name = "Authentication")
+@Tag(name = "Authentication", description = "Operations related to authenticating user accounts")
 @HttpExchange("/api/v1/auth")
 public interface AuthRestService {
 

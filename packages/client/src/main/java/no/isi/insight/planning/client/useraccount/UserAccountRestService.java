@@ -21,7 +21,7 @@ import no.isi.insight.planning.client.useraccount.view.CreateUserAccountRequest;
 import no.isi.insight.planning.client.useraccount.view.UpdateUserAccountRequest;
 import no.isi.insight.planning.client.useraccount.view.UserAccountDetails;
 
-@Tag(name = "User Accounts")
+@Tag(name = "User Accounts", description = "Operations on the collection of user accounts")
 @HttpExchange("/api/v1/user-accounts")
 public interface UserAccountRestService {
 

@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import no.isi.insight.planning.client.file.view.FileUploadResponse;
 
-@Tag(name = "Files")
+@Tag(name = "Files", description = "Operations for uploading and downloading static files to buckets")
 @HttpExchange(FileRestService.PREFIX)
 public interface FileRestService {
 
