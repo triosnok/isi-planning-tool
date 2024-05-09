@@ -20,7 +20,7 @@ import no.isi.insight.planning.client.capture.view.CaptureActionRequest;
 import no.isi.insight.planning.client.capture.view.CapturedMetersByDay;
 import no.isi.insight.planning.client.capture.view.CaptureLogDetails;
 
-@Tag(name = "Capture")
+@Tag(name = "Capture", description = "Operations related to ongoing captures and capture logs")
 @HttpExchange("/api/v1/capture")
 public interface CaptureRestService {
 

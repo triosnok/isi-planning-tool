@@ -20,7 +20,7 @@ import no.isi.insight.planning.client.trip.view.CreateTripRequest;
 import no.isi.insight.planning.client.trip.view.TripDetails;
 import no.isi.insight.planning.client.trip.view.UpdateTripRequest;
 
-@Tag(name = "Trips")
+@Tag(name = "Trips", description = "Operations on the collection of trips")
 @HttpExchange("/api/v1/trips")
 public interface TripRestService {
 

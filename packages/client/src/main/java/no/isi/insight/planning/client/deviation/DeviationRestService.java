@@ -22,12 +22,12 @@ import no.isi.insight.planning.client.deviation.view.DeviationCount;
 import no.isi.insight.planning.client.deviation.view.DeviationDetails;
 
 @Validated
-@Tag(name = "Deviations")
+@Tag(name = "Deviations", description = "Operations for managing deviations")
 @HttpExchange("/api/v1/deviations")
 public interface DeviationRestService {
 
   @GetExchange
-  @Operation(summary = "")
+  @Operation(summary = "Lists all deviations with optional filtering")
   ResponseEntity<List<DeviationDetails>> listDeviations(
       @RequestParam Optional<UUID> projectId,
       @RequestParam Optional<UUID> planId,
@@ -36,25 +36,25 @@ public interface DeviationRestService {
   );
 
   @PostExchange
-  @Operation(summary = "")
+  @Operation(summary = "Creates a single deviation")
   ResponseEntity<DeviationDetails> createDeviation(
       @RequestBody @Valid CreateDeviationRequest request
   );
 
   @PostExchange("/batch")
-  @Operation(summary = "")
+  @Operation(summary = "Creates a batch of deviations")
   ResponseEntity<Void> createDeviations(
       @RequestBody List<@Valid CreateDeviationRequest> request
   );
 
   @DeleteExchange("/{id}")
-  @Operation(summary = "")
+  @Operation(summary = "Deletes a deviation from the system")
   ResponseEntity<Void> deleteDeviation(
       @PathVariable UUID id
   );
 
   @GetExchange("/counts")
-  @Operation(summary = "")
+  @Operation(summary = "Finds a summary of the deviation counts in the last week")
   ResponseEntity<List<DeviationCount>> getDeviationCounts(
       @RequestParam Optional<UUID> projectId,
       @RequestParam Optional<UUID> planId

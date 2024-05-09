@@ -19,7 +19,7 @@ import no.isi.insight.planning.client.project.view.CreateProjectPlanRequest;
 import no.isi.insight.planning.client.project.view.ProjectPlanDetails;
 import no.isi.insight.planning.client.project.view.UpdateProjectPlanRequest;
 
-@Tag(name = "Project Plans")
+@Tag(name = "Project Plans", description = "Operations on the collection of project plans")
 @HttpExchange("/api/v1/project-plans")
 public interface ProjectPlanRestService {
 
