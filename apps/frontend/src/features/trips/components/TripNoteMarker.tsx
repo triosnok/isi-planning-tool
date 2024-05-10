@@ -1,24 +1,17 @@
 import { useMap } from '@/components/map/MapRoot';
+import { parseFeature } from '@/components/map/utils';
 import { cn } from '@/lib/utils';
 import { TripNoteDetails } from '@isi-insight/client';
 import { IconMessage } from '@tabler/icons-solidjs';
-import { Feature, Overlay } from 'ol';
-import WKT from 'ol/format/WKT';
+import { Overlay } from 'ol';
 import { Point } from 'ol/geom';
-import { Component, createSignal, onCleanup, onMount } from 'solid-js';
+import { Component, onCleanup, onMount } from 'solid-js';
 
 export interface TripNoteMarkerProps {
   note?: TripNoteDetails;
   onSelected?: () => void;
   selected: boolean;
 }
-
-const fmt = new WKT();
-
-const READ_OPTIONS = {
-  dataProjection: 'EPSG:4326',
-  featureProjection: 'EPSG:25833',
-};
 
 const TripNoteMarker: Component<TripNoteMarkerProps> = (props) => {
   let overlayElement: HTMLDivElement;
@@ -30,10 +23,7 @@ const TripNoteMarker: Component<TripNoteMarkerProps> = (props) => {
       return;
     }
 
-    const pos = fmt.readFeature(
-      props.note.geometry.wkt,
-      READ_OPTIONS
-    ) as Feature<Point>;
+    const pos = parseFeature<Point>(props.note.geometry);
 
     const over = new Overlay({
       element: overlayElement,

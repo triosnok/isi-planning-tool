@@ -81,7 +81,8 @@
     "NOTE": "Note",
     "ADD_NOTE": "Add note",
     "SHOW_NOTES": "Show notes",
-    "CLICK_TO_EXPAND": "Click to expand"
+    "CLICK_TO_EXPAND": "Click to expand",
+    "CLICK_TO_MINIMIZE": "Click to minimize"
   },
   "PLANS": {
     "TITLE": "Plans",

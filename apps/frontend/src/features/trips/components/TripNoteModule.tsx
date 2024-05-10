@@ -1,13 +1,18 @@
+import TextArea from '@/components/input/TextArea';
+import { useMap } from '@/components/map/MapRoot';
+import { parseGeometry } from '@/components/map/utils';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { DateFormat, useTranslations } from '@/features/i18n';
+import { TripNoteDetails } from '@isi-insight/client';
 import {
   SubmitHandler,
   createForm,
   reset,
+  setValue,
   zodForm,
 } from '@modular-forms/solid';
 import { IconPencil, IconSend2, IconTrash } from '@tabler/icons-solidjs';
+import { Point } from 'ol/geom';
 import {
   Component,
   For,
@@ -87,7 +92,7 @@ const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
     }
   };
 
-  let noteInputElement: HTMLInputElement | undefined;
+  let noteInputElement: HTMLTextAreaElement | undefined;
 
   createEffect(() => {
     if (noteInputElement) {
@@ -95,100 +100,138 @@ const TripNoteModule: Component<TripNoteModuleProps> = (props) => {
     }
   });
 
-  const { t, d } = useTranslations();
+  const { t } = useTranslations();
 
   return (
-    <>
-      <section class='pointer-events-auto flex h-full flex-col overflow-hidden rounded-md bg-gray-50 p-2 md:dark:bg-gray-900 dark:bg-gray-950'>
-        <div class='space-y-2'>
-          <p class='text-2xl font-semibold'>{t('NOTES.TITLE')}</p>
+    <section class='pointer-events-auto flex h-full flex-col overflow-hidden rounded-md bg-gray-50 p-2 dark:bg-gray-950 md:dark:bg-gray-900'>
+      <div class='space-y-2'>
+        <p class='text-2xl font-semibold'>{t('NOTES.TITLE')}</p>
 
-          <Form onSubmit={handleSubmit} class='flex'>
-            <Field name='note' type='string'>
-              {(field, props) => (
-                <Input
+        <Form onSubmit={handleSubmit} class='flex'>
+          <Field name='note' type='string'>
+            {(field, props) => (
+              <div class='relative w-full'>
+                <TextArea
                   {...props}
-                  type='text'
-                  id='note'
+                  name={field.name}
                   placeholder={t('NOTES.NOTE') + '...'}
                   value={field.value}
-                  class='rounded-r-none border-r-0'
-                  ref={noteInputElement}
+                  onChange={(v) => setValue(form, 'note', v)}
+                  ref={noteInputElement as any}
+                  class='pr-10'
                 />
-              )}
-            </Field>
 
-            <Button class='rounded-l-none rounded-r-xl'>
-              <IconSend2 />
-            </Button>
-          </Form>
+                <Button class='absolute right-2 top-1/2 aspect-square -translate-y-1/2 rounded-full p-0'>
+                  <IconSend2 class='size-5' />
+                </Button>
+              </div>
+            )}
+          </Field>
+        </Form>
 
-          <div class='flex justify-between space-x-2'>
-            {/* Cancel button */}
-            <Show when={editTripNote() !== undefined}>
-              <Button
-                onclick={(e) => setEditTripNote(undefined)}
-                disabled={tripNoteId() === undefined}
-                class='w-full'
-              >
-                {t('GENERAL.CANCEL')}
-              </Button>
-            </Show>
-
-            {/* Edit button */}
-            <Show when={editTripNote() === undefined}>
-              <Button
-                onclick={(e) => setEditTripNote(tripNoteId())}
-                disabled={tripNoteId() === undefined}
-                class='w-full'
-              >
-                <IconPencil />
-              </Button>
-            </Show>
-
+        <div class='flex justify-between space-x-2'>
+          {/* Cancel button */}
+          <Show when={editTripNote() !== undefined}>
             <Button
+              onclick={(e) => setEditTripNote(undefined)}
               disabled={tripNoteId() === undefined}
-              onclick={(e) => deleteTripNote(tripNoteId()!)}
-              variant='destructive'
               class='w-full'
             >
-              <IconTrash />
+              {t('GENERAL.CANCEL')}
             </Button>
-          </div>
-        </div>
+          </Show>
 
-        <div class='my-2 space-y-2 overflow-y-auto pb-1'>
-          <For each={notes.data}>
-            {(note) => (
-              <TripNoteCard
-                tripId={props.tripId}
-                tripNoteId={note.id}
-                createdAt={d(note.createdAt, DateFormat.DATETIME)}
-                note={note.note}
-                onToggle={() => {
-                  handleTripNoteToggled(note.id);
-                }}
-                selected={selectedTripNotes().includes(note.id)}
-                editing={editTripNote() === note.id}
-                onEdited={() => {
-                  setEditTripNote(undefined);
-                }}
-              />
-            )}
-          </For>
-        </div>
-      </section>
+          {/* Edit button */}
+          <Show when={editTripNote() === undefined}>
+            <Button
+              onclick={(e) => setEditTripNote(tripNoteId())}
+              disabled={tripNoteId() === undefined}
+              class='w-full'
+            >
+              <IconPencil />
+            </Button>
+          </Show>
 
-      <Show when={props.showMapNotes !== false}>
+          <Button
+            disabled={tripNoteId() === undefined}
+            onclick={(e) => deleteTripNote(tripNoteId()!)}
+            variant='destructive'
+            class='w-full'
+          >
+            <IconTrash />
+          </Button>
+        </div>
+      </div>
+
+      <div class='my-2 space-y-2 overflow-y-auto pb-1'>
         <For each={notes.data}>
           {(note) => (
-            <TripNoteMarker
+            <TripNoteItem
+              tripId={props.tripId}
               note={note}
-              onSelected={() => handleTripNoteToggled(note.id)}
+              onToggle={() => handleTripNoteToggled(note.id)}
               selected={selectedTripNotes().includes(note.id)}
+              editing={editTripNote() === note.id}
+              onEdited={() => setEditTripNote(undefined)}
             />
           )}
         </For>
+      </div>
+    </section>
+  );
+};
+
+const TripNoteItem: Component<{
+  tripId: string;
+  note: TripNoteDetails;
+  editing: boolean;
+  selected: boolean;
+  onToggle: () => void;
+  onEdited: () => void;
+  markers?: boolean;
+}> = (props) => {
+  const { map } = useMap();
+  const { d } = useTranslations();
+  let cardElement: HTMLDivElement;
+
+  const handleMarkerToggle = () => {
+    if (!props.selected) cardElement.scrollIntoView();
+    props.onToggle();
+  };
+
+  const handleCardToggle = () => {
+    if (!props.selected && props.note.geometry) {
+      const geom = parseGeometry<Point>(props.note.geometry);
+
+      map.getView().animate({
+        center: geom.getCoordinates(),
+        duration: 300,
+      });
+    }
+
+    props.onToggle();
+  };
+
+  return (
+    <>
+      <TripNoteCard
+        ref={cardElement!}
+        tripId={props.tripId}
+        tripNoteId={props.note.id}
+        createdAt={d(props.note.createdAt, DateFormat.DATETIME)}
+        note={props.note.note}
+        onToggle={handleCardToggle}
+        selected={props.selected}
+        editing={props.editing}
+        onEdited={props.onEdited}
+      />
+
+      <Show when={props.markers !== false}>
+        <TripNoteMarker
+          note={props.note}
+          onSelected={handleMarkerToggle}
+          selected={props.selected}
+        />
       </Show>
     </>
   );
