@@ -43,6 +43,7 @@ public class UserAccountJdbcRepository {
         ON ua.user_account_id = at.fk_driver_user_id
       WHERE 1=1
         AND (:id IS NULL OR ua.user_account_id = :id::uuid)
+      ORDER BY ua.full_name ASC
     """;
 
   private static final RowMapper<UserAccountDetails> USER_ACCOUNT_DETAILS_MAPPER = (rs, i) -> {

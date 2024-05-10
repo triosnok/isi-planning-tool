@@ -53,7 +53,7 @@ public class VehicleJdbcRepository {
         ON v.vehicle_id = vr.fk_vehicle_id
       WHERE 1=1
         AND (:id IS NULL OR v.vehicle_id = :id::uuid)
-      ORDER BY vr.count ASC NULLS FIRST
+      ORDER BY vr.count ASC NULLS FIRST, v.model ASC
     """;
 
   private static final RowMapper<VehicleDetails> VEHICLE_DETAILS_ROW_MAPPER = (rs, rowNum) -> {
