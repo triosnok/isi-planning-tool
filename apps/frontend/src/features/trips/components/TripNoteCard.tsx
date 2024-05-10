@@ -72,10 +72,10 @@ const TripNoteCard: Component<TripNoteCardProps> = (props) => {
             </p>
           </Show>
 
-          <Collapsible open={props.selected} class='flex-1'>
+          <Collapsible open={props.selected} class='flex flex-1'>
             <Collapsible.Content class='animate-collapsible-up ui-expanded:animate-collapsible-down relative flex-1 overflow-hidden p-2'>
               {/* hack to make the collapsible animation work as intended, size isn't measured properly when only using textarea */}
-              <p class='invisible whitespace-pre-wrap text-sm' aria-hidden>
+              <p class='invisible whitespace-pre-wrap pb-4 text-sm' aria-hidden>
                 {note()}
               </p>
 
