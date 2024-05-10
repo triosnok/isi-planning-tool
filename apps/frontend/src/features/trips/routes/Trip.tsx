@@ -15,7 +15,7 @@ import {
 } from '@/features/trips/components/TripIndicator';
 import { cn } from '@/lib/utils';
 import { CaptureAction } from '@isi-insight/client';
-import { Collapsible } from '@kobalte/core';
+import { Collapsible } from '@kobalte/core/collapsible';
 import { useParams } from '@solidjs/router';
 import {
   IconChevronUp,
@@ -30,6 +30,7 @@ import { Component, Show, createMemo, createSignal } from 'solid-js';
 import { useTripDetailsQuery } from '../api';
 
 import Header from '@/components/layout/Header';
+import MapContainer from '@/components/map/MapContainer';
 import MapFollowVehicleToggle from '@/components/map/MapFollowVehicleToggle';
 import MapPopupLayer from '@/components/map/MapPopupLayer';
 import MapRoot from '@/components/map/MapRoot';
@@ -41,7 +42,6 @@ import {
 } from '@/features/capture/api';
 import TripNoteModule from '../components/TripNoteModule';
 import TripSummaryDialog from '../components/TripSummaryDialog';
-import MapContainer from '@/components/map/MapContainer';
 
 const Trip: Component = () => {
   const params = useParams();
@@ -229,7 +229,7 @@ const Trip: Component = () => {
                   />
                 </section>
 
-                <Collapsible.Root class='flex flex-col gap-2'>
+                <Collapsible class='flex flex-col gap-2'>
                   <Collapsible.Content class='animate-collapsible-up ui-expanded:animate-collapsible-down overflow-hidden'>
                     <div class='flex flex-row items-center gap-2 px-2'>
                       <SwitchButton
@@ -250,7 +250,7 @@ const Trip: Component = () => {
                       {t('TRIPS.SHOW_LESS')}
                     </Show>
                   </Collapsible.Trigger>
-                </Collapsible.Root>
+                </Collapsible>
 
                 <TripSummaryDialog
                   tripId={params.tripId}
