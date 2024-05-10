@@ -19,7 +19,7 @@ const ErrorLabel: Component<ErrorLabelProps> = (props) => {
   return (
     <strong
       class={cn(
-        'dark:text-error-400 text-error-600 text-sm',
+        'dark:text-error-400 text-error-600 text-sm font-normal',
         !props.text && 'hidden',
         props.class
       )}
