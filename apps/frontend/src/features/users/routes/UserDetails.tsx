@@ -1,5 +1,6 @@
 import Header from '@/components/layout/Header';
 import Resizable from '@/components/layout/Resizable';
+import MapContainer from '@/components/map/MapContainer';
 import MapDriverMarker from '@/components/map/MapDriverMarker';
 import MapRoot from '@/components/map/MapRoot';
 import MapTripPopoverMarker from '@/components/map/MapTripPopoverMarker';
@@ -7,6 +8,7 @@ import MapZoomControls from '@/components/map/MapZoomControls';
 import BackLink from '@/components/navigation/BackLink';
 import { useSubjectPosition } from '@/features/positions';
 import TripTable from '@/features/trips/components/TripTable';
+import { usePanelSizes } from '@/lib/usePanelSizes';
 import { useParams } from '@solidjs/router';
 import { Component, Show } from 'solid-js';
 import {
@@ -16,13 +18,16 @@ import {
   useUserMutation,
 } from '../api';
 import UpdateUserForm from '../components/UpdateUserForm';
-import MapContainer from '@/components/map/MapContainer';
 
 const UserDetails: Component = () => {
   const params = useParams();
   const user = useUserDetailsQuery(params.id);
   const userDetails = useUserMutation();
   const position = useSubjectPosition('DRIVER', () => params.id);
+  const [panelSizes, setPanelSizes] = usePanelSizes({
+    storageKey: 'user-details-panel-sizes',
+    count: 2,
+  });
 
   const trips = useTripsByUserQuery(() => params.id);
 
@@ -41,7 +46,11 @@ const UserDetails: Component = () => {
     <div class='flex h-svh w-svw flex-col'>
       <Header />
 
-      <Resizable.Root class='flex flex-1 overflow-hidden'>
+      <Resizable.Root
+        class='flex flex-1 overflow-hidden'
+        sizes={panelSizes()}
+        onSizesChange={setPanelSizes}
+      >
         <Resizable.Panel
           as='main'
           class='overflow-y-auto p-2 py-2 max-md:flex-1'

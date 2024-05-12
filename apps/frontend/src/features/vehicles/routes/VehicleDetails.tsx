@@ -1,9 +1,14 @@
 import Header from '@/components/layout/Header';
-import MapVehicleMarker from '@/components/map/MapVehicleMarker';
+import Resizable from '@/components/layout/Resizable';
+import MapContainer from '@/components/map/MapContainer';
 import MapRoot from '@/components/map/MapRoot';
+import MapTripPopoverMarker from '@/components/map/MapTripPopoverMarker';
+import MapVehicleMarker from '@/components/map/MapVehicleMarker';
+import MapZoomControls from '@/components/map/MapZoomControls';
 import BackLink from '@/components/navigation/BackLink';
 import { useSubjectPosition } from '@/features/positions';
 import TripTable from '@/features/trips/components/TripTable';
+import { usePanelSizes } from '@/lib/usePanelSizes';
 import { useParams } from '@solidjs/router';
 import { Component, Show } from 'solid-js';
 import {
@@ -13,10 +18,6 @@ import {
   useVehicleMutation,
 } from '../api';
 import VehicleForm from '../components/VehicleForm';
-import Resizable from '@/components/layout/Resizable';
-import MapZoomControls from '@/components/map/MapZoomControls';
-import MapTripPopoverMarker from '@/components/map/MapTripPopoverMarker';
-import MapContainer from '@/components/map/MapContainer';
 
 const VehicleDetails: Component = () => {
   const params = useParams();
@@ -24,6 +25,10 @@ const VehicleDetails: Component = () => {
   const vehicleMutation = useVehicleMutation();
   const trips = useTripsByVehicleQuery(params.id);
   const { position } = useSubjectPosition('VEHICLE', () => params.id);
+  const [panelSizes, setPanelSizes] = usePanelSizes({
+    storageKey: 'vehicle-details-panel-sizes',
+    count: 2,
+  });
 
   const handleUpdateVehicle = async (vehicle: VehicleSchemaValues) => {
     try {
@@ -40,7 +45,11 @@ const VehicleDetails: Component = () => {
     <div class='flex h-svh w-svw flex-col'>
       <Header />
 
-      <Resizable.Root class='flex flex-1 overflow-hidden'>
+      <Resizable.Root
+        class='flex flex-1 overflow-hidden'
+        sizes={panelSizes()}
+        onSizesChange={setPanelSizes}
+      >
         <Resizable.Panel
           initialSize={0.6}
           minSize={0.5}

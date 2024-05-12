@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useTranslations } from '@/features/i18n';
 import { usePositions } from '@/features/positions';
+import { usePanelSizes } from '@/lib/usePanelSizes';
 import { LayoutProps } from '@/lib/utils';
 import { useNavigate } from '@solidjs/router';
 import { Component, For, Index } from 'solid-js';
@@ -21,6 +22,10 @@ const UserOverview: Component<LayoutProps> = (props) => {
   const { t } = useTranslations();
   const handleAddUser = () => navigate('/users/new');
   const { positions } = usePositions('DRIVER');
+  const [panelSizes, setPanelSizes] = usePanelSizes({
+    storageKey: 'user-overview-panel-sizes',
+    count: 2,
+  });
 
   const userMap = () => {
     const list = users.data;
@@ -37,7 +42,11 @@ const UserOverview: Component<LayoutProps> = (props) => {
     <div class='flex h-svh w-svw flex-col'>
       <Header />
 
-      <Resizable.Root class='isolate flex flex-1 overflow-hidden'>
+      <Resizable.Root
+        class='isolate flex flex-1 overflow-hidden'
+        sizes={panelSizes()}
+        onSizesChange={setPanelSizes}
+      >
         <Resizable.Panel
           as='main'
           class='overflow-y-auto px-6 py-4 max-md:flex-1'
