@@ -56,7 +56,7 @@ const Dropzone: Component<DropzoneProps> = (props) => {
       <Show
         when={file()}
         fallback={
-          <div class='flex flex-col items-center justify-center gap-2'>
+          <div class='flex flex-col items-center justify-center gap-2 text-sm'>
             <IconUpload class='size-12' />
             {props.title}
           </div>
