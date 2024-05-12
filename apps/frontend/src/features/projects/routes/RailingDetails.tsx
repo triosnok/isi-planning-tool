@@ -1,6 +1,7 @@
 import IconProperty from '@/components/IconProperty';
 import MapRoadSegmentLayer from '@/components/map/MapRoadSegmentLayer';
 import BackLink from '@/components/navigation/BackLink';
+import { Separator } from '@/components/ui/separator';
 import {
   Slider,
   SliderFill,
@@ -27,7 +28,6 @@ import {
   useRailingCaptureQuery,
   useRailingRoadSegmentsQuery,
 } from '../api/railing';
-import { Separator } from '@/components/ui/separator';
 
 const parseNumber = (value?: string) => {
   const number = Number(value);
@@ -128,7 +128,7 @@ const RailingDetails: Component = () => {
   const sliderMaxValue = () => selectedSegment()?.length ?? 0;
 
   return (
-    <div class='flex h-full flex-col overflow-hidden p-2'>
+    <div class='flex h-full flex-col p-2 max-md:overflow-y-auto md:overflow-hidden'>
       <BackLink href='../..' />
 
       <h1 class='text-xl font-bold'>Railing {railingId()}</h1>
@@ -157,7 +157,7 @@ const RailingDetails: Component = () => {
 
       <Separator class='my-2' />
 
-      <section class='overflow-hidden'>
+      <section class='md:overflow-hidden'>
         <Show when={selectedCapture()}>
           {(capture) => (
             <>
@@ -235,7 +235,7 @@ const RailingDetails: Component = () => {
         </div>
       </section>
 
-      <section class='-mx-2 flex-1 divide-y divide-gray-300 overflow-y-auto dark:divide-gray-800'>
+      <section class='-mx-2 flex-1 divide-y divide-gray-300 md:overflow-y-auto dark:divide-gray-800'>
         <For each={captures.data}>
           {(capture) => (
             <CaptureCard
