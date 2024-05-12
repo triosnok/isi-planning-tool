@@ -36,7 +36,7 @@ const DropdownMenuContent: Component<
         class={cn(
           'animate-content-hide data-[expanded]:animate-content-show z-[2000] min-w-[8rem] origin-[var(--kb-menu-content-transform-origin)] overflow-hidden rounded-md border p-1 shadow-md',
           'bg-gray-50 text-gray-950',
-          'dark:border-gray-800 dark:bg-gray-900 dark:text-gray-50',
+          'dark:border-gray-900 dark:bg-gray-950 dark:text-gray-50',
           props.class
         )}
         {...rest}
@@ -52,7 +52,7 @@ const DropdownMenuItem: Component<
   return (
     <DropdownMenuPrimitive.Item
       class={cn(
-        'focus:bg-brand-red-700 relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:text-gray-50 data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+        'relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-gray-200 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-gray-900 dark:focus:text-gray-50',
         props.class
       )}
       {...rest}
@@ -212,6 +212,5 @@ export {
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 };
-
