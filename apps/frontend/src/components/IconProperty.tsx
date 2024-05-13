@@ -45,7 +45,7 @@ const IconProperty: Component<IconPropertyProps> = (props) => {
       >
         <props.icon
           class={cn(
-            'size-5 text-gray-500 dark:text-gray-400',
+            'size-5 text-gray-500 dark:text-gray-400 flex-shrink-0',
             props.size === 'xs' && 'size-4'
           )}
         />

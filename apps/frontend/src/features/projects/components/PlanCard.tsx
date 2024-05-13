@@ -30,7 +30,7 @@ const PlanCard: Component<PlanCardProps> = (props) => {
       )}
     >
       <div class='flex justify-between p-2'>
-        <div class='flex items-center'>
+        <div class='flex items-center overflow-hidden'>
           <div
             role='figure'
             class={cn(
@@ -39,7 +39,7 @@ const PlanCard: Component<PlanCardProps> = (props) => {
             )}
           />
 
-          <div class='flex flex-col'>
+          <div class='flex flex-col overflow-hidden'>
             <p
               class={cn(
                 props.ongoingTripAmount === 0 && 'hidden',
@@ -58,7 +58,7 @@ const PlanCard: Component<PlanCardProps> = (props) => {
           </div>
         </div>
 
-        <div class='flex flex-col items-end'>
+        <div class='flex flex-1 flex-col items-end'>
           <IconPencil
             class={cn(
               'size-6 rounded-full bg-gray-200 p-0.5 hover:bg-gray-300/80 dark:bg-gray-800 dark:hover:bg-gray-700/60',
@@ -71,10 +71,12 @@ const PlanCard: Component<PlanCardProps> = (props) => {
             }}
           />
 
-          <p>
-            {props.railingAmount} {t('RAILINGS.TITLE')}
+          <p class='whitespace-nowrap'>
+            {props.railingAmount} {t('RAILINGS.TITLE')?.toLowerCase()}
           </p>
-          <p>{n(props.length, NumberFormat.INTEGER)} m</p>
+          <p class='whitespace-nowrap'>
+            {n(props.length, NumberFormat.INTEGER)} m
+          </p>
         </div>
       </div>
     </div>
