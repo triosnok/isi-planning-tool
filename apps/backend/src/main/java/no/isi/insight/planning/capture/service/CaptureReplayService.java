@@ -236,7 +236,8 @@ public class CaptureReplayService {
   ) {
     return this.getCurrentCaptureDetails(tripId)
       .map(CaptureDetails::position)
-      .map(geom -> this.geometryService.parsePoint(geom.wkt()).get());
+      .map(geom -> this.geometryService.parsePoint(geom.wkt()).get())
+      .map(this.geometryService::transformGpsToRail);
   }
 
   /**
