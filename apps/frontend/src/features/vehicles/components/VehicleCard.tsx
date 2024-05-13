@@ -42,7 +42,7 @@ const VehicleCard: Component<VehicleCardProps> = (props) => {
           </div>
         }
       >
-        {(url) => <img class='h-24 w-full' src={url()} />}
+        {(url) => <img class='h-24 w-full object-cover' src={url()} />}
       </Show>
 
       <div class='m-2 flex flex-col'>
