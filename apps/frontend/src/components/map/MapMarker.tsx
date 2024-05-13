@@ -1,7 +1,11 @@
+import { cn } from '@/lib/utils';
 import { Geometry as InternalGeometry } from '@isi-insight/client';
-import { Feature, Overlay } from 'ol';
-import WKT from 'ol/format/WKT';
+import { Ref, mergeRefs } from '@solid-primitives/refs';
+import { debounce } from '@solid-primitives/scheduled';
+import { Overlay } from 'ol';
+import { linear } from 'ol/easing';
 import { Point } from 'ol/geom';
+import { toRadians } from 'ol/math';
 import {
   Component,
   ComponentProps,
@@ -14,11 +18,7 @@ import {
   splitProps,
 } from 'solid-js';
 import { useMap } from './MapRoot';
-import { debounce } from '@solid-primitives/scheduled';
-import { linear } from 'ol/easing';
-import { toRadians } from 'ol/math';
-import { Ref, mergeRefs } from '@solid-primitives/refs';
-import { cn } from '@/lib/utils';
+import { parseFeature, parseGeometry } from './utils';
 
 export interface MapMarkerProps extends Omit<ComponentProps<'button'>, 'ref'> {
   children?: JSX.Element;
@@ -29,13 +29,6 @@ export interface MapMarkerProps extends Omit<ComponentProps<'button'>, 'ref'> {
   heading?: number;
   follow?: boolean;
 }
-
-const fmt = new WKT();
-
-const READ_OPTIONS = {
-  dataProjection: 'EPSG:4326',
-  featureProjection: 'EPSG:25833',
-};
 
 const TRANSITION_CLASSES = ['transition-transform', 'duration-1000'];
 
@@ -62,10 +55,7 @@ const MapMarker: Component<MapMarkerProps> = (props) => {
   };
 
   onMount(() => {
-    const pos = fmt.readFeature(
-      props.position.wkt,
-      READ_OPTIONS
-    ) as Feature<Point>;
+    const pos = parseFeature<Point>(props.position);
 
     const over = new Overlay({
       element: overlayElement,
@@ -130,7 +120,7 @@ const MapMarker: Component<MapMarkerProps> = (props) => {
   });
 
   createEffect(() => {
-    const wkt = fmt.readGeometry(props.position.wkt, READ_OPTIONS) as Point;
+    const wkt = parseGeometry<Point>(props.position);
     const rotationAngle = props.heading;
     const overlay = carOverlay();
     if (overlay === undefined) return;

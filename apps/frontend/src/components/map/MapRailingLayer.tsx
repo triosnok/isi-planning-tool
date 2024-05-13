@@ -2,7 +2,7 @@ import { RailingStatus } from '@/lib/constants';
 import { getRailingStatus } from '@/lib/utils';
 import { RoadRailing } from '@isi-insight/client';
 import { pointerMove } from 'ol/events/condition';
-import WKT from 'ol/format/WKT';
+import { LineString } from 'ol/geom';
 import Select from 'ol/interaction/Select';
 import Layer, { Options } from 'ol/layer/Layer';
 import WebGLVectorLayerRenderer from 'ol/renderer/webgl/VectorLayer';
@@ -11,7 +11,12 @@ import VectorSource from 'ol/source/Vector';
 import { WebGLStyle } from 'ol/style/webgl';
 import { Component, createEffect, createSignal, onCleanup } from 'solid-js';
 import { useMap } from './MapRoot';
-import { FeatureProperty, LayerProperty, LayerType } from './utils';
+import {
+  FeatureProperty,
+  LayerProperty,
+  LayerType,
+  parseFeature,
+} from './utils';
 
 export interface MapRailingLayerProps {
   railings?: RoadRailing[];
@@ -48,8 +53,6 @@ class WebGLLayer extends Layer {
   }
 }
 
-const fmt = new WKT();
-
 // RailingStatus.TODO=brand-blue-400
 // RailingStatus.ERROR=error-600
 // RailingStatus.DONE=success-500
@@ -67,7 +70,7 @@ const MapRailingLayer: Component<MapRailingLayerProps> = (props) => {
   createEffect(() => {
     const polylines = props.railings
       ?.map((railing) => {
-        const feature = fmt.readFeature(railing.geometry.wkt);
+        const feature = parseFeature<LineString>(railing.geometry);
         feature.set(
           FeatureProperty.COLOR,
           getRailingColor(railing.captureGrade)
@@ -115,7 +118,7 @@ const MapRailingLayer: Component<MapRailingLayerProps> = (props) => {
     }
 
     map.getTargetElement().style.cursor = 'pointer';
-    const feature = fmt.readFeature(hovered?.geometry.wkt);
+    const feature = parseFeature<LineString>(hovered?.geometry);
 
     feature.set(FeatureProperty.WIDTH, 15);
     feature.set(

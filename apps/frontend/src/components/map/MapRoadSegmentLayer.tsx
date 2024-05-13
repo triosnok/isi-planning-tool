@@ -1,6 +1,5 @@
 import { Geometry } from '@isi-insight/client';
 import { Feature } from 'ol';
-import WKT from 'ol/format/WKT';
 import { LineString, Point } from 'ol/geom';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
@@ -16,7 +15,7 @@ import {
   onMount,
 } from 'solid-js';
 import { useMap } from './MapRoot';
-import { LayerProperty, LayerType } from './utils';
+import { LayerProperty, LayerType, parseFeature, parseGeometry } from './utils';
 
 export interface MapRoadSegmentLayerProps {
   segment: Geometry;
@@ -24,8 +23,6 @@ export interface MapRoadSegmentLayerProps {
   length: number;
   capturePosition?: Geometry;
 }
-
-const fmt = new WKT();
 
 const SEGMENT_STYLE_INNER = new Style({
   stroke: new Stroke({
@@ -82,7 +79,7 @@ const MapRoadSegmentLayer: Component<MapRoadSegmentLayerProps> = (props) => {
     const segmentIndex = props.index;
 
     const features: Feature[] = [];
-    const segmentFeature = fmt.readFeature(segment.wkt) as Feature<LineString>;
+    const segmentFeature = parseFeature<LineString>(segment);
 
     segmentFeature.setStyle([SEGMENT_STYLE_OUTER, SEGMENT_STYLE_INNER]);
 
@@ -101,7 +98,7 @@ const MapRoadSegmentLayer: Component<MapRoadSegmentLayerProps> = (props) => {
     setSegmentIndexFeature(segmentIndexFeature);
 
     const capturePositionFeature = capturePosition
-      ? (fmt.readFeature(capturePosition.wkt) as Feature<Point>)
+      ? parseFeature<Point>(capturePosition)
       : new Feature({ geometry: new Point([0, 0]) });
 
     capturePositionFeature.setStyle(CAPTURE_POSITION_STYLE);
@@ -128,8 +125,7 @@ const MapRoadSegmentLayer: Component<MapRoadSegmentLayerProps> = (props) => {
   createEffect(() => {
     const segment = props.segment;
     const segmentFeat = segmentFeature();
-    if (segment)
-      segmentFeat?.setGeometry(fmt.readGeometry(segment.wkt) as LineString);
+    if (segment) segmentFeat?.setGeometry(parseGeometry<LineString>(segment));
   });
 
   createEffect(() => {
@@ -151,9 +147,7 @@ const MapRoadSegmentLayer: Component<MapRoadSegmentLayerProps> = (props) => {
     const capturePositionFeat = capturePositionFeature();
 
     if (capturePosition) {
-      capturePositionFeat?.setGeometry(
-        fmt.readGeometry(capturePosition.wkt) as Point
-      );
+      capturePositionFeat?.setGeometry(parseGeometry<Point>(capturePosition));
     } else {
       capturePositionFeat?.setGeometry(new Point([0, 0]));
     }
