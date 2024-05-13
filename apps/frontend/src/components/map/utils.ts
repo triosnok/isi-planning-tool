@@ -25,7 +25,7 @@ export const parseGeometry = <T extends Geometry>(
   geometry: ClientGeometry
 ): T => {
   return WKTFormat.readGeometry(geometry.wkt, {
-    dataProjection: 'EPSG:4326',
+    dataProjection: 'EPSG:' + geometry.srid,
     featureProjection: 'EPSG:25833',
   }) as T;
 };
@@ -34,7 +34,7 @@ export const parseFeature = <T extends Geometry>(
   geometry: ClientGeometry
 ): Feature<T> => {
   return WKTFormat.readFeature(geometry.wkt, {
-    dataProjection: 'EPSG:4326',
+    dataProjection: 'EPSG:' + geometry.srid,
     featureProjection: 'EPSG:25833',
   }) as Feature<T>;
 };
