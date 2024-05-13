@@ -5,14 +5,13 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { useProfile } from '@/features/auth/api';
 import { DateFormat, useTranslations } from '@/features/i18n';
 import ProjectCard from '@/features/projects/components/ProjectCard';
 import { useVehiclesQuery } from '@/features/vehicles/api';
 import VehicleSelect from '@/features/vehicles/components/VehicleSelect';
 import { vehiclePreference } from '@/features/vehicles/context';
-import { VehicleDetails } from '@isi-insight/client';
+import { ProjectStatus, VehicleDetails } from '@isi-insight/client';
 import { A } from '@solidjs/router';
 import { IconPlus } from '@tabler/icons-solidjs';
 import { Component, For, Show } from 'solid-js';
@@ -54,16 +53,27 @@ const ProjectOverview: Component = () => {
             emptyText={t('VEHICLES.NO_VEHICLE_SELECTED')}
           />
         </div>
-        <Input placeholder={t('NAVIGATION.SEARCH')} />
       </div>
 
-      <Accordion multiple={true} defaultValue={['ongoing', 'upcoming']} class='flex-1 overflow-y-auto'>
+      <Accordion
+        multiple={true}
+        defaultValue={['ongoing', 'upcoming']}
+        class='flex-1 overflow-y-auto'
+      >
         <AccordionItem value='ongoing'>
           <AccordionTrigger>
             {t('PROJECTS.STATUS.ONGOING')} ({ongoingProjects.data?.length})
           </AccordionTrigger>
           <AccordionContent class='flex flex-col space-y-2 p-2'>
-            <For each={ongoingProjects.data}>
+            <For
+              each={ongoingProjects.data}
+              fallback={
+                <ProjectListEmptyState
+                  status='ONGOING'
+                  loading={ongoingProjects.isLoading}
+                />
+              }
+            >
               {(project) => (
                 <A href={`/projects/${project.id}`}>
                   <ProjectCard
@@ -88,7 +98,15 @@ const ProjectOverview: Component = () => {
             {t('PROJECTS.STATUS.UPCOMING')} ({upcomingProjects.data?.length})
           </AccordionTrigger>
           <AccordionContent class='flex flex-col space-y-2 p-2'>
-            <For each={upcomingProjects.data}>
+            <For
+              each={upcomingProjects.data}
+              fallback={
+                <ProjectListEmptyState
+                  status='UPCOMING'
+                  loading={ongoingProjects.isLoading}
+                />
+              }
+            >
               {(project) => (
                 <A href={`/projects/${project.id}`}>
                   <ProjectCard
@@ -113,7 +131,15 @@ const ProjectOverview: Component = () => {
             {t('PROJECTS.STATUS.PREVIOUS')} ({previousProjects.data?.length})
           </AccordionTrigger>
           <AccordionContent class='flex flex-col space-y-2 p-2'>
-            <For each={previousProjects.data}>
+            <For
+              each={previousProjects.data}
+              fallback={
+                <ProjectListEmptyState
+                  status='PREVIOUS'
+                  loading={ongoingProjects.isLoading}
+                />
+              }
+            >
               {(project) => (
                 <A href={`/projects/${project.id}`}>
                   <ProjectCard
@@ -135,6 +161,24 @@ const ProjectOverview: Component = () => {
         </AccordionItem>
       </Accordion>
     </>
+  );
+};
+
+const ProjectListEmptyState: Component<{
+  loading: boolean;
+  status: ProjectStatus;
+}> = (props) => {
+  const { t } = useTranslations();
+  return (
+    <div class='flex w-full flex-col items-center justify-center py-1 text-gray-600 dark:text-gray-300'>
+      <p class='text-sm font-medium'>
+        <Show when={!props.loading} fallback={t('FEEDBACK.LOADING')}>
+          {t('PROJECTS.NO_PROJECTS', {
+            status: t(`PROJECTS.STATUS.${props.status}`)?.toLowerCase() ?? '',
+          })}
+        </Show>
+      </p>
+    </div>
   );
 };
 

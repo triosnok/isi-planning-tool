@@ -102,6 +102,7 @@
     "PROJECT": "Project",
     "NEW_PROJECT": "New project",
     "UPDATE_PROJECT": "Update project",
+    "NO_PROJECTS": "No {{ status }} projects found",
     "FORM": {
       "PROJECT_NAME": "Project name",
       "PROJECT_REFERENCE": "Project reference",
