@@ -1,3 +1,5 @@
+import Logo from '@/components/logo/Logo';
+import BackLink from '@/components/navigation/BackLink';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,7 +10,6 @@ import { Component, Match, Switch, createSignal } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { z } from 'zod';
 import { useForgotPasswordMutation } from '../api';
-import BackLink from '@/components/navigation/BackLink';
 
 interface ForgotPasswordState {
   step: Step;
@@ -33,6 +34,8 @@ const ForgotPassword: Component = () => {
   return (
     <div class='flex h-svh w-svw items-center justify-center'>
       <main class='m-4 flex w-full max-w-md flex-col rounded-lg border border-gray-100 p-4 shadow-lg dark:border-gray-800 dark:bg-gray-900'>
+        <Logo variant='colored' class='h-28 mx-auto' />
+
         <Switch>
           <Match when={store.step === Step.SEND_CODE}>
             <SendCodeStep
