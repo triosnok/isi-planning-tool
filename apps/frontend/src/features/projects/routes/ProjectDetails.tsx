@@ -148,7 +148,7 @@ const ProjectDetails: Component<LayoutProps> = (props) => {
         >
           <AccordionItem value='plans'>
             <AccordionTrigger>
-              {t('PLANS.TITLE')} {n(plans.data?.length, NumberFormat.INTEGER)}
+              {t('PLANS.TITLE')} ({n(plans.data?.length, NumberFormat.INTEGER)})
             </AccordionTrigger>
             <AccordionContent class='flex flex-col space-y-2 p-2'>
               <Show
