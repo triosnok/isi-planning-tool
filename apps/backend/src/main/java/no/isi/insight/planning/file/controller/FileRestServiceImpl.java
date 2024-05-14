@@ -3,6 +3,8 @@ package no.isi.insight.planning.file.controller;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
@@ -12,6 +14,7 @@ import io.minio.GetObjectArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.StatObjectArgs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.isi.insight.planning.auth.annotation.Authenticated;
@@ -45,7 +48,7 @@ public class FileRestServiceImpl implements FileRestService {
 
   @Override
   @Authenticated
-  public StreamingResponseBody get(
+  public ResponseEntity<StreamingResponseBody> get(
       String bucket,
       String key
   ) {
@@ -53,14 +56,13 @@ public class FileRestServiceImpl implements FileRestService {
       throw new BadRequestException("Invalid bucket");
     }
 
-    var args = GetObjectArgs.builder().bucket(bucket).object(key);
-
     try {
-      var object = this.minioClient.getObject(args.build());
+      var metadata = this.minioClient.statObject(StatObjectArgs.builder().bucket(bucket).object(key).build());
+      var object = this.minioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(key).build());
 
-      return out -> {
-        object.transferTo(out);
-      };
+      return ResponseEntity.ok()
+        .contentType(MediaType.parseMediaType(metadata.contentType()))
+        .body(out -> object.transferTo(out));
     } catch (Exception e) {
       log.error("Error downloading file: {}", e.getMessage(), e);
       throw new InternalErrorException("Unknown error downloading file");
@@ -79,10 +81,19 @@ public class FileRestServiceImpl implements FileRestService {
 
     // random file key is generated to avoid collisions
     var key = UUID.randomUUID().toString();
+    var contentType = file.getContentType();
+
+    if (!contentType.startsWith("image")) {
+      throw new BadRequestException("Invalid file type, only images can be uploaded.");
+    }
 
     try {
       this.ensureBucket(bucket);
-      var args = PutObjectArgs.builder().bucket(bucket).object(key).stream(file.getInputStream(), file.getSize(), -1);
+      var args = PutObjectArgs.builder()
+        .bucket(bucket)
+        .object(key)
+        .contentType(contentType)
+        .stream(file.getInputStream(), file.getSize(), -1);
       this.minioClient.putObject(args.build());
       return new FileUploadResponse("%s/%s/%s".formatted(FileRestService.PREFIX, bucket, key));
     } catch (Exception e) {

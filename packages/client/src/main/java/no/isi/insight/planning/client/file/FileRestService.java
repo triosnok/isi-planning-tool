@@ -1,5 +1,6 @@
 package no.isi.insight.planning.client.file;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +21,7 @@ public interface FileRestService {
 
   @Operation(summary = "Downloads a file with a given key from a bucket")
   @GetExchange("/{bucket}/{key}")
-  public StreamingResponseBody get(
+  public ResponseEntity<StreamingResponseBody> get(
       @PathVariable String bucket,
       @PathVariable String key
   );
