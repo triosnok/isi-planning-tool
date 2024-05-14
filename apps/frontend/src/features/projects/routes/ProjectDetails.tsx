@@ -9,15 +9,13 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { SeparatorWithText } from '@/components/ui/separator';
 import { SwitchButton } from '@/components/ui/switch-button';
-import { DateFormat, useTranslations } from '@/features/i18n';
+import { useDeviationsQuery } from '@/features/deviation';
+import { DateFormat, NumberFormat, useTranslations } from '@/features/i18n';
 import UpdateProjectPlanDialog from '@/features/projects/components/UpdateProjectPlanDialog';
 import TripCard from '@/features/trips/components/TripCard';
 import { LayoutProps, cn } from '@/lib/utils';
 import { A, useNavigate, useParams } from '@solidjs/router';
-import {
-  IconEdit,
-  IconPlus
-} from '@tabler/icons-solidjs';
+import { IconEdit, IconPlus } from '@tabler/icons-solidjs';
 import { createVirtualizer } from '@tanstack/solid-virtual';
 import dayjs from 'dayjs';
 import {
@@ -35,6 +33,7 @@ import {
   useProjectPlansQuery,
   useProjectRailings,
 } from '../api';
+import DeviationCard from '../components/DeviationCard';
 import PlanCard from '../components/PlanCard';
 import ProjectStatusIndicator from '../components/ProjectStatusIndicator';
 import RailingCard from '../components/RailingCard';
@@ -54,6 +53,20 @@ const ProjectDetails: Component<LayoutProps> = (props) => {
       ? searchParams.selectedPlans()[0]
       : undefined;
   });
+
+  const railings = useProjectRailings(
+    () => params.id,
+    searchParams.selectedPlans,
+    searchParams.hideCompleted
+  );
+
+  const deviations = useDeviationsQuery(
+    () => params.id,
+    searchParams.selectedPlans,
+    () => undefined,
+    () => undefined,
+    () => undefined
+  );
 
   const handlePlanToggled = (planId: string) => {
     const plans = searchParams.selectedPlans();
@@ -135,7 +148,7 @@ const ProjectDetails: Component<LayoutProps> = (props) => {
         >
           <AccordionItem value='plans'>
             <AccordionTrigger>
-              {t('PLANS.TITLE')} ({plans.data?.length})
+              {t('PLANS.TITLE')} {n(plans.data?.length, NumberFormat.INTEGER)}
             </AccordionTrigger>
             <AccordionContent class='flex flex-col space-y-2 p-2'>
               <Show
@@ -187,7 +200,7 @@ const ProjectDetails: Component<LayoutProps> = (props) => {
           </AccordionItem>
           <AccordionItem value='trips'>
             <AccordionTrigger>
-              {t('TRIPS.TITLE')} ({trips.data?.length})
+              {t('TRIPS.TITLE')} ({n(trips.data?.length, NumberFormat.INTEGER)})
             </AccordionTrigger>
             <AccordionContent class='flex flex-col space-y-2 p-2'>
               <Suspense fallback={<div class=''>{t('FEEDBACK.LOADING')}</div>}>
@@ -209,15 +222,35 @@ const ProjectDetails: Component<LayoutProps> = (props) => {
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value='railings'>
-            <AccordionTrigger>{t('RAILINGS.TITLE')}</AccordionTrigger>
+            <AccordionTrigger>
+              {t('RAILINGS.TITLE')} (
+              {n(railings.data?.length, NumberFormat.INTEGER)})
+            </AccordionTrigger>
             <AccordionContent class='flex flex-col space-y-2 p-2'>
               <RailingList />
             </AccordionContent>
           </AccordionItem>
 
           <AccordionItem value='deviations'>
-            <AccordionTrigger>{t('DEVIATIONS.TITLE')}</AccordionTrigger>
-            <AccordionContent class='flex flex-col space-y-2 p-2'></AccordionContent>
+            <AccordionTrigger>
+              {t('DEVIATIONS.TITLE')} (
+              {n(deviations.data?.length, NumberFormat.INTEGER)})
+            </AccordionTrigger>
+            <AccordionContent class='flex flex-col divide-y divide-gray-300 dark:divide-gray-800'>
+              <For each={deviations.data}>
+                {(deviation) => (
+                  <A
+                    href={`/projects/${params.id}/railings/${deviation.railingId}?segment=${deviation.segmentId}&index=${deviation.segmentIndex}&captureId=${deviation.captureId}`}
+                  >
+                    <DeviationCard
+                      type={deviation.deviationType}
+                      roadSystemReference={deviation.roadSystemReference}
+                      class='px-2 py-1'
+                    />
+                  </A>
+                )}
+              </For>
+            </AccordionContent>
           </AccordionItem>
         </Accordion>
 

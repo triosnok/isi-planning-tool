@@ -30,9 +30,10 @@ public interface DeviationRestService {
   @Operation(summary = "Lists all deviations with optional filtering")
   ResponseEntity<List<DeviationDetails>> listDeviations(
       @RequestParam Optional<UUID> projectId,
-      @RequestParam Optional<UUID> planId,
+      @RequestParam(required = false) List<UUID> planId,
       @RequestParam Optional<UUID> tripId,
-      @RequestParam Optional<Long> railingId
+      @RequestParam Optional<Long> railingId,
+      @RequestParam Optional<String> segmentId
   );
 
   @PostExchange

@@ -35,18 +35,23 @@ public class DeviationRestServiceImpl implements DeviationRestService {
   @Override
   public ResponseEntity<List<DeviationDetails>> listDeviations(
       Optional<UUID> projectId,
-      Optional<UUID> planId,
+      List<UUID> planId,
       Optional<UUID> tripId,
-      Optional<Long> railingId
+      Optional<Long> railingId,
+      Optional<String> segmentId
   ) {
-    var hasFilter = Stream.of(projectId, planId, tripId, railingId).anyMatch(Optional::isPresent);
+    var hasFilter = Stream.of(projectId, tripId, railingId).anyMatch(Optional::isPresent);
 
-    if (!hasFilter) {
+    if (!hasFilter && planId.isEmpty()) {
       throw new BadRequestException("At least one parameter needs to be provided");
     }
 
+    if (segmentId.isPresent() && railingId.isEmpty()) {
+      throw new BadRequestException("Segment id can only be used with railing id");
+    }
+
     var deviations = this.deviationJdbcRepository
-      .findDeviations(Optional.empty(), projectId, planId, tripId, railingId);
+      .findDeviations(Optional.empty(), projectId, planId, tripId, railingId, segmentId);
 
     return ResponseEntity.ok(deviations);
   }

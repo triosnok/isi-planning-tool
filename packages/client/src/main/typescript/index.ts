@@ -86,8 +86,11 @@ export interface DeviationCount {
 }
 
 export interface DeviationDetails {
-    roadSegment: string;
+    roadSystemReference: string;
     railingId: number;
+    segmentId: string;
+    captureId: string;
+    segmentIndex: number;
     position: Geometry;
     deviationType: string;
     details: { [index: string]: string };
@@ -143,8 +146,8 @@ export interface ProjectDetails {
     totalLength: number;
     deviations: number;
     notes: number;
-    status: ProjectStatus;
     progress: number;
+    status: ProjectStatus;
 }
 
 export interface ProjectPlanDetails {

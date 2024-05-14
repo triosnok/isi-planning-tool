@@ -128,6 +128,12 @@ public class RailingImportService {
     for (var railing : railings) {
       var segments = railing.roadSegments().stream().map(segment -> {
         var placement = railing.location().placements().stream().filter(p -> segment.isWithin(p)).findFirst();
+        var reference = railing.location()
+          .roadSystemReferences()
+          .stream()
+          .filter(r -> r.system().id().equals(segment.roadSystemReference().system().id()))
+          .findFirst();
+
         var stretch = this.geometryService.parseLineString(segment.geometry().wkt());
 
         if (placement.isEmpty() || stretch.isEmpty()) {
@@ -138,7 +144,7 @@ public class RailingImportService {
           .placementDirection(
             placement.map(Placement::direction).map(Direction::toRoadDirection).orElse(RoadDirection.WITH)
           )
-          .roadSystemDirection(segment.direction().toRoadDirection())
+          .roadSystemDirection(reference.map(r -> r.stretch().direction()).map(Direction::toRoadDirection).orElse(null))
           .stretchDirection(
             Optional.ofNullable(segment.roadSystemReference().stretch())
               .map(RoadStretch::direction)
