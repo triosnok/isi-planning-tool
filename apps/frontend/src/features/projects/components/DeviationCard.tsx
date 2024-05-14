@@ -19,7 +19,7 @@ const DeviationCard: Component<DeviationCardProps> = (props) => {
       onClick={props.onClick}
     >
       <div>
-        <p class='font-medium'>{props.type}</p>
+        <p class='font-medium text-lg'>{props.type}</p>
 
         <span class='text-xs text-gray-600 dark:text-gray-400'>
           {props.roadSystemReference}
