@@ -110,7 +110,7 @@ public class TripRailingDeviationJdbcRepository {
     var deviations = this.findDeviations(
       Optional.of(id),
       Optional.empty(),
-      List.of(),
+      null,
       Optional.empty(),
       Optional.empty(),
       Optional.empty()
