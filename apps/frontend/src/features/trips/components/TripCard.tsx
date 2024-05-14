@@ -4,7 +4,7 @@ import {
   IconAlertCircleFilled,
   IconClock,
   IconMessage,
-  IconSteeringWheel
+  IconSteeringWheel,
 } from '@tabler/icons-solidjs';
 import { cva } from 'class-variance-authority';
 import dayjs from 'dayjs';
@@ -72,7 +72,7 @@ const TripCard: Component<TripCardProps> = (props) => {
           <div class='flex flex-row gap-1'>
             <IconAlertCircleFilled class='text-warning-500 size-5' />
             <p class='text-warning-500'>
-              {props.deviations} {t('DEVIATIONS.TITLE')}
+              {props.deviations} {t('DEVIATIONS.TITLE')?.toLowerCase()}
             </p>
           </div>
         </Show>
@@ -80,7 +80,7 @@ const TripCard: Component<TripCardProps> = (props) => {
           <div class='flex flex-row justify-end gap-1'>
             <IconMessage class='size-5' />
             <p>
-              {props.notes} {t('NOTES.TITLE')}
+              {props.notes} {t('NOTES.TITLE')?.toLowerCase()}
             </p>
           </div>
         </Show>
