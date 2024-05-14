@@ -60,18 +60,21 @@ const RailingCard: Component<RailingCardProps> = (props) => {
       <div class='flex flex-col gap-0.5'>
         <IconProperty
           side='right'
+          size='xs'
           icon={IconRulerMeasure}
           text={`${n(props.length)} m`}
         />
 
         <IconProperty
           side='right'
+          size='xs'
           icon={IconSquarePercentage}
           text={n(props.captureGrade, NumberFormat.PERCENTAGE)}
         />
 
         <IconProperty
           side='right'
+          size='xs'
           show={props.capturedAt !== undefined}
           icon={IconPhoto}
           text={d(props.capturedAt)}
