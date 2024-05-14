@@ -18,6 +18,7 @@ import {
   useContext,
 } from 'solid-js';
 import './style.css';
+import 'ol/ol.css';
 
 proj4.defs(
   'EPSG:25833',
