@@ -6,7 +6,6 @@ import MapRoot from '@/components/map/MapRoot';
 import MapTripPopoverMarker from '@/components/map/MapTripPopoverMarker';
 import MapZoomControls from '@/components/map/MapZoomControls';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { useTranslations } from '@/features/i18n';
 import { usePositions } from '@/features/positions';
 import { usePanelSizes } from '@/lib/usePanelSizes';
@@ -53,10 +52,9 @@ const UserOverview: Component<LayoutProps> = (props) => {
           minSize={0.265}
           initialSize={0.7}
         >
-          <h1 class='text-4xl font-bold'>{t('USERS.TITLE')}</h1>
-
           <section class='flex flex-col justify-between gap-2 sm:flex-row'>
-            <Input placeholder={t('NAVIGATION.SEARCH')} class='w-fit' />
+            <h1 class='text-4xl font-bold'>{t('USERS.TITLE')}</h1>
+
             <Button onClick={handleAddUser} class='ml-auto w-full sm:w-auto'>
               {t('USERS.ADD_USER')}
             </Button>
