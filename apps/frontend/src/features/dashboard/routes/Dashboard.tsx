@@ -161,7 +161,7 @@ const Dashboard: Component = () => {
           </div>
         </Card>
 
-        <Card class='flex flex-col px-2 py-1'>
+        <Card class='flex flex-col px-2 py-1 max-sm:max-h-96'>
           <CardHeader title={t('DEVIATIONS.TITLE')} />
           <div class='relative flex-1 overflow-hidden'>
             <Show
@@ -182,7 +182,7 @@ const Dashboard: Component = () => {
           </div>
         </Card>
 
-        <Card class='flex flex-col px-2 py-1'>
+        <Card class='flex flex-col px-2 py-1 max-sm:max-h-96'>
           <CardHeader title={t('DASHBOARD.DAILY_METERS_CAPTURED')} />
           <div class='relative flex-1 overflow-hidden'>
             <BarChart
