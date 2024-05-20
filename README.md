@@ -18,12 +18,12 @@
 ```bash
 .
 ├── apps
-│   ├── backend
-│   ├── frontend
-│   └── init # init container (migrations)
+│   ├── backend
+│   ├── frontend
+│   └── init # init container (migrations)
 ├── infrastructure # ansible scripts & Helm chart
 └── packages
-    └── client # spring http interfaces & generated typescript definitions
+    └── client # spring http interfaces & generated typescript definitions
 ```
 
 ### Code organizing
@@ -34,14 +34,14 @@ For Java code this means, namespacing using packages.
 ```bash
 .
 └── no.isi.insight.planning
-    ├── capture
-    │   ├── controller
-    │   └── service
-    ├── project
-    │   ├── controller
-    │   └── service
-    └── vehicle
-        └── ...
+    ├── capture
+    │   ├── controller
+    │   └── service
+    ├── project
+    │   ├── controller
+    │   └── service
+    └── vehicle
+        └── ...
 ```
 
 For TypeScript code, code is organized into feature folders.
@@ -51,14 +51,14 @@ Inspired by [Bulletproof React](https://github.com/alan2207/bulletproof-react).
 .
 ├── components # global components
 ├── features
-│   ├── projects
-│   │   ├── api
-│   │   ├── components
-│   │   └── routes
-│   └── vehicles
-│       ├── api
-│       ├── components
-│       └── routes
+│   ├── projects
+│   │   ├── api
+│   │   ├── components
+│   │   └── routes
+│   └── vehicles
+│       ├── api
+│       ├── components
+│       └── routes
 ├── lib
 └── router # global router
 ```
