@@ -1,8 +1,0 @@
-server:
-  port: 8081
-
-no.isi.insight.simulator:
-  planning-client:
-    base-url: ${PLANNING_CLIENT_URL}
-    username: ${PLANNING_CLIENT_USERNAME}
-    password: ${PLANNING_CLIENT_PASSWORD}
